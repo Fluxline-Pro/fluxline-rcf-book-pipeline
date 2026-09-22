@@ -21,11 +21,11 @@ This pipeline treats the manuscript as the only source of truth and makes every 
 | Phase | What it does | Ends with |
 |---|---|---|
 | **1 — Creation** | Generates every chapter artifact from the locked manuscript: review packet, workbook, training materials, reference guides, slide outline, eBook prep, print prep, narration script, RAG packet, and a grounded marketing intake packet | Production checklist |
-| **2 — Governance** | Validates everything against the manuscript, fixes what is safely fixable, proposes the rest, and certifies the chapter | `GOVERNANCE_READY` |
+| **2 — Governance** | Validates everything against the manuscript, fixes what is safely fixable, proposes the rest, and certifies the chapter | `GOVERNANCE_READY.md` |
 | **3 — Design + Production** | Design-system-bound HTML for every asset, figure images, exports, manual print layout, audiobook render, and book-level assembly | Hand-off to QA |
-| **3.5 — Design QA** | Reviews the design output against the design system, accessibility, instructional quality, and Kindle readiness | `DESIGN_READY` |
+| **3.5 — Design QA** | Reviews the design output against the design system, accessibility, instructional quality, and Kindle readiness | `DESIGN_READY.md` |
 | **4 — Kindle** | Builds the Kindle files per chapter, then assembles the book-level Kindle package | Kindle package |
-| **5 — RAG + Local LLM** | Rebuilds the chapter's ingestion surface, updates the vector store, writes the system prompt and query profiles | `RAG_READY` |
+| **5 — RAG + Local LLM** | Rebuilds the chapter's ingestion surface, updates the vector store, writes the system prompt and query profiles | `RAG_READY.md` |
 | **6 — Automation** | Activates the n8n and OpenClaw workflows that generate marketing and design drafts from the grounded RAG | Activation report |
 | **6.5 — Publication QA** | Validates EPUB, Kindle, print, audiobook, metadata, and accessibility | Publishing Ready |
 | **7 — Release** | Final verification, the assistant's recommendations, and the author's signature | **Published** |
@@ -36,7 +36,7 @@ Locked manuscript ─▶ 1 ─▶ 2 ─▶ 3 ─▶ 3.5 ─▶ 4 ─▶ 5 ─▶
                             └───────┘ fix loop
 ```
 
-Phases 1–5 run chapter by chapter. Book-level assembly happens once every chapter has cleared the relevant gate.
+Every phase runs chapter by chapter, including 6 and 6.5. Three of them add a book-level mode that runs once — PHASE 3 (eBook, workbook, print, audiobook assembly), PHASE 4 Part B (the Kindle package), and PHASE 6.5 book mode (publication QA of the assembled files) — each waiting until every chapter has cleared the gate before it. PHASE 2 and PHASE 6 also offer a batch mode for running several chapters in one pass.
 
 ## Principles the phases enforce
 

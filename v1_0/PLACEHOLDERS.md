@@ -28,11 +28,13 @@ Tokens look like `<THIS>`. A few also appear inside example file names (`<BOOK>_
 PowerShell, from the repo root:
 
 ```powershell
-$map = @{
+# [ordered] matters: <BOOK_ROOT> and <BOOK_SLUG> must be replaced before <BOOK>,
+# or '<BOOK>_ROOT>' is what you get. A plain @{} hashtable has no guaranteed order.
+$map = [ordered]@{
   '<BOOK_ROOT>'      = 'D:\Books\MYBOOK_FIRST_EDITION'
   '<BOOK_SLUG>'      = 'MYBOOK_FIRST_EDITION'
-  '<BOOK>'           = 'MYBOOK'
   '<BOOK_TITLE>'     = 'The Quiet Engine'
+  '<BOOK>'           = 'MYBOOK'
   '<EDITION>'        = 'First Edition'
   '<AUTHOR>'         = 'A. Writer'
   '<PASS7_SOURCE>'   = 'D:\Books\MYBOOK_FIRST_EDITION\_PASS7'
@@ -40,10 +42,13 @@ $map = @{
   '<dsm-slug>'       = 'quiet-engine-dsm'
   '<RAG_COLLECTION>' = 'quiet_engine_book'
 }
+# UTF-8 without BOM, LF endings, trailing newline preserved — the files contain
+# em dashes and arrows, and Set-Content would rewrite the encoding.
+$utf8 = New-Object System.Text.UTF8Encoding $false
 Get-ChildItem v1_0\*.md | ForEach-Object {
-  $t = Get-Content $_ -Raw
+  $t = [System.IO.File]::ReadAllText($_.FullName, $utf8)
   foreach ($k in $map.Keys) { $t = $t.Replace($k, $map[$k]) }
-  Set-Content $_ $t -NoNewline
+  [System.IO.File]::WriteAllText($_.FullName, $t, $utf8)
 }
 ```
 
@@ -51,8 +56,11 @@ bash / macOS / Linux:
 
 ```bash
 cd v1_0
-sed -i 's|<BOOK_ROOT>|/Books/MYBOOK_FIRST_EDITION|g; s|<BOOK_SLUG>|MYBOOK_FIRST_EDITION|g; s|<BOOK>|MYBOOK|g; s|<AUTHOR>|A. Writer|g' *.md
+# Same rule: longer tokens first, so <BOOK> does not eat <BOOK_ROOT>.
+sed -i 's|<BOOK_ROOT>|/Books/MYBOOK_FIRST_EDITION|g; s|<BOOK_SLUG>|MYBOOK_FIRST_EDITION|g; s|<BOOK_TITLE>|The Quiet Engine|g; s|<BOOK>|MYBOOK|g; s|<EDITION>|First Edition|g; s|<AUTHOR>|A. Writer|g; s|<DSM_NAME>|Quiet Engine DSM|g; s|<dsm-slug>|quiet-engine-dsm|g; s|<RAG_COLLECTION>|quiet_engine_book|g' *.md
 ```
+
+On macOS use `sed -i ''` instead of `sed -i`.
 
 Leave `<ChapterName>` and `<CH_ROOT>` alone — the phases resolve those per chapter as they run.
 

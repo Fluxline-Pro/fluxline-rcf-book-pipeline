@@ -29,7 +29,7 @@ Run **per chapter**, or in batch mode once multiple chapters have `RAG_READY.md`
 | Deliverable | Path |
 |---|---|
 | N8N_AUTOMATIONS | `/_BookAutomation/n8n/<BOOK>_<WorkflowName>.json` (exported, chapter-parameterized workflows) |
-| OpenClaw pipelines | `/_BookAutomation/OpenClaw/<BOOK>_<PipelineName>.(yaml\|json)` |
+| OpenClaw pipelines | `/_BookAutomation/OpenClaw/<BOOK>_<PipelineName>.yaml` (or `.json` — pick one format and use it for every pipeline) |
 | AutomationIndex.json | `/_BookAutomation/AutomationIndex.json` |
 | ActivationReport | `<CH_ROOT>/<ChapterName>_PHASE6_ActivationReport.md` |
 | Checklist | `<CH_ROOT>/<ChapterName>_PHASE6_AutomationChecklist.md` |

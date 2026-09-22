@@ -18,7 +18,7 @@
 
 1. Claude copies this template to `<CH_ROOT>/<ChapterName>_PHASE7_ReleaseChecklist.md` and pre-fills Part A (evidence: file paths, report names, gate statuses) and Part B (recommendations).
 2. <AUTHOR> reviews, ticks, and signs Part C. Only <AUTHOR> can mark a chapter **Published**.
-3. After sign-off, a copy is placed in `<BOOK_ROOT>/_FinalizedReleases/<ChapterName>_PHASE7_ReleaseChecklist_v<version>.md`.
+3. After sign-off, a copy is placed in `<BOOK_ROOT>/_FinalizedReleases/<ChapterName>_PHASE7_ReleaseChecklist_v<chapterVersion>.md`, where `<chapterVersion>` is the `chapterVersion` value from `Governance/<ChapterName>_VersionMetadata.json` (e.g. `..._ReleaseChecklist_v1.0.md`). Re-releasing a chapter writes a new file at its new version rather than replacing the signed one.
 
 `<CH_ROOT>` = `<BOOK_ROOT>/Chapters/<ChapterName>/Final/`
 
