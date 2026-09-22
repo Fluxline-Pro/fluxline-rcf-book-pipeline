@@ -55,8 +55,8 @@ v1_0/
   MASTER_PIPELINE_OVERVIEW.md   the tie-breaker: phases, gates, folders, deliverables
   PLACEHOLDERS.md               every token to replace, and what to leave alone
   PHASE 1 … PHASE 7             the nine phase prompts
-beta_0_9/                  previous version, kept intact for books mid-flight
 archived-versions/
+  beta_0_9/                previous version, kept intact for books mid-flight
   alpha_0_5/               the original six-phase shape
 CHANGELOG.md               what changed in each version, and why
 LICENSE                    GPL-3.0

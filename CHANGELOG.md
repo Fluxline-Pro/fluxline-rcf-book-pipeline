@@ -7,7 +7,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ## [v1.0] — 2026-09-22
 
-**Folder:** `v1_0/` · **Previous:** `beta_0_9/` (unchanged, kept for reference)
+**Folder:** `v1_0/` · **Previous:** `archived-versions/beta_0_9/` (unchanged, kept for reference)
 
 The first release where the phases actually connect. Beta 0.9 was a set of strong individual prompts that disagreed with each other about paths, phase numbers, certification levels, and who produces what. v1.0 is a consistency and alignment pass: every phase now has one entry gate, one exit gate, one set of deliverables, and one place to write them.
 
@@ -62,11 +62,11 @@ Prompt text that was working was kept. The changes below are about making the pi
 - **Manuscript-versus-structure conflicts** during the Kindle build now resolve to the manuscript, and the difference is logged.
 - **Vector deletions scoped.** The ChromaDB rebuild deletes vectors for the chapter being rebuilt instead of implying a wider wipe, and the embedding model is fixed book-wide so chapters stay comparable.
 - **Environment state is recorded, not assumed.** The local LLM setup step no longer marks model installs and servers as done; missing pieces become blockers.
-- **Superseded files retired.** The duplicate PHASE 4 placeholder ("Local LLM AI and Human Publishing Checklist") was merged into PHASE 7, and the old publication QA file was replaced by the renamed 6.5. Neither is carried into `v1_0/`; both remain in `beta_0_9/`.
+- **Superseded files retired.** The duplicate PHASE 4 placeholder ("Local LLM AI and Human Publishing Checklist") was merged into PHASE 7, and the old publication QA file was replaced by the renamed 6.5. Neither is carried into `v1_0/`; both remain in `archived-versions/beta_0_9/`.
 
 ### Migration from beta 0.9
 
-1. Copy `v1_0/` into your instructions folder and keep `beta_0_9/` for reference. Chapters mid-flight can finish on 0.9.
+1. Copy `v1_0/` into your instructions folder and keep `archived-versions/beta_0_9/` for reference. Chapters mid-flight can finish on 0.9.
 2. Fill in the placeholders (see `v1_0/PLACEHOLDERS.md`) and confirm your chapter-name convention against the folder map in `MASTER_PIPELINE_OVERVIEW.md` §4.
 3. Create the folders phases now expect: `eBook/`, `Governance/`, `DesignPacket/` per chapter, and `_BookGovernance/`, `_BookPublication/`, `_BookAutomation/`, `_FinalizedReleases/`, `_Archive/` at the book root.
 4. Re-run PHASE 2 on chapters processed under 0.9 to produce the governance files and triggers they never had.
@@ -77,7 +77,7 @@ Prompt text that was working was kept. The changes below are about making the pi
 
 ## [beta 0.9] — 2026-09
 
-**Folder:** `beta_0_9/`
+**Folder:** `archived-versions/beta_0_9/`
 
 ### Added
 - Marketing & Local LLM Intake Packet in PHASE 1 (intake, seeds, trigger, claims registry, terminology lock, voice notes) with a retrofit run mode for chapters already built.
@@ -108,5 +108,5 @@ Prompt text that was working was kept. The changes below are about making the pi
 ---
 
 [v1.0]: ./v1_0
-[beta 0.9]: ./beta_0_9
+[beta 0.9]: ./archived-versions/beta_0_9
 [alpha 0.5]: ./archived-versions/alpha_0_5
