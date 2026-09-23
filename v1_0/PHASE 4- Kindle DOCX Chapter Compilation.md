@@ -26,7 +26,7 @@ Transform the governed, design-validated PHASE 1–3.5 chapter outputs into a **
 | Updated manuscript (Markdown) | `<CH_ROOT>/Manuscript/<ChapterName>_Manuscript.md` |
 | Updated manuscript (Word) | `<CH_ROOT>/Manuscript/<ChapterName>_Manuscript.docx` |
 | Sync report (every difference, what was applied, what was flagged) | `<CH_ROOT>/Manuscript/<ChapterName>_ManuscriptSync_<YYYYMMDD_HHMM>.md` |
-| Sync trigger | `<CH_ROOT>/Manuscript/Trigger/MANUSCRIPT_SYNCED.md` or `MANUSCRIPT_SYNC_INCOMPLETE.md` |
+| Sync trigger | `<CH_ROOT>/Manuscript/Trigger/MANUSCRIPT_SYNCED.md` or `<CH_ROOT>/Manuscript/Trigger/MANUSCRIPT_SYNC_INCOMPLETE.md` |
 
 ### Part A — per chapter (run chapter by chapter)
 
@@ -46,7 +46,7 @@ Transform the governed, design-validated PHASE 1–3.5 chapter outputs into a **
 
 ---
 
-# PART 0 — MANUSCRIPT SYNC FROM THE FINAL eBOOK PDF (run first)
+# PART 0 — MANUSCRIPT SYNC FROM THE FINAL eBook PDF (run first)
 
 **Why:** <AUTHOR> refines wording while laying out the eBook and the print InDesign books. Those edits land in the layouts, not in the manuscript. Everything from here on (Kindle, RAG, automation, marketing grounding) reads the manuscript, so it has to say what the published eBook says before any of it runs.
 
@@ -82,7 +82,7 @@ Extract the PDF's reading-order text, then drop layout artifacts **before** comp
 - line breaks and column breaks inside a paragraph
 - ligatures (`ﬁ` `ﬂ`), soft hyphens, non-breaking and thin spaces, discretionary breaks
 - smart versus straight quotes and apostrophes, en/em dash spacing; follow the manuscript's convention
-- figure images, figure labels, and captions (captions are checked against the FigureRegistry below, not the body)
+- figure images, figure labels, and captions (captions are checked against `Governance/<ChapterName>_FigureRegistry.json` in 0.3, not as body text)
 - pull quotes and sidebars repeated from the body (compare those against `InDesign/` prep, not as body text)
 
 Normalize the manuscript the same way (strip Markdown syntax for comparison only). Keep a map from each normalized paragraph back to its source location in the MD and the DOCX.
