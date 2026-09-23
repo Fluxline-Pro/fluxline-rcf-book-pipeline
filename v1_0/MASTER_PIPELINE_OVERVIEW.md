@@ -3,6 +3,7 @@
 **Book:** *<BOOK_TITLE>* — <EDITION>
 **Author:** <AUTHOR> · **Pipeline version:** v3 (aligned 2026-09-22)
 **Kindle decision (2026-09-22):** all Kindle work lives in PHASE 4, chapter by chapter, after the DesignPacket, figures, and the manual print/eBook work are finished and QA'd. PHASE 3 no longer produces a Kindle edition; `<BOOK>_KINDLE_EBOOK` is assembled in PHASE 4 Part B from the per-chapter builds.
+**Manuscript sync (2026-09-23):** PHASE 4 opens with Part 0, which brings the manuscript (MD and DOCX) into line with the final eBook PDF, because <AUTHOR> refines wording during InDesign layout. No eBook PDF, no PHASE 4, and nothing after it.
 
 **Authority:** This file is the single reference for paths, gates, triggers, status, and deliverables. Each PHASE file points here. If a PHASE file disagrees with this overview, this overview wins, and the discrepancy is logged for correction.
 
@@ -16,7 +17,7 @@
 | **2** Governance | `PHASE 2- Governance Check of Outputs.md` | Validate, fix (Tier A/B), propose (Tier C), certify, stage the design handoff | PHASE 1 exit | `GOVERNANCE_READY.md` (certified Design Ready) | per chapter + batch |
 | **3** Design + Production | `PHASE 3- Claude Design Hand-off.md` | Claude Design HTML packet + exports + **figure image export**; manual InDesign print; XTTS audio; eBook/print book assembly | `GOVERNANCE_READY.md` | Handoff to 3.5 | per chapter + book assembly |
 | **3.5** Design QA | `PHASE 3.5- Claude QA of Design Artifacts.md` | Report-only QA → fix loop; **Kindle Readiness check (§13)** | PHASE 3 exit | `DESIGN_READY.md` (Production Ready + Kindle Ready) | per chapter |
-| **4** Kindle | `PHASE 4- Kindle DOCX Chapter Compilation.md` | **Part A:** Kindle DOCX + HTML + metadata + figures per chapter · **Part B:** book-level `<BOOK>_KINDLE_EBOOK` | `DESIGN_READY.md` + Step 0 dependency check | Part A checklist PASS; Part B package complete | per chapter / section, then once per book |
+| **4** Kindle | `PHASE 4- Kindle DOCX Chapter Compilation.md` | **Part 0:** sync manuscript MD + DOCX to the final eBook PDF · **Part A:** Kindle DOCX + HTML + metadata + figures per chapter · **Part B:** book-level `<BOOK>_KINDLE_EBOOK` | `DESIGN_READY.md` + final eBook PDF uploaded + `MANUSCRIPT_SYNCED.md` + Step 0 dependency check | Part A checklist PASS; Part B package complete | per chapter / section, then once per book |
 | **5** RAG + Local LLM | `PHASE 5- RAG Rebuild & Local LLM Setup (Per Chapter).md` | Final ingestion, ChromaDB rebuild, system prompt, query profiles | PHASE4 PASS | `RAG_READY.md` | per chapter |
 | **6** Automation | `PHASE 6- Automation Activation (n8n + Local LLM + RAG).md` | n8n + OpenClaw activation, drafts-only | `RAG_READY.md` | PHASE6 checklist PASS, status `active` | per chapter + batch |
 | **6.5** Publication QA | `PHASE 6.5- Claude Design Publication QA.md` | Report-only QA of EPUB/Kindle/print/audio/RAG | PHASE6 PASS | Publishing Ready report | per chapter + book |
@@ -59,6 +60,8 @@ PHASES 4, 5, and 6 don't change the status; they gate by checklist (`gateStatus`
 | | <BOOK>_WORKBOOK_PRINT_BOOK (manual InDesign) | `_BookPublication/<BOOK>_WORKBOOK_PRINT_BOOK/` |
 | | <BOOK>_AUDIOBOOK | `_BookPublication/<BOOK>_AUDIOBOOK/` |
 | | Exported figure images (PHASE 4 dependency) | `<CH_ROOT>/DesignPacket/figures_export/` |
+| **PHASE 4 (Part 0, per chapter)** | Manuscript MD + DOCX synced to the final eBook PDF | `<CH_ROOT>/Manuscript/<ChapterName>_Manuscript.md` / `.docx` |
+| | Manuscript sync report | `<CH_ROOT>/Manuscript/<ChapterName>_ManuscriptSync_<YYYYMMDD_HHMM>.md` |
 | **PHASE 4 (Part A, per chapter)** | Kindle DOCX per chapter | `<CH_ROOT>/Kindle/<ChapterName>_Kindle.docx` |
 | | Kindle-ready HTML blocks | `<CH_ROOT>/Kindle/<ChapterName>_Kindle.html` |
 | | Kindle-ready metadata | `<CH_ROOT>/Kindle/<ChapterName>_KindleMetadata.json` |
@@ -86,6 +89,7 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 **Book root:** `<BOOK_ROOT>` — your book's root folder, e.g. `D:\Books\<BOOK_SLUG>`. Every path below is relative to it.
 **Chapter root:** `<CH_ROOT>` = `<BOOK_ROOT>/Chapters/<ChapterName>/Final/`
 **Chapter name:** `Ch<N>_<PascalCaseTitle>` (e.g. `Ch1_YourChapterTitle`)
+**Print InDesign book:** <AUTHOR> may keep the print InDesign book (INDB, templates, linked assets) in separate print folders outside `<BOOK_ROOT>`. Phases then treat print as <AUTHOR>-confirmed rather than checking `InDesign/` for files; the final **eBook** PDF is the layout text PHASE 4 Part 0 syncs the manuscript to.
 **File names:** `<ChapterName>_<ArtifactType>.<ext>`; Marketing: `<ChapterName>_MKT_<Type>.<ext>`; Claude Design project files: `Ch<N>_<Type>.dc.html` (accepted exception)
 
 ```
@@ -102,12 +106,12 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 ├── BackMatter/<Section>/         {Audiobook, eBook, Kindle}/                       [P3, P4]
 └── Chapters/<ChapterName>/
     ├── Final/
-    │   ├── Manuscript/           PASS 7 copy, EditorialSuggestions                 [P1]
+    │   ├── Manuscript/           PASS 7 copy, EditorialSuggestions [P1]; synced to eBook PDF, ManuscriptSync report, Trigger/ [P4 Part 0]
     │   ├── ReviewPacket/  Workbook/  Training/  ReferenceGuides/  Slides/          [P1; exports P3]
     │   ├── Equations/                                                              [P1]
-    │   ├── eBook/                HTML blocks + metadata [P1]; PDF/EPUB exports     [P3]
+    │   ├── eBook/                HTML blocks + metadata [P1]; PDF/EPUB exports [P3]; final eBook PDF (required by P4 Part 0)
     │   ├── Kindle/               DOCX, HTML, metadata, figures/                    [P4]
-    │   ├── InDesign/             prep [P1]; .indd + print PDF (manual)             [P3]
+    │   ├── InDesign/             prep [P1]; .indd + print PDF (manual, optional)   [P3]
     │   ├── Audiobook/            script, markers [P1]; MP3                         [P3]
     │   ├── RAG/                  PHASE 1 packet; Ingestion, Chunks/, Trigger/      [P1, P5]
     │   ├── Marketing/            Intake/, Seeds/, Trigger/ [P1]; Generated/        [P6]
@@ -126,6 +130,7 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 | `MARKETING_READY.md` / `_INCOMPLETE` | `Marketing/Trigger/` | P1, re-validated P2 | P6 3A marketing workflows |
 | `GOVERNANCE_READY.md` / `_INCOMPLETE` | `Governance/Trigger/` | P2 | P3 entry; P6 3C |
 | `DESIGN_READY.md` / `_INCOMPLETE` | `DesignPacket/Trigger/` | P3.5 | P4 entry; P6 3B/3D |
+| `MANUSCRIPT_SYNCED.md` / `MANUSCRIPT_SYNC_INCOMPLETE.md` | `Manuscript/Trigger/` | P4 Part 0 | P4 Step 0; P4 Part B; P5 entry |
 | `RAG_READY.md` / `_INCOMPLETE` | `RAG/Trigger/` | P5 | P6 entry; P6 3E |
 
 Rules: triggers only fire workflows for chapters whose `automationStatus` is `active` or `batch-ready`. Never leave a stale READY file; an older one is renamed `*_superseded_<timestamp>.md`.
@@ -151,7 +156,7 @@ Rules: triggers only fire workflows for chapters whose `automationStatus` is `ac
 | Publication check | P6.5 | RAG sub-certification | gate |
 
 **Chunk rule (all phases):** 500–1000 words · 100-word overlap (80–120 tolerated) · section name in metadata · never split a concept.
-**Authority hierarchy (embedded in metadata):** PASS 7 Manuscript > GlossaryNormalized > LearningMetadata / FigureRegistry > derived artifacts.
+**Authority hierarchy (embedded in metadata):** PASS 7 Manuscript > GlossaryNormalized > LearningMetadata / FigureRegistry > derived artifacts. From PHASE 4 Part 0 on, "Manuscript" means the manuscript as synced to the final eBook PDF.
 
 ---
 

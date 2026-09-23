@@ -110,6 +110,9 @@
 
 ## PHASE 4 — Kindle
 
+- [ ] Part 0: manuscript MD and DOCX synced to the final eBook PDF (`Manuscript/Trigger/MANUSCRIPT_SYNCED.md` newer than the PDF); sync report reviewed
+- [ ] Part 0 follow-ups closed: every "must fix before release" item in the downstream impact list (pull quotes, voice samples, claims, narration) is fixed; deferred items listed here
+- [ ] Part 0 print cross-check recorded (print InDesign book carries the same wording, or differences listed)
 - [ ] Step 0 dependency check passed (figures exported, manual print/eBook work finished)
 - [ ] `<ChapterName>_Kindle.docx` · `_Kindle.html` · `_KindleMetadata.json` · `Kindle/figures/`
 - [ ] Every figure is a real image (no placeholders, or an approval is recorded)
