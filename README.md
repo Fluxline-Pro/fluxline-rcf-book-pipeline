@@ -24,7 +24,7 @@ This pipeline treats the manuscript as the only source of truth and makes every 
 | **2 — Governance** | Validates everything against the manuscript, fixes what is safely fixable, proposes the rest, and certifies the chapter | `GOVERNANCE_READY.md` |
 | **3 — Design + Production** | Design-system-bound HTML for every asset, figure images, exports, manual print layout, audiobook render, and book-level assembly | Hand-off to QA |
 | **3.5 — Design QA** | Reviews the design output against the design system, accessibility, instructional quality, and Kindle readiness | `DESIGN_READY.md` |
-| **4 — Kindle** | Builds the Kindle files per chapter, then assembles the book-level Kindle package | Kindle package |
+| **4 — Kindle** | Syncs the manuscript (MD and DOCX) to the final eBook PDF, builds the Kindle files per chapter, then assembles the book-level Kindle package | Kindle package |
 | **5 — RAG + Local LLM** | Rebuilds the chapter's ingestion surface, updates the vector store, writes the system prompt and query profiles | `RAG_READY.md` |
 | **6 — Automation** | Activates the n8n and OpenClaw workflows that generate marketing and design drafts from the grounded RAG | Activation report |
 | **6.5 — Publication QA** | Validates EPUB, Kindle, print, audiobook, metadata, and accessibility | Publishing Ready |
@@ -40,7 +40,7 @@ Every phase runs chapter by chapter, including 6 and 6.5. Three of them add a bo
 
 ## Principles the phases enforce
 
-- **The manuscript is locked.** No phase edits it. Suggested changes go into a proposals file that you accept or reject, and the version increments before governance runs.
+- **The manuscript is locked.** No phase edits it. Suggested changes go into a proposals file that you accept or reject, and the version increments before governance runs. The one exception is PHASE 4 Part 0: wording you changed while laying out the eBook is copied back from the final eBook PDF, with a backup, a change log, a version bump, and anything uncertain left for you to decide. Without that PDF, PHASE 4 does not start.
 - **One source of truth, ranked.** Manuscript → normalized glossary → learning metadata and figure registry → everything derived. Conflicts always resolve downward.
 - **Gates, not vibes.** Each phase has an entry condition, an exit condition, and a trigger file that says it passed. A phase cannot start because it feels ready.
 - **Fix with a paper trail.** The governance phase backs up before editing, logs every change with before-and-after, escalates anything ambiguous to you, and never deletes.
