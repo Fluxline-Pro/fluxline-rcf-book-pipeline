@@ -5,6 +5,48 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [v1.0.2] — 2026-09-24
+
+**Folder:** `v_1_0_2/` · **Previous:** `v1_0/` (tag `v1_0_1_PROD`, unchanged, kept for books mid-flight)
+
+The RAG layer now supports two vector indexes: a private local one and an optional cloud one. Both are built from the same chunks, and neither can drift from the manuscript unnoticed. Found while running PHASES 4–5 on a real chapter.
+
+### Added
+
+- **Dual RAG in PHASE 5 (v4).** One canonical, model-agnostic chunk set (`RAG/Chunks/`) feeds two tracks:
+  - **Track L — Local (required):** ChromaDB in Docker, with vectors from an ONNX/TEI embedding container.
+  - **Track C — Cloud (optional):** Azure AI Search, with vectors from an Azure OpenAI embedding deployment.
+  - The tracks share chunk text, IDs, and metadata; they never share vectors.
+- **Book-level `_BookAutomation/RAG/RAG_Config.json`.** It names each track's store, index, embedding model, dimensions, task prefixes, and endpoint *environment variable names* (never keys), and `cloud.enabled` switches the cloud track on or off.
+- **Per-track index manifests** (`RAG/Index/<ChapterName>_RAG_Index_{Local,Cloud}.json`): model, dimensions, chunk IDs, chunk-set hash, and before/after counts.
+- **Per-track triggers** `RAG_LOCAL_READY.md` and `RAG_CLOUD_READY.md`. `RAG_READY.md` now means every *enabled* track passed.
+- **Parity check** in the validation report: the cloud chunk IDs are a subset of the local ones, at the same version and chunk-set hash.
+- **Cloud data rule:** chunks marked `cloudEligible: false` stay local. By default that covers draft marketing seeds and internal governance notes.
+- **Azure AI Search index layout** (PHASE 5 §4B). The key is URL-safe Base64 of the chunk ID, because Azure keys reject `::`; the original ID is kept as a filterable field.
+- **PHASE 6 (v4):**
+  - Every workflow declares its track, and it embeds queries with that track's model.
+  - AutomationIndex entries record both tracks.
+  - New §4B (connect the cloud LLM), with credentials kept only in n8n's store or environment variables.
+  - Governance automation gains an index drift check.
+  - New **Test 6** covers index routing and parity. Tests 1 and 3 now run per track.
+- **`<RAG_INDEX_CLOUD>`** placeholder token.
+
+### Changed
+
+- **The default local embedder is now `nomic-ai/nomic-embed-text-v1.5` (768 dims, 8k context), served by the ONNX/TEI container.** Common container defaults such as `all-MiniLM-L6-v2` truncate input at 256 tokens, which silently drops most of a 500–1000-word chunk. Ingest uses the `search_document: ` prefix and queries use `search_query: `.
+- PHASE 5 checks each track's *served* input limit, not just the model's nominal context. A container can serve less than the model's full window: nomic's 8k window, for example, is typically capped at 2048 tokens on an ~8 GB Docker host so warmup doesn't run out of memory. The config gains `maxInputTokens` and `prefixesAppliedBy`, which prevents double-prefixing.
+- PHASE 5 no longer lets an ingestion path re-split the canonical chunks. If a tool would re-chunk them, send pre-computed vectors to the store directly.
+- PHASE 5 runs again after every PHASE 4 Part 0 manuscript re-sync; an index built from an older chunk set counts as stale.
+- PHASE 6.5 (v3.1) and PHASE 7 (v3.1) certify and verify RAG per track: RAG (Local) · RAG (Cloud / N/A).
+- `MASTER_PIPELINE_OVERVIEW.md`: phase table, deliverable map, trigger map, RAG map, and LLM map updated for both tracks.
+- `PLACEHOLDERS.md`: new token and example values; scripts point at `v_1_0_2/`.
+
+### Unchanged
+
+PHASES 1, 2, 3, 3.5, and 4 are identical to `v1_0/`.
+
+---
+
 ## [v1.0] — 2026-09-22
 
 **Folder:** `v1_0/` · **Previous:** `archived-versions/beta_0_9/` (unchanged, kept for reference)
