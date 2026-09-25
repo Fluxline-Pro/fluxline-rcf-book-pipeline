@@ -1,4 +1,4 @@
-# PHASE 6.5: Claude Design Publication QA (v3)
+# PHASE 6.5: Claude Design Publication QA (v3.1)
 ### EPUB • Kindle • HTML Master • Workbook eBook • Print • Audiobook • RAG
 
 > **Pipeline position:** PHASE 6.5 of 7 (Publication QA gate) · **Upstream gate:** PHASE 6 checklist `gateStatus: PASS` · **Downstream:** PHASE 7 Final Checklist & Sign-off

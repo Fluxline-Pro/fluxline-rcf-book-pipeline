@@ -1,4 +1,4 @@
-# PHASE 7: Chapter Publishing & Release Checklist (v3)
+# PHASE 7: Chapter Publishing & Release Checklist (v3.1)
 
 ## Final Validation, LLM Recommendations, and Human Sign-off
 
