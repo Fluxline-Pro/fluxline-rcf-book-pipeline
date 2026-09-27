@@ -4,7 +4,7 @@
 > **Pipeline position:** PHASE 6.5 of 7 (Publication QA gate) · **Upstream gate:** PHASE 6 checklist `gateStatus: PASS` · **Downstream:** PHASE 7 Final Checklist & Sign-off
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
-**v3.1 changes (2026-09-24 dual-RAG):** RAG readiness (§9) checks every enabled RAG track (Local ChromaDB, Cloud Azure AI Search), index-manifest freshness, and cloud-eligibility. The RAG sub-certification is split into RAG (Local) and RAG (Cloud / N/A).
+**v3.1 changes (2026-09-24 dual-RAG):** RAG readiness (§9) checks every enabled RAG track (Local ChromaDB, Cloud Azure Blob Storage vector files), index-manifest freshness, and cloud-eligibility. The RAG sub-certification is split into RAG (Local) and RAG (Cloud / N/A).
 
 **v3 changes (2026-09-22 pipeline alignment):**
 - File renamed from `PHASE 6_5- … (New Markdown).md`. The internal title was "PHASE 5.5" and has been corrected to 6.5.
@@ -114,7 +114,7 @@ Print: print PDFs exist, trim size 7×10, figures present (layout quality is <AU
 Audiobook: every section has an MP3, running order matches the TOC, file naming `<NN>_<Section>.mp3`, track list present.
 
 ## 9. RAG readiness
-Check chunk-friendly structure, heading quality, semantic clarity, retrieval-friendly segmentation, metadata blocks, and that the PHASE 5 validation report passed **for every enabled track**. Confirm both index manifests carry the current chunk-set hash and chapter version (no stale index after a manuscript re-sync), the cloud index holds only cloud-eligible chunks, and no Azure secret appears in any report or exported workflow.
+Check chunk-friendly structure, heading quality, semantic clarity, retrieval-friendly segmentation, metadata blocks, and that the PHASE 5 validation report passed **for every enabled track**. Confirm both index manifests carry the current chunk-set hash and chapter version (no stale index after a manuscript re-sync), the cloud vector file (the one `current.json` points to) holds only cloud-eligible chunks and matches the current chunk-set hash, and no Azure key or SAS token appears in any report or exported workflow.
 
 ## 10. Brand consistency
 Check terminology (TerminologyLock), voice (VoiceKit), component consistency, DSM alignment.

@@ -83,7 +83,7 @@ These prompts are a working author's, not a sanitized template, so expect to cha
 - **Paths and names.** `<BOOK_ROOT>`, `<BOOK>`, `<BOOK_TITLE>`, `<AUTHOR>`, and the rest — see `PLACEHOLDERS.md`. "PASS 7" means the seventh editing pass in the pipeline this came from; substitute your own final-draft stage. The phases are written in the author's first person ("my book", "I approve every piece"), which reads correctly whoever runs them.
 - **The design system.** PHASE 3 expects a design system manual derived from your print layout — tokens, typography, components. Without one, the design phase has nothing authoritative to follow.
 - **Framework terminology.** The terminology lock names this book's concepts. Replace them with yours.
-- **Tools.** The defaults are Claude and Claude Design for generation, InDesign for print, XTTS for narration, Ollama plus an ONNX/TEI embedder and ChromaDB for local RAG, optionally Azure OpenAI plus Azure AI Search for cloud RAG, and n8n plus OpenClaw for orchestration. Each is swappable; the gates and deliverables are what matter.
+- **Tools.** The defaults are Claude and Claude Design for generation, InDesign for print, XTTS for narration, Ollama plus an ONNX/TEI embedder and ChromaDB for local RAG, optionally Azure OpenAI `text-embedding-3-large` with vectors in Azure Blob Storage for multilingual cloud RAG, and n8n plus OpenClaw for orchestration. Each is swappable; the gates and deliverables are what matter.
 - **Optional deliverables.** Workbook, training materials, and audiobook are separable. Drop what your book does not have, and say so in the checklist rather than leaving the item silently blank.
 
 ## Contributing

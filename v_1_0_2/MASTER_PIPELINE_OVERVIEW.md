@@ -3,10 +3,10 @@
 **Book:** *<BOOK_TITLE>* — <EDITION>
 **Author:** <AUTHOR> · **Pipeline version:** v3 (aligned 2026-09-22)
 **Kindle decision (2026-09-22):** all Kindle work lives in PHASE 4, chapter by chapter, after the DesignPacket, figures, and the manual print/eBook work are finished and QA'd. PHASE 3 no longer produces a Kindle edition; `<BOOK>_KINDLE_EBOOK` is assembled in PHASE 4 Part B from the per-chapter builds.
-**Dual RAG (2026-09-24):** PHASE 5 builds one canonical chunk set and embeds it into two indexes: **Local** (ChromaDB + ONNX/TEI embeddings, Docker) and **Cloud** (Azure AI Search + Azure OpenAI embeddings). Each track has its own model, trigger, and index manifest; `RAG_READY.md` means every enabled track passed.
+**Dual RAG (2026-09-24):** PHASE 5 builds one canonical chunk set and embeds it into two vector stores: **Local** (ChromaDB + ONNX/TEI embeddings, Docker) and **Cloud** (vector files in Azure Blob Storage, embedded with Azure OpenAI `text-embedding-3-large` and searched in memory; multilingual). Each track has its own model, trigger, and index manifest; `RAG_READY.md` means every enabled track passed.
 **Manuscript sync (2026-09-23):** PHASE 4 opens with Part 0, which brings the manuscript (MD and DOCX) into line with the final eBook PDF, because <AUTHOR> refines wording during InDesign layout. No eBook PDF, no PHASE 4, and nothing after it.
 
-**Release v1.0.2 (2026-09-24):** dual RAG (PHASE 5 v4, PHASE 6 v4); the local embedding default is now `nomic-embed-text-v1.5` on an ONNX/TEI container, because the previous default truncated chunks at 256 tokens.
+**Release v1.0.2 (2026-09-24):** dual RAG (PHASE 5 v4, PHASE 6 v4); the local embedding default is now `nomic-embed-text-v1.5` on an ONNX/TEI container, because the previous default truncated chunks at 256 tokens. The cloud track uses `text-embedding-3-large` with vectors stored in Azure Blob Storage (no search service), for multilingual retrieval at low cost.
 
 **Authority:** This file is the single reference for paths, gates, triggers, status, and deliverables. Each PHASE file points here. If a PHASE file disagrees with this overview, this overview wins, and the discrepancy is logged for correction.
 
@@ -21,7 +21,7 @@
 | **3** Design + Production | `PHASE 3- Claude Design Hand-off.md` | Claude Design HTML packet + exports + **figure image export**; manual InDesign print; XTTS audio; eBook/print book assembly | `GOVERNANCE_READY.md` | Handoff to 3.5 | per chapter + book assembly |
 | **3.5** Design QA | `PHASE 3.5- Claude QA of Design Artifacts.md` | Report-only QA → fix loop; **Kindle Readiness check (§13)** | PHASE 3 exit | `DESIGN_READY.md` (Production Ready + Kindle Ready) | per chapter |
 | **4** Kindle | `PHASE 4- Kindle DOCX Chapter Compilation.md` | **Part 0:** sync manuscript MD + DOCX to the final eBook PDF · **Part A:** Kindle DOCX + HTML + metadata + figures per chapter · **Part B:** book-level `<BOOK>_KINDLE_EBOOK` | `DESIGN_READY.md` + final eBook PDF uploaded + `MANUSCRIPT_SYNCED.md` + Step 0 dependency check | Part A checklist PASS; Part B package complete | per chapter / section, then once per book |
-| **5** RAG (Local + Cloud) + LLM | `PHASE 5- RAG Rebuild & Local LLM Setup (Per Chapter).md` | Canonical chunk set; Track L ChromaDB rebuild; Track C Azure AI Search rebuild (if enabled); parity check; system prompt, query profiles | PHASE4 PASS + `MANUSCRIPT_SYNCED.md` | `RAG_LOCAL_READY.md` (+ `RAG_CLOUD_READY.md` if enabled) → `RAG_READY.md` | per chapter |
+| **5** RAG (Local + Cloud) + LLM | `PHASE 5- RAG Rebuild & Local LLM Setup (Per Chapter).md` | Canonical chunk set; Track L ChromaDB rebuild; Track C Blob vector file rewrite (if enabled); parity check; system prompt, query profiles | PHASE4 PASS + `MANUSCRIPT_SYNCED.md` | `RAG_LOCAL_READY.md` (+ `RAG_CLOUD_READY.md` if enabled) → `RAG_READY.md` | per chapter |
 | **6** Automation | `PHASE 6- Automation Activation (n8n + Local LLM + RAG).md` | n8n + OpenClaw activation, drafts-only; each workflow grounded on the local or cloud index | `RAG_READY.md` | PHASE6 checklist PASS, status `active` | per chapter + batch |
 | **6.5** Publication QA | `PHASE 6.5- Claude Design Publication QA.md` | Report-only QA of EPUB/Kindle/print/audio/RAG | PHASE6 PASS | Publishing Ready report | per chapter + book |
 | **7** Release | `PHASE 7- Chapter Publishing Checklist.md` | Validation, LLM recommendations, <AUTHOR>'s sign-off | Publishing Ready | **Published** | per chapter |
@@ -159,7 +159,7 @@ Rules: triggers only fire workflows for chapters whose `automationStatus` is `ac
 | Chunk validation / re-chunk | P2 | `Governance/_ChunkingValidation.md` | Tier A fixes |
 | Final ingestion | P5 | `_RAG_Ingestion.json`, `RAG/Chunks/_RAG_Chunks.jsonl` | authoritative |
 | Vector store — Local (Track L) | P5 | ChromaDB (Docker) collection `<RAG_COLLECTION>`; ONNX/TEI embeddings (`nomic-embed-text-v1.5`, 768d); filtered by `chapterName` | rebuilt per chapter |
-| Vector store — Cloud (Track C) | P5 | Azure AI Search index `<RAG_INDEX_CLOUD>`; Azure OpenAI `text-embedding-3-small` (1536d); filtered by `chapterName`; cloud-eligible chunks only | rebuilt per chapter, when enabled |
+| Vector store — Cloud (Track C) | P5 | Azure Blob Storage container `<RAG_BLOB_CONTAINER>`: `<BOOK>/chapters/<ChapterName>/current.json` → `vectors.jsonl.gz`; Azure OpenAI `text-embedding-3-large` (3072d, multilingual); in-memory cosine retrieval filtered by metadata; cloud-eligible chunks only | rebuilt per chapter, when enabled |
 | Index manifests + parity | P5 | `RAG/Index/*_RAG_Index_{Local,Cloud}.json`; same chunk IDs and chunk-set hash in both | gate |
 | Validation | P5 | `_RAG_ValidationReport.md` (incl. retrieval smoke test) | gate |
 | Publication check | P6.5 | RAG sub-certification per track (Local · Cloud) | gate |
@@ -178,8 +178,8 @@ Rules: triggers only fire workflows for chapters whose `automationStatus` is `ac
 | Claude Design | DSM-bound HTML packet, layouts, exports; applies HTML fixes | 3 (and fixes from 3.5 / 6.5) |
 | Ollama: drafting model (default Qwen2.5 14B Instruct) | Grounded marketing/design drafts | 5 (configure), 6 (run) |
 | ONNX/TEI embedding container (default `nomic-ai/nomic-embed-text-v1.5`) | Local embeddings for `<RAG_COLLECTION>` (Track L); one model for all chapters | 5, 6 (query embeddings) |
-| Azure OpenAI (embedding deployment `text-embedding-3-small`; optional chat deployment) | Cloud embeddings for `<RAG_INDEX_CLOUD>` (Track C); cloud-grounded drafting | 5, 6 |
-| Azure AI Search | Cloud vector store | 5, 6 |
+| Azure OpenAI (embedding deployment `text-embedding-3-large`; optional chat deployment) | Cloud embeddings for `<RAG_BLOB_CONTAINER>` (Track C) and query vectors; cloud-grounded drafting | 5, 6 |
+| Azure Blob Storage | Cloud vector store (private container; Entra ID, read-only for consumers) | 5, 6 |
 | LM Studio (optional) | OpenAI-compatible endpoint for n8n | 5, 6 |
 | XTTS (local) | Audiobook narration render | 3 |
 | n8n / OpenClaw | Orchestration | 6 |
@@ -198,6 +198,6 @@ Rules: triggers only fire workflows for chapters whose `automationStatus` is `ac
 | Workbook print | Manual InDesign | P3 (<AUTHOR>) | P6.5 | P7 |
 | Audiobook | XTTS from narration scripts | P3 | P3.5, P6.5 | P7 |
 | Kindle / KDP | Per-chapter Kindle build (P4 Part A) → book assembly (P4 Part B) | P4 | P6.5 | P7 (<AUTHOR> approves upload) |
-| RAG (Local + Cloud) | Canonical chunk set → ChromaDB and Azure AI Search | P5 | P5, P6.5 | P7 |
+| RAG (Local + Cloud) | Canonical chunk set → ChromaDB and Azure Blob Storage | P5 | P5, P6.5 | P7 |
 | Marketing | Intake + Seeds → n8n/OpenClaw drafts | P1, P6 | P2, P6 tests | Per item, <AUTHOR> approval |
 | Training / LMS / CMS | DesignPacket HTML + exports | P3, P6 (drafts) | P3.5 | P7 |

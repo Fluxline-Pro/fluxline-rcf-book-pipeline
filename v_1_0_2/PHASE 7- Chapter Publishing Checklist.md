@@ -126,7 +126,7 @@
 
 - [ ] `RAG_Ingestion.json` + `Chunks/` · `Index/` manifests · `RAG_ValidationReport.md` · `LLM_SystemPrompt.md` · `RAG_QueryProfiles.md`
 - [ ] Local: ChromaDB `<RAG_COLLECTION>` updated for this chapter; smoke test passed; `RAG_LOCAL_READY.md` present
-- [ ] Cloud: Azure AI Search `<RAG_INDEX_CLOUD>` updated for this chapter; smoke test passed; `RAG_CLOUD_READY.md` present (or cloud track disabled in `RAG_Config.json`)
+- [ ] Cloud: Blob `<RAG_BLOB_CONTAINER>` `current.json` points at this chapter's current vector file (`text-embedding-3-large`); smoke test and multilingual smoke test passed; `RAG_CLOUD_READY.md` present (or cloud track disabled in `RAG_Config.json`)
 - [ ] Parity: both indexes built from the same chunk set (same hash and chapter version)
 - [ ] `RAG_READY.md` present
 

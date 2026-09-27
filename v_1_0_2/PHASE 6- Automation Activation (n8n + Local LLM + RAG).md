@@ -4,10 +4,10 @@
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
 **v4 changes (2026-09-24 dual-RAG):**
-- PHASE 5 now builds two indexes: **Local** (ChromaDB + ONNX/TEI embeddings) and **Cloud** (Azure AI Search + Azure OpenAI embeddings). Every workflow declares which index it is grounded on, and it embeds its queries with **that index's** model.
+- PHASE 5 now builds two vector stores: **Local** (ChromaDB + ONNX/TEI embeddings) and **Cloud** (vector files in Azure Blob Storage, embedded with Azure OpenAI `text-embedding-3-large`, searched in memory). Every workflow declares which store it is grounded on, and it embeds its queries with **that store's** model.
 - The AutomationIndex entry records both tracks and their triggers. `RAG_LOCAL_READY.md` enables local workflows; `RAG_CLOUD_READY.md` enables cloud-grounded workflows.
 - New §4B (connect the cloud LLM) and new Test 6 (index parity and routing). Tests 1 and 3 run once per enabled track.
-- Azure keys live only in the n8n credential store or environment variables, never in exported workflow JSON.
+- Cloud workflows read Blob with a read-only identity (Entra ID preferred). Azure keys and SAS tokens live only in the n8n credential store or environment variables, never in exported workflow JSON.
 
 **v3 changes (2026-09-22 pipeline alignment):** AutomationIndex at `<BOOK_ROOT>/_BookAutomation/`; fixed homes for n8n exports and OpenClaw pipelines; every trigger created by an earlier phase; human approval gate.
 
@@ -22,7 +22,7 @@ Activate the automation ecosystem for the chapter using the rebuilt RAG indexes 
 - automated metadata consistency checks
 - content calendar drafts (scheduling needs approval)
 - chapter-level and multi-chapter batch workflows
-- cloud-grounded consumers (Azure-hosted assistants, web/CMS search), when the cloud track is enabled
+- cloud-grounded consumers (Azure-hosted assistants, web/CMS search, readers asking in other languages), when the cloud track is enabled
 
 Run **per chapter**, or in batch mode once multiple chapters have `RAG_READY.md`.
 
@@ -44,7 +44,7 @@ Run **per chapter**, or in batch mode once multiple chapters have `RAG_READY.md`
 - Generated content is written with `status: draft`, `voiceCheck: pending`, and `groundedOn: local | cloud`.
 - Only <AUTHOR> moves an item to `approved`. Only approved items may be scheduled or published.
 - Automations never edit the manuscript and never overwrite files in `Final/` outside `Marketing/Generated/`. Governance automations report; they do not fix.
-- Automations never write to either vector index. Only PHASE 5 rebuilds them.
+- Automations never write to either vector store (the ChromaDB collection or the Blob vector files). Only PHASE 5 rebuilds them.
 
 # 1. Register the chapter in the Automation Index
 
@@ -66,7 +66,7 @@ Add or update the chapter's entry in `/_BookAutomation/AutomationIndex.json`:
   },
   "rag": {
     "local": { "enabled": true, "collection": "<RAG_COLLECTION>", "embeddingModel": "", "indexManifest": "<CH_ROOT>/RAG/Index/<ChapterName>_RAG_Index_Local.json" },
-    "cloud": { "enabled": false, "index": "<RAG_INDEX_CLOUD>", "embeddingModel": "", "indexManifest": "<CH_ROOT>/RAG/Index/<ChapterName>_RAG_Index_Cloud.json" }
+    "cloud": { "enabled": false, "container": "<RAG_BLOB_CONTAINER>", "currentPointer": "<BOOK>/chapters/<ChapterName>/current.json", "embeddingModel": "", "dimensions": 0, "indexManifest": "<CH_ROOT>/RAG/Index/<ChapterName>_RAG_Index_Cloud.json" }
   },
   "ragIngestionPath": "<CH_ROOT>/RAG/<ChapterName>_RAG_Ingestion.json",
   "llmSystemPromptPath": "<CH_ROOT>/RAG/<ChapterName>_LLM_SystemPrompt.md",
@@ -87,13 +87,13 @@ Import:
 - `<ChapterName>_RAG_Ingestion.json`
 - `<ChapterName>_RAG_QueryProfiles.md` (each profile names its track)
 - `<ChapterName>_LLM_SystemPrompt.md`
-- the chapter's index manifests (collection/index name, model, dimensions)
+- the chapter's index manifests (local collection name; cloud container and `current.json` path; model; dimensions)
 
 These are the grounding layer for every automation. A workflow retrieves only from the track its query profile names.
 
 # 3. Activate n8n chapter workflows
 
-Each workflow is tagged **local** (Ollama + ChromaDB) or **cloud** (Azure OpenAI + Azure AI Search). Default routing: 3A–3E run **local**. A workflow runs **cloud** only when it serves an Azure-hosted consumer or <AUTHOR> chooses cloud for it.
+Each workflow is tagged **local** (Ollama + ChromaDB) or **cloud** (Azure OpenAI + Blob vector files). Default routing: 3A–3E run **local**. A workflow runs **cloud** only when it serves an Azure-hosted consumer or <AUTHOR> chooses cloud for it.
 
 ### 3A. Marketing automation (drafts)
 Social posts · Reddit drafts · Newsletter excerpts · Podcast kits · Short scripts · Audiobook teasers · Image prompts · SEO articles · Content calendar
@@ -103,7 +103,7 @@ HTML slide deck drafts · HTML training drafts · HTML one-pager drafts · Infog
 → Outputs are input material for Claude Design. Anything that would enter `DesignPacket/` goes through PHASE 3 and 3.5.
 
 ### 3C. Governance automation (report-only)
-Claims validation · Terminology validation · Metadata consistency · Voice consistency · Marketing safety · Figure registry alignment · Glossary normalization checks · **Index drift check** (each index manifest's chunk-set hash still matches the current `RAG/Chunks/` file; both tracks at the same chapter version)
+Claims validation · Terminology validation · Metadata consistency · Voice consistency · Marketing safety · Figure registry alignment · Glossary normalization checks · **Index drift check** (each index manifest's chunk-set hash still matches the current `RAG/Chunks/` file, and the chapter's Blob `current.json` points at that same hash; both tracks at the same chapter version)
 
 ### 3D. Publishing automation (checks)
 Kindle DOCX validation · EPUB readiness · InDesign asset presence · PDF export checks
@@ -135,10 +135,11 @@ Export every activated workflow to `/_BookAutomation/n8n/` (credentials stripped
 **LM Studio (optional):** OpenAI-compatible endpoint · multi-step reasoning · long-form generation · design packet integration
 
 ### 4B. Cloud (only if the cloud track is enabled)
-**Azure OpenAI:** chat deployment for cloud-grounded drafting · embedding deployment **identical to PHASE 5 Track C** for query vectors
-**Azure AI Search:** vector (or hybrid vector + keyword) query against `<RAG_INDEX_CLOUD>`, filtered by `chapterName`
-**Credentials:** n8n credential store (or environment variables) only. Never pasted into Code nodes, workflow JSON, reports, or logs.
-**Rule:** never query one index with the other track's embeddings. The dimensions differ, and even equal-sized vectors from different models are meaningless to each other.
+**Azure OpenAI:** chat deployment for cloud-grounded drafting · the `text-embedding-3-large` deployment **identical to PHASE 5 Track C** (same deployment and same `dimensions`) for query vectors
+**Blob retrieval:** read the chapter's `current.json` in `<RAG_BLOB_CONTAINER>`, load its `vectors.jsonl.gz` (cache by `chunkSetHash`; reload when the pointer changes), filter by metadata, then rank by cosine similarity and take top-k. Do this in an n8n Code node or a small function, following PHASE 5 §4B. For multi-chapter queries, load each chapter's current file.
+**Multilingual:** queries may be in any language the model supports; they retrieve the English chunks. Answers may be written in the reader's language, but quotations and cited wording come from the English chunk text, and translated output is a draft like everything else.
+**Credentials:** read-only access (Storage Blob Data Reader), preferably through Entra ID / managed identity. Otherwise keys or a SAS from the n8n credential store or environment variables only. Never paste them into Code nodes, workflow JSON, reports, or logs.
+**Rule:** never query one store with the other track's embeddings. The dimensions differ, and even equal-sized vectors from different models are meaningless to each other.
 
 # 5. Activate OpenClaw pipelines
 
@@ -146,7 +147,7 @@ Define each pipeline in `/_BookAutomation/OpenClaw/` and list it in the chapter'
 
 - **5A. Multi-asset marketing:** pull-lines → social → newsletter → SEO → scripts → podcast kit
 - **5B. Multi-asset design:** design packet → HTML drafts → figure prompts → layout notes
-- **5C. Multi-asset governance:** metadata → glossary → claims → terminology → voice → RAG (both indexes' drift checks)
+- **5C. Multi-asset governance:** metadata → glossary → claims → terminology → voice → RAG (drift checks on both stores)
 - **5D. Multi-asset publishing checks:** Kindle → EPUB → PDF → InDesign → LMS → CMS
 
 OpenClaw handles multi-step reasoning and multi-agent workflows; the approval rule above applies to every step.
@@ -155,7 +156,7 @@ OpenClaw handles multi-step reasoning and multi-agent workflows; the approval ru
 
 Run Tests 1 and 3 once **per enabled track**. Label every sample output with its track.
 
-**Test 1 — RAG query (per track):** "Explain the chapter's thesis." · "Generate 3 social posts." · "Generate 1 Reddit draft." · "Generate 1 design prompt." Every answer cites chunk IDs from the index it queried.
+**Test 1 — RAG query (per track):** "Explain the chapter's thesis." · "Generate 3 social posts." · "Generate 1 Reddit draft." · "Generate 1 design prompt." On the cloud track, also ask "Explain the chapter's thesis" in each language in `cloud.multilingualSmokeTest`. Every answer cites chunk IDs from the store it queried.
 
 **Test 2 — n8n workflow:** trigger the Social, Newsletter, Design, and Governance workflows (plus one cloud workflow, if the cloud track is enabled).
 
@@ -163,9 +164,9 @@ Run Tests 1 and 3 once **per enabled track**. Label every sample output with its
 
 **Test 4 — Publishing:** Kindle DOCX integrity · HTML readiness · EPUB safety
 
-**Test 5 — Approval rule:** confirm every output landed as `status: draft` (with `groundedOn`) in `Marketing/Generated/`, that nothing was published or scheduled, and that no workflow wrote to either index.
+**Test 5 — Approval rule:** confirm every output landed as `status: draft` (with `groundedOn`) in `Marketing/Generated/`, that nothing was published or scheduled, and that no workflow wrote to either vector store.
 
-**Test 6 — Index routing and parity (if both tracks are enabled):** each workflow queried only its declared track; the query embedding model matched that index's manifest; the two index manifests share the same chunk-set hash and chapter version; no Azure secret appears in any exported workflow or report.
+**Test 6 — Routing and parity (if both tracks are enabled):** each workflow queried only its declared track; the query embedding model and dimensions matched that track's manifest; the two index manifests and the Blob `current.json` share the same chunk-set hash and chapter version; cloud workflows used read-only Blob access; no Azure key or SAS token appears in any exported workflow or report.
 
 Save results (pass/fail per test and per track, sample outputs, issues) to `<CH_ROOT>/<ChapterName>_PHASE6_ActivationReport.md`.
 
@@ -177,7 +178,7 @@ Only if Tests 1–6 pass (Test 6 counts as passed when the cloud track is disabl
 
 Save `<CH_ROOT>/<ChapterName>_PHASE6_AutomationChecklist.md`:
 
-- RAG loaded (per track: collection/index, model, trigger present)
+- RAG loaded (per track: local collection or cloud `current.json`, model, dimensions, trigger present)
 - LLMs connected (local; cloud if enabled)
 - n8n workflows activated and exported (with track, credentials stripped)
 - OpenClaw pipelines defined and activated

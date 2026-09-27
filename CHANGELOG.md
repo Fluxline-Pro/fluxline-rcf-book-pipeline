@@ -15,21 +15,23 @@ The RAG layer now supports two vector indexes: a private local one and an option
 
 - **Dual RAG in PHASE 5 (v4).** One canonical, model-agnostic chunk set (`RAG/Chunks/`) feeds two tracks:
   - **Track L — Local (required):** ChromaDB in Docker, with vectors from an ONNX/TEI embedding container.
-  - **Track C — Cloud (optional):** Azure AI Search, with vectors from an Azure OpenAI embedding deployment.
+  - **Track C — Cloud (optional):** vector files in Azure Blob Storage, embedded with an Azure OpenAI `text-embedding-3-large` deployment (3,072 dims, multilingual) and searched in memory by cosine similarity. No search service, so the cloud track costs only the per-token embedding calls plus Blob storage.
   - The tracks share chunk text, IDs, and metadata; they never share vectors.
 - **Book-level `_BookAutomation/RAG/RAG_Config.json`.** It names each track's store, index, embedding model, dimensions, task prefixes, and endpoint *environment variable names* (never keys), and `cloud.enabled` switches the cloud track on or off.
 - **Per-track index manifests** (`RAG/Index/<ChapterName>_RAG_Index_{Local,Cloud}.json`): model, dimensions, chunk IDs, chunk-set hash, and before/after counts.
 - **Per-track triggers** `RAG_LOCAL_READY.md` and `RAG_CLOUD_READY.md`. `RAG_READY.md` now means every *enabled* track passed.
 - **Parity check** in the validation report: the cloud chunk IDs are a subset of the local ones, at the same version and chunk-set hash.
 - **Cloud data rule:** chunks marked `cloudEligible: false` stay local. By default that covers draft marketing seeds and internal governance notes.
-- **Azure AI Search index layout** (PHASE 5 §4B). The key is URL-safe Base64 of the chunk ID, because Azure keys reject `::`; the original ID is kept as a filterable field.
+- **Blob vector layout** (PHASE 5 §4B): `<BOOK>/chapters/<ChapterName>/<chunkSetHash>/vectors.jsonl.gz`, published by swapping a `current.json` pointer only after the upload is verified, so readers never see a half-written file. One previous version is kept for rollback. A book-level `manifest.json` records the model and dimensions.
+- **Multilingual smoke test** for the cloud track: translated AudienceMap questions (languages in `cloud.multilingualSmokeTest`) must retrieve the mapped section. PHASE 6 cloud answers may be written in the reader's language, but quotations come from the English chunk text.
+- **Access model:** Entra ID preferred. PHASE 5 writes with Storage Blob Data Contributor, and consumers read with Storage Blob Data Reader. Keys and SAS tokens are allowed only through environment variables or the n8n credential store.
 - **PHASE 6 (v4):**
   - Every workflow declares its track, and it embeds queries with that track's model.
   - AutomationIndex entries record both tracks.
   - New §4B (connect the cloud LLM), with credentials kept only in n8n's store or environment variables.
   - Governance automation gains an index drift check.
   - New **Test 6** covers index routing and parity. Tests 1 and 3 now run per track.
-- **`<RAG_INDEX_CLOUD>`** placeholder token.
+- **`<RAG_BLOB_CONTAINER>`** placeholder token.
 
 ### Changed
 

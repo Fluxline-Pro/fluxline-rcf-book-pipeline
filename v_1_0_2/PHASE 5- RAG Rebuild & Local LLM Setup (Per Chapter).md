@@ -1,12 +1,12 @@
-# PHASE 5: RAG Rebuild — Local + Cloud Indexes, LLM Setup (Per Chapter) (v4)
+# PHASE 5: RAG Rebuild — Local + Cloud Vectors, LLM Setup (Per Chapter) (v4)
 
 > **Pipeline position:** PHASE 5 of 7 (Knowledge) · **Upstream gate:** PHASE 4 checklist `gateStatus: PASS` and `Manuscript/Trigger/MANUSCRIPT_SYNCED.md` · **Downstream:** PHASE 6 Automation Activation
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
 **v4 changes (2026-09-24 dual-RAG):**
-- The book now keeps **two vector indexes** built from **one canonical chunk set**:
+- The book now keeps **two vector stores** built from **one canonical chunk set**:
   - **Track L (local):** ChromaDB in Docker, with vectors from the local ONNX/TEI embedding container.
-  - **Track C (cloud):** Azure AI Search, with vectors from an Azure OpenAI embedding deployment.
+  - **Track C (cloud):** vector files in **Azure Blob Storage**, with vectors from an Azure OpenAI **`text-embedding-3-large`** deployment (3,072 dimensions, multilingual). There is no search service: cloud consumers load a chapter's vector file and rank chunks by cosine similarity in memory, which is fast at book scale and costs only the per-token embedding calls plus Blob storage.
 - The two tracks cannot share vectors: each embedding model produces its own vector space and dimensions. They share chunk text, chunk IDs, and metadata, so a result from either index traces back to the same chunk.
 - Adds a book-level config (`_BookAutomation/RAG/RAG_Config.json`), per-track index manifests, per-track triggers (`RAG_LOCAL_READY.md`, `RAG_CLOUD_READY.md`), and a parity check. `RAG_READY.md` means every **enabled** track passed.
 - Local embedding model changed from Ollama `nomic-embed-text` to **`nomic-ai/nomic-embed-text-v1.5` served by the ONNX/TEI container**. The container's default, `all-MiniLM-L6-v2`, truncates input at 256 tokens, which would drop most of a 500–1000-word chunk.
@@ -24,13 +24,15 @@ Run **per chapter**, after PHASE 4.
 
 | | Track L — Local | Track C — Cloud |
 |---|---|---|
-| Purpose | Offline/private grounding for n8n + Ollama drafting, local tools, the orchestrator | Grounding for Azure-hosted consumers (Azure OpenAI chat, agents, web/CMS search, Copilot-style assistants) |
-| Vector store | ChromaDB (Docker), collection `<RAG_COLLECTION>` | Azure AI Search, index `<RAG_INDEX_CLOUD>` |
-| Embedding model | `nomic-ai/nomic-embed-text-v1.5` via the ONNX/TEI container (768 dims; model context 8k, served input usually capped lower by the container's token budget, e.g. 2048) | Azure OpenAI deployment of `text-embedding-3-small` (1536 dims; 8191-token input) |
-| Access path | Orchestrator `/v1/rag` (ingest with `"chunking": "none"`, admin) or direct ChromaDB + TEI | Azure OpenAI Embeddings API + Azure AI Search REST/SDK |
-| Secrets | none | `AZURE_OPENAI_*`, `AZURE_SEARCH_*` from environment variables only — never written to a file, report, or workflow export |
+| Purpose | Offline/private grounding for n8n + Ollama drafting, local tools, the orchestrator | Grounding for Azure-hosted and multilingual consumers (Azure OpenAI chat, agents, web/CMS search, Copilot-style assistants) |
+| Vector store | ChromaDB (Docker), collection `<RAG_COLLECTION>` | Azure Blob Storage, private container `<RAG_BLOB_CONTAINER>`: one gzipped JSONL vector file per chapter plus a `current.json` pointer (layout in §4B) |
+| Embedding model | `nomic-ai/nomic-embed-text-v1.5` via the ONNX/TEI container (768 dims; model context 8k, served input usually capped lower by the container's token budget, e.g. 2048) | Azure OpenAI deployment of `text-embedding-3-large` (3,072 dims; 8,192-token input; multilingual: a query in another language retrieves the English chunks) |
+| Access path | Orchestrator `/v1/rag` (ingest with `"chunking": "none"`, admin) or direct ChromaDB + TEI | Azure OpenAI Embeddings API + Azure Blob Storage SDK/REST; retrieval is in-memory cosine similarity over the chapter's vector file |
+| Secrets | none | Microsoft Entra ID (preferred), or `AZURE_OPENAI_*` / `AZURE_STORAGE_*` from environment variables — never written to a file, report, or workflow export |
 | Content allowed | Everything in the canonical chunk set | Canonical chunks **except** items marked `cloudEligible: false` (default: draft marketing seeds and internal governance notes) |
 | Can be disabled | No (Track L is required) | Yes: `cloud.enabled: false` in `RAG_Config.json` |
+
+`cloud.auth` is `entra-id` (preferred; `openaiKey` and `storageSas` are then unused) or `keys` (the named environment variables). `cloud.dimensions` may be lowered (e.g. 1024) to shrink the vector files; whatever value is set is sent on every ingest **and** query call. `multilingualSmokeTest` lists the extra languages the §5 smoke test uses.
 
 Rule: **one embedding model per track, for every chapter.** If a track's model or dimensions change in `RAG_Config.json`, every chapter is re-embedded **for that track only**. The other track is untouched.
 
@@ -55,13 +57,18 @@ Rule: **one embedding model per track, for every chapter.** If a track's model o
   },
   "cloud": {
     "enabled": false,
-    "store": "azure-ai-search",
-    "index": "<RAG_INDEX_CLOUD>",
+    "store": "azure-blob",
+    "container": "<RAG_BLOB_CONTAINER>",
+    "blobPrefix": "<BOOK>/",
+    "retrieval": "in-memory-cosine",
     "embeddingProvider": "azure-openai",
-    "embeddingModel": "text-embedding-3-small",
+    "embeddingModel": "text-embedding-3-large",
     "embeddingDeployment": "<deployment name>",
-    "dimensions": 1536,
-    "endpointEnv": { "openai": "AZURE_OPENAI_ENDPOINT", "openaiKey": "AZURE_OPENAI_API_KEY", "search": "AZURE_SEARCH_ENDPOINT", "searchKey": "AZURE_SEARCH_API_KEY" },
+    "dimensions": 3072,
+    "maxInputTokens": 8192,
+    "multilingualSmokeTest": ["es"],
+    "auth": "entra-id",
+    "endpointEnv": { "openai": "AZURE_OPENAI_ENDPOINT", "openaiKey": "AZURE_OPENAI_API_KEY", "storageAccountUrl": "AZURE_STORAGE_ACCOUNT_URL", "storageSas": "AZURE_STORAGE_SAS_TOKEN" },
     "excludeWhere": { "cloudEligible": false }
   }
 }
@@ -74,13 +81,14 @@ Rule: **one embedding model per track, for every chapter.** If a track's model o
 | RAG_INGESTION (canonical, model-agnostic) | `<CH_ROOT>/RAG/<ChapterName>_RAG_Ingestion.json` + `<CH_ROOT>/RAG/Chunks/<ChapterName>_RAG_Chunks.jsonl` | shared |
 | Local index manifest | `<CH_ROOT>/RAG/Index/<ChapterName>_RAG_Index_Local.json` | L |
 | Cloud index manifest | `<CH_ROOT>/RAG/Index/<ChapterName>_RAG_Index_Cloud.json` | C |
+| Cloud vector file (in Blob) | `<RAG_BLOB_CONTAINER>/<BOOK>/chapters/<ChapterName>/<chunkSetHash>/vectors.jsonl.gz` + `current.json` pointer | C |
 | RAG_ValidationReport (both tracks + parity) | `<CH_ROOT>/RAG/<ChapterName>_RAG_ValidationReport.md` | both |
 | LLM_SystemPrompt | `<CH_ROOT>/RAG/<ChapterName>_LLM_SystemPrompt.md` | both |
 | RAG_QueryProfiles | `<CH_ROOT>/RAG/<ChapterName>_RAG_QueryProfiles.md` | both |
 | Checklist | `<CH_ROOT>/<ChapterName>_PHASE5_RAGChecklist.md` | both |
 | Triggers | `<CH_ROOT>/RAG/Trigger/RAG_LOCAL_READY.md`, `RAG_CLOUD_READY.md`, `RAG_READY.md` (or `RAG_INCOMPLETE.md`) | per track / combined |
 
-Each index manifest records: track, store, collection/index name, embedding provider, model, dimensions, chunk count, chunk IDs, content hash of the chunk file, vector count for this chapter before and after, total index count before and after, timestamp, and the smoke-test result.
+Each index manifest records: track, store, collection name (local) or container and blob paths (cloud), embedding provider, model, dimensions, chunk count, chunk IDs, content hash of the chunk file, vector count for this chapter before and after, total index count before and after, timestamp, and the smoke-test result.
 
 The PHASE 1 files `<ChapterName>_RAG_chunks.jsonl` and `_RAG_metadata.json` stay in place. Mark them `superseded` in the ArtifactManifest; never delete them.
 
@@ -136,7 +144,7 @@ Generate `<ChapterName>_RAG_Ingestion.json`, the unified schema, **independent o
 - semantic boundaries preserved; never split a concept mid-explanation
 - section name and `sourceArtifact` in every chunk's metadata
 - chunk ID format: `<ChapterName>::<sourceArtifact>::c<NNN>` (extends the PHASE 1 format)
-- every chunk fits every enabled track's **served** input limit (1000 words ≈ 1,350 tokens; check `local.maxInputTokens`, since a container may serve less than the model's full context; Azure `text-embedding-3-small` accepts 8191). An embedder that silently truncates is a Track failure, not a warning.
+- every chunk fits every enabled track's **served** input limit (1000 words ≈ 1,350 tokens; check `local.maxInputTokens`, since a container may serve less than the model's full context; Azure `text-embedding-3-large` accepts 8,192). An embedder that silently truncates is a Track failure, not a warning.
 
 Output: `<CH_ROOT>/RAG/Chunks/<ChapterName>_RAG_Chunks.jsonl`. **This one file feeds both tracks.** Nothing downstream may re-split it. If an ingestion path would re-chunk (for example an orchestrator that splits documents before embedding), use its no-split option (the fluxline orchestrator: `"chunking": "none"` on `/v1/rag` ingest) or send pre-computed vectors directly to the store, and record which in the index manifest.
 
@@ -150,26 +158,29 @@ Collection: `<RAG_COLLECTION>` (one collection for the whole book; chapters sepa
 4. Embed each chunk with the document prefix (`search_document: `) prepended **for embedding only**; the stored text stays clean. If the ingestion path applies the prefix itself (`prefixesAppliedBy: "ingestion-path"`; the fluxline orchestrator does), send clean text and do not prefix twice. Ingest with the chunk ID, text, and all metadata (semantic tags, authority level, marketing fields, design fields, governance flags). Non-scalar metadata is stored as JSON strings.
 5. Record the counts **after** (the chapter count must equal the chunk count) and write `RAG/Index/<ChapterName>_RAG_Index_Local.json`.
 
-# 4B. Track C — rebuild the Azure AI Search index (skip if `cloud.enabled` is false)
+# 4B. Track C — write the chapter's vectors to Azure Blob Storage (skip if `cloud.enabled` is false)
 
-Index: `<RAG_INDEX_CLOUD>`, same layout for every chapter:
+Container: `<RAG_BLOB_CONTAINER>` (private: no anonymous access). Same layout for every chapter:
 
-| Field | Type | Notes |
-|---|---|---|
-| `id` | key (string) | Azure keys allow only letters, digits, `_`, `-`, `=`: use URL-safe Base64 of the chunk ID |
-| `chunkId` | string, filterable | original `<ChapterName>::<sourceArtifact>::c<NNN>` |
-| `content` | string, searchable | chunk text |
-| `contentVector` | Collection(Edm.Single), `cloud.dimensions`, HNSW, cosine | from the Azure OpenAI embedding deployment |
-| `chapterName`, `chapterNumber`, `section`, `sourceArtifact`, `version`, `authorityLevel`, `status` | filterable | from the ingestion schema |
-| `tags`, `glossaryTerms` | Collection(Edm.String), filterable | |
+```
+<RAG_BLOB_CONTAINER>/
+  <BOOK>/manifest.json                                   book-level: model, dimensions, and each chapter's current pointer
+  <BOOK>/chapters/<ChapterName>/current.json             pointer: chunkSetHash, version, vector file path, count, model, dims, updated
+  <BOOK>/chapters/<ChapterName>/<chunkSetHash>/vectors.jsonl.gz
+```
 
-1. Confirm the embedding deployment exists and returns `cloud.dimensions`-length vectors, and that the index exists with this schema. Create the index if missing; never change an existing field's type or dimension (a model change means a new index plus a full re-embed).
-2. Record the index document count and this chapter's count **before** (`$filter=chapterName eq '<ChapterName>'`).
-3. Delete this chapter's documents (query IDs by filter, then delete by key).
-4. Embed every `cloudEligible` chunk with the Azure OpenAI deployment (no task prefix; batch within the deployment's rate limits, retrying on 429 with backoff) and upload with `mergeOrUpload`.
-5. Record the counts **after** (the chapter count must equal the number of cloud-eligible chunks) and write `RAG/Index/<ChapterName>_RAG_Index_Cloud.json`.
+Each line of `vectors.jsonl.gz` is one cloud-eligible chunk: `{ "chunkId", "content", "metadata": { chapterName, chapterNumber, section, sourceArtifact, version, authorityLevel, status, tags, glossaryTerms }, "vector": [cloud.dimensions floats] }`. The chunk ID is stored as-is; Blob has no key-format limits.
 
-Data-handling rule: only cloud-eligible, manuscript-derived text leaves the machine. Keys come from environment variables and are never echoed into files, logs, or reports.
+1. Confirm the embedding deployment runs `cloud.embeddingModel` and returns `cloud.dimensions`-length vectors (send `dimensions` on every call). Confirm the container exists, is private, and PHASE 5's identity can write to it (Entra role **Storage Blob Data Contributor**). If `<BOOK>/manifest.json` names a different model or dimensions, stop Track C and record the blocker: a model or dimension change means re-embedding **every** chapter under a new `blobPrefix`; ask <AUTHOR> first.
+2. Record **before**: this chapter's `current.json` (chunk count and `chunkSetHash`), or "none".
+3. Embed every `cloudEligible` chunk (no task prefix). Batch at most 2,048 inputs and 300,000 tokens per request, retry 429s with backoff, and check that every returned vector has `cloud.dimensions` values.
+4. Upload `vectors.jsonl.gz` to a **new** `<chunkSetHash>/` folder and verify it (line count equals the cloud-eligible chunk count). Only then overwrite `current.json`, and update the chapter's entry in `<BOOK>/manifest.json`. Readers follow `current.json`, so they never see a half-written file.
+5. Keep the previous `<chunkSetHash>/` folder until the §5 smoke test passes (for rollback), then delete older folders, keeping one prior version.
+6. Record **after** (the count in `current.json` must equal the number of cloud-eligible chunks) and write `RAG/Index/<ChapterName>_RAG_Index_Cloud.json` with the blob paths, `chunkSetHash`, ETag, model, and dimensions.
+
+Retrieval (used by the §5 smoke test and every PHASE 6 cloud consumer): read `current.json` → load the vector file (cache it by `chunkSetHash`) → filter by metadata → embed the query with the same deployment and `dimensions` → rank by cosine similarity (`text-embedding-3` vectors are unit-length, so a dot product is enough) → top-k. At book scale (a few thousand chunks), this runs in milliseconds and needs no search service. If a consumer later needs keyword/hybrid search or a much larger corpus, add a search index that reads these same Blob files. That's a consumer change, not a PHASE 5 change.
+
+Data-handling rule: only cloud-eligible, manuscript-derived text leaves the machine. Prefer Entra ID; if keys or a SAS are used, they come from environment variables, are short-lived where possible, and are never echoed into files, logs, or reports. Consumers get read-only access (**Storage Blob Data Reader**).
 
 # 5. Validate RAG integrity
 
@@ -177,8 +188,9 @@ Data-handling rule: only cloud-eligible, manuscript-derived text leaves the mach
 
 **Per enabled track:**
 - model and dimensions match `RAG_Config.json`
-- chapter vector count equals the chunks sent to that track
+- chapter vector count equals the chunks sent to that track (Track C: `current.json` points at a file whose `chunkSetHash` matches the current `RAG/Chunks/` file)
 - **retrieval smoke test:** the same 5 questions from the AudienceMap search questions (queries use the query prefix `search_query: ` on Track L). Each must retrieve, in the top 5, a chunk from the mapped manuscript section.
+- **multilingual smoke test (Track C):** 2 of those questions, translated into each language in `cloud.multilingualSmokeTest`, must also retrieve a chunk from the mapped section in the top 5.
 
 **Parity (when both tracks are enabled):**
 - every cloud chunk ID exists in the local collection with the same `version`
@@ -199,8 +211,8 @@ Output: `<CH_ROOT>/RAG/<ChapterName>_RAG_ValidationReport.md`, with a **Shared**
 - LM Studio (optional): same model loaded, local server started for n8n
 
 **Cloud (only if `cloud.enabled`):**
-- Azure OpenAI endpoint reachable; embedding deployment present (and a chat deployment, if PHASE 6 cloud workflows will use one)
-- Azure AI Search service reachable; index `<RAG_INDEX_CLOUD>` present with the §4B schema
+- Azure OpenAI endpoint reachable; `text-embedding-3-large` deployment present (and a chat deployment, if PHASE 6 cloud workflows will use one)
+- Storage account reachable; container `<RAG_BLOB_CONTAINER>` present and private; PHASE 5 identity has Storage Blob Data Contributor, cloud consumers have Storage Blob Data Reader
 - Required environment variables set (names only in the report, never values)
 
 If anything is missing, list it in the checklist as a blocker for the affected track. Do not mark it done.
@@ -230,7 +242,7 @@ If anything is missing, list it in the checklist as a blocker for the affected t
 - Generate HTML blocks
 - Generate SEO articles
 
-Default: n8n/Ollama drafting profiles use `local`; web, CMS, and Azure-hosted assistant profiles use `cloud`.
+Default: n8n/Ollama drafting profiles use `local`; web, CMS, Azure-hosted assistant, and non-English reader profiles use `cloud`. A cloud profile may answer in the reader's language, but quotations and cited wording come from the English chunk text, and any translation is a draft.
 
 # 8. Produce PHASE 5 checklist and triggers
 
@@ -239,7 +251,7 @@ Save `<CH_ROOT>/<ChapterName>_PHASE5_RAGChecklist.md`:
 - Canonical ingestion files created; chunk count; cloud-eligible count
 - All metadata validated; semantic tags, governance, marketing, and design fields applied
 - **Track L:** model/dimensions, ChromaDB before/after counts, smoke test, `gateStatus: PASS | FAIL`
-- **Track C:** enabled/disabled; model/dimensions, Azure AI Search before/after counts, smoke test, `gateStatus: PASS | FAIL | DISABLED`
+- **Track C:** enabled/disabled; model/dimensions, Blob `current.json` before/after counts and `chunkSetHash`, smoke test (including multilingual), `gateStatus: PASS | FAIL | DISABLED`
 - Parity result (if both enabled)
 - LLM environment state recorded (local and cloud)
 - Query profiles created
@@ -249,7 +261,7 @@ Save `<CH_ROOT>/<ChapterName>_PHASE5_RAGChecklist.md`:
 
 Triggers (rename any older one to `*_superseded_<timestamp>.md`):
 - `RAG/Trigger/RAG_LOCAL_READY.md` when Track L passes: collection, model, dims, counts, timestamp.
-- `RAG/Trigger/RAG_CLOUD_READY.md` when Track C passes: index, model, dims, counts, timestamp.
+- `RAG/Trigger/RAG_CLOUD_READY.md` when Track C passes: container, `current.json` path, model, dims, counts, timestamp.
 - `RAG/Trigger/RAG_READY.md` when the overall gate passes: paths of the deliverables, each track's status, timestamp.
 - Otherwise `RAG/Trigger/RAG_INCOMPLETE.md` listing the blockers per track.
 
