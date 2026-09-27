@@ -1,9 +1,9 @@
-# PHASE 3.5: Claude QA of Design Artifacts (v3)
+# PHASE 3.5: Claude QA of Design Artifacts (v3.1)
 
 > **Pipeline position:** PHASE 3.5 of 7 (Design QA gate) · **Upstream gate:** PHASE 3 exit gate · **Downstream:** PHASE 4 Kindle DOCX
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
-**Audiobook timing (2026-09-27):** the audiobook moved to PHASE 4 Part C (recorded from the Kindle output), so PHASE 3.5 no longer checks it.
+**v3.1 changes (2026-09-27 audiobook timing):** the audiobook moved to PHASE 4 Part C (recorded from the Kindle output), so PHASE 3.5 no longer checks it.
 
 **v3 changes (2026-09-22 pipeline alignment):**
 - One report name and location (the two conflicting names are merged).

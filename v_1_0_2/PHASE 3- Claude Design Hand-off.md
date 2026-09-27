@@ -1,9 +1,9 @@
-# PHASE 3: CLAUDE DESIGN HAND-OFF (v3)
+# PHASE 3: CLAUDE DESIGN HAND-OFF (v3.1)
 
 > **Pipeline position:** PHASE 3 of 7 (Design + Production) · **Upstream gate:** `Governance/Trigger/GOVERNANCE_READY.md` exists · **Downstream:** PHASE 3.5 Design QA
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
-**Audiobook timing (2026-09-27):** the audiobook and the `<BOOK>_AUDIOBOOK` set moved to **PHASE 4 Part C / Part B**. <AUTHOR> can still change wording in the eBook and print InDesign books, and the audiobook is recorded from the Kindle output built after that. XTTS makes a draft there, and <AUTHOR> records the final narration in Adobe Audition. PHASE 3 keeps the narration script and pronunciation guide from PHASE 1 as they are.
+**v3.1 changes (2026-09-27 audiobook timing):** the audiobook and the `<BOOK>_AUDIOBOOK` set moved to **PHASE 4 Part C / Part B**. <AUTHOR> can still change wording in the eBook and print InDesign books, and the audiobook is recorded from the Kindle output built after that. XTTS makes a draft there, and <AUTHOR> records the final narration in Adobe Audition. PHASE 3 keeps the narration script and pronunciation guide from PHASE 1 as they are.
 
 **v3 changes (2026-09-22 pipeline alignment):**
 - Adds the operator section (inputs, outputs, folders, production tracks, book assembly, exit gate). The Claude Design System Prompt below is unchanged except for one clarification that PDF/PPTX/EPUB are exported *from* the HTML.

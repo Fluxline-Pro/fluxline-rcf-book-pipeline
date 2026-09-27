@@ -1,4 +1,4 @@
-# PHASE 2: GOVERNANCE CHECK + AUTO-REMEDIATION (v3)
+# PHASE 2: GOVERNANCE CHECK + AUTO-REMEDIATION (v3.1)
 
 > **Pipeline position:** PHASE 2 of 7 (Governance) · **Upstream gate:** PHASE 1 Exit Gate passed · **Downstream:** PHASE 3 Claude Design
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.

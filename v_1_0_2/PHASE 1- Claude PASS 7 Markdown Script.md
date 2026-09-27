@@ -1,4 +1,4 @@
-# PHASE 1: Claude Markdown Script for each PASS 7-finished Chapter (v3)
+# PHASE 1: Claude Markdown Script for each PASS 7-finished Chapter (v3.1)
 
 > **Pipeline position:** PHASE 1 of 7 (Creation) · **Upstream gate:** PASS 7 manuscript locked by <AUTHOR> **and** `_BookGovernance/Audit/Trigger/AUDIT_CLEAR.md` (PHASE 0.9) · **Downstream:** PHASE 2 Governance
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md` in this folder. If this file and the Overview ever disagree, the Overview wins and the discrepancy is logged.
