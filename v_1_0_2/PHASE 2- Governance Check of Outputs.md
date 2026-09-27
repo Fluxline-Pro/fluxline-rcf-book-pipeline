@@ -3,6 +3,8 @@
 > **Pipeline position:** PHASE 2 of 7 (Governance) · **Upstream gate:** PHASE 1 Exit Gate passed · **Downstream:** PHASE 3 Claude Design
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
+**v3.1 changes (2026-09-27 book audit):** glossary normalization also checks against the book-wide canonical list from PHASE 0.9 (`_BookGovernance/Audit/Audit_CanonicalTerms.json`).
+
 **v3 changes (2026-09-22 pipeline alignment):**
 - Paths moved to the canonical chapter root `<BOOK_ROOT>/Chapters/<ChapterName>/Final/` (`<CH_ROOT>`).
 - Adds the `/eBook/` prep files to the inputs and validations.
@@ -338,6 +340,7 @@ Requirements:
 - Normalize terminology.
 - Maintain consistency across all artifacts.
 - **Compare against the `<ChapterName>_GlossaryNormalized.json` files of previously processed chapters** (sibling folders under `/Chapters/`) and resolve or flag conflicts.
+- **Compare against `<BOOK_ROOT>/_BookGovernance/Audit/Audit_CanonicalTerms.json`** (PHASE 0.9, author-resolved). A term whose form or definition differs from it is a Tier C proposal (flag it for <AUTHOR>), never a silent fix.
 - Mark each term with its chapter reference (References: Ch N).
 
 ---

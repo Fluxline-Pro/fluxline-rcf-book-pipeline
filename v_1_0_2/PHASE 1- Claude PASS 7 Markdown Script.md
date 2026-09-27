@@ -1,7 +1,9 @@
 # PHASE 1: Claude Markdown Script for each PASS 7-finished Chapter (v3)
 
-> **Pipeline position:** PHASE 1 of 7 (Creation) · **Upstream gate:** PASS 7 manuscript locked by <AUTHOR> · **Downstream:** PHASE 2 Governance
+> **Pipeline position:** PHASE 1 of 7 (Creation) · **Upstream gate:** PASS 7 manuscript locked by <AUTHOR> **and** `_BookGovernance/Audit/Trigger/AUDIT_CLEAR.md` (PHASE 0.9) · **Downstream:** PHASE 2 Governance
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md` in this folder. If this file and the Overview ever disagree, the Overview wins and the discrepancy is logged.
+
+**v3.1 changes (2026-09-27 book audit):** PHASE 1 now waits for the book-wide audit (PHASE 0.9 `AUDIT_CLEAR.md`), and each chapter's TerminologyLock is seeded from `_BookGovernance/Audit/Audit_CanonicalTerms.json`.
 
 **v3 changes (2026-09-22 pipeline alignment):**
 - All paths now resolve from one canonical book root (`<BOOK_ROOT>`) and one chapter root (`<BOOK_ROOT>/Chapters/<ChapterName>/Final/`), replacing the mix of cloud-sync and local paths used before.
@@ -172,6 +174,7 @@ with three subfolders: `/Intake/`, `/Seeds/`, `/Trigger/`.
 4. **`<ChapterName>_MKT_TerminologyLock.json`**
    - Every framework term used in the chapter, with exact casing as it appears in the manuscript, approved aliases, and forbidden substitutes.
    - Framework terms — every concept the book defines, plus any chapter-specific terms — must be taken from the manuscript, not assumed.
+   - Seed canonical forms from `<BOOK_ROOT>/_BookGovernance/Audit/Audit_CanonicalTerms.json` (PHASE 0.9). If the manuscript uses a different form, do not pick one: list it in the Editorial Suggestions file for <AUTHOR>.
    - Never restate scoring rubrics, equations, or numeric scales unless copied verbatim from the manuscript.
 
 5. **`<ChapterName>_MKT_AudienceMap.md`**

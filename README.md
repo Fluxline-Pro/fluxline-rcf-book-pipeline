@@ -16,10 +16,11 @@ A book that ships in six formats has the same content living in twenty places: m
 
 This pipeline treats the manuscript as the only source of truth and makes every other artifact answer to it — with validation, correction, and a human sign-off at the end.
 
-## The nine phases
+## The ten phases
 
 | Phase | What it does | Ends with |
 |---|---|---|
+| **0.9 — Book audit** | Audits the whole draft for drift (terms, definitions, acronyms, equations, thresholds, lists, figures, cross-references) **before PASS 7**, and again as a final delta once every chapter is synced to its final eBook PDF. Report-only; you resolve the canonical decisions | `AUDIT_CLEAR.md`, then `AUDIT_FINAL_CLEAR.md` |
 | **1 — Creation** | Generates every chapter artifact from the locked manuscript: review packet, workbook, training materials, reference guides, slide outline, eBook prep, print prep, narration script, RAG packet, and a grounded marketing intake packet | Production checklist |
 | **2 — Governance** | Validates everything against the manuscript, fixes what is safely fixable, proposes the rest, and certifies the chapter | `GOVERNANCE_READY.md` |
 | **3 — Design + Production** | Design-system-bound HTML for every asset, figure images, exports, manual print layout, audiobook render, and book-level assembly | Hand-off to QA |
@@ -31,12 +32,13 @@ This pipeline treats the manuscript as the only source of truth and makes every 
 | **7 — Release** | Final verification, the assistant's recommendations, and the author's signature | **Published** |
 
 ```
-Locked manuscript ─▶ 1 ─▶ 2 ─▶ 3 ─▶ 3.5 ─▶ 4 ─▶ 5 ─▶ 6 ─▶ 6.5 ─▶ 7 ─▶ Published
+Draft ─▶ 0.9 audit ─▶ Locked manuscript ─▶ 1 ─▶ 2 ─▶ 3 ─▶ 3.5 ─▶ 4 ─▶ 5 ─▶ 6 ─▶ 6.5 ─▶ 7 ─▶ Published
+                                                                (0.9 final delta at 4 Part B)
                             ▲       │
                             └───────┘ fix loop
 ```
 
-Every phase runs chapter by chapter, including 6 and 6.5. Three of them add a book-level mode that runs once — PHASE 3 (eBook, workbook, print, audiobook assembly), PHASE 4 Part B (the Kindle package), and PHASE 6.5 book mode (publication QA of the assembled files) — each waiting until every chapter has cleared the gate before it. PHASE 2 and PHASE 6 also offer a batch mode for running several chapters in one pass.
+PHASE 0.9 is the exception: it audits the whole book at once, first on the draft before PASS 7 and again as a final delta at PHASE 4 Part B. Every other phase runs chapter by chapter, including 6 and 6.5. Three of them add a book-level mode that runs once — PHASE 3 (eBook, workbook, print, audiobook assembly), PHASE 4 Part B (the Kindle package), and PHASE 6.5 book mode (publication QA of the assembled files) — each waiting until every chapter has cleared the gate before it. PHASE 2 and PHASE 6 also offer a batch mode for running several chapters in one pass.
 
 ## Principles the phases enforce
 
@@ -54,7 +56,7 @@ Every phase runs chapter by chapter, including 6 and 6.5. Three of them add a bo
 v_1_0_2/                   current release (dual local + cloud RAG)
   MASTER_PIPELINE_OVERVIEW.md   the tie-breaker: phases, gates, folders, deliverables
   PLACEHOLDERS.md               every token to replace, and what to leave alone
-  PHASE 1 … PHASE 7             the nine phase prompts
+  PHASE 0.9 … PHASE 7           the ten phase prompts
 v1_0/                      previous release, kept for books mid-flight
 archived-versions/
   beta_0_9/                previous version, kept intact for books mid-flight

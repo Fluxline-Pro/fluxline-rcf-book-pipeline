@@ -1,7 +1,9 @@
-# PHASE 4: Kindle DOCX Chapter Compilation (v3)
+# PHASE 4: Kindle DOCX Chapter Compilation (v3.1)
 
 > **Pipeline position:** PHASE 4 of 7 (Kindle) · **Upstream gate:** `DesignPacket/Trigger/DESIGN_READY.md` exists (PHASE 3.5 certified Production Ready) **and** the final eBook PDF is uploaded (Part 0) · **Downstream:** PHASE 5 RAG Rebuild
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
+
+**v3.1 changes (2026-09-27 book audit):** Part B opens with step **B0**, the PHASE 0.9 final delta audit of the synced manuscripts. It re-checks the chapters whose wording changed during layout, and the assembly waits for `AUDIT_FINAL_CLEAR.md`.
 
 **v3 changes (2026-09-22 pipeline alignment):**
 - One path root: `<CH_ROOT>` = `<BOOK_ROOT>/Chapters/<ChapterName>/Final/` (the old file mixed three different roots).
@@ -42,6 +44,7 @@ Transform the governed, design-validated PHASE 1–3.5 chapter outputs into a **
 
 | Deliverable | Path |
 |---|---|
+| Final delta audit (PHASE 0.9 Mode D) | `<BOOK_ROOT>/_BookGovernance/Audit/<RUN_ID>/` + `Audit/Trigger/AUDIT_FINAL_CLEAR.md` |
 | **<BOOK>_KINDLE_EBOOK** | `<BOOK_ROOT>/_BookPublication/<BOOK>_KINDLE_EBOOK/` |
 
 ---
@@ -295,6 +298,13 @@ PHASE 5 may start for the chapter when `Manuscript/Trigger/MANUSCRIPT_SYNCED.md`
 
 Run once, when every chapter, front matter section, Part opener, and back matter section has a PHASE 4 Part A `PASS`. Output folder: `<BOOK_ROOT>/_BookPublication/<BOOK>_KINDLE_EBOOK/`.
 
+## B0. Final delta audit (PHASE 0.9, Mode D)
+
+Once every chapter has `MANUSCRIPT_SYNCED.md`, run PHASE 0.9 in **Mode D** on the synced manuscripts:
+- Re-audit (Pass 1 → Pass 2, plus Pass 3 if its anchors moved) every chapter whose Part 0 sync applied or resolved changes since the last audit run, then run Consolidation over the whole book.
+- A blocking wording fix goes back through the eBook: fix the eBook source → re-export the PDF → Part 0 re-sync → Part A → PHASE 5 re-run for that chapter → re-run Mode D. Never patch a synced manuscript by hand.
+- Continue to B1 only when `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md` exists and is newer than every chapter's `MANUSCRIPT_SYNCED.md`.
+
 ## B1. Confirm the assembly inputs
 
 - [ ] Every chapter has `Manuscript/Trigger/MANUSCRIPT_SYNCED.md`, still newer than its eBook PDF (re-run Part 0 and Part A for any chapter whose PDF was re-exported)
@@ -302,6 +312,7 @@ Run once, when every chapter, front matter section, Part opener, and back matter
 - [ ] FrontMatter, Parts, and BackMatter Kindle DOCX files exist
 - [ ] Reading order confirmed against the book TOC (front matter → Part I → its chapters → Part II → … → back matter)
 - [ ] Every chapter is at the same edition version (VersionMetadata)
+- [ ] `AUDIT_FINAL_CLEAR.md` exists and is newer than every chapter's `MANUSCRIPT_SYNCED.md` (B0)
 
 ## B2. Build the manuscript
 
@@ -336,3 +347,4 @@ PHASE 6.5 validates this package (EPUB, Kindle, metadata, figures, accessibility
 - [ ] `<BOOK>_Kindle.docx`, `.epub`, `.azw3`, metadata, cover, and assembly report exist
 - [ ] Kindle Previewer opens the proof with a working TOC and correct reflow
 - [ ] Assembly report lists no unresolved warnings
+- [ ] Assembly report records the final audit run ID

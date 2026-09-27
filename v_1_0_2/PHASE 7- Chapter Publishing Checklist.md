@@ -5,6 +5,8 @@
 > **Pipeline position:** PHASE 7 of 7 (Release) · **Upstream gate:** latest PHASE 6.5 report certifies **Publishing Ready** · **Downstream:** none (chapter becomes **Published**)
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
+**Book audit (2026-09-27):** the book-level section verifies the PHASE 0.9 final delta audit.
+
 **v3.1 changes (2026-09-24 dual-RAG):** the PHASE 5 section verifies the Local and Cloud RAG tracks separately, plus their parity. The RAG sub-certification is split per track.
 
 **v3 changes (2026-09-22 pipeline alignment):**
@@ -152,6 +154,7 @@
 - [ ] <BOOK>_WORKBOOK_PRINT_BOOK (manual InDesign)
 - [ ] <BOOK>_AUDIOBOOK
 - [ ] <BOOK>_KINDLE_EBOOK (PHASE 4 Part B)
+- [ ] Book-wide audit: `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md` present, and this chapter's final wording was part of that run (PHASE 0.9 Mode D)
 
 ---
 

@@ -18,6 +18,7 @@ Tokens look like `<THIS>`. A few also appear inside example file names (`<BOOK>_
 | `<AUTHOR>` | Author's name. Appears in the PHASE 7 sign-off and wherever a phase needs a human decision. | `A. Writer` |
 | `<ChapterName>` | Per-chapter folder and file prefix. The phases assume `Ch<N>_<PascalCaseTitle>` and governance flags anything that drifts from it. | `Ch1_YourChapterTitle` |
 | `<PASS7_SOURCE>` | Folder holding your locked final-draft manuscripts (see "PASS 7" below) | `<BOOK_ROOT>/_PASS7/` |
+| `<DRAFT_SOURCE>` | Folder holding the current full-book draft that PHASE 0.9 audits before PASS 7 (one file per chapter) | `<BOOK_ROOT>/_PASS6/` |
 | `<DSM_NAME>` | Name of your Design System Manual — the token, typography, and component spec the design phase must obey | `Quiet Engine DSM` |
 | `<dsm-slug>` | Folder name of that DSM inside `DesignPacket/_ds/` | `quiet-engine-dsm` |
 | `<RAG_COLLECTION>` | Local vector store (ChromaDB) collection name for the whole book | `quiet_engine_book` |
@@ -39,6 +40,7 @@ $map = [ordered]@{
   '<EDITION>'        = 'First Edition'
   '<AUTHOR>'         = 'A. Writer'
   '<PASS7_SOURCE>'   = 'D:\Books\MYBOOK_FIRST_EDITION\_PASS7'
+  '<DRAFT_SOURCE>'   = 'D:\Books\MYBOOK_FIRST_EDITION\_PASS6'
   '<DSM_NAME>'       = 'Quiet Engine DSM'
   '<dsm-slug>'       = 'quiet-engine-dsm'
   '<RAG_COLLECTION>' = 'quiet_engine_book'
@@ -59,7 +61,7 @@ bash / macOS / Linux:
 ```bash
 cd v_1_0_2
 # Same rule: longer tokens first, so <BOOK> does not eat <BOOK_ROOT>.
-sed -i 's|<BOOK_ROOT>|/Books/MYBOOK_FIRST_EDITION|g; s|<BOOK_SLUG>|MYBOOK_FIRST_EDITION|g; s|<BOOK_TITLE>|The Quiet Engine|g; s|<BOOK>|MYBOOK|g; s|<EDITION>|First Edition|g; s|<AUTHOR>|A. Writer|g; s|<DSM_NAME>|Quiet Engine DSM|g; s|<dsm-slug>|quiet-engine-dsm|g; s|<RAG_COLLECTION>|quiet_engine_book|g; s|<RAG_BLOB_CONTAINER>|quiet-engine-book-rag|g' *.md
+sed -i 's|<BOOK_ROOT>|/Books/MYBOOK_FIRST_EDITION|g; s|<BOOK_SLUG>|MYBOOK_FIRST_EDITION|g; s|<BOOK_TITLE>|The Quiet Engine|g; s|<DRAFT_SOURCE>|/Books/MYBOOK_FIRST_EDITION/_PASS6|g; s|<BOOK>|MYBOOK|g; s|<EDITION>|First Edition|g; s|<AUTHOR>|A. Writer|g; s|<DSM_NAME>|Quiet Engine DSM|g; s|<dsm-slug>|quiet-engine-dsm|g; s|<RAG_COLLECTION>|quiet_engine_book|g; s|<RAG_BLOB_CONTAINER>|quiet-engine-book-rag|g' *.md
 ```
 
 On macOS use `sed -i ''` instead of `sed -i`.

@@ -4,6 +4,8 @@
 > **Pipeline position:** PHASE 6.5 of 7 (Publication QA gate) · **Upstream gate:** PHASE 6 checklist `gateStatus: PASS` · **Downstream:** PHASE 7 Final Checklist & Sign-off
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
+**Book audit (2026-09-27):** book mode checks the PHASE 0.9 final delta audit (`AUDIT_FINAL_CLEAR.md`, no open blocking findings) and the cloud store's release-ready flag.
+
 **v3.1 changes (2026-09-24 dual-RAG):** RAG readiness (§9) checks every enabled RAG track (Local ChromaDB, Cloud Azure Blob Storage vector files), index-manifest freshness, and cloud-eligibility. The RAG sub-certification is split into RAG (Local) and RAG (Cloud / N/A).
 
 **v3 changes (2026-09-22 pipeline alignment):**
@@ -72,6 +74,7 @@ Evaluate all publication outputs for:
 | `RAG_Manuscript.html`, `RAG_Workbook.html` (if built) | `_BookPublication/_Masters/` |
 | OPF, NCX, TOC metadata | inside the EPUB packages |
 | DSM, all chapter Figure Registries | chapter `DesignPacket/_ds/` and `Governance/` folders |
+| Final audit report + trigger (PHASE 0.9 Mode D) | `_BookGovernance/Audit/<RUN_ID>/<BOOK>_AuditReport.md`, `Audit/Trigger/AUDIT_FINAL_CLEAR.md` |
 
 ---
 
@@ -114,7 +117,7 @@ Print: print PDFs exist, trim size 7×10, figures present (layout quality is <AU
 Audiobook: every section has an MP3, running order matches the TOC, file naming `<NN>_<Section>.mp3`, track list present.
 
 ## 9. RAG readiness
-Check chunk-friendly structure, heading quality, semantic clarity, retrieval-friendly segmentation, metadata blocks, and that the PHASE 5 validation report passed **for every enabled track**. Confirm both index manifests carry the current chunk-set hash and chapter version (no stale index after a manuscript re-sync), the cloud vector file (the one `current.json` points to) holds only cloud-eligible chunks and matches the current chunk-set hash, and no Azure key or SAS token appears in any report or exported workflow.
+Check chunk-friendly structure, heading quality, semantic clarity, retrieval-friendly segmentation, metadata blocks, and that the PHASE 5 validation report passed **for every enabled track**. Confirm both index manifests carry the current chunk-set hash and chapter version (no stale index after a manuscript re-sync), the cloud vector file (the one `current.json` points to) holds only cloud-eligible chunks and matches the current chunk-set hash, and no Azure key or SAS token appears in any report or exported workflow. **Book mode:** `AUDIT_FINAL_CLEAR.md` exists, no blocking audit finding is open, and the cloud `manifest.json` `auditFinalClear` flag matches that run.
 
 ## 10. Brand consistency
 Check terminology (TerminologyLock), voice (VoiceKit), component consistency, DSM alignment.

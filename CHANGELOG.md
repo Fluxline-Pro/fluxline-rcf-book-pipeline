@@ -5,14 +5,26 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
-## [v1.0.2] — 2026-09-24
+## [v1.0.2] — 2026-09-27
 
 **Folder:** `v_1_0_2/` · **Previous:** `v1_0/` (tag `v1_0_1_PROD`, unchanged, kept for books mid-flight)
 
-The RAG layer now supports two vector indexes: a private local one and an optional cloud one. Both are built from the same chunks, and neither can drift from the manuscript unnoticed. Found while running PHASES 4–5 on a real chapter.
+The RAG layer now supports two vector stores: a private local one and an optional cloud one. Both are built from the same chunks, and neither can drift from the manuscript unnoticed. Found while running PHASES 4–5 on a real chapter.
+
+A new PHASE 0.9 audits the **whole book** for drift before PASS 7 and again at the end, because the RAG stores (and any product built on them) inherit every inconsistency between chapters.
 
 ### Added
 
+- **PHASE 0.9 — Book-Wide Manuscript Audit (new file).** A report-only, chapter-by-chapter audit with a running ledger, so a local 8k-context model can run it. Pass 1 extracts, Pass 2 detects drift in eleven categories with a blocking/major/minor severity, Pass 3 writes evaluation questions, and a Consolidation pass produces the canonical decisions list and a glossary delta. It has three modes:
+  - **F — Full:** runs on the draft before PASS 7 → `AUDIT_CLEAR.md`, which PHASE 1 now requires.
+  - **P — Spot check:** re-runs Pass 2 on a chapter whose PASS 7 edits touch a canonical item.
+  - **D — Final delta:** runs at PHASE 4 Part B, step B0, on the manuscripts synced to the final eBook PDFs → `AUDIT_FINAL_CLEAR.md`.
+- **`Audit_CanonicalTerms.json`** (author-resolved) becomes the book-wide terminology authority. PHASE 1 seeds each TerminologyLock from it, and PHASE 2 flags any glossary entry that differs from it as Tier C.
+- **`Audit_Config.json`** holds the canonical-term seed list, the known corrections, and `glossaryStatus`. A `stale` glossary produces review items, never blockers.
+- **Evaluation set** (Pass 3), versioned per edition in `_BookGovernance/Audit/EvalSet/<EDITION>/`. PHASE 5 adds an informational extended retrieval check from it.
+- **Cloud release-ready flag.** The Blob `manifest.json` gets an `auditFinalClear` entry, set only after the final delta audit. External consumers serve the book only while it is set.
+- PHASE 4 Part B, PHASE 6.5 book mode, and PHASE 7 now check `AUDIT_FINAL_CLEAR.md`.
+- **`<DRAFT_SOURCE>`** placeholder token.
 - **Dual RAG in PHASE 5 (v4).** One canonical, model-agnostic chunk set (`RAG/Chunks/`) feeds two tracks:
   - **Track L — Local (required):** ChromaDB in Docker, with vectors from an ONNX/TEI embedding container.
   - **Track C — Cloud (optional):** vector files in Azure Blob Storage, embedded with an Azure OpenAI `text-embedding-3-large` deployment (3,072 dims, multilingual) and searched in memory by cosine similarity. No search service, so the cloud track costs only the per-token embedding calls plus Blob storage.
@@ -45,7 +57,7 @@ The RAG layer now supports two vector indexes: a private local one and an option
 
 ### Unchanged
 
-PHASES 1, 2, 3, 3.5, and 4 are identical to `v1_0/`.
+PHASES 3 and 3.5 are identical to `v1_0/`. PHASES 1, 2, and 4 differ only by the PHASE 0.9 hooks: the entry gate and TerminologyLock seed, glossary normalization, and Part B step B0.
 
 ---
 

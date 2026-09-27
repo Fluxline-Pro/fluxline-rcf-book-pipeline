@@ -4,30 +4,33 @@
 **Author:** <AUTHOR> · **Pipeline version:** v3 (aligned 2026-09-22)
 **Kindle decision (2026-09-22):** all Kindle work lives in PHASE 4, chapter by chapter, after the DesignPacket, figures, and the manual print/eBook work are finished and QA'd. PHASE 3 no longer produces a Kindle edition; `<BOOK>_KINDLE_EBOOK` is assembled in PHASE 4 Part B from the per-chapter builds.
 **Dual RAG (2026-09-24):** PHASE 5 builds one canonical chunk set and embeds it into two vector stores: **Local** (ChromaDB + ONNX/TEI embeddings, Docker) and **Cloud** (vector files in Azure Blob Storage, embedded with Azure OpenAI `text-embedding-3-large` and searched in memory; multilingual). Each track has its own model, trigger, and index manifest; `RAG_READY.md` means every enabled track passed.
+**Book audit (2026-09-27):** PHASE 0.9 audits the whole book for drift (terms, definitions, acronyms, equations, thresholds, lists, figures, cross-references, headings) on the draft **before PASS 7**, while wording is cheapest to change. Its author-resolved `Audit_CanonicalTerms.json` seeds PHASE 1 and PHASE 2. A **final delta audit** runs at PHASE 4 Part B (step B0) on the manuscripts synced to the final eBook PDFs, and gates the book's release-ready flag in the cloud RAG store.
 **Manuscript sync (2026-09-23):** PHASE 4 opens with Part 0, which brings the manuscript (MD and DOCX) into line with the final eBook PDF, because <AUTHOR> refines wording during InDesign layout. No eBook PDF, no PHASE 4, and nothing after it.
 
-**Release v1.0.2 (2026-09-24):** dual RAG (PHASE 5 v4, PHASE 6 v4); the local embedding default is now `nomic-embed-text-v1.5` on an ONNX/TEI container, because the previous default truncated chunks at 256 tokens. The cloud track uses `text-embedding-3-large` with vectors stored in Azure Blob Storage (no search service), for multilingual retrieval at low cost.
+**Release v1.0.2 (2026-09-24):** dual RAG (PHASE 5 v4, PHASE 6 v4); the local embedding default is now `nomic-embed-text-v1.5` on an ONNX/TEI container, because the previous default truncated chunks at 256 tokens. The cloud track uses `text-embedding-3-large` with vectors stored in Azure Blob Storage (no search service), for multilingual retrieval at low cost. New PHASE 0.9 book-wide audit (2026-09-27).
 
 **Authority:** This file is the single reference for paths, gates, triggers, status, and deliverables. Each PHASE file points here. If a PHASE file disagrees with this overview, this overview wins, and the discrepancy is logged for correction.
 
 ---
 
-## 1. PHASE 1–7 at a glance
+## 1. PHASE 0.9–7 at a glance
 
 | Phase | File | Role | Entry gate | Exit gate | Runs |
 |---|---|---|---|---|---|
-| **1** Creation | `PHASE 1- Claude PASS 7 Markdown Script.md` | Generate every chapter artifact from the locked PASS 7 manuscript (Mode A new, Mode B retrofit) | PASS 7 locked | ProductionChecklist + Editorial Suggestions resolved + Marketing trigger | per chapter |
+| **0.9** Book audit | `PHASE 0.9- Book-Wide Manuscript Audit.md` | Report-only book-wide drift audit (extract → detect → eval questions → consolidation); canonical decisions for <AUTHOR>. **Mode F** before PASS 7; **Mode P** spot checks during PASS 7; **Mode D** final delta at PHASE 4 Part B | Full draft in `<DRAFT_SOURCE>` (Mode F); every chapter `MANUSCRIPT_SYNCED.md` (Mode D) | `AUDIT_CLEAR.md` (F) · `AUDIT_FINAL_CLEAR.md` (D) | once per book, plus the final delta |
+| **1** Creation | `PHASE 1- Claude PASS 7 Markdown Script.md` | Generate every chapter artifact from the locked PASS 7 manuscript (Mode A new, Mode B retrofit) | PASS 7 locked + `AUDIT_CLEAR.md` | ProductionChecklist + Editorial Suggestions resolved + Marketing trigger | per chapter |
 | **2** Governance | `PHASE 2- Governance Check of Outputs.md` | Validate, fix (Tier A/B), propose (Tier C), certify, stage the design handoff | PHASE 1 exit | `GOVERNANCE_READY.md` (certified Design Ready) | per chapter + batch |
 | **3** Design + Production | `PHASE 3- Claude Design Hand-off.md` | Claude Design HTML packet + exports + **figure image export**; manual InDesign print; XTTS audio; eBook/print book assembly | `GOVERNANCE_READY.md` | Handoff to 3.5 | per chapter + book assembly |
 | **3.5** Design QA | `PHASE 3.5- Claude QA of Design Artifacts.md` | Report-only QA → fix loop; **Kindle Readiness check (§13)** | PHASE 3 exit | `DESIGN_READY.md` (Production Ready + Kindle Ready) | per chapter |
-| **4** Kindle | `PHASE 4- Kindle DOCX Chapter Compilation.md` | **Part 0:** sync manuscript MD + DOCX to the final eBook PDF · **Part A:** Kindle DOCX + HTML + metadata + figures per chapter · **Part B:** book-level `<BOOK>_KINDLE_EBOOK` | `DESIGN_READY.md` + final eBook PDF uploaded + `MANUSCRIPT_SYNCED.md` + Step 0 dependency check | Part A checklist PASS; Part B package complete | per chapter / section, then once per book |
+| **4** Kindle | `PHASE 4- Kindle DOCX Chapter Compilation.md` | **Part 0:** sync manuscript MD + DOCX to the final eBook PDF · **Part A:** Kindle DOCX + HTML + metadata + figures per chapter · **Part B:** B0 final delta audit (PHASE 0.9 Mode D), then book-level `<BOOK>_KINDLE_EBOOK` | `DESIGN_READY.md` + final eBook PDF uploaded + `MANUSCRIPT_SYNCED.md` + Step 0 dependency check | Part A checklist PASS; Part B package complete | per chapter / section, then once per book |
 | **5** RAG (Local + Cloud) + LLM | `PHASE 5- RAG Rebuild & Local LLM Setup (Per Chapter).md` | Canonical chunk set; Track L ChromaDB rebuild; Track C Blob vector file rewrite (if enabled); parity check; system prompt, query profiles | PHASE4 PASS + `MANUSCRIPT_SYNCED.md` | `RAG_LOCAL_READY.md` (+ `RAG_CLOUD_READY.md` if enabled) → `RAG_READY.md` | per chapter |
 | **6** Automation | `PHASE 6- Automation Activation (n8n + Local LLM + RAG).md` | n8n + OpenClaw activation, drafts-only; each workflow grounded on the local or cloud index | `RAG_READY.md` | PHASE6 checklist PASS, status `active` | per chapter + batch |
 | **6.5** Publication QA | `PHASE 6.5- Claude Design Publication QA.md` | Report-only QA of EPUB/Kindle/print/audio/RAG | PHASE6 PASS | Publishing Ready report | per chapter + book |
 | **7** Release | `PHASE 7- Chapter Publishing Checklist.md` | Validation, LLM recommendations, <AUTHOR>'s sign-off | Publishing Ready | **Published** | per chapter |
 
 ```
-PASS 7 ─▶ 1 ─▶ 2 ─▶ 3 ─▶ 3.5 ─▶ 4 ─▶ 5 ─▶ 6 ─▶ 6.5 ─▶ 7 ─▶ Published
+Draft (PASS 6) ─▶ 0.9 audit ─▶ PASS 7 ─▶ 1 ─▶ 2 ─▶ 3 ─▶ 3.5 ─▶ 4 ─▶ 5 ─▶ 6 ─▶ 6.5 ─▶ 7 ─▶ Published
+                                                    └ Part B: 0.9 final delta
                ▲          │ fix loop
                └──────────┘ (3.5 → 3; 6.5 → owner phase after approval)
 ```
@@ -57,6 +60,9 @@ PHASES 4, 5, and 6 don't change the status; they gate by checklist (`gateStatus`
 
 | After | Deliverable | Location |
 |---|---|---|
+| **PHASE 0.9 (per book)** | Audit report, canonical decisions, ledger, per-chapter pass files | `_BookGovernance/Audit/<RUN_ID>/` |
+| | Canonical terms (author-resolved) | `_BookGovernance/Audit/Audit_CanonicalTerms.json` |
+| | Evaluation set (Pass 3) | `_BookGovernance/Audit/EvalSet/<EDITION>/` |
 | **PHASE 3** (+3.5) | <BOOK>_EBOOK_PDF&EPUB | `_BookPublication/<BOOK>_EBOOK/` |
 | | <BOOK>_WORKBOOK_EBOOK | `_BookPublication/<BOOK>_WORKBOOK_EBOOK/` |
 | | <BOOK>_PRINT_BOOK (manual InDesign) | `_BookPublication/<BOOK>_PRINT_BOOK/` |
@@ -102,6 +108,7 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 ├── _ClaudeInstructions/          PHASE prompts, this overview, _Backups/, _Superseded/
 ├── _BookMarketing/               VoiceKit.md (book-level voice)                    [P1]
 ├── _BookGovernance/              cross-chapter reports, master glossary, book QA   [P2, P6.5]
+│   └── Audit/                    config, canonical terms, EvalSet/, <RUN_ID>/, Trigger/ [P0.9]
 ├── _BookPublication/             six book deliverables + _Masters/                 [P3 assembly, P6.5]
 ├── _BookAutomation/              AutomationIndex.json, n8n/, OpenClaw/             [P6]
 ├── _FinalizedReleases/           signed PHASE 7 checklists                         [P7]
@@ -132,6 +139,8 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 
 | Trigger file | Location | Created by | Consumed by |
 |---|---|---|---|
+| `AUDIT_CLEAR.md` / `AUDIT_INCOMPLETE.md` | `_BookGovernance/Audit/Trigger/` | P0.9 Mode F | P1 entry |
+| `AUDIT_FINAL_CLEAR.md` / `AUDIT_FINAL_INCOMPLETE.md` | `_BookGovernance/Audit/Trigger/` | P0.9 Mode D (P4 B0) | P4 Part B; P5 cloud release-ready flag; P6.5 book mode; P7 |
 | `MARKETING_READY.md` / `_INCOMPLETE` | `Marketing/Trigger/` | P1, re-validated P2 | P6 3A marketing workflows |
 | `GOVERNANCE_READY.md` / `_INCOMPLETE` | `Governance/Trigger/` | P2 | P3 entry; P6 3C |
 | `DESIGN_READY.md` / `_INCOMPLETE` | `DesignPacket/Trigger/` | P3.5 | P4 entry; P6 3B/3D |
@@ -162,10 +171,13 @@ Rules: triggers only fire workflows for chapters whose `automationStatus` is `ac
 | Vector store — Cloud (Track C) | P5 | Azure Blob Storage container `<RAG_BLOB_CONTAINER>`: `<BOOK>/chapters/<ChapterName>/current.json` → `vectors.jsonl.gz`; Azure OpenAI `text-embedding-3-large` (3072d, multilingual); in-memory cosine retrieval filtered by metadata; cloud-eligible chunks only | rebuilt per chapter, when enabled |
 | Index manifests + parity | P5 | `RAG/Index/*_RAG_Index_{Local,Cloud}.json`; same chunk IDs and chunk-set hash in both | gate |
 | Validation | P5 | `_RAG_ValidationReport.md` (incl. retrieval smoke test) | gate |
+| Evaluation set | P0.9 Pass 3 → P5 | `_BookGovernance/Audit/EvalSet/<EDITION>/`; extended retrieval check (informational) | versioned per edition |
+| Release-ready flag (cloud) | P5 | `<BOOK>/manifest.json` → `auditFinalClear`, set only after `AUDIT_FINAL_CLEAR.md` | gate for external consumers |
 | Publication check | P6.5 | RAG sub-certification per track (Local · Cloud) | gate |
 
 **One chunk set, two vector spaces:** the tracks share chunk text, IDs, and metadata, never vectors. Changing a track's embedding model re-embeds every chapter for that track only.
 **Chunk rule (all phases):** 500–1000 words · 100-word overlap (80–120 tolerated) · section name in metadata · never split a concept.
+**Canonical terminology:** `_BookGovernance/Audit/Audit_CanonicalTerms.json` (PHASE 0.9, author-resolved) is the book-wide source for term forms and definitions; the TerminologyLock and GlossaryNormalized files follow it.
 **Authority hierarchy (embedded in metadata):** PASS 7 Manuscript > GlossaryNormalized > LearningMetadata / FigureRegistry > derived artifacts. From PHASE 4 Part 0 on, "Manuscript" means the manuscript as synced to the final eBook PDF.
 
 ---
@@ -174,7 +186,8 @@ Rules: triggers only fire workflows for chapters whose `automationStatus` is `ac
 
 | Model / tool | Role | Phases |
 |---|---|---|
-| Claude (Cowork) | Artifact generation, governance fixes, QA reports, Kindle compile, RAG build, recommendations | 1, 2, 3.5, 4, 5, 6.5, 7 (Part B) |
+| Claude (Cowork) | Book audit, artifact generation, governance fixes, QA reports, Kindle compile, RAG build, recommendations | 0.9, 1, 2, 3.5, 4, 5, 6.5, 7 (Part B) |
+| Local LLM (Ollama) for the audit (optional) | PHASE 0.9 passes run chapter by chapter with a running ledger, so an 8k-context model can run them | 0.9 |
 | Claude Design | DSM-bound HTML packet, layouts, exports; applies HTML fixes | 3 (and fixes from 3.5 / 6.5) |
 | Ollama: drafting model (default Qwen2.5 14B Instruct) | Grounded marketing/design drafts | 5 (configure), 6 (run) |
 | ONNX/TEI embedding container (default `nomic-ai/nomic-embed-text-v1.5`) | Local embeddings for `<RAG_COLLECTION>` (Track L); one model for all chapters | 5, 6 (query embeddings) |

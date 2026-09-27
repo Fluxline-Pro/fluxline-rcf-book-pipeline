@@ -9,6 +9,7 @@
   - **Track C (cloud):** vector files in **Azure Blob Storage**, with vectors from an Azure OpenAI **`text-embedding-3-large`** deployment (3,072 dimensions, multilingual). There is no search service: cloud consumers load a chapter's vector file and rank chunks by cosine similarity in memory, which is fast at book scale and costs only the per-token embedding calls plus Blob storage.
 - The two tracks cannot share vectors: each embedding model produces its own vector space and dimensions. They share chunk text, chunk IDs, and metadata, so a result from either index traces back to the same chunk.
 - Adds a book-level config (`_BookAutomation/RAG/RAG_Config.json`), per-track index manifests, per-track triggers (`RAG_LOCAL_READY.md`, `RAG_CLOUD_READY.md`), and a parity check. `RAG_READY.md` means every **enabled** track passed.
+- **Book audit (2026-09-27):** the cloud store's `manifest.json` records the PHASE 0.9 final audit, and consumers treat the book as release-ready only once it passes. The PHASE 0.9 evaluation set adds an extended retrieval check.
 - Local embedding model changed from Ollama `nomic-embed-text` to **`nomic-ai/nomic-embed-text-v1.5` served by the ONNX/TEI container**. The container's default, `all-MiniLM-L6-v2`, truncates input at 256 tokens, which would drop most of a 500–1000-word chunk.
 
 **v3 changes (2026-09-22 pipeline alignment):** paths moved to `<CH_ROOT>`; chunk rule aligned with PHASES 1–2; ChromaDB rebuild scoped by `chapterName`; checklist and `RAG_READY.md` trigger added; environment state is recorded, not assumed.
@@ -164,7 +165,7 @@ Container: `<RAG_BLOB_CONTAINER>` (private: no anonymous access). Same layout fo
 
 ```
 <RAG_BLOB_CONTAINER>/
-  <BOOK>/manifest.json                                   book-level: model, dimensions, and each chapter's current pointer
+  <BOOK>/manifest.json                                   book-level: model, dimensions, each chapter's current pointer, and the final audit status
   <BOOK>/chapters/<ChapterName>/current.json             pointer: chunkSetHash, version, vector file path, count, model, dims, updated
   <BOOK>/chapters/<ChapterName>/<chunkSetHash>/vectors.jsonl.gz
 ```
@@ -177,6 +178,8 @@ Each line of `vectors.jsonl.gz` is one cloud-eligible chunk: `{ "chunkId", "cont
 4. Upload `vectors.jsonl.gz` to a **new** `<chunkSetHash>/` folder and verify it (line count equals the cloud-eligible chunk count). Only then overwrite `current.json`, and update the chapter's entry in `<BOOK>/manifest.json`. Readers follow `current.json`, so they never see a half-written file.
 5. Keep the previous `<chunkSetHash>/` folder until the §5 smoke test passes (for rollback), then delete older folders, keeping one prior version.
 6. Record **after** (the count in `current.json` must equal the number of cloud-eligible chunks) and write `RAG/Index/<ChapterName>_RAG_Index_Cloud.json` with the blob paths, `chunkSetHash`, ETag, model, and dimensions.
+
+**Release-ready flag:** `<BOOK>/manifest.json` carries `"auditFinalClear": { "runId": "", "timestamp": "" }`. Set it only when `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md` exists and every chapter's `current.json` was written from the synced manuscript that the audit checked; clear it whenever a chapter is rebuilt after that audit. Chapters can be ingested and tested before then. External products (for example a reader-facing companion) should serve the book only while the flag is set.
 
 Retrieval (used by the §5 smoke test and every PHASE 6 cloud consumer): read `current.json` → load the vector file (cache it by `chunkSetHash`) → filter by metadata → embed the query with the same deployment and `dimensions` → rank by cosine similarity (`text-embedding-3` vectors are unit-length, so a dot product is enough) → top-k. At book scale (a few thousand chunks), this runs in milliseconds and needs no search service. If a consumer later needs keyword/hybrid search or a much larger corpus, add a search index that reads these same Blob files. That's a consumer change, not a PHASE 5 change.
 
@@ -196,6 +199,8 @@ Data-handling rule: only cloud-eligible, manuscript-derived text leaves the mach
 - every cloud chunk ID exists in the local collection with the same `version`
 - the local-only chunk IDs are exactly the `cloudEligible: false` set
 - informational: top-3 overlap per smoke-test question across the two tracks (low overlap is worth a look, not a failure)
+
+**Extended retrieval check (when the PHASE 0.9 evaluation set exists):** run the chapter's `answerable` items from `_BookGovernance/Audit/EvalSet/<EDITION>/<ChapterName>_EvalSet.jsonl` against each enabled track and report the share whose `expected_anchor` section appears in the top 5. This is informational: the pass thresholds belong to the product that consumes the store, and the `not_in_book` and `personal_advice` items test that product's answer behavior, not retrieval.
 
 Output: `<CH_ROOT>/RAG/<ChapterName>_RAG_ValidationReport.md`, with a **Shared**, **Track L**, **Track C**, and **Parity** section, each with PASS/FAIL.
 
