@@ -16,18 +16,18 @@ Find every place where the book disagrees with itself — terms, definitions, ac
 - **PHASE 0.9, Mode F.** The book-wide audit, run on the tightened draft.
 - **PASS 7: voice.** <AUTHOR> reads each chapter in full and edits it for voice, resolving the audit findings along the way. After PASS 7, the chapter is pseudo-locked: from then on, wording changes only through PHASE 1 Editorial Suggestions or the layout sync in PHASE 4 Part 0.
 - **PHASES 1–3.** Production, governance, and design work from the PASS 7 text.
-- **eBook and print InDesign books.** Built before PHASE 4. <AUTHOR> may refine wording in either one, and PHASE 4 Part 0 copies the final eBook wording back into the manuscript. Mode P checks each chapter at that point, and Mode D checks the whole book before the book-level builds.
-- **Audiobook and the remaining phases.** They run from the final, synced wording.
+- **eBook and print InDesign books.** Built before PHASE 4. <AUTHOR> may refine wording in either one. **The finished eBook is the trigger:** PHASE 4 Part 0 copies its final wording back into the manuscript. Mode P checks each chapter at that point, and Mode D checks the whole book before the book-level builds.
+- **Kindle, then audiobook.** Kindle is built from the synced text, the audiobook is recorded from the Kindle output (an XTTS draft as a guide, <AUTHOR>'s Adobe Audition recording as the final), and the remaining phases follow.
 
 ## When it runs
 
 | Mode | When | Chapters | Passes | Exit trigger |
 |---|---|---|---|---|
 | **F — Full** | Once, on the complete draft (PASS 6 or whichever pass is current), **before PASS 7** | all | 1 → 2 → 3 per chapter, then Consolidation | `AUDIT_CLEAR.md` |
-| **P — Spot check** | (a) During PASS 7, whenever an edit touches a canonical term, equation, threshold, or named list · (b) **after every PHASE 4 Part 0 sync** that changes wording (Part 0 step 0.7), before the chapter's audiobook render and RAG rebuild | the one chapter | (a) 2 only · (b) 1 → 2 on the synced text, updating the ledger | (a) none; findings join the next Consolidation · (b) the result is recorded in the sync report; no open blocking finding allowed |
+| **P — Spot check** | (a) During PASS 7, whenever an edit touches a canonical term, equation, threshold, or named list · (b) **after every PHASE 4 Part 0 sync** that changes wording (Part 0 step 0.7), before the chapter's Kindle build, audiobook recording, and RAG rebuild | the one chapter | (a) 2 only · (b) 1 → 2 on the synced text, updating the ledger | (a) none; findings join the next Consolidation · (b) the result is recorded in the sync report; no open blocking finding allowed |
 | **D — Final delta** | PHASE 4 Part B, step B0: every chapter has `MANUSCRIPT_SYNCED.md` | only chapters whose text changed **after** their last Mode P check (usually none, since each Part 0 sync already ran one) | 1 → 2 (→ 3 if anchors moved) for those chapters, then Consolidation over the whole book (catches conflicts *between* chapters synced at different times) | `AUDIT_FINAL_CLEAR.md` |
 
-Why this order: before PASS 7, a fix is one edit in one draft file, and PASS 7 is where <AUTHOR> is already reading every line. After PHASE 1, the same fix touches every derived artifact, the design packet, and both vector stores. The Part 0 spot check exists because <AUTHOR> refines wording during InDesign layout, and that wording is what the eBook, Kindle build, audiobook, and RAG actually ship. Catching drift then, chapter by chapter, means a problem is fixed before its audio is rendered, and the final delta has little left to find.
+Why this order: before PASS 7, a fix is one edit in one draft file, and PASS 7 is where <AUTHOR> is already reading every line. After PHASE 1, the same fix touches every derived artifact, the design packet, and both vector stores. The Part 0 spot check exists because <AUTHOR> refines wording during InDesign layout, and that wording is what the eBook, Kindle build, audiobook, and RAG actually ship. Catching drift then, chapter by chapter, means a problem is fixed before Kindle is built and the audiobook is recorded, and the final delta has little left to find.
 
 ## Inputs
 

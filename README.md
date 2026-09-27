@@ -25,7 +25,7 @@ This pipeline treats the manuscript as the only source of truth and makes every 
 | **2 — Governance** | Validates everything against the manuscript, fixes what is safely fixable, proposes the rest, and certifies the chapter | `GOVERNANCE_READY.md` |
 | **3 — Design + Production** | Design-system-bound HTML for every asset, figure images, exports, the manual eBook and print layouts, and book-level assembly | Hand-off to QA |
 | **3.5 — Design QA** | Reviews the design output against the design system, accessibility, instructional quality, and Kindle readiness | `DESIGN_READY.md` |
-| **4 — Final-wording builds** | Syncs the manuscript (MD and DOCX) to the final eBook PDF and spot-checks it, then builds the Kindle files and renders the audiobook per chapter, and assembles the book-level Kindle package and audiobook set | Kindle package + audiobook |
+| **4 — Final-wording builds** | Syncs the manuscript (MD and DOCX) to the final eBook PDF and spot-checks it, then builds the Kindle files and, from those, the audiobook per chapter (an XTTS draft as a guide, the final narration recorded by the author), and assembles the book-level Kindle package and audiobook set | Kindle package + audiobook |
 | **5 — RAG (Local + Cloud)** | Rebuilds the chapter's canonical chunk set, re-embeds it into the local index (and the cloud index, if enabled), checks parity, writes the system prompt and query profiles | `RAG_READY.md` |
 | **6 — Automation** | Activates the n8n and OpenClaw workflows that generate marketing and design drafts from the grounded RAG | Activation report |
 | **6.5 — Publication QA** | Validates EPUB, Kindle, print, audiobook, metadata, and accessibility | Publishing Ready |
@@ -85,7 +85,7 @@ These prompts are a working author's, not a sanitized template, so expect to cha
 - **Paths and names.** `<BOOK_ROOT>`, `<BOOK>`, `<BOOK_TITLE>`, `<AUTHOR>`, and the rest — see `PLACEHOLDERS.md`. "PASS 7" means the seventh editing pass in the pipeline this came from; substitute your own final-draft stage. The phases are written in the author's first person ("my book", "I approve every piece"), which reads correctly whoever runs them.
 - **The design system.** PHASE 3 expects a design system manual derived from your print layout — tokens, typography, components. Without one, the design phase has nothing authoritative to follow.
 - **Framework terminology.** The terminology lock names this book's concepts. Replace them with yours.
-- **Tools.** The defaults are Claude and Claude Design for generation, InDesign for print, XTTS for narration, Ollama plus an ONNX/TEI embedder and ChromaDB for local RAG, optionally Azure OpenAI `text-embedding-3-large` with vectors in Azure Blob Storage for multilingual cloud RAG, and n8n plus OpenClaw for orchestration. Each is swappable; the gates and deliverables are what matter.
+- **Tools.** The defaults are Claude and Claude Design for generation, InDesign for print, XTTS for draft narration and Adobe Audition for the final recording, Ollama plus an ONNX/TEI embedder and ChromaDB for local RAG, optionally Azure OpenAI `text-embedding-3-large` with vectors in Azure Blob Storage for multilingual cloud RAG, and n8n plus OpenClaw for orchestration. Each is swappable; the gates and deliverables are what matter.
 - **Optional deliverables.** Workbook, training materials, and audiobook are separable. Drop what your book does not have, and say so in the checklist rather than leaving the item silently blank.
 
 ## Contributing

@@ -111,6 +111,9 @@ Kindle DOCX validation · EPUB readiness · InDesign asset presence · PDF expor
 ### 3E. Knowledge system automation
 RAG query testing (per track) · RAG semantic map updates · CMS ingestion (drafts; cloud-grounded) · LMS ingestion (drafts)
 
+### 3F. Final eBook watcher (book-level, notify only)
+Watches `Chapters/*/Final/eBook/<ChapterName>_eBook.pdf`. When a PDF is newer than the chapter's `MANUSCRIPT_SYNCED.md` (a new or re-exported final eBook), the watcher writes a notice to `/_BookAutomation/Notices/<YYYYMMDD>_<ChapterName>_eBookUpdated.md`. The notice says that PHASE 4 Part 0 is due, and that the chapter's Kindle build, audiobook passages, and RAG stores are stale until it runs. The watcher runs for every chapter, whatever its `automationStatus`, because it only notifies. It never syncs, edits, or rebuilds anything.
+
 ### Triggers
 
 | Trigger | Created by | Starts |
@@ -121,6 +124,7 @@ RAG query testing (per track) · RAG semantic map updates · CMS ingestion (draf
 | `RAG_LOCAL_READY.md` | PHASE 5 (Track L) | local 3E; enables every **local** workflow |
 | `RAG_CLOUD_READY.md` | PHASE 5 (Track C) | cloud 3E; enables every **cloud** workflow |
 | `RAG_READY.md` | PHASE 5 (all enabled tracks) | enables the chapter for batch mode |
+| Final eBook PDF (newer than `MANUSCRIPT_SYNCED.md`) | <AUTHOR> (final export) | 3F notice only; PHASE 4 Part 0 is run by <AUTHOR> / Claude |
 | daily cron / weekly cron / manual | n8n | per workflow |
 
 A trigger only fires workflows for chapters whose `automationStatus` is `active` or `batch-ready`, and a workflow only runs if its track's trigger exists and its track is enabled in the AutomationIndex.

@@ -54,7 +54,7 @@ Evaluate all publication outputs for:
 | eBook HTML + exports | `<CH_ROOT>/eBook/` |
 | Kindle DOCX, HTML, metadata, figures | `<CH_ROOT>/Kindle/` (PHASE 4 Part A) |
 | Design layouts (eBook, Print 7×10, Workbook) | `<CH_ROOT>/DesignPacket/` |
-| Audiobook MP3 + narration script | `<CH_ROOT>/Audiobook/` |
+| Audiobook final MP3 + narration script (drafts in `Audiobook/Drafts/` are out of scope) | `<CH_ROOT>/Audiobook/` |
 | InDesign print files | `<CH_ROOT>/InDesign/` |
 | RAG ingestion, index manifests (Local, Cloud), validation report | `<CH_ROOT>/RAG/` |
 | DSM | `<CH_ROOT>/DesignPacket/_ds/` |
@@ -114,7 +114,7 @@ Check OPF completeness, NCX correctness, TOC anchors, publication metadata, lang
 
 ## 8. Print and audiobook package
 Print: print PDFs exist, trim size 7×10, figures present (layout quality is <AUTHOR>'s manual call).
-Audiobook: every section has an MP3, running order matches the TOC, file naming `<NN>_<Section>.mp3`, track list present.
+Audiobook: every section has <AUTHOR>'s final recording (no XTTS file from `Audiobook/Drafts/` anywhere in the set), running order matches the TOC and the Kindle reading order, file naming `<NN>_<Section>.mp3`, track list present, PHASE 4 Part C coverage and technical-spec results recorded, and no stale passages (recorded before the latest Kindle build of changed text).
 
 ## 9. RAG readiness
 Check chunk-friendly structure, heading quality, semantic clarity, retrieval-friendly segmentation, metadata blocks, and that the PHASE 5 validation report passed **for every enabled track**. Confirm both index manifests carry the current chunk-set hash and chapter version (no stale index after a manuscript re-sync), the cloud vector file (the one `current.json` points to) holds only cloud-eligible chunks and matches the current chunk-set hash, and no Azure key or SAS token appears in any report or exported workflow. **Book mode:** `AUDIT_FINAL_CLEAR.md` exists, no blocking audit finding is open, and the cloud `manifest.json` `auditFinalClear` flag matches that run.

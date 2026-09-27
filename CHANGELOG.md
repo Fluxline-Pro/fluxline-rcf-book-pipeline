@@ -17,21 +17,22 @@ A new PHASE 0.9 audits the **whole book** for drift before PASS 7 and again at t
 
 - **PHASE 0.9 — Book-Wide Manuscript Audit (new file).** A report-only, chapter-by-chapter audit with a running ledger, so a local 8k-context model can run it. Pass 1 extracts, Pass 2 detects drift in eleven categories with a blocking/major/minor severity, Pass 3 writes evaluation questions, and a Consolidation pass produces the canonical decisions list and a glossary delta. It has three modes:
   - **F — Full:** runs on the draft before PASS 7 → `AUDIT_CLEAR.md`, which PHASE 1 now requires.
-  - **P — Spot check:** re-runs Pass 2 on a chapter whose PASS 7 edits touch a canonical item.
-  - **D — Final delta:** runs at PHASE 4 Part B, step B0, on the manuscripts synced to the final eBook PDFs → `AUDIT_FINAL_CLEAR.md`.
+  - **P — Spot check:** re-runs Pass 2 on a chapter whose PASS 7 edits touch a canonical item, and runs Passes 1–2 after every PHASE 4 Part 0 sync (step 0.7).
+  - **D — Final delta:** runs at PHASE 4 Part B, step B0, on the manuscripts synced to the final eBook PDFs. It re-checks only chapters changed since their spot check, then consolidates the whole book → `AUDIT_FINAL_CLEAR.md`.
 - **`Audit_CanonicalTerms.json`** (author-resolved) becomes the book-wide terminology authority. PHASE 1 seeds each TerminologyLock from it, and PHASE 2 flags any glossary entry that differs from it as Tier C.
 - **`Audit_Config.json`** holds the canonical-term seed list, the known corrections, and `glossaryStatus`. A `stale` glossary produces review items, never blockers.
 - **Evaluation set** (Pass 3), versioned per edition in `_BookGovernance/Audit/EvalSet/<EDITION>/`. PHASE 5 adds an informational extended retrieval check from it.
 - **Cloud release-ready flag.** The Blob `manifest.json` gets an `auditFinalClear` entry, set only after the final delta audit. External consumers serve the book only while it is set.
 - PHASE 4 Part B, PHASE 6.5 book mode, and PHASE 7 now check `AUDIT_FINAL_CLEAR.md`.
 - **`<DRAFT_SOURCE>`** placeholder token.
-- **PHASE 4 Part C (Audiobook).** The narration script is refreshed from the synced manuscript and rendered with XTTS after Part 0, per chapter. Part B (B4b) then assembles `<BOOK>_AUDIOBOOK`.
-- **PHASE 4 Part 0 step 0.7.** A PHASE 0.9 spot check of each chapter's synced text, so drift is caught before the audio renders. `MANUSCRIPT_SYNCED.md` requires that no blocking finding is open.
+- **PHASE 4 Part C (Audiobook), after Part A.** The narration script is built from the Kindle output. XTTS renders an optional **draft** (a pacing guide, never published), and the author records the final narration in Adobe Audition. Part C then checks coverage, the technical spec (ACX as the example), and pronunciation, with a re-record rule for changed passages. Part B (B4b) assembles `<BOOK>_AUDIOBOOK` from the final recordings only.
+- **The final eBook PDF is the trigger** for each chapter's final-wording chain: Part 0 → 0.7 → Part A Kindle → Part C audiobook → PHASE 5. It's documented in the overview's trigger map, and PHASE 6 gains an optional notify-only **3F eBook watcher**.
+- **PHASE 4 Part 0 step 0.7.** A PHASE 0.9 spot check of each chapter's synced text, so drift is caught before Kindle is built and the audiobook is recorded. `MANUSCRIPT_SYNCED.md` requires that no blocking finding is open.
 - **Dual RAG in PHASE 5 (v4).** One canonical, model-agnostic chunk set (`RAG/Chunks/`) feeds two tracks:
   - **Track L — Local (required):** ChromaDB in Docker, with vectors from an ONNX/TEI embedding container.
   - **Track C — Cloud (optional):** vector files in Azure Blob Storage, embedded with an Azure OpenAI `text-embedding-3-large` deployment (3,072 dims, multilingual) and searched in memory by cosine similarity. No search service, so the cloud track costs only the per-token embedding calls plus Blob storage.
   - The tracks share chunk text, IDs, and metadata; they never share vectors.
-- **Book-level `_BookAutomation/RAG/RAG_Config.json`.** It names each track's store, index, embedding model, dimensions, task prefixes, and endpoint *environment variable names* (never keys), and `cloud.enabled` switches the cloud track on or off.
+- **Book-level `_BookAutomation/RAG/RAG_Config.json`.** It names each track's store (ChromaDB collection or Blob container), embedding model, dimensions, task prefixes, and endpoint *environment variable names* (never keys), and `cloud.enabled` switches the cloud track on or off.
 - **Per-track index manifests** (`RAG/Index/<ChapterName>_RAG_Index_{Local,Cloud}.json`): model, dimensions, chunk IDs, chunk-set hash, and before/after counts.
 - **Per-track triggers** `RAG_LOCAL_READY.md` and `RAG_CLOUD_READY.md`. `RAG_READY.md` now means every *enabled* track passed.
 - **Parity check** in the validation report: the cloud chunk IDs are a subset of the local ones, at the same version and chunk-set hash.
@@ -56,13 +57,12 @@ A new PHASE 0.9 audits the **whole book** for drift before PASS 7 and again at t
 - PHASE 6.5 (v3.1) and PHASE 7 (v3.1) certify and verify RAG per track: RAG (Local) · RAG (Cloud / N/A).
 - `MASTER_PIPELINE_OVERVIEW.md`: phase table, deliverable map, trigger map, RAG map, and LLM map updated for both tracks.
 - `PLACEHOLDERS.md`: new token and example values; scripts point at `v_1_0_2/`.
-
 - **The audiobook moved from PHASE 3 to PHASE 4.** The author refines wording in the eBook and print InDesign books up to PHASE 4, so audio rendered in PHASE 3 would narrate pre-final text. PHASE 3.5 no longer checks audio, and PHASE 4 Part C and PHASE 6.5 do. PHASE 4 is retitled "Final-Wording Builds" (the file name is unchanged).
 - PHASE 0.9 documents the manuscript passes: PASS 6 is tightening (audit when it's complete), and PASS 7 is the author's voice pass, after which the chapter is pseudo-locked.
 
 ### Unchanged
 
-PHASES 1 and 2 differ from `v1_0/` only by the PHASE 0.9 hooks (the entry gate and TerminologyLock seed, and glossary normalization). PHASES 3 and 3.5 differ only by the audiobook moving to PHASE 4.
+PHASES 1 and 2 differ from `v1_0/` only by the PHASE 0.9 hooks (the entry gate, the TerminologyLock seed, and glossary normalization) and a PHASE 1 Step 9 note about the audiobook. PHASES 3 and 3.5 differ only by the audiobook moving to PHASE 4.
 
 ---
 

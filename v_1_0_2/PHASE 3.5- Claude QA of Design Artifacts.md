@@ -3,7 +3,7 @@
 > **Pipeline position:** PHASE 3.5 of 7 (Design QA gate) · **Upstream gate:** PHASE 3 exit gate · **Downstream:** PHASE 4 Kindle DOCX
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
-**Audiobook timing (2026-09-27):** the audiobook render moved to PHASE 4 Part C, so PHASE 3.5 no longer checks it.
+**Audiobook timing (2026-09-27):** the audiobook moved to PHASE 4 Part C (recorded from the Kindle output), so PHASE 3.5 no longer checks it.
 
 **v3 changes (2026-09-22 pipeline alignment):**
 - One report name and location (the two conflicting names are merged).
@@ -82,7 +82,7 @@ Review the following artifacts:
 
 - PPTX/PDF slide exports, eBook PDF/EPUB, Workbook eBook PDF
 - InDesign print files (check presence and figure coverage only; layout is <AUTHOR>'s manual work)
-- Audiobook: not checked here. It renders after PHASE 4 Part 0 and is checked in PHASE 4 Part C and PHASE 6.5.
+- Audiobook: not checked here. It is recorded after the PHASE 4 Kindle build and checked in PHASE 4 Part C and PHASE 6.5.
 
 All inputs live under `<CH_ROOT>` = `<BOOK_ROOT>/Chapters/<ChapterName>/Final/` (see PHASE 3, Part A).
 

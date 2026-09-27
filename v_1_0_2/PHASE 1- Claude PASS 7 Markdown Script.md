@@ -131,6 +131,7 @@ First action: copy the locked manuscript into `<CH_ROOT>/Manuscript/<ChapterName
    - Segment markers
    - Pacing notes
    - Full transcript of the chapter in MD format
+   - (These are prep files. The narration script is rebuilt from the Kindle output in PHASE 4 Part C, where XTTS makes a draft and <AUTHOR> records the final narration in Adobe Audition.)
 
 10. Create “RAG/ChromaDB Ingestion Packet” including:
     - Chunked text blocks
