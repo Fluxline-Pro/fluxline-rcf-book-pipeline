@@ -20,19 +20,24 @@
 | **0.9** Book audit | `PHASE 0.9- Book-Wide Manuscript Audit.md` | Report-only book-wide drift audit (extract → detect → eval questions → consolidation); canonical decisions for <AUTHOR>. **Mode F** before PASS 7; **Mode P** spot checks during PASS 7; **Mode D** final delta at PHASE 4 Part B | Full draft in `<DRAFT_SOURCE>` (Mode F); every chapter `MANUSCRIPT_SYNCED.md` (Mode D) | `AUDIT_CLEAR.md` (F) · `AUDIT_FINAL_CLEAR.md` (D) | once per book, plus the final delta |
 | **1** Creation | `PHASE 1- Claude PASS 7 Markdown Script.md` | Generate every chapter artifact from the locked PASS 7 manuscript (Mode A new, Mode B retrofit) | PASS 7 locked + `AUDIT_CLEAR.md` | ProductionChecklist + Editorial Suggestions resolved + Marketing trigger | per chapter |
 | **2** Governance | `PHASE 2- Governance Check of Outputs.md` | Validate, fix (Tier A/B), propose (Tier C), certify, stage the design handoff | PHASE 1 exit | `GOVERNANCE_READY.md` (certified Design Ready) | per chapter + batch |
-| **3** Design + Production | `PHASE 3- Claude Design Hand-off.md` | Claude Design HTML packet + exports + **figure image export**; manual InDesign print; XTTS audio; eBook/print book assembly | `GOVERNANCE_READY.md` | Handoff to 3.5 | per chapter + book assembly |
+| **3** Design + Production | `PHASE 3- Claude Design Hand-off.md` | Claude Design HTML packet + exports + **figure image export**; manual eBook + print InDesign books; eBook/print book assembly (audiobook moved to PHASE 4) | `GOVERNANCE_READY.md` | Handoff to 3.5 | per chapter + book assembly |
 | **3.5** Design QA | `PHASE 3.5- Claude QA of Design Artifacts.md` | Report-only QA → fix loop; **Kindle Readiness check (§13)** | PHASE 3 exit | `DESIGN_READY.md` (Production Ready + Kindle Ready) | per chapter |
-| **4** Kindle | `PHASE 4- Kindle DOCX Chapter Compilation.md` | **Part 0:** sync manuscript MD + DOCX to the final eBook PDF · **Part A:** Kindle DOCX + HTML + metadata + figures per chapter · **Part B:** B0 final delta audit (PHASE 0.9 Mode D), then book-level `<BOOK>_KINDLE_EBOOK` | `DESIGN_READY.md` + final eBook PDF uploaded + `MANUSCRIPT_SYNCED.md` + Step 0 dependency check | Part A checklist PASS; Part B package complete | per chapter / section, then once per book |
+| **4** Final-wording builds (Kindle + audiobook) | `PHASE 4- Kindle DOCX Chapter Compilation.md` | **Part 0:** sync manuscript MD + DOCX to the final eBook PDF · **Part A:** Kindle DOCX + HTML + metadata + figures per chapter · **Part 0.7:** audit spot check (PHASE 0.9 Mode P) · **Part C:** narration refresh + XTTS audiobook per chapter · **Part B:** B0 final delta audit (PHASE 0.9 Mode D), then book-level `<BOOK>_KINDLE_EBOOK` and `<BOOK>_AUDIOBOOK` | `DESIGN_READY.md` + final eBook PDF uploaded + `MANUSCRIPT_SYNCED.md` + Step 0 dependency check | Part A checklist PASS; Part B package complete | per chapter / section, then once per book |
 | **5** RAG (Local + Cloud) + LLM | `PHASE 5- RAG Rebuild & Local LLM Setup (Per Chapter).md` | Canonical chunk set; Track L ChromaDB rebuild; Track C Blob vector file rewrite (if enabled); parity check; system prompt, query profiles | PHASE4 PASS + `MANUSCRIPT_SYNCED.md` | `RAG_LOCAL_READY.md` (+ `RAG_CLOUD_READY.md` if enabled) → `RAG_READY.md` | per chapter |
 | **6** Automation | `PHASE 6- Automation Activation (n8n + Local LLM + RAG).md` | n8n + OpenClaw activation, drafts-only; each workflow grounded on the local or cloud index | `RAG_READY.md` | PHASE6 checklist PASS, status `active` | per chapter + batch |
 | **6.5** Publication QA | `PHASE 6.5- Claude Design Publication QA.md` | Report-only QA of EPUB/Kindle/print/audio/RAG | PHASE6 PASS | Publishing Ready report | per chapter + book |
 | **7** Release | `PHASE 7- Chapter Publishing Checklist.md` | Validation, LLM recommendations, <AUTHOR>'s sign-off | Publishing Ready | **Published** | per chapter |
 
 ```
-Draft (PASS 6) ─▶ 0.9 audit ─▶ PASS 7 ─▶ 1 ─▶ 2 ─▶ 3 ─▶ 3.5 ─▶ 4 ─▶ 5 ─▶ 6 ─▶ 6.5 ─▶ 7 ─▶ Published
-                                                    └ Part B: 0.9 final delta
-               ▲          │ fix loop
-               └──────────┘ (3.5 → 3; 6.5 → owner phase after approval)
+PASS 6 (tighten) ─▶ 0.9 audit ─▶ PASS 7 (voice; pseudo-locked)
+  ─▶ 1 ─▶ 2 ─▶ 3 ─▶ 3.5 ─▶ eBook + print InDesign books (final wording edits)
+  ─▶ 4: Part 0 sync + 0.7 spot check ─▶ Part A Kindle · Part C audiobook
+  ─▶ 5 ─▶ 6 ─▶ 6.5 ─▶ 7 ─▶ Published                               (per chapter)
+
+  4 Part B, once every chapter has passed Part A and Part C:
+  B0 final delta audit ─▶ Kindle package + audiobook set ─▶ 6.5 book mode   (once per book)
+
+Fix loops: 3.5 → 3; 0.7 / B0 blocking finding → eBook (and print) InDesign fix → re-export → Part 0 re-run; 6.5 → owner phase after approval.
 ```
 
 ---
@@ -67,7 +72,6 @@ PHASES 4, 5, and 6 don't change the status; they gate by checklist (`gateStatus`
 | | <BOOK>_WORKBOOK_EBOOK | `_BookPublication/<BOOK>_WORKBOOK_EBOOK/` |
 | | <BOOK>_PRINT_BOOK (manual InDesign) | `_BookPublication/<BOOK>_PRINT_BOOK/` |
 | | <BOOK>_WORKBOOK_PRINT_BOOK (manual InDesign) | `_BookPublication/<BOOK>_WORKBOOK_PRINT_BOOK/` |
-| | <BOOK>_AUDIOBOOK | `_BookPublication/<BOOK>_AUDIOBOOK/` |
 | | Exported figure images (PHASE 4 dependency) | `<CH_ROOT>/DesignPacket/figures_export/` |
 | **PHASE 4 (Part 0, per chapter)** | Manuscript MD + DOCX synced to the final eBook PDF | `<CH_ROOT>/Manuscript/<ChapterName>_Manuscript.md` / `.docx` |
 | | Manuscript sync report | `<CH_ROOT>/Manuscript/<ChapterName>_ManuscriptSync_<YYYYMMDD_HHMM>.md` |
@@ -75,7 +79,9 @@ PHASES 4, 5, and 6 don't change the status; they gate by checklist (`gateStatus`
 | | Kindle-ready HTML blocks | `<CH_ROOT>/Kindle/<ChapterName>_Kindle.html` |
 | | Kindle-ready metadata | `<CH_ROOT>/Kindle/<ChapterName>_KindleMetadata.json` |
 | | Kindle figure images | `<CH_ROOT>/Kindle/figures/` |
-| **PHASE 4 (Part B, per book)** | <BOOK>_KINDLE_EBOOK: `<BOOK>_Kindle.docx` (KDP source), `.epub`, `.azw3` proof, metadata, cover, assembly report | `_BookPublication/<BOOK>_KINDLE_EBOOK/` |
+| **PHASE 4 (Part C, per chapter)** | Narration script refreshed + audiobook MP3 (XTTS) | `<CH_ROOT>/Audiobook/` |
+| **PHASE 4 (Part B, per book)** | <BOOK>_AUDIOBOOK (ordered MP3 set + track list) | `_BookPublication/<BOOK>_AUDIOBOOK/` |
+| | <BOOK>_KINDLE_EBOOK: `<BOOK>_Kindle.docx` (KDP source), `.epub`, `.azw3` proof, metadata, cover, assembly report | `_BookPublication/<BOOK>_KINDLE_EBOOK/` |
 | **PHASE 5** | RAG_INGESTION | `<CH_ROOT>/RAG/<ChapterName>_RAG_Ingestion.json` + `RAG/Chunks/` |
 | | Index manifests (per track) | `<CH_ROOT>/RAG/Index/<ChapterName>_RAG_Index_Local.json`, `_RAG_Index_Cloud.json` |
 | | RAG_ValidationReport (both tracks + parity) | `<CH_ROOT>/RAG/<ChapterName>_RAG_ValidationReport.md` |
@@ -88,7 +94,7 @@ PHASES 4, 5, and 6 don't change the status; they gate by checklist (`gateStatus`
 | | ActivationReport | `<CH_ROOT>/<ChapterName>_PHASE6_ActivationReport.md` |
 | **PHASE 7** | Validation of outputs · checklist of all content · <AUTHOR>'s sign-off with LLM recommendations | `<CH_ROOT>/<ChapterName>_PHASE7_ReleaseChecklist.md` → copy in `_FinalizedReleases/` |
 
-The eBook, workbook, print, and audiobook deliverables are assembled in PHASE 3 *book assembly mode* once every chapter is Production Ready. **<BOOK>_KINDLE_EBOOK is assembled in PHASE 4 Part B**, after every chapter's Kindle build passes, because Kindle depends on the finished figures and the completed print/eBook work. PHASE 6.5 validates the package; <AUTHOR> approves the KDP upload in PHASE 7.
+The eBook, workbook, and print deliverables are assembled in PHASE 3 *book assembly mode* once every chapter is Production Ready. **The audiobook is rendered per chapter in PHASE 4 Part C and assembled in Part B**, because it must use the final wording that PHASE 4 Part 0 syncs back from the eBook. **<BOOK>_KINDLE_EBOOK is assembled in PHASE 4 Part B**, after every chapter's Kindle build passes, because Kindle depends on the finished figures and the completed print/eBook work. PHASE 6.5 validates the package; <AUTHOR> approves the KDP upload in PHASE 7.
 
 Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 `_ProductionChecklist.md` (P1) · `Governance/_ChapterCertification.md` (P2) · `Governance/_DesignQA_<ts>.md` (P3.5) · `_PHASE4_KindleChecklist.md` · `_PHASE5_RAGChecklist.md` · `_PHASE6_AutomationChecklist.md` · `Governance/_PublicationQA_<ts>.md` (P6.5) · `_PHASE7_ReleaseChecklist.md`
@@ -124,7 +130,7 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
     │   ├── eBook/                HTML blocks + metadata [P1]; PDF/EPUB exports [P3]; final eBook PDF (required by P4 Part 0)
     │   ├── Kindle/               DOCX, HTML, metadata, figures/                    [P4]
     │   ├── InDesign/             prep [P1]; .indd + print PDF (manual, optional)   [P3]
-    │   ├── Audiobook/            script, markers [P1]; MP3                         [P3]
+    │   ├── Audiobook/            script, markers [P1]; refreshed script + MP3      [P4 Part C]
     │   ├── RAG/                  PHASE 1 packet; Ingestion, Chunks/, Index/, Trigger/ [P1, P5]
     │   ├── Marketing/            Intake/, Seeds/, Trigger/ [P1]; Generated/        [P6]
     │   ├── Governance/           reports, Trigger/, _Backups/, QA reports          [P2, P3.5, P6.5]
@@ -194,7 +200,7 @@ Rules: triggers only fire workflows for chapters whose `automationStatus` is `ac
 | Azure OpenAI (embedding deployment `text-embedding-3-large`; optional chat deployment) | Cloud embeddings for `<RAG_BLOB_CONTAINER>` (Track C) and query vectors; cloud-grounded drafting | 5, 6 |
 | Azure Blob Storage | Cloud vector store (private container; Entra ID, read-only for consumers) | 5, 6 |
 | LM Studio (optional) | OpenAI-compatible endpoint for n8n | 5, 6 |
-| XTTS (local) | Audiobook narration render | 3 |
+| XTTS (local) | Audiobook narration render (after the Part 0 sync) | 4 (Part C) |
 | n8n / OpenClaw | Orchestration | 6 |
 
 **Local-LLM context load order (8k window):** VoiceKit → TerminologyLock → Claims + Do-Not-Claim → Marketing rules → Design rules → Governance rules → RAG query rules → task.
@@ -209,7 +215,7 @@ Rules: triggers only fire workflows for chapters whose `automationStatus` is `ac
 | Workbook eBook | `_Masters/Workbook_Master.html` ← chapter Workbook + DesignPacket | P3 | P3.5, P6.5 | P7 |
 | Print book | Manual InDesign from Print 7×10 layouts + InDesign prep | P3 (<AUTHOR>) | P6.5 (package) | P7 |
 | Workbook print | Manual InDesign | P3 (<AUTHOR>) | P6.5 | P7 |
-| Audiobook | XTTS from narration scripts | P3 | P3.5, P6.5 | P7 |
+| Audiobook | XTTS from the narration script refreshed after the Part 0 sync | P4 Part C (set: Part B) | P4 Part C, P6.5 | P7 |
 | Kindle / KDP | Per-chapter Kindle build (P4 Part A) → book assembly (P4 Part B) | P4 | P6.5 | P7 (<AUTHOR> approves upload) |
 | RAG (Local + Cloud) | Canonical chunk set → ChromaDB and Azure Blob Storage | P5 | P5, P6.5 | P7 |
 | Marketing | Intake + Seeds → n8n/OpenClaw drafts | P1, P6 | P2, P6 tests | Per item, <AUTHOR> approval |

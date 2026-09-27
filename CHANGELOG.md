@@ -25,6 +25,8 @@ A new PHASE 0.9 audits the **whole book** for drift before PASS 7 and again at t
 - **Cloud release-ready flag.** The Blob `manifest.json` gets an `auditFinalClear` entry, set only after the final delta audit. External consumers serve the book only while it is set.
 - PHASE 4 Part B, PHASE 6.5 book mode, and PHASE 7 now check `AUDIT_FINAL_CLEAR.md`.
 - **`<DRAFT_SOURCE>`** placeholder token.
+- **PHASE 4 Part C (Audiobook).** The narration script is refreshed from the synced manuscript and rendered with XTTS after Part 0, per chapter. Part B (B4b) then assembles `<BOOK>_AUDIOBOOK`.
+- **PHASE 4 Part 0 step 0.7.** A PHASE 0.9 spot check of each chapter's synced text, so drift is caught before the audio renders. `MANUSCRIPT_SYNCED.md` requires that no blocking finding is open.
 - **Dual RAG in PHASE 5 (v4).** One canonical, model-agnostic chunk set (`RAG/Chunks/`) feeds two tracks:
   - **Track L — Local (required):** ChromaDB in Docker, with vectors from an ONNX/TEI embedding container.
   - **Track C — Cloud (optional):** vector files in Azure Blob Storage, embedded with an Azure OpenAI `text-embedding-3-large` deployment (3,072 dims, multilingual) and searched in memory by cosine similarity. No search service, so the cloud track costs only the per-token embedding calls plus Blob storage.
@@ -55,9 +57,12 @@ A new PHASE 0.9 audits the **whole book** for drift before PASS 7 and again at t
 - `MASTER_PIPELINE_OVERVIEW.md`: phase table, deliverable map, trigger map, RAG map, and LLM map updated for both tracks.
 - `PLACEHOLDERS.md`: new token and example values; scripts point at `v_1_0_2/`.
 
+- **The audiobook moved from PHASE 3 to PHASE 4.** The author refines wording in the eBook and print InDesign books up to PHASE 4, so audio rendered in PHASE 3 would narrate pre-final text. PHASE 3.5 no longer checks audio, and PHASE 4 Part C and PHASE 6.5 do. PHASE 4 is retitled "Final-Wording Builds" (the file name is unchanged).
+- PHASE 0.9 documents the manuscript passes: PASS 6 is tightening (audit when it's complete), and PASS 7 is the author's voice pass, after which the chapter is pseudo-locked.
+
 ### Unchanged
 
-PHASES 3 and 3.5 are identical to `v1_0/`. PHASES 1, 2, and 4 differ only by the PHASE 0.9 hooks: the entry gate and TerminologyLock seed, glossary normalization, and Part B step B0.
+PHASES 1 and 2 differ from `v1_0/` only by the PHASE 0.9 hooks (the entry gate and TerminologyLock seed, and glossary normalization). PHASES 3 and 3.5 differ only by the audiobook moving to PHASE 4.
 
 ---
 

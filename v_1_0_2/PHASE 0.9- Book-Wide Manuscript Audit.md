@@ -1,6 +1,6 @@
 # PHASE 0.9: Book-Wide Manuscript Audit (v1)
 
-> **Pipeline position:** PHASE 0.9 (Consistency), before PASS 7 locks the manuscript · **Upstream gate:** every chapter exists at the current draft pass (e.g. PASS 6) in `<DRAFT_SOURCE>` · **Downstream:** PASS 7 (<AUTHOR>'s edits) → PHASE 1. Runs again as a **final delta audit** at the start of PHASE 4 Part B.
+> **Pipeline position:** PHASE 0.9 (Consistency), between the tightening pass (PASS 6) and <AUTHOR>'s voice pass (PASS 7) · **Upstream gate:** PASS 6 is complete for **every** chapter in `<DRAFT_SOURCE>` · **Downstream:** PASS 7 → PHASE 1. Spot-checks each chapter again after its PHASE 4 Part 0 sync, and runs a **final delta audit** at the start of PHASE 4 Part B.
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
 **v1 (2026-09-27):** new phase. Every other phase checks one chapter at a time; PHASE 2 carries the glossary forward, but only against chapters already processed. Nothing checked the **whole book** for drift. That matters most in the RAG layer: the local and cloud vector stores (and any product built on them) inherit every inconsistency, and two chapters that disagree become one contradictory answer.
@@ -10,20 +10,29 @@
 **Purpose:**
 Find every place where the book disagrees with itself — terms, definitions, acronyms, equations, thresholds, lists, figures, cross-references, and citation-unfriendly headings — and hand <AUTHOR> one list of decisions to make. This phase is **report-only**: it never edits the manuscript.
 
+## Where it sits in the manuscript passes
+
+- **PASS 6: tightening.** Word counts come down and redundancy goes. Wording changes a lot here, so audit **after** PASS 6 is finished for every chapter, not during it.
+- **PHASE 0.9, Mode F.** The book-wide audit, run on the tightened draft.
+- **PASS 7: voice.** <AUTHOR> reads each chapter in full and edits it for voice, resolving the audit findings along the way. After PASS 7, the chapter is pseudo-locked: from then on, wording changes only through PHASE 1 Editorial Suggestions or the layout sync in PHASE 4 Part 0.
+- **PHASES 1–3.** Production, governance, and design work from the PASS 7 text.
+- **eBook and print InDesign books.** Built before PHASE 4. <AUTHOR> may refine wording in either one, and PHASE 4 Part 0 copies the final eBook wording back into the manuscript. Mode P checks each chapter at that point, and Mode D checks the whole book before the book-level builds.
+- **Audiobook and the remaining phases.** They run from the final, synced wording.
+
 ## When it runs
 
 | Mode | When | Chapters | Passes | Exit trigger |
 |---|---|---|---|---|
 | **F — Full** | Once, on the complete draft (PASS 6 or whichever pass is current), **before PASS 7** | all | 1 → 2 → 3 per chapter, then Consolidation | `AUDIT_CLEAR.md` |
-| **P — PASS 7 spot check** | During PASS 7, whenever an edit touches a canonical term, equation, threshold, or named list | the edited chapter | 2 only (against the current ledger) | none (findings join the next Consolidation) |
-| **D — Final delta** | PHASE 4 Part B, step B0: every chapter has `MANUSCRIPT_SYNCED.md` | chapters whose PHASE 4 Part 0 sync applied or resolved changes since the last audit run | 1 → 2 (→ 3 if anchors moved) per changed chapter, then Consolidation over the whole book | `AUDIT_FINAL_CLEAR.md` |
+| **P — Spot check** | (a) During PASS 7, whenever an edit touches a canonical term, equation, threshold, or named list · (b) **after every PHASE 4 Part 0 sync** that changes wording (Part 0 step 0.7), before the chapter's audiobook render and RAG rebuild | the one chapter | (a) 2 only · (b) 1 → 2 on the synced text, updating the ledger | (a) none; findings join the next Consolidation · (b) the result is recorded in the sync report; no open blocking finding allowed |
+| **D — Final delta** | PHASE 4 Part B, step B0: every chapter has `MANUSCRIPT_SYNCED.md` | only chapters whose text changed **after** their last Mode P check (usually none, since each Part 0 sync already ran one) | 1 → 2 (→ 3 if anchors moved) for those chapters, then Consolidation over the whole book (catches conflicts *between* chapters synced at different times) | `AUDIT_FINAL_CLEAR.md` |
 
-Why this order: before PASS 7, a fix is one edit in one draft file. After PHASE 1, the same fix touches every derived artifact, the design packet, and both vector stores. The final delta exists because <AUTHOR> refines wording during InDesign layout (PHASE 4 Part 0 copies it back), and that wording is what the eBook, Kindle build, and RAG actually ship.
+Why this order: before PASS 7, a fix is one edit in one draft file, and PASS 7 is where <AUTHOR> is already reading every line. After PHASE 1, the same fix touches every derived artifact, the design packet, and both vector stores. The Part 0 spot check exists because <AUTHOR> refines wording during InDesign layout, and that wording is what the eBook, Kindle build, audiobook, and RAG actually ship. Catching drift then, chapter by chapter, means a problem is fixed before its audio is rendered, and the final delta has little left to find.
 
 ## Inputs
 
 - Mode F / P: the draft manuscripts in `<DRAFT_SOURCE>` (one file per chapter)
-- Mode D: the synced manuscripts, `<CH_ROOT>/Manuscript/<ChapterName>_Manuscript.md`, and each chapter's `ManuscriptSync_*.md` reports (to pick the changed chapters)
+- Mode P (b) and Mode D: the synced manuscripts, `<CH_ROOT>/Manuscript/<ChapterName>_Manuscript.md`, and each chapter's `ManuscriptSync_*.md` reports (Mode D uses them to find chapters changed after their last spot check)
 - The book glossary (export to plain text if it is a DOCX)
 - `<BOOK_ROOT>/_BookGovernance/Audit/Audit_Config.json` (below)
 - Mode D also reads the previous run's `ledger.json` and `Audit_CanonicalTerms.json`
@@ -258,7 +267,7 @@ Save as `<BOOK>_AuditReport.md`, and copy the *Canonical decisions needed* secti
 1. **<AUTHOR> resolves the canonical decisions first.** Each chosen version goes into `Audit_CanonicalTerms.json` (term, canonical form, canonical definition or expression, source location) and into `Audit_Config.json` → `canonicalTerms` / `knownCorrections` for the next run.
 2. **Fix the manuscript.**
    - Mode F / P: <AUTHOR> edits the draft (this is what PASS 7 is for).
-   - Mode D: a blocking wording fix goes into the eBook source → re-export the eBook PDF → PHASE 4 Part 0 re-sync → Part A → PHASE 5 re-run for that chapter (its existing re-sync rule). Never patch the synced manuscript by hand.
+   - Mode P (b) and Mode D: a blocking wording fix goes into the eBook InDesign book (and the print book, if it carries the same text) → re-export the eBook PDF → PHASE 4 Part 0 re-sync → Part A / Part C → PHASE 5 re-run for that chapter (the existing re-sync rule). Never patch the synced manuscript by hand.
 3. **Update the glossary** from the glossary delta.
 4. **Re-run Pass 2 on the changed chapters only**, then Consolidation, until the gate passes.
 

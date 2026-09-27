@@ -3,6 +3,8 @@
 > **Pipeline position:** PHASE 3 of 7 (Design + Production) · **Upstream gate:** `Governance/Trigger/GOVERNANCE_READY.md` exists · **Downstream:** PHASE 3.5 Design QA
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
+**Audiobook timing (2026-09-27):** the audiobook render and the `<BOOK>_AUDIOBOOK` set moved to **PHASE 4 Part C / Part B**. <AUTHOR> can still change wording in the eBook and print InDesign books, so audio is rendered only after PHASE 4 Part 0 syncs the final wording. PHASE 3 keeps the narration script and pronunciation guide from PHASE 1 as they are.
+
 **v3 changes (2026-09-22 pipeline alignment):**
 - Adds the operator section (inputs, outputs, folders, production tracks, book assembly, exit gate). The Claude Design System Prompt below is unchanged except for one clarification that PDF/PPTX/EPUB are exported *from* the HTML.
 - **Kindle decision (2026-09-22):** PHASE 3 no longer produces a Kindle edition. PHASE 3 finishes the DesignPacket, the figures, and the manual print and eBook layouts; **all Kindle work happens in PHASE 4**, chapter by chapter, from those finished assets. PHASE 3 therefore has one new required output: exported figure image assets, which PHASE 4 needs.
@@ -64,7 +66,7 @@ Every figure in the chapter's `FigureRegistry.json` must exist as a raster image
 |---|---|---|
 | Print layout | **<AUTHOR>, manual in InDesign**, using `Ch<N>_Print7x10.dc.html` and `/InDesign/` prep as reference | `<CH_ROOT>/InDesign/<ChapterName>_Print.indd` + print PDF |
 | Workbook print layout | **<AUTHOR>, manual in InDesign** | `<CH_ROOT>/InDesign/<ChapterName>_WorkbookPrint.indd` + print PDF |
-| Audiobook render | Local XTTS from `/Audiobook/` narration script + pronunciation guide | `<CH_ROOT>/Audiobook/<NN>_<ChapterName>.mp3` (NN = book running order, matching FrontMatter numbering) |
+| Audiobook render | **Moved to PHASE 4 Part C** (renders from the synced, final wording) | — |
 
 ## A4. Book assembly mode (once every chapter for the edition has passed PHASE 3.5)
 
@@ -76,7 +78,7 @@ Assemble chapter outputs, plus FrontMatter, Parts, and BackMatter sections, into
 | <BOOK>_WORKBOOK_EBOOK | `_BookPublication/<BOOK>_WORKBOOK_EBOOK/` | `<BOOK>_Workbook_eBook.pdf`, `.epub` (from `_Masters/Workbook_Master.html`) |
 | <BOOK>_PRINT_BOOK | `_BookPublication/<BOOK>_PRINT_BOOK/` | Manual InDesign book file + print-ready PDF |
 | <BOOK>_WORKBOOK_PRINT_BOOK | `_BookPublication/<BOOK>_WORKBOOK_PRINT_BOOK/` | Manual InDesign book file + print-ready PDF |
-| <BOOK>_AUDIOBOOK | `_BookPublication/<BOOK>_AUDIOBOOK/` | Ordered MP3 set + track list |
+| <BOOK>_AUDIOBOOK | `_BookPublication/<BOOK>_AUDIOBOOK/` | **Assembled in PHASE 4 Part B**, not here |
 
 **<BOOK>_KINDLE_EBOOK is not built here.** It is assembled in PHASE 4 book assembly mode from the per-chapter Kindle builds, once every chapter has passed PHASE 4.
 

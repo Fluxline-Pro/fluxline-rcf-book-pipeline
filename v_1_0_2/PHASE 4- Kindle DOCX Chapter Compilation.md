@@ -1,9 +1,12 @@
-# PHASE 4: Kindle DOCX Chapter Compilation (v3.1)
+# PHASE 4: Final-Wording Builds — Manuscript Sync, Kindle DOCX, Audiobook (v3.1)
 
 > **Pipeline position:** PHASE 4 of 7 (Kindle) · **Upstream gate:** `DesignPacket/Trigger/DESIGN_READY.md` exists (PHASE 3.5 certified Production Ready) **and** the final eBook PDF is uploaded (Part 0) · **Downstream:** PHASE 5 RAG Rebuild
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
-**v3.1 changes (2026-09-27 book audit):** Part B opens with step **B0**, the PHASE 0.9 final delta audit of the synced manuscripts. It re-checks the chapters whose wording changed during layout, and the assembly waits for `AUDIT_FINAL_CLEAR.md`.
+**v3.1 changes (2026-09-27 book audit + audiobook timing):**
+- Part 0 gains step **0.7**, a PHASE 0.9 spot check (Mode P) of the chapter's synced text. `MANUSCRIPT_SYNCED.md` now requires that no blocking audit finding is open for the chapter.
+- Part B opens with step **B0**, the PHASE 0.9 final delta audit, and waits for `AUDIT_FINAL_CLEAR.md`.
+- **New Part C: Audiobook**, moved here from PHASE 3. <AUTHOR> can edit wording in the eBook and print InDesign books right up to PHASE 4, so the narration script is refreshed from the synced manuscript and rendered only after Part 0. The book-level `<BOOK>_AUDIOBOOK` set is now assembled in Part B.
 
 **v3 changes (2026-09-22 pipeline alignment):**
 - One path root: `<CH_ROOT>` = `<BOOK_ROOT>/Chapters/<ChapterName>/Final/` (the old file mixed three different roots).
@@ -40,12 +43,21 @@ Transform the governed, design-validated PHASE 1–3.5 chapter outputs into a **
 | Kindle figure images (Kindle-sized copies) | `<CH_ROOT>/Kindle/figures/<ChapterName>_Fig<#>_<Name>.jpg` |
 | PHASE 4 checklist | `<CH_ROOT>/<ChapterName>_PHASE4_KindleChecklist.md` |
 
-### Part B — book level (once every chapter has passed Part A)
+### Part C — per chapter, after Part 0 (can run alongside Part A)
+
+| Deliverable | Path |
+|---|---|
+| Narration script refreshed from the synced manuscript | `<CH_ROOT>/Audiobook/<ChapterName>_NarrationScript.md` (pronunciation guide and segment markers kept) |
+| Audiobook render (XTTS) | `<CH_ROOT>/Audiobook/<NN>_<ChapterName>.mp3` (NN = book running order, matching FrontMatter numbering) |
+| Audiobook check (in the PHASE 4 checklist) | `<CH_ROOT>/<ChapterName>_PHASE4_KindleChecklist.md` → `audiobookStatus` |
+
+### Part B — book level (once every chapter has passed Part A and Part C)
 
 | Deliverable | Path |
 |---|---|
 | Final delta audit (PHASE 0.9 Mode D) | `<BOOK_ROOT>/_BookGovernance/Audit/<RUN_ID>/` + `Audit/Trigger/AUDIT_FINAL_CLEAR.md` |
 | **<BOOK>_KINDLE_EBOOK** | `<BOOK_ROOT>/_BookPublication/<BOOK>_KINDLE_EBOOK/` |
+| **<BOOK>_AUDIOBOOK** (ordered MP3 set + track list) | `<BOOK_ROOT>/_BookPublication/<BOOK>_AUDIOBOOK/` |
 
 ---
 
@@ -126,7 +138,13 @@ Present the S3 list (location, manuscript text, PDF text, why it is flagged, rec
 - **Downstream impact list.** Search the chapter's derived artifacts for the old wording of every applied change and list each hit in the sync report: ReviewPacket, ReferenceGuides, Workbook, Training, Slides, InDesign prep (pull quotes, sidebars), Audiobook narration script and rendered MP3, eBook HTML blocks, Marketing Intake (claims registry, terminology lock, voice samples), and the PHASE 1 RAG packet. Do **not** edit them here. PHASE 4 Part A reads the updated manuscript, and PHASE 5 rebuilds RAG from it; the others go to <AUTHOR> as proposed follow-ups. Mark verbatim quotations (pull quotes, voice samples, claims) and narration as **must fix before release**; they are checked again in PHASE 6.5 and PHASE 7.
 - **Print cross-check (<AUTHOR>).** The print book is outside this pipeline's folders, so <AUTHOR> confirms one of: the print InDesign book carries the same wording changes, or the print-only differences are listed in the sync report. PHASE 4 does not block on print, but the answer is recorded.
 
-## 0.7 Sync report and trigger
+## 0.7 Chapter audit spot check (PHASE 0.9, Mode P)
+
+Run this before writing the sync report. If Part 0 changed any wording, run PHASE 0.9 Pass 1 → Pass 2 on the synced manuscript against the book ledger and `Audit_CanonicalTerms.json`, update the ledger with this chapter's entries, and add the result to the sync report (counts by severity, run ID). If nothing changed, record "spot check not needed".
+
+A **blocking** finding is handled like an S3 item: <AUTHOR> decides, the fix goes into the eBook (and print) InDesign book, the PDF is re-exported, and Part 0 re-runs. Major and minor findings are carried into the Mode D final delta.
+
+## 0.8 Sync report and trigger
 
 Save `<CH_ROOT>/Manuscript/<ChapterName>_ManuscriptSync_<YYYYMMDD_HHMM>.md`:
 
@@ -137,13 +155,14 @@ Save `<CH_ROOT>/Manuscript/<ChapterName>_ManuscriptSync_<YYYYMMDD_HHMM>.md`:
 - Version before → after, backup path
 - Downstream impact list
 - Print cross-check answer
+- Audit spot check (0.7): run ID and counts by severity, or "not needed"
 - `syncStatus: SYNCED | NO_DIFFERENCES | BLOCKED`
 
 Then write the trigger (renaming any older one to `*_superseded_<timestamp>.md`):
-- `Manuscript/Trigger/MANUSCRIPT_SYNCED.md` when `syncStatus` is `SYNCED` or `NO_DIFFERENCES`: no S3 item is pending, MD and DOCX match the PDF and each other, and the version is recorded.
+- `Manuscript/Trigger/MANUSCRIPT_SYNCED.md` when `syncStatus` is `SYNCED` or `NO_DIFFERENCES`: no S3 item is pending, no blocking step-0.7 audit finding is open, MD and DOCX match the PDF and each other, and the version is recorded.
 - `Manuscript/Trigger/MANUSCRIPT_SYNC_INCOMPLETE.md` otherwise, listing what is blocking.
 
-**Re-run rule:** if <AUTHOR> re-exports the eBook PDF after further edits, at any point up to PHASE 7, Part 0 runs again for that chapter, and PHASE 4 Part A is rebuilt from the updated manuscript.
+**Re-run rule:** if <AUTHOR> re-exports the eBook PDF after further edits, at any point up to PHASE 7, Part 0 runs again for that chapter, and PHASE 4 Part A and Part C are rebuilt from the updated manuscript.
 
 ## Part 0 exit gate
 
@@ -275,9 +294,22 @@ Save as `<CH_ROOT>/<ChapterName>_PHASE4_KindleChecklist.md`. Include:
 - Deliverables saved (DOCX, HTML, metadata, `Kindle/figures/`) and manifest updated
 - Any missing elements
 - Recommendations for PHASE 5 (RAG rebuild)
+- Part 0 step 0.7 audit spot check result
+- Part C: `audiobookStatus: RENDERED | PENDING | N/A`, narration refresh date, render file, pronunciation review by <AUTHOR>
 - `gateStatus: PASS | FAIL`
 
 ---
+
+# PART C — AUDIOBOOK (per chapter, after Part 0)
+
+The audiobook is rendered from the **final** wording, so it waits for `MANUSCRIPT_SYNCED.md` (including the step 0.7 spot check). It can run alongside Part A.
+
+1. **Refresh the narration script.** Update `Audiobook/<ChapterName>_NarrationScript.md` (PHASE 1 Step 9) from the synced manuscript: apply every Part 0 wording change, keep the pronunciation guide and segment markers, and move any marker whose text moved. This clears the "narration" items in the Part 0 downstream impact list.
+2. **Render.** Run local XTTS from the refreshed script and the pronunciation guide to `Audiobook/<NN>_<ChapterName>.mp3`.
+3. **Check.** Every narration segment is present and in order, the segment markers match the script, and <AUTHOR> has reviewed pronunciation of the framework terms. Record the result as `audiobookStatus` in the PHASE 4 checklist.
+4. **Re-render rule.** If Part 0 re-runs for the chapter, repeat steps 1–3. An MP3 older than the chapter's `MANUSCRIPT_SYNCED.md` is stale.
+
+Front matter, Part openers, and back matter sections that are narrated follow the same steps in their `Audiobook/` folders.
 
 ## Front matter, Parts, and back matter
 
@@ -294,7 +326,7 @@ PHASE 5 may start for the chapter when `Manuscript/Trigger/MANUSCRIPT_SYNCED.md`
 
 ---
 
-# PART B — BOOK-LEVEL KINDLE ASSEMBLY (<BOOK>_KINDLE_EBOOK)
+# PART B — BOOK-LEVEL ASSEMBLY (<BOOK>_KINDLE_EBOOK + <BOOK>_AUDIOBOOK)
 
 Run once, when every chapter, front matter section, Part opener, and back matter section has a PHASE 4 Part A `PASS`. Output folder: `<BOOK_ROOT>/_BookPublication/<BOOK>_KINDLE_EBOOK/`.
 
@@ -334,6 +366,10 @@ Once every chapter has `MANUSCRIPT_SYNCED.md`, run PHASE 0.9 in **Mode D** on th
 - `cover/<BOOK>_Kindle_Cover.jpg` (1600 × 2560 recommended)
 - `<BOOK>_Kindle_AssemblyReport.md` — source files used, per-chapter versions, TOC depth, figure count, warnings
 
+## B4b. Audiobook set (<BOOK>_AUDIOBOOK)
+
+Once every narrated section has a current Part C render (none older than its `MANUSCRIPT_SYNCED.md`), assemble `_BookPublication/<BOOK>_AUDIOBOOK/`: the ordered MP3 set (running order matches the book TOC and the Kindle reading order) and `<BOOK>_Audiobook_TrackList.md` (track number, section, file, duration). This set was assembled in PHASE 3 before v1.0.2.
+
 ## B5. Workbook Kindle edition (optional)
 
 If a Kindle workbook is in scope, repeat B1–B4 using the chapters' workbook content into `_BookPublication/<BOOK>_WORKBOOK_EBOOK/<BOOK>_Workbook_Kindle.docx`. Otherwise record "not in scope" in the assembly report.
@@ -348,3 +384,4 @@ PHASE 6.5 validates this package (EPUB, Kindle, metadata, figures, accessibility
 - [ ] Kindle Previewer opens the proof with a working TOC and correct reflow
 - [ ] Assembly report lists no unresolved warnings
 - [ ] Assembly report records the final audit run ID
+- [ ] `<BOOK>_AUDIOBOOK` set and track list exist, and no MP3 is older than its section's `MANUSCRIPT_SYNCED.md`

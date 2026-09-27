@@ -104,7 +104,6 @@
 - [ ] eBook, Print 7×10, and Workbook eBook/Print layouts present
 - [ ] Exports: Slides PPTX + PDF · eBook PDF + EPUB · Workbook eBook PDF
 - [ ] InDesign print files (manual) present
-- [ ] Audiobook MP3 rendered (XTTS) and pronunciation reviewed
 
 ## PHASE 3.5 — Design QA
 
@@ -121,6 +120,8 @@
 - [ ] `<ChapterName>_Kindle.docx` · `_Kindle.html` · `_KindleMetadata.json` · `Kindle/figures/`
 - [ ] Every figure is a real image (no placeholders, or an approval is recorded)
 - [ ] Build profile recorded; no draft marketing seeds included
+- [ ] Part 0 step 0.7 audit spot check recorded; no blocking finding open
+- [ ] Part C: narration script refreshed from the synced manuscript; audiobook MP3 rendered (XTTS) after the latest sync; pronunciation reviewed
 - [ ] PHASE 4 Part A checklist `gateStatus: PASS`
 - [ ] Part B book assembly: this chapter appears in `<BOOK>_Kindle.docx` at the correct version and reading position
 
@@ -152,7 +153,7 @@
 - [ ] <BOOK>_WORKBOOK_EBOOK
 - [ ] <BOOK>_PRINT_BOOK (manual InDesign)
 - [ ] <BOOK>_WORKBOOK_PRINT_BOOK (manual InDesign)
-- [ ] <BOOK>_AUDIOBOOK
+- [ ] <BOOK>_AUDIOBOOK (PHASE 4 Part B)
 - [ ] <BOOK>_KINDLE_EBOOK (PHASE 4 Part B)
 - [ ] Book-wide audit: `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md` present, and this chapter's final wording was part of that run (PHASE 0.9 Mode D)
 

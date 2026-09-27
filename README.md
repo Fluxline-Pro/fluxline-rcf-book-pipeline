@@ -23,9 +23,9 @@ This pipeline treats the manuscript as the only source of truth and makes every 
 | **0.9 — Book audit** | Audits the whole draft for drift (terms, definitions, acronyms, equations, thresholds, lists, figures, cross-references) **before PASS 7**, and again as a final delta once every chapter is synced to its final eBook PDF. Report-only; you resolve the canonical decisions | `AUDIT_CLEAR.md`, then `AUDIT_FINAL_CLEAR.md` |
 | **1 — Creation** | Generates every chapter artifact from the locked manuscript: review packet, workbook, training materials, reference guides, slide outline, eBook prep, print prep, narration script, RAG packet, and a grounded marketing intake packet | Production checklist |
 | **2 — Governance** | Validates everything against the manuscript, fixes what is safely fixable, proposes the rest, and certifies the chapter | `GOVERNANCE_READY.md` |
-| **3 — Design + Production** | Design-system-bound HTML for every asset, figure images, exports, manual print layout, audiobook render, and book-level assembly | Hand-off to QA |
+| **3 — Design + Production** | Design-system-bound HTML for every asset, figure images, exports, the manual eBook and print layouts, and book-level assembly | Hand-off to QA |
 | **3.5 — Design QA** | Reviews the design output against the design system, accessibility, instructional quality, and Kindle readiness | `DESIGN_READY.md` |
-| **4 — Kindle** | Syncs the manuscript (MD and DOCX) to the final eBook PDF, builds the Kindle files per chapter, then assembles the book-level Kindle package | Kindle package |
+| **4 — Final-wording builds** | Syncs the manuscript (MD and DOCX) to the final eBook PDF and spot-checks it, then builds the Kindle files and renders the audiobook per chapter, and assembles the book-level Kindle package and audiobook set | Kindle package + audiobook |
 | **5 — RAG (Local + Cloud)** | Rebuilds the chapter's canonical chunk set, re-embeds it into the local index (and the cloud index, if enabled), checks parity, writes the system prompt and query profiles | `RAG_READY.md` |
 | **6 — Automation** | Activates the n8n and OpenClaw workflows that generate marketing and design drafts from the grounded RAG | Activation report |
 | **6.5 — Publication QA** | Validates EPUB, Kindle, print, audiobook, metadata, and accessibility | Publishing Ready |
