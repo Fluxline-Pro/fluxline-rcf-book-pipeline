@@ -9,31 +9,33 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 **Folder:** `v_1_0_3/` · **Previous:** `v_1_0_2/` (tag `v1_0_2_PROD`, unchanged, kept for books mid-flight)
 
-The workbook gets its own track. It ships in two formats only, an **eBook PDF** and a **full-color print book**, both laid out by the author in InDesign alongside PHASE 3 / 3.5. Before this release, the workbook's steps were spread across seven phases, and several of them assumed things this workbook doesn't have: an HTML-built eBook, a Kindle edition, and RAG ingestion.
+The workbook gets its own track. It ships in two formats only: an **eBook PDF** (8.5×11 in) and a **full-color print book** (7×10 in). Claude Design builds the workbook from the workbook manuscript, and the author produces both formats in InDesign alongside PHASE 3 / 3.5. The workbook manuscript now follows the chapter manuscript's rule (the DOCX is canonical, the MD is its replica), and by the end the PDF, DOCX, and MD match word for word. Before this release, the workbook's steps were spread across seven phases, and several of them assumed things this workbook doesn't have: an HTML-built eBook, a Kindle edition, and RAG ingestion.
 
 ### Added
 
 - **PHASE 3W — Workbook Track (eBook + Print) (new file).**
-  - **W0:** the PHASE 1 exercise content. The exercise DOCX is canonical and the Markdown is its replica.
-  - **W1:** the author's InDesign layout. One layout serves both exports: CMYK PDF/X-4 print with bleed and write-in space, and an RGB eBook PDF with bookmarks and links (fillable fields optional).
+  - **W0:** the workbook manuscript, `<ChapterName>_Exercise<L.N>_Workbook.docx` (canonical) + `.md` (replica). At the end of PHASE 2, the **`WORKBOOK_MANUSCRIPT_READY.md`** gate confirms DOCX = MD and registers the exercise IDs. The PHASE 3 workbook design waits for it.
+  - **W1:** Claude Design builds the workbook from the workbook manuscript; the author produces both formats from it in InDesign.
+    - eBook: 8.5×11 in RGB PDF, printable at home but not meant for it.
+    - Print: 7×10 in, full color, CMYK PDF/X-4, with bleed and write-in space.
   - **W2:** the author uploads `<ChapterName>_Workbook_eBook.pdf` and `_Workbook_Print.pdf` to `Workbook/`. **The upload is the cue** that the chapter's workbook is done.
-  - **W3:** a report-only check, which writes `WORKBOOK_READY.md` or `WORKBOOK_INCOMPLETE.md`. It covers content match (PDF vs DOCX), print/eBook match, the exercise registry, print preflight, and eBook checks.
+  - **W3:** syncs layout-time wording from the eBook PDF back into the DOCX, then regenerates the MD (with a backup and a change log; uncertain items go to the author). It confirms **PDF = DOCX = MD**, then checks print/eBook match, the exercise registry, print preflight, and the eBook. The result is `WORKBOOK_READY.md` or `WORKBOOK_INCOMPLETE.md`.
   - **W4–W5:** the book-level workbook, assembled after PHASE 4 B0 (`AUDIT_FINAL_CLEAR.md`) so exercise IDs and wording are frozen, plus an assembly report.
 - **Exercise registry** `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json`. Exercises are numbered by Lesson (e.g. `Exercise 1.4` in Chapter 4). A manuscript mention with no matching exercise is blocking.
-- **`WORKBOOK_READY.md` / `WORKBOOK_INCOMPLETE.md`** triggers in `Workbook/Trigger/`. They don't block `DESIGN_READY.md` or PHASES 4–6; they're required for PHASE 6.5's new **Workbook** sub-certification and for PHASE 7.
+- **`WORKBOOK_MANUSCRIPT_READY.md`** (before PHASE 3) and **`WORKBOOK_READY.md`** (after the PDFs, PDF = DOCX = MD) triggers in `Workbook/Trigger/`, each with an `_INCOMPLETE` counterpart. `WORKBOOK_READY.md` doesn't block `DESIGN_READY.md` or PHASES 4–6; they're required for PHASE 6.5's new **Workbook** sub-certification and for PHASE 7.
 - **`<WORKBOOK_INDESIGN_ROOT>`** placeholder: the workbook InDesign files, INDB, links, and fonts stay outside `<BOOK_ROOT>` (for example, OneDrive), and no phase reads them.
-- **`<WORKBOOK_TRIM>`** placeholder for the print workbook's trim size.
 
 ### Changed
 
-- **PHASE 3 (v3.2):** the Claude Design workbook layout is an optional reference, and the workbook's production track points to PHASE 3W. The book-level workbook deliverables are assembled in PHASE 3W, not in PHASE 3 book assembly.
-- **PHASE 3.5 (v3.2):** it no longer checks the workbook PDFs (PHASE 3W does). The Kindle Readiness item covers only the exercise text the Kindle book carries.
+- **PHASE 2 (v3.2):** writes the `WORKBOOK_MANUSCRIPT_READY.md` gate in the same run as `GOVERNANCE_READY.md`.
+- **PHASE 3 (v3.2):** Claude Design builds the workbook from the workbook manuscript once `WORKBOOK_MANUSCRIPT_READY.md` exists, and the workbook's production track points to PHASE 3W. The book-level workbook deliverables are assembled in PHASE 3W, not in PHASE 3 book assembly.
+- **PHASE 3.5 (v3.2):** still reviews the Claude Design workbook, and confirms its exercise text matches the workbook manuscript. The workbook PDFs are checked in PHASE 3W. The Kindle Readiness item covers only the exercise text the Kindle book carries.
 - **PHASE 4 (v3.2):** the Part 0 downstream impact list checks exercise IDs against the registry.
 - **PHASE 6.5 (v3.2):** certifies the workbook from the PHASE 3W reports, with new Workbook score, findings, and sub-certification lines.
 - **PHASE 7 (v3.2):** gains a PHASE 3W section and the Workbook sub-certification.
-- **PHASE 1 (v3.2):** Step 2 names the workbook files.
+- **PHASE 1 (v3.2):** Step 2 names the workbook files and creates the workbook manuscript's MD replica.
 - **`MASTER_PIPELINE_OVERVIEW.md`:** 3W appears in the flow, phase table, deliverable map, folder map, trigger map, publishing map, and LLM map.
-- **`PLACEHOLDERS.md`:** new tokens; the scripts point at `v_1_0_3/`. The bash script also gains the `<PASS7_SOURCE>` replacement it was missing.
+- **`PLACEHOLDERS.md`:** new token; the workbook eBook page size (8.5×11 in) is listed as a changeable example; the scripts point at `v_1_0_3/`. The bash script also gains the `<PASS7_SOURCE>` replacement it was missing.
 
 ### Removed
 

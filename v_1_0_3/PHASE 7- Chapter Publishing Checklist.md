@@ -103,13 +103,15 @@
 
 - [ ] DesignPacket complete (deck, facilitator, learner, ref guides, review, workbook, opener, figures)
 - [ ] Exported figure images in `DesignPacket/figures_export/` for every FigureRegistry entry
-- [ ] eBook and Print 7×10 layouts present (workbook layout reference optional)
+- [ ] eBook, Print 7×10, and Workbook eBook/Print layouts present
 - [ ] Exports: Slides PPTX + PDF · eBook PDF + EPUB
 - [ ] InDesign print files (manual) present
 
 ## PHASE 3W — Workbook
 
-- [ ] `Workbook/<ChapterName>_Workbook_eBook.pdf` and `_Workbook_Print.pdf` uploaded by <AUTHOR> (InDesign files stay in `<WORKBOOK_INDESIGN_ROOT>`)
+- [ ] `Workbook/Trigger/WORKBOOK_MANUSCRIPT_READY.md` was present before the workbook design (DOCX = MD, exercise IDs registered)
+- [ ] `Workbook/<ChapterName>_Workbook_eBook.pdf` (8.5×11) and `_Workbook_Print.pdf` (7×10) uploaded by <AUTHOR> (InDesign files stay in `<WORKBOOK_INDESIGN_ROOT>`)
+- [ ] Workbook PDF = DOCX = MD (latest WorkbookQA report, after the W3 sync)
 - [ ] Latest `Governance/<ChapterName>_WorkbookQA_<timestamp>.md` has no open blocking items
 - [ ] `Workbook/Trigger/WORKBOOK_READY.md` present, and newer than any PHASE 4 Part 0 sync that flagged the workbook
 - [ ] This chapter's exercises are in `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json`, and every manuscript mention matches
@@ -189,7 +191,7 @@
 ## Final published package (`Chapters/<ChapterName>/Published/`)
 
 Copies of the approved release versions only:
-- [ ] Final Manuscript · Workbook (eBook + print PDFs) · Training Guide · Slides (PPTX/PDF) · Reference Guides · eBook (PDF/EPUB) · Kindle DOCX · Audio · Metadata · Manifest
+- [ ] Final Manuscript · Workbook (manuscript DOCX + MD, eBook + print PDFs) · Training Guide · Slides (PPTX/PDF) · Reference Guides · eBook (PDF/EPUB) · Kindle DOCX · Audio · Metadata · Manifest
 
 ## Archive (`<BOOK_ROOT>/_Archive/<ChapterName>/`)
 

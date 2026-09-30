@@ -55,8 +55,8 @@ Evaluate all publication outputs for:
 |---|---|
 | eBook HTML + exports | `<CH_ROOT>/eBook/` |
 | Kindle DOCX, HTML, metadata, figures | `<CH_ROOT>/Kindle/` (PHASE 4 Part A) |
-| Design layouts (eBook, Print 7×10; workbook layout reference if made) | `<CH_ROOT>/DesignPacket/` |
-| Workbook eBook + print PDFs, `WORKBOOK_READY.md`, latest WorkbookQA report | `<CH_ROOT>/Workbook/`, `<CH_ROOT>/Governance/<ChapterName>_WorkbookQA_*.md` |
+| Design layouts (eBook, Print 7×10, Workbook) | `<CH_ROOT>/DesignPacket/` |
+| Workbook manuscript (DOCX + MD), eBook + print PDFs, `WORKBOOK_READY.md`, latest WorkbookQA report | `<CH_ROOT>/Workbook/`, `<CH_ROOT>/Governance/<ChapterName>_WorkbookQA_*.md` |
 | Audiobook final MP3 + narration script (drafts in `Audiobook/Drafts/` are out of scope) | `<CH_ROOT>/Audiobook/` |
 | InDesign print files | `<CH_ROOT>/InDesign/` |
 | RAG ingestion, index manifests (Local, Cloud), validation report | `<CH_ROOT>/RAG/` |
@@ -117,7 +117,10 @@ Check OPF completeness, NCX correctness, TOC anchors, publication metadata, lang
 
 ## 8. Print and audiobook package
 Print: print PDFs exist, trim size 7×10, figures present (layout quality is <AUTHOR>'s manual call).
-Workbook: chapter mode, a current `WORKBOOK_READY.md` (newer than any PHASE 4 Part 0 sync that flagged the workbook) and a WorkbookQA report with no open blocking items. Book mode, both workbook deliverables are present and the PHASE 3W assembly report lists no blocking items: exercise registry against the synced manuscripts, full-color print preflight, eBook bookmarks and links. The workbook has no EPUB, Kindle, audiobook, or RAG checks.
+Workbook:
+- **Chapter mode:** a current `WORKBOOK_READY.md` (newer than any PHASE 4 Part 0 sync that flagged the workbook), and a WorkbookQA report that shows PDF = DOCX = MD with no open blocking items.
+- **Book mode:** both workbook deliverables are present, the eBook at 8.5×11 in and the print interior at 7×10 in. The PHASE 3W assembly report lists no blocking items: book PDFs vs chapter workbook manuscripts, the exercise registry vs the synced manuscripts, full-color print preflight, eBook bookmarks and links.
+- The workbook has no EPUB, Kindle, audiobook, or RAG checks.
 Audiobook: every section has <AUTHOR>'s final recording (no XTTS file from `Audiobook/Drafts/` anywhere in the set), running order matches the TOC and the Kindle reading order, file naming `<NN>_<Section>.mp3`, track list present, PHASE 4 Part C coverage and technical-spec results recorded, and no stale passages (recorded before the latest Kindle build of changed text).
 
 ## 9. RAG readiness

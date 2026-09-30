@@ -3,7 +3,7 @@
 > **Pipeline position:** PHASE 1 of 7 (Creation) · **Upstream gate:** PASS 7 manuscript locked by <AUTHOR> **and** `_BookGovernance/Audit/Trigger/AUDIT_CLEAR.md` (PHASE 0.9) · **Downstream:** PHASE 2 Governance
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md` in this folder. If this file and the Overview ever disagree, the Overview wins and the discrepancy is logged.
 
-**v3.2 changes (2026-09-30 workbook track):** Step 2 names the workbook files (the exercise DOCX is canonical, with a Markdown replica). Layout, PDFs, and checks belong to `PHASE 3W- Workbook Track (eBook + Print).md`.
+**v3.2 changes (2026-09-30 workbook track):** Step 2 names the workbook files and creates the workbook manuscript's MD replica from its DOCX (the DOCX is canonical). Layout, PDFs, and checks belong to `PHASE 3W- Workbook Track (eBook + Print).md`.
 
 **v3.1 changes (2026-09-27 book audit):** PHASE 1 now waits for the book-wide audit (PHASE 0.9 `AUDIT_CLEAR.md`), and each chapter's TerminologyLock is seeded from `_BookGovernance/Audit/Audit_CanonicalTerms.json`.
 
@@ -78,7 +78,8 @@ First action: copy the locked manuscript into `<CH_ROOT>/Manuscript/<ChapterName
    - Reflection prompts
    - Application questions
    - A DOCX file formatted for workbook inclusion based on the complementary workbook exercise given as part of this prompt
-   - Save as `<CH_ROOT>/Workbook/<ChapterName>_WorkbookPacket.md` and `<CH_ROOT>/Workbook/<ChapterName>_Exercise<L.N>_Workbook.docx`, where `<L.N>` is the Lesson-based exercise ID the manuscript uses (e.g. `Exercise1.4`). The DOCX is canonical and the Markdown is its replica. The workbook's layout, PDFs, and checks belong to `PHASE 3W- Workbook Track (eBook + Print).md`.
+   - Save the packet as `<CH_ROOT>/Workbook/<ChapterName>_WorkbookPacket.md` (working material).
+   - Save the **workbook manuscript** as `<CH_ROOT>/Workbook/<ChapterName>_Exercise<L.N>_Workbook.docx` (canonical), plus its replica `<ChapterName>_Exercise<L.N>_Workbook.md` generated from the DOCX (same base name). `<L.N>` is the Lesson-based exercise ID the manuscript uses (e.g. `Exercise1.4`). Its design, PDFs, gates, and checks belong to `PHASE 3W- Workbook Track (eBook + Print).md`.
 
 3. Create “Training Materials” including:
    - Instructor notes

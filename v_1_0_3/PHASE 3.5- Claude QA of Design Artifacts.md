@@ -3,7 +3,7 @@
 > **Pipeline position:** PHASE 3.5 of 7 (Design QA gate) · **Upstream gate:** PHASE 3 exit gate · **Downstream:** PHASE 4 Kindle DOCX
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
-**v3.2 changes (2026-09-30 workbook track):** the workbook PDFs are checked in `PHASE 3W- Workbook Track (eBook + Print).md` (W3), which writes `WORKBOOK_READY.md`. PHASE 3.5 reviews only the optional Claude Design workbook layout reference, and the workbook doesn't block `DESIGN_READY.md`.
+**v3.2 changes (2026-09-30 workbook track):** PHASE 3.5 still reviews the Claude Design workbook, and now also confirms it matches the workbook manuscript (the one that passed `WORKBOOK_MANUSCRIPT_READY.md`). The InDesign PDFs are checked in `PHASE 3W- Workbook Track (eBook + Print).md` (W3), which writes `WORKBOOK_READY.md`. The workbook doesn't block `DESIGN_READY.md`.
 
 **v3.1 changes (2026-09-27 audiobook timing):** the audiobook moved to PHASE 4 Part C (recorded from the Kindle output), so PHASE 3.5 no longer checks it.
 
@@ -78,7 +78,7 @@ Review the following artifacts:
 - HTML Reference Guides
 - HTML Figures (`packet/figures/`) and their exported images (`DesignPacket/figures_export/`)
 - Chapter Opener
-- eBook layout (`Ch<N>_eBook.dc.html`), Print 7×10 layout, Workbook layout reference (optional)
+- eBook layout (`Ch<N>_eBook.dc.html`), Print 7×10 layout, Workbook eBook (8.5×11) / Print 7×10 layout. Its exercise text must match the workbook manuscript DOCX/MD word for word
 
 ## Exports and production tracks
 

@@ -24,7 +24,6 @@ Tokens look like `<THIS>`. A few also appear inside example file names (`<BOOK>_
 | `<RAG_COLLECTION>` | Local vector store (ChromaDB) collection name for the whole book | `quiet_engine_book` |
 | `<RAG_BLOB_CONTAINER>` | Azure Blob Storage container holding the book's cloud vector files. Container names are 3–63 characters: lowercase letters, digits, and single hyphens | `quiet-engine-book-rag` |
 | `<WORKBOOK_INDESIGN_ROOT>` | Folder outside `<BOOK_ROOT>` where the workbook InDesign documents, book file (INDB), links, and fonts live. No phase reads it; it's named so the phases can say where the source is | `C:\Users\a.writer\OneDrive\InDesign\MYBOOK_Workbook` |
-| `<WORKBOOK_TRIM>` | Trim size of the full-color print workbook, as the printer specifies it | `8.5×11 in` |
 | `<CH_ROOT>` | Derived, not set by you: `<BOOK_ROOT>/Chapters/<ChapterName>/Final/` | — |
 
 ## Replace them
@@ -48,7 +47,6 @@ $map = [ordered]@{
   '<RAG_COLLECTION>' = 'quiet_engine_book'
   '<RAG_BLOB_CONTAINER>' = 'quiet-engine-book-rag'
   '<WORKBOOK_INDESIGN_ROOT>' = 'C:\Users\a.writer\OneDrive\InDesign\MYBOOK_Workbook'
-  '<WORKBOOK_TRIM>'  = '8.5×11 in'
 }
 # UTF-8 without BOM, LF endings, trailing newline preserved — the files contain
 # em dashes and arrows, and Set-Content would rewrite the encoding.
@@ -65,7 +63,7 @@ bash / macOS / Linux:
 ```bash
 cd v_1_0_3
 # Same rule: longer tokens first, so <BOOK> does not eat <BOOK_ROOT>.
-sed -i 's|<BOOK_ROOT>|/Books/MYBOOK_FIRST_EDITION|g; s|<BOOK_SLUG>|MYBOOK_FIRST_EDITION|g; s|<BOOK_TITLE>|The Quiet Engine|g; s|<PASS7_SOURCE>|/Books/MYBOOK_FIRST_EDITION/_PASS7|g; s|<DRAFT_SOURCE>|/Books/MYBOOK_FIRST_EDITION/_PASS6|g; s|<WORKBOOK_INDESIGN_ROOT>|/Users/a.writer/OneDrive/InDesign/MYBOOK_Workbook|g; s|<WORKBOOK_TRIM>|8.5×11 in|g; s|<BOOK>|MYBOOK|g; s|<EDITION>|First Edition|g; s|<AUTHOR>|A. Writer|g; s|<DSM_NAME>|Quiet Engine DSM|g; s|<dsm-slug>|quiet-engine-dsm|g; s|<RAG_COLLECTION>|quiet_engine_book|g; s|<RAG_BLOB_CONTAINER>|quiet-engine-book-rag|g' *.md
+sed -i 's|<BOOK_ROOT>|/Books/MYBOOK_FIRST_EDITION|g; s|<BOOK_SLUG>|MYBOOK_FIRST_EDITION|g; s|<BOOK_TITLE>|The Quiet Engine|g; s|<PASS7_SOURCE>|/Books/MYBOOK_FIRST_EDITION/_PASS7|g; s|<DRAFT_SOURCE>|/Books/MYBOOK_FIRST_EDITION/_PASS6|g; s|<WORKBOOK_INDESIGN_ROOT>|/Users/a.writer/OneDrive/InDesign/MYBOOK_Workbook|g; s|<BOOK>|MYBOOK|g; s|<EDITION>|First Edition|g; s|<AUTHOR>|A. Writer|g; s|<DSM_NAME>|Quiet Engine DSM|g; s|<dsm-slug>|quiet-engine-dsm|g; s|<RAG_COLLECTION>|quiet_engine_book|g; s|<RAG_BLOB_CONTAINER>|quiet-engine-book-rag|g' *.md
 ```
 
 On macOS use `sed -i ''` instead of `sed -i`.
@@ -81,7 +79,8 @@ These are concrete because a working example teaches faster than a blank. Change
 | Thing | Appears as | Note |
 |---|---|---|
 | **"PASS 7"** | The final-draft stage a manuscript must reach before PHASE 1 | It means the seventh editing pass in the pipeline this came from. Substitute your own name for "the draft is locked and I will not rewrite it now". The lock matters; the number does not. |
-| **Print trim size** | `7×10`, `Ch<N>_Print7x10.dc.html` | Set to your trim. |
+| **Print trim size** | `7×10`, `Ch<N>_Print7x10.dc.html` (the book and the print workbook) | Set to your trim. |
+| **Workbook eBook page size** | `8.5×11 in` (US Letter) | A page size readers can print at home if they choose. Use A4 for a non-US audience. |
 | **Local models** | `Qwen2.5 14B Instruct` (drafting, Ollama), `nomic-ai/nomic-embed-text-v1.5` (embedding, ONNX/TEI container, 768 dims) | Defaults, not requirements. Pick an embedder whose context window holds a whole chunk (1000 words ≈ 1,350 tokens); `all-MiniLM-L6-v2`, for example, silently truncates at 256 tokens. Keep one embedding model per track for the whole book — changing it means re-embedding every chapter for that track. |
 | **Cloud models** | Azure OpenAI `text-embedding-3-large` (3072 dims, multilingual), vectors stored in Azure Blob Storage; optional Azure OpenAI chat deployment | Optional track (`cloud.enabled` in `RAG_Config.json`). `dimensions` can be lowered to shrink the vector files. Any cloud embedder and store works if PHASE 5 §4B's layout and pointer rules are kept. |
 | **Toolchain** | Claude and Claude Design (generation), InDesign (print, and the workbook's eBook and print), XTTS (draft narration), Adobe Audition (final narration, manual), Ollama + ONNX/TEI + ChromaDB (local RAG), Azure OpenAI + Azure Blob Storage (cloud RAG, optional), n8n + OpenClaw (orchestration) | Swap freely. The gates, deliverables, and source-of-truth rules are the pipeline; the tools are an implementation. |

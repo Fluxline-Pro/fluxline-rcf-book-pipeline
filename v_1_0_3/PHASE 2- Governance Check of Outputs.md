@@ -1,7 +1,9 @@
-# PHASE 2: GOVERNANCE CHECK + AUTO-REMEDIATION (v3.1)
+# PHASE 2: GOVERNANCE CHECK + AUTO-REMEDIATION (v3.2)
 
 > **Pipeline position:** PHASE 2 of 7 (Governance) · **Upstream gate:** PHASE 1 Exit Gate passed · **Downstream:** PHASE 3 Claude Design
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
+
+**v3.2 changes (2026-09-30 workbook track):** the trigger step also writes the PHASE 3W workbook manuscript gate, `Workbook/Trigger/WORKBOOK_MANUSCRIPT_READY.md`. It confirms the workbook DOCX and its MD replica match and the exercise IDs are registered.
 
 **v3.1 changes (2026-09-27 book audit):** glossary normalization also checks against the book-wide canonical list from PHASE 0.9 (`_BookGovernance/Audit/Audit_CanonicalTerms.json`).
 
@@ -746,6 +748,8 @@ After certification:
 - Otherwise create `GOVERNANCE_INCOMPLETE.md` in the same folder listing the blockers, and remove nothing else. Never leave a stale `GOVERNANCE_READY.md`: if one exists from an earlier run and this run does not certify Design Ready, rename the old one to `GOVERNANCE_READY_superseded_<YYYYMMDD_HHMM>.md`.
 
 PHASE 3 does not start without `GOVERNANCE_READY.md`.
+
+**Workbook manuscript gate (PHASE 3W, W0).** In the same run, confirm that the workbook manuscript's DOCX and MD replica match word for word, and that every exercise ID the chapter manuscript mentions is in `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json` and in the workbook DOCX. Then write `<CH_ROOT>/Workbook/Trigger/WORKBOOK_MANUSCRIPT_READY.md`, or `WORKBOOK_MANUSCRIPT_INCOMPLETE.md` with the blockers. The steps and blocking rules are in `PHASE 3W- Workbook Track (eBook + Print).md`. The PHASE 3 workbook design waits for this trigger; the rest of PHASE 3 doesn't.
 
 ---
 

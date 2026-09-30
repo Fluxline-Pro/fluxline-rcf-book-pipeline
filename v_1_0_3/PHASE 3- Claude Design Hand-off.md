@@ -3,7 +3,10 @@
 > **Pipeline position:** PHASE 3 of 7 (Design + Production) · **Upstream gate:** `Governance/Trigger/GOVERNANCE_READY.md` exists · **Downstream:** PHASE 3.5 Design QA
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
-**v3.2 changes (2026-09-30 workbook track):** the workbook moved to `PHASE 3W- Workbook Track (eBook + Print).md`. <AUTHOR> lays out the workbook eBook and full-color print book in InDesign alongside this phase and uploads the two PDFs to `Workbook/`. The Claude Design workbook layout is now an optional reference, and the HTML-built workbook eBook (`Workbook_Master.html` → PDF/EPUB) is gone.
+**v3.2 changes (2026-09-30 workbook track):** the workbook is tracked in `PHASE 3W- Workbook Track (eBook + Print).md`.
+- Claude Design still builds the workbook, now from the workbook manuscript, and only once `Workbook/Trigger/WORKBOOK_MANUSCRIPT_READY.md` exists.
+- <AUTHOR> produces the eBook (8.5×11 in) and full-color print (7×10 in) PDFs in InDesign from it, and uploads them to `Workbook/`.
+- The HTML-built workbook eBook (`Workbook_Master.html` → PDF/EPUB) is gone.
 
 **v3.1 changes (2026-09-27 audiobook timing):** the audiobook and the `<BOOK>_AUDIOBOOK` set moved to **PHASE 4 Part C / Part B**. <AUTHOR> can still change wording in the eBook and print InDesign books, and the audiobook is recorded from the Kindle output built after that. XTTS makes a draft there, and <AUTHOR> records the final narration in Adobe Audition. PHASE 3 keeps the narration script and pronunciation guide from PHASE 1 as they are.
 
@@ -47,7 +50,7 @@ Save into `<CH_ROOT>/DesignPacket/` using the layout already established in Chap
 | **Exported figure images (required by PHASE 4)** | `DesignPacket/figures_export/<ChapterName>_Fig<#>_<Name>.png` |
 | eBook chapter layout | `DesignPacket/Ch<N>_eBook.dc.html` |
 | Print 7×10 chapter layout (InDesign reference) | `DesignPacket/Ch<N>_Print7x10.dc.html` |
-| Workbook layout reference (optional; the workbook itself is built in InDesign, see PHASE 3W) | `DesignPacket/Ch<N>_Workbook_eBook_Print7x10.dc.html` |
+| Workbook eBook (8.5×11) + Print 7×10 layout, built from the workbook manuscript (requires `WORKBOOK_MANUSCRIPT_READY.md`; <AUTHOR> produces the PDFs from it in InDesign, see PHASE 3W) | `DesignPacket/Ch<N>_Workbook_eBook_Print7x10.dc.html` |
 
 Claude Design project files keep the `Ch<N>_` short prefix Claude Design assigns (accepted exception to the `<ChapterName>_` rule). **Exports** use the full convention:
 - `<CH_ROOT>/Slides/<ChapterName>_SlideDeck.pptx` and `.pdf`
@@ -68,7 +71,7 @@ Every figure in the chapter's `FigureRegistry.json` must exist as a raster image
 | Track | Owner | Output |
 |---|---|---|
 | Print layout | **<AUTHOR>, manual in InDesign**, using `Ch<N>_Print7x10.dc.html` and `/InDesign/` prep as reference | `<CH_ROOT>/InDesign/<ChapterName>_Print.indd` + print PDF |
-| Workbook (eBook + full-color print) | **<AUTHOR>, manual in InDesign**; InDesign files stay in `<WORKBOOK_INDESIGN_ROOT>`. See `PHASE 3W- Workbook Track (eBook + Print).md` | `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf` + `_Workbook_Print.pdf` (the upload is the cue) |
+| Workbook (eBook 8.5×11 + full-color print 7×10) | **<AUTHOR>, manual in InDesign**, from the Claude Design workbook; InDesign files stay in `<WORKBOOK_INDESIGN_ROOT>`. See `PHASE 3W- Workbook Track (eBook + Print).md` | `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf` + `_Workbook_Print.pdf` (the upload is the cue) |
 | Audiobook | **Moved to PHASE 4 Part C** (recorded from the Kindle output; XTTS draft + <AUTHOR>'s Audition recording) | — |
 
 ## A4. Book assembly mode (once every chapter for the edition has passed PHASE 3.5)

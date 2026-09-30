@@ -6,7 +6,11 @@
 **Dual RAG (2026-09-24):** PHASE 5 builds one canonical chunk set and embeds it into two vector stores: **Local** (ChromaDB + ONNX/TEI embeddings, Docker) and **Cloud** (vector files in Azure Blob Storage, embedded with Azure OpenAI `text-embedding-3-large` and searched in memory; multilingual). Each track has its own model, trigger, and index manifest; `RAG_READY.md` means every enabled track passed.
 **The final eBook is the trigger (2026-09-27):** when <AUTHOR> finishes a chapter's eBook and exports its final PDF, the chapter is ready for everything that follows. PHASE 4 Part 0 syncs the manuscript to it, Part A builds Kindle from it, Part C records the audiobook from the Kindle output, and PHASE 5 onward read the synced text. The XTTS render is a draft; the final audiobook is <AUTHOR>'s own recording, made in Adobe Audition.
 **Book audit (2026-09-27):** PHASE 0.9 audits the whole book for drift (terms, definitions, acronyms, equations, thresholds, lists, figures, cross-references, headings) on the draft **before PASS 7**, while wording is cheapest to change. Its author-resolved `Audit_CanonicalTerms.json` seeds PHASE 1 and PHASE 2. A **final delta audit** runs at PHASE 4 Part B (step B0) on the manuscripts synced to the final eBook PDFs, and gates the book's release-ready flag in the cloud RAG store.
-**Workbook track (2026-09-30):** the workbook ships as an **eBook PDF** and a **full-color print book**, both laid out by <AUTHOR> in InDesign alongside PHASE 3 / 3.5. **PHASE 3W** owns it end to end. Uploading a chapter's two workbook PDFs to `Workbook/` is the cue that they're done, and a report-only check then writes `WORKBOOK_READY.md`. The workbook has no Kindle edition, no audiobook, and no RAG ingestion. The book-level workbook is assembled after the final delta audit (B0), once exercise IDs and wording are frozen.
+**Workbook track (2026-09-30):** the workbook ships as an **eBook PDF** (8.5×11 in) and a **full-color print book** (7×10 in). **PHASE 3W** owns it end to end.
+- The workbook manuscript follows the chapter manuscript's rule: the DOCX is canonical and the MD is its replica. `WORKBOOK_MANUSCRIPT_READY.md` (end of PHASE 2) confirms DOCX = MD before Claude Design builds the workbook in PHASE 3.
+- <AUTHOR> then produces both formats in InDesign and uploads the two PDFs to `Workbook/`, which is the cue that they're done. The W3 check syncs layout-time wording back to the DOCX and MD, and writes `WORKBOOK_READY.md` once PDF = DOCX = MD.
+- No Kindle edition, no audiobook, no RAG ingestion.
+- The book-level workbook is assembled after the final delta audit (B0), once exercise IDs and wording are frozen.
 **Manuscript sync (2026-09-23):** PHASE 4 opens with Part 0, which brings the manuscript (MD and DOCX) into line with the final eBook PDF, because <AUTHOR> refines wording during InDesign layout. No eBook PDF, no PHASE 4, and nothing after it.
 
 **Release v1.0.2 (2026-09-27):** dual RAG (PHASE 5 v4, PHASE 6 v4); the local embedding default is now `nomic-embed-text-v1.5` on an ONNX/TEI container, because the previous default truncated chunks at 256 tokens. The cloud track uses `text-embedding-3-large` with vectors stored in Azure Blob Storage (no search service), for multilingual retrieval at low cost. New PHASE 0.9 book-wide audit; the audiobook moved to PHASE 4 Part C (recorded from the Kindle output: XTTS draft, <AUTHOR>'s final narration in Adobe Audition); the final eBook PDF formally triggers each chapter's final-wording chain.
@@ -25,7 +29,7 @@
 | **1** Creation | `PHASE 1- Claude PASS 7 Markdown Script.md` | Generate every chapter artifact from the locked PASS 7 manuscript (Mode A new, Mode B retrofit) | PASS 7 locked + `AUDIT_CLEAR.md` | ProductionChecklist + Editorial Suggestions resolved + Marketing trigger | per chapter |
 | **2** Governance | `PHASE 2- Governance Check of Outputs.md` | Validate, fix (Tier A/B), propose (Tier C), certify, stage the design handoff | PHASE 1 exit | `GOVERNANCE_READY.md` (certified Design Ready) | per chapter + batch |
 | **3** Design + Production | `PHASE 3- Claude Design Hand-off.md` | Claude Design HTML packet + exports + **figure image export**; manual eBook + print InDesign books; eBook/print book assembly (audiobook moved to PHASE 4) | `GOVERNANCE_READY.md` | Handoff to 3.5 | per chapter + book assembly |
-| **3W** Workbook track | `PHASE 3W- Workbook Track (eBook + Print).md` | <AUTHOR> lays out the workbook in InDesign alongside PHASE 3 / 3.5 and uploads the eBook + print PDFs; Claude checks content match, the exercise registry, print preflight, and the eBook. Book-level workbook assembled after B0. No Kindle, audiobook, or RAG | `GOVERNANCE_READY.md`; both workbook PDFs uploaded to `Workbook/` | `WORKBOOK_READY.md` (per chapter); workbook assembly report (per book) | per chapter, then once per book |
+| **3W** Workbook track | `PHASE 3W- Workbook Track (eBook + Print).md` | Workbook manuscript DOCX = MD gate (end of 2); Claude Design builds the workbook (3); <AUTHOR> produces the eBook (8.5×11) + print (7×10) PDFs in InDesign and uploads them; Claude syncs layout wording back (PDF = DOCX = MD) and checks the registry, preflight, and eBook. Book-level workbook assembled after B0. No Kindle, audiobook, or RAG | `GOVERNANCE_READY.md` → `WORKBOOK_MANUSCRIPT_READY.md`; both workbook PDFs uploaded to `Workbook/` | `WORKBOOK_READY.md` (per chapter); workbook assembly report (per book) | per chapter, then once per book |
 | **3.5** Design QA | `PHASE 3.5- Claude QA of Design Artifacts.md` | Report-only QA → fix loop; **Kindle Readiness check (§13)** | PHASE 3 exit | `DESIGN_READY.md` (Production Ready + Kindle Ready) | per chapter |
 | **4** Final-wording builds (Kindle + audiobook) | `PHASE 4- Kindle DOCX Chapter Compilation.md` | **Part 0:** sync manuscript MD + DOCX to the final eBook PDF · **Part A:** Kindle DOCX + HTML + metadata + figures per chapter · **Part 0.7:** audit spot check (PHASE 0.9 Mode P) · **Part C:** narration refresh + XTTS audiobook per chapter · **Part B:** B0 final delta audit (PHASE 0.9 Mode D), then book-level `<BOOK>_KINDLE_EBOOK` and `<BOOK>_AUDIOBOOK` | `DESIGN_READY.md` + final eBook PDF uploaded + `MANUSCRIPT_SYNCED.md` + Step 0 dependency check | Part A checklist PASS; Part B package complete | per chapter / section, then once per book |
 | **5** RAG (Local + Cloud) + LLM | `PHASE 5- RAG Rebuild & Local LLM Setup (Per Chapter).md` | Canonical chunk set; Track L ChromaDB rebuild; Track C Blob vector file rewrite (if enabled); parity check; system prompt, query profiles | PHASE4 PASS + `MANUSCRIPT_SYNCED.md` | `RAG_LOCAL_READY.md` (+ `RAG_CLOUD_READY.md` if enabled) → `RAG_READY.md` | per chapter |
@@ -36,7 +40,8 @@
 ```
 PASS 6 (tighten) ─▶ 0.9 audit ─▶ PASS 7 (voice; pseudo-locked)
   ─▶ 1 ─▶ 2 ─▶ 3 ─▶ 3.5 ─▶ eBook + print InDesign books (final wording edits)
-                 └─ 3W workbook (alongside 3 / 3.5): InDesign eBook + print ─▶ upload PDFs ─▶ W3 check ─▶ WORKBOOK_READY
+        └─ 3W workbook: WORKBOOK_MANUSCRIPT_READY (end of 2) ─▶ Claude Design workbook (3) ─▶ InDesign eBook + print
+                          ─▶ upload PDFs ─▶ W3 sync + check (PDF = DOCX = MD) ─▶ WORKBOOK_READY
   ─▶ 4: Part 0 sync + 0.7 spot check ─▶ Part A Kindle ─▶ Part C audiobook (script from the Kindle output; XTTS draft; <AUTHOR> records in Audition)
   ─▶ 5 ─▶ 6 ─▶ 6.5 ─▶ 7 ─▶ Published                               (per chapter)
 
@@ -44,7 +49,7 @@ PASS 6 (tighten) ─▶ 0.9 audit ─▶ PASS 7 (voice; pseudo-locked)
   B0 final delta audit ─▶ Kindle package + audiobook set ─▶ 6.5 book mode   (once per book)
                        └─▶ 3W W4–W5: workbook eBook + print books (after B0)
 
-Fix loops: 3.5 → 3; 3W W3 → InDesign workbook fix → re-export → re-upload; 0.7 / B0 blocking finding → eBook (and print) InDesign fix → re-export → Part 0 re-run; 6.5 → owner phase after approval.
+Fix loops: 3.5 → 3; 3W W3 → InDesign workbook fix (and DOCX → MD) → re-export → re-upload; 0.7 / B0 blocking finding → eBook (and print) InDesign fix → re-export → Part 0 re-run; 6.5 → owner phase after approval.
 ```
 
 ---
@@ -78,7 +83,8 @@ PHASES 4, 5, and 6 don't change the status; they gate by checklist (`gateStatus`
 | **PHASE 3** (+3.5) | <BOOK>_EBOOK_PDF&EPUB | `_BookPublication/<BOOK>_EBOOK/` |
 | | <BOOK>_PRINT_BOOK (manual InDesign) | `_BookPublication/<BOOK>_PRINT_BOOK/` |
 | | Exported figure images (PHASE 4 dependency) | `<CH_ROOT>/DesignPacket/figures_export/` |
-| **PHASE 3W (per chapter)** | Workbook eBook PDF + full-color print PDF (<AUTHOR>, InDesign) | `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf`, `_Workbook_Print.pdf` |
+| **PHASE 3W (per chapter)** | Workbook manuscript: DOCX (canonical) + MD (replica), synced to the eBook PDF in W3 | `<CH_ROOT>/Workbook/<ChapterName>_Exercise<L.N>_Workbook.docx` / `.md` |
+| | Workbook eBook PDF (8.5×11) + full-color print PDF (7×10) (<AUTHOR>, InDesign) | `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf`, `_Workbook_Print.pdf` |
 | | Workbook QA report | `<CH_ROOT>/Governance/<ChapterName>_WorkbookQA_<YYYYMMDD_HHMM>.md` |
 | | Exercise registry (book-wide, updated per chapter) | `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json` |
 | **PHASE 3W (per book, after B0)** | <BOOK>_WORKBOOK_EBOOK (PDF) + assembly report | `_BookPublication/<BOOK>_WORKBOOK_EBOOK/` |
@@ -117,7 +123,7 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 **Chapter root:** `<CH_ROOT>` = `<BOOK_ROOT>/Chapters/<ChapterName>/Final/`
 **Chapter name:** `Ch<N>_<PascalCaseTitle>` (e.g. `Ch1_YourChapterTitle`)
 **Print InDesign book:** <AUTHOR> may keep the print InDesign book (INDB, templates, linked assets) in separate print folders outside `<BOOK_ROOT>`. Phases then treat print as <AUTHOR>-confirmed rather than checking `InDesign/` for files; the final **eBook** PDF is the layout text PHASE 4 Part 0 syncs the manuscript to.
-**Workbook InDesign files:** <AUTHOR> keeps them (documents, INDB, links, fonts) in `<WORKBOOK_INDESIGN_ROOT>`, outside `<BOOK_ROOT>` (for example, OneDrive). No phase reads them; PHASE 3W checks only the exported PDFs uploaded to `Workbook/`.
+**Workbook InDesign files:** <AUTHOR> keeps them (documents, INDB, links, fonts) in `<WORKBOOK_INDESIGN_ROOT>`, outside `<BOOK_ROOT>` (for example, OneDrive). No phase reads them; PHASE 3W checks only the exported PDFs uploaded to `Workbook/` (eBook 8.5×11 in, print 7×10 in).
 **File names:** `<ChapterName>_<ArtifactType>.<ext>`; Marketing: `<ChapterName>_MKT_<Type>.<ext>`; Claude Design project files: `Ch<N>_<Type>.dc.html` (accepted exception)
 
 ```
@@ -138,7 +144,7 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
     ├── Final/
     │   ├── Manuscript/           PASS 7 copy, EditorialSuggestions [P1]; synced to eBook PDF, ManuscriptSync report, Trigger/ [P4 Part 0]
     │   ├── ReviewPacket/  Training/  ReferenceGuides/  Slides/                     [P1; exports P3]
-    │   ├── Workbook/             packet + exercise DOCX (canonical) + MD [P1]; eBook + print PDFs, Trigger/ [P3W]
+    │   ├── Workbook/             packet, workbook manuscript DOCX (canonical) + MD [P1]; Trigger/ [P2 → P3W]; eBook + print PDFs [P3W]
     │   ├── Equations/                                                              [P1]
     │   ├── eBook/                HTML blocks + metadata [P1]; PDF/EPUB exports [P3]; final eBook PDF (required by P4 Part 0)
     │   ├── Kindle/               DOCX, HTML, metadata, figures/                    [P4]
@@ -163,6 +169,7 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 | `AUDIT_FINAL_CLEAR.md` / `AUDIT_FINAL_INCOMPLETE.md` | `_BookGovernance/Audit/Trigger/` | P0.9 Mode D (P4 B0) | P4 Part B; P5 cloud release-ready flag; P6.5 book mode; P7 |
 | `MARKETING_READY.md` / `_INCOMPLETE` | `Marketing/Trigger/` | P1, re-validated P2 | P6 3A marketing workflows |
 | `GOVERNANCE_READY.md` / `_INCOMPLETE` | `Governance/Trigger/` | P2 | P3 entry; P6 3C |
+| `WORKBOOK_MANUSCRIPT_READY.md` / `WORKBOOK_MANUSCRIPT_INCOMPLETE.md` | `Workbook/Trigger/` | P3W W0 gate (end of P2) | P3 workbook design |
 | **Workbook PDFs** `<ChapterName>_Workbook_eBook.pdf` + `_Workbook_Print.pdf` (newer than `WORKBOOK_READY.md`) | `Workbook/` | <AUTHOR> (final exports from InDesign) | P3W W3 |
 | `WORKBOOK_READY.md` / `WORKBOOK_INCOMPLETE.md` | `Workbook/Trigger/` | P3W W3 | P3W W4 (every chapter); P6.5 workbook sub-cert; P7 |
 | `DESIGN_READY.md` / `_INCOMPLETE` | `DesignPacket/Trigger/` | P3.5 | P4 entry; P6 3B/3D |
@@ -229,9 +236,9 @@ Rules: triggers only fire workflows for chapters whose `automationStatus` is `ac
 | Channel | Source | Built in | Validated in | Released in |
 |---|---|---|---|---|
 | eBook PDF & EPUB | `_Masters/Manuscript_Master.html` ← chapter `eBook/` + DesignPacket | P3 | P3.5, P6.5 | P7 |
-| Workbook eBook (PDF) | <AUTHOR>'s InDesign workbook (in `<WORKBOOK_INDESIGN_ROOT>`) → uploaded PDFs | P3W (<AUTHOR>; book: W4) | P3W W3/W5, P6.5 | P7 |
+| Workbook eBook (PDF, 8.5×11) | Workbook manuscript → Claude Design workbook → <AUTHOR>'s InDesign workbook (in `<WORKBOOK_INDESIGN_ROOT>`) → uploaded PDF | P3 (design), P3W (<AUTHOR>; book: W4) | P3.5 (design), P3W W3/W5, P6.5 | P7 |
 | Print book | Manual InDesign from Print 7×10 layouts + InDesign prep | P3 (<AUTHOR>) | P6.5 (package) | P7 |
-| Workbook print (full color) | Same InDesign layout, CMYK print export | P3W (<AUTHOR>; book: W4) | P3W W3/W5, P6.5 | P7 |
+| Workbook print (7×10, full color) | Same source, CMYK print export | P3W (<AUTHOR>; book: W4) | P3W W3/W5, P6.5 | P7 |
 | Audiobook | <AUTHOR>'s narration (Adobe Audition) from the script built from the Kindle output; XTTS draft as a guide | P4 Part C (set: Part B) | P4 Part C, P6.5 | P7 |
 | Kindle / KDP | Per-chapter Kindle build (P4 Part A) → book assembly (P4 Part B) | P4 | P6.5 | P7 (<AUTHOR> approves upload) |
 | RAG (Local + Cloud) | Canonical chunk set → ChromaDB and Azure Blob Storage | P5 | P5, P6.5 | P7 |
