@@ -6,7 +6,7 @@ It is a set of Markdown prompts. You paste a phase into an AI assistant (these w
 
 Built for *RCF: Resonance Core Framework* by Terence Waters at [Fluxline.pro](https://fluxline.pro), and shared for other authors who are building a real production pipeline rather than one-off prompts.
 
-**Current version: [v1.0.3](./v_1_0_3)** (previous: [v1.0.2](./v_1_0_2), [v1.0](./v1_0)) · See the [changelog](./CHANGELOG.md) for what changed and why.
+**Current version: [v1.0.4](./v_1_0_4)** (previous: [v1.0.3](./v_1_0_3), [v1.0.2](./v_1_0_2), [v1.0](./v1_0)) · See the [changelog](./CHANGELOG.md) for what changed and why.
 
 ---
 
@@ -27,8 +27,8 @@ This pipeline treats the manuscript as the only source of truth and makes every 
 | **3W — Workbook track** | Runs from the end of 2 through 3.5.<br>• The workbook manuscript (DOCX canonical, MD replica) must match before Claude Design builds the workbook.<br>• The author produces the eBook PDF (8.5×11) and full-color print PDF (7×10) in InDesign. Uploading them is the cue that the workbook is done.<br>• Layout wording flows back so the PDF, DOCX, and MD match, and every exercise the manuscript mentions is checked.<br>• The book-level workbook is assembled after the final audit.<br>• No Kindle, audiobook, or RAG | `WORKBOOK_MANUSCRIPT_READY.md`, then `WORKBOOK_READY.md` |
 | **3.5 — Design QA** | Reviews the design output against the design system, accessibility, instructional quality, and Kindle readiness | `DESIGN_READY.md` |
 | **4 — Final-wording builds** | Syncs the manuscript (MD and DOCX) to the final eBook PDF and spot-checks it, then builds the Kindle files and, from those, the audiobook per chapter (an XTTS draft as a guide, the final narration recorded by the author), and assembles the book-level Kindle package and audiobook set | Kindle package + audiobook |
-| **5 — RAG (Local + Cloud)** | Rebuilds the chapter's canonical chunk set, re-embeds it into the local index (and the cloud index, if enabled), checks parity, writes the system prompt and query profiles | `RAG_READY.md` |
-| **6 — Automation** | Activates the n8n and OpenClaw workflows that generate marketing and design drafts from the grounded RAG | Activation report |
+| **5 — RAG (Local + Cloud)** | Rebuilds the chapter's canonical chunk set, re-embeds it into the local index (and the cloud index, if enabled, through a governance gateway when you have one), checks parity, writes the system prompt and query profiles | `RAG_READY.md` |
+| **6 — Automation** | Activates the n8n and OpenClaw workflows that generate marketing and design drafts from the grounded RAG, plus a nightly refresh that keeps both vector stores in sync when chapters change | Activation report |
 | **6.5 — Publication QA** | Validates EPUB, Kindle, print, the workbook, audiobook, metadata, and accessibility | Publishing Ready |
 | **7 — Release** | Final verification, the assistant's recommendations, and the author's signature | **Published** |
 
@@ -54,11 +54,12 @@ PHASE 0.9 is the exception: it audits the whole book at once, first on the draft
 ## Repository layout
 
 ```
-v_1_0_3/                   current release (adds the PHASE 3W workbook track)
+v_1_0_4/                   current release (governed cloud track, nightly RAG refresh)
   MASTER_PIPELINE_OVERVIEW.md   the tie-breaker: phases, gates, folders, deliverables
   PLACEHOLDERS.md               every token to replace, and what to leave alone
   PHASE 0.9 … PHASE 7           the ten phase prompts, plus PHASE 3W (workbook)
-v_1_0_2/                   previous release (dual local + cloud RAG), kept for books mid-flight
+v_1_0_3/                   previous release (PHASE 3W workbook track), kept for books mid-flight
+v_1_0_2/                   earlier release (dual local + cloud RAG), kept for books mid-flight
 v1_0/                      earlier release, kept for books mid-flight
 archived-versions/
   beta_0_9/                previous version, kept intact for books mid-flight
@@ -67,12 +68,12 @@ CHANGELOG.md               what changed in each version, and why
 LICENSE                    GPL-3.0
 ```
 
-Start with **`v_1_0_3/MASTER_PIPELINE_OVERVIEW.md`**. It carries the phase table, the status ladder, the folder map, the deliverable map, and the trigger map, and it is the tie-breaker whenever a phase file and the overview disagree.
+Start with **`v_1_0_4/MASTER_PIPELINE_OVERVIEW.md`**. It carries the phase table, the status ladder, the folder map, the deliverable map, and the trigger map, and it is the tie-breaker whenever a phase file and the overview disagree.
 
 ## Getting started
 
 1. **Read the overview.** Ten minutes there saves an afternoon later.
-2. **Fill in the placeholders.** The phase files ship with tokens like `<BOOK_ROOT>`, `<BOOK>`, and `<AUTHOR>`. [`v_1_0_3/PLACEHOLDERS.md`](./v_1_0_3/PLACEHOLDERS.md) lists every one, with a find-and-replace script for PowerShell and bash, and says which concrete values (print trim, model names, "PASS 7") are examples rather than requirements.
+2. **Fill in the placeholders.** The phase files ship with tokens like `<BOOK_ROOT>`, `<BOOK>`, and `<AUTHOR>`. [`v_1_0_4/PLACEHOLDERS.md`](./v_1_0_4/PLACEHOLDERS.md) lists every one, with a find-and-replace script for PowerShell and bash, and says which concrete values (print trim, model names, "PASS 7") are examples rather than requirements.
 3. **Create the folder skeleton** from the overview's folder map — per chapter and at the book root.
 4. **Run PHASE 1 on one chapter.** Paste the phase, give it the locked manuscript, let it generate.
 5. **Run PHASE 2 on that same chapter** before generating a second one. It will find naming, metadata, and terminology problems while they are cheap to fix.

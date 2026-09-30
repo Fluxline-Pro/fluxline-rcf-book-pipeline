@@ -5,6 +5,29 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [v1.0.4] — 2026-09-30
+
+**Folder:** `v_1_0_4/` · **Previous:** `v_1_0_3/` (unchanged, kept for books mid-flight)
+
+The cloud RAG track can now run behind a governance gateway, and a nightly refresh keeps the local and cloud stores in sync without anyone starting PHASE 5 by hand. Found while connecting a reader-facing companion to the cloud store: it needs every cloud AI call governed, smaller vectors, and a signal when a chapter changes.
+
+### Added
+
+- **Governance gateway mode for Track C (PHASE 5 v4.2).** `cloud.embeddingProvider: "governance-gateway"` sends every embedding call through a gateway flow (`cloud.gateway` in `RAG_Config.json`: `baseUrl`, `embedFlow`, `maxInputsPerCall`, `credentialEnv`). The gateway checks the request, then calls the embedding deployment, so PHASE 5 holds a gateway credential instead of model credentials. Direct Azure OpenAI (`azure-openai`) remains for setups without a gateway.
+- **PHASE 6 §3G nightly RAG refresh** (book-level, time-triggered at `<RAG_REFRESH_TIME>`): detects chapters whose PHASE 5 inputs changed, re-runs PHASE 5 for them (Track L and Track C, validation and parity), then notifies each consumer in `cloud.consumers` and records its response. Nothing changed means nothing runs.
+- **`cloud.consumers`** in `RAG_Config.json`: downstream products that build their own index from the cloud store, each with a `notifyUrl`, a `credentialEnv`, and any extra uploads it needs (for example figure images).
+- **Cloud vector metadata:** `part` and `lesson` on every line; `figureId` and `altText` on FigureRegistry chunks.
+- **Placeholders:** `<GATEWAY_URL>`, `<CLOUD_EMBED_FLOW>`, `<RAG_REFRESH_TIME>`.
+
+### Changed
+
+- **PHASE 5 (v4.2):** default `cloud.dimensions` is 1,024 (was 3,072). Existing cloud stores keep their dimensions until re-embedded, per the model-change rule. The environment check and data-handling rule cover gateway mode.
+- **PHASE 6 (v4.1):** in gateway mode, cloud query embeddings and cloud chat go through the gateway (§4B). Test 5 allows the §3G refresh as the one workflow that writes to the vector stores; Test 6 checks gateway routing.
+- **`MASTER_PIPELINE_OVERVIEW.md`:** release note, PHASE 6 row, cloud vector store row, and LLM map.
+- **`PLACEHOLDERS.md`:** new tokens; the scripts point at `v_1_0_4/`; cloud-model defaults.
+
+---
+
 ## [v1.0.3] — 2026-09-30
 
 **Folder:** `v_1_0_3/` · **Previous:** `v_1_0_2/` (tag `v1_0_2_PROD`, unchanged, kept for books mid-flight)
