@@ -5,6 +5,49 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [v1.0.3] — 2026-09-30
+
+**Folder:** `v_1_0_3/` · **Previous:** `v_1_0_2/` (tag `v1_0_2_PROD`, unchanged, kept for books mid-flight)
+
+The workbook gets its own track. It ships in two formats only: an **eBook PDF** (8.5×11 in) and a **full-color print book** (7×10 in). Claude Design builds the workbook from the workbook manuscript, and the author produces both formats in InDesign alongside PHASE 3 / 3.5. The workbook manuscript now follows the chapter manuscript's rule (the DOCX is canonical, the MD is its replica), and by the end the PDF, DOCX, and MD match word for word. Before this release, the workbook's steps were spread across seven phases, and several of them assumed things this workbook doesn't have: an HTML-built eBook, a Kindle edition, and RAG ingestion.
+
+### Added
+
+- **PHASE 3W — Workbook Track (eBook + Print) (new file).**
+  - **W0:** the workbook manuscript, `<ChapterName>_Exercise<L.N>_Workbook.docx` (canonical) + `.md` (replica). At the end of PHASE 2, the **`WORKBOOK_MANUSCRIPT_READY.md`** gate confirms DOCX = MD and registers the exercise IDs. The PHASE 3 workbook design waits for it.
+  - **W1:** Claude Design builds the workbook from the workbook manuscript; the author produces both formats from it in InDesign.
+    - eBook: 8.5×11 in RGB PDF, printable at home but not meant for it.
+    - Print: 7×10 in, full color, CMYK PDF/X-4, with bleed and write-in space.
+  - **W2:** the author uploads `<ChapterName>_Workbook_eBook.pdf` and `_Workbook_Print.pdf` to `Workbook/`. **The upload is the cue** that the chapter's workbook is done.
+  - **W3:** syncs layout-time wording from the eBook PDF back into the DOCX, then regenerates the MD (with a backup and a change log; uncertain items go to the author). It confirms **PDF = DOCX = MD**, then checks print/eBook match, the exercise registry, print preflight, and the eBook. The result is `WORKBOOK_READY.md` or `WORKBOOK_INCOMPLETE.md`.
+  - **W4–W5:** the book-level workbook, assembled after PHASE 4 B0 (`AUDIT_FINAL_CLEAR.md`) so exercise IDs and wording are frozen, plus an assembly report.
+- **Companion workbook manuscripts** (optional): `<ChapterName>_Exercise<L.N>_<Part>_Workbook.docx` + `.md` for extra pages of the same exercise, such as write-in journal pages. They follow the same DOCX = MD rule and gates.
+- **Exercise registry** `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json`. Exercises are numbered by Lesson (e.g. `Exercise 1.4` in Chapter 4). A manuscript mention with no matching exercise is blocking.
+- **`WORKBOOK_MANUSCRIPT_READY.md`** (before PHASE 3) and **`WORKBOOK_READY.md`** (after the PDFs, PDF = DOCX = MD) triggers in `Workbook/Trigger/`, each with an `_INCOMPLETE` counterpart. `WORKBOOK_READY.md` doesn't block `DESIGN_READY.md` or PHASES 4–6; they're required for PHASE 6.5's new **Workbook** sub-certification and for PHASE 7.
+- **Workbook triggers are bound to their files.** Each READY file records the SHA-256 hashes of what it certifies, and consumers treat it as stale if a hash differs. Every re-run renames the previous READY file to `_superseded_<timestamp>` before writing its result, so a failed re-upload can't leave an old READY standing.
+- **PHASE 7:** a Workbook Approved sign-off, and PHASE 3W in the completion rule.
+- **`<WORKBOOK_INDESIGN_ROOT>`** placeholder: the workbook InDesign files, INDB, links, and fonts stay outside `<BOOK_ROOT>` (for example, OneDrive), and no phase reads them.
+
+### Changed
+
+- **PHASE 2 (v3.2):** writes the `WORKBOOK_MANUSCRIPT_READY.md` gate in the same run as `GOVERNANCE_READY.md`.
+- **PHASE 3 (v3.2):** Claude Design builds the workbook from the workbook manuscript once `WORKBOOK_MANUSCRIPT_READY.md` exists, and the workbook's production track points to PHASE 3W. The book-level workbook deliverables are assembled in PHASE 3W, not in PHASE 3 book assembly.
+- **PHASE 3.5 (v3.2):** still reviews the Claude Design workbook, and confirms its exercise text matches the workbook manuscript. The workbook PDFs are checked in PHASE 3W. The Kindle Readiness item covers only the exercise text the Kindle book carries.
+- **PHASE 4 (v3.2):** the Part 0 downstream impact list checks exercise IDs against the registry.
+- **PHASE 6.5 (v3.2):** certifies the workbook from the PHASE 3W reports, with new Workbook score, findings, and sub-certification lines.
+- **PHASE 7 (v3.2):** gains a PHASE 3W section and the Workbook sub-certification.
+- **PHASE 1 (v3.2):** Step 2 names the workbook files and creates the workbook manuscript's MD replica.
+- **`MASTER_PIPELINE_OVERVIEW.md`:** 3W appears in the flow, phase table, deliverable map, folder map, trigger map, publishing map, and LLM map.
+- **`PLACEHOLDERS.md`:** new token; the workbook eBook page size (8.5×11 in) is listed as a changeable example; the scripts point at `v_1_0_3/`. The bash script also gains the `<PASS7_SOURCE>` replacement it was missing.
+
+### Removed
+
+- **PHASE 4 B5 Kindle workbook.** There is no Kindle workbook.
+- **The workbook as a RAG input** (PHASE 5 v4.1), and `RAG_Workbook.html`. The manuscript still carries each chapter's main exercise text.
+- **The HTML-built workbook eBook** (`_Masters/Workbook_Master.html` → PDF/EPUB), and the workbook EPUB.
+
+---
+
 ## [v1.0.2] — 2026-09-27
 
 **Folder:** `v_1_0_2/` · **Previous:** `v1_0/` (tag `v1_0_1_PROD`, unchanged, kept for books mid-flight)
