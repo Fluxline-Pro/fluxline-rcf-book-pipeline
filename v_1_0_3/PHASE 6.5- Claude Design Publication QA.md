@@ -118,7 +118,7 @@ Check OPF completeness, NCX correctness, TOC anchors, publication metadata, lang
 ## 8. Print and audiobook package
 Print: print PDFs exist, trim size 7×10, figures present (layout quality is <AUTHOR>'s manual call).
 Workbook:
-- **Chapter mode:** a current `WORKBOOK_READY.md` (newer than any PHASE 4 Part 0 sync that flagged the workbook), and a WorkbookQA report that shows PDF = DOCX = MD with no open blocking items.
+- **Chapter mode:** a current `WORKBOOK_READY.md` (not superseded, newer than any PHASE 4 Part 0 sync that flagged the workbook, and with recorded PDF hashes that match the files in `Workbook/`), and a WorkbookQA report that shows PDF = DOCX = MD with no open blocking items.
 - **Book mode:** both workbook deliverables are present, the eBook at 8.5×11 in and the print interior at 7×10 in. The PHASE 3W assembly report lists no blocking items: book PDFs vs chapter workbook manuscripts, the exercise registry vs the synced manuscripts, full-color print preflight, eBook bookmarks and links.
 - The workbook has no EPUB, Kindle, audiobook, or RAG checks.
 Audiobook: every section has <AUTHOR>'s final recording (no XTTS file from `Audiobook/Drafts/` anywhere in the set), running order matches the TOC and the Kindle reading order, file naming `<NN>_<Section>.mp3`, track list present, PHASE 4 Part C coverage and technical-spec results recorded, and no stale passages (recorded before the latest Kindle build of changed text).

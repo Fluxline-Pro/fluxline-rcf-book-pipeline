@@ -1,7 +1,7 @@
 # MASTER PIPELINE OVERVIEW
 
 **Book:** *<BOOK_TITLE>* — <EDITION>
-**Author:** <AUTHOR> · **Pipeline version:** v3.1 (aligned 2026-09-30)
+**Author:** <AUTHOR> · **Pipeline version:** v3.2 (aligned 2026-09-30)
 **Kindle decision (2026-09-22):** all Kindle work lives in PHASE 4, chapter by chapter, after the DesignPacket, figures, and the manual print/eBook work are finished and QA'd. PHASE 3 no longer produces a Kindle edition; `<BOOK>_KINDLE_EBOOK` is assembled in PHASE 4 Part B from the per-chapter builds.
 **Dual RAG (2026-09-24):** PHASE 5 builds one canonical chunk set and embeds it into two vector stores: **Local** (ChromaDB + ONNX/TEI embeddings, Docker) and **Cloud** (vector files in Azure Blob Storage, embedded with Azure OpenAI `text-embedding-3-large` and searched in memory; multilingual). Each track has its own model, trigger, and index manifest; `RAG_READY.md` means every enabled track passed.
 **The final eBook is the trigger (2026-09-27):** when <AUTHOR> finishes a chapter's eBook and exports its final PDF, the chapter is ready for everything that follows. PHASE 4 Part 0 syncs the manuscript to it, Part A builds Kindle from it, Part C records the audiobook from the Kindle output, and PHASE 5 onward read the synced text. The XTTS render is a draft; the final audiobook is <AUTHOR>'s own recording, made in Adobe Audition.

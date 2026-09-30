@@ -23,6 +23,8 @@ The workbook gets its own track. It ships in two formats only: an **eBook PDF** 
   - **W4–W5:** the book-level workbook, assembled after PHASE 4 B0 (`AUDIT_FINAL_CLEAR.md`) so exercise IDs and wording are frozen, plus an assembly report.
 - **Exercise registry** `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json`. Exercises are numbered by Lesson (e.g. `Exercise 1.4` in Chapter 4). A manuscript mention with no matching exercise is blocking.
 - **`WORKBOOK_MANUSCRIPT_READY.md`** (before PHASE 3) and **`WORKBOOK_READY.md`** (after the PDFs, PDF = DOCX = MD) triggers in `Workbook/Trigger/`, each with an `_INCOMPLETE` counterpart. `WORKBOOK_READY.md` doesn't block `DESIGN_READY.md` or PHASES 4–6; they're required for PHASE 6.5's new **Workbook** sub-certification and for PHASE 7.
+- **Workbook triggers are bound to their files.** Each READY file records the SHA-256 hashes of what it certifies, and consumers treat it as stale if a hash differs. Every re-run renames the previous READY file to `_superseded_<timestamp>` before writing its result, so a failed re-upload can't leave an old READY standing.
+- **PHASE 7:** a Workbook Approved sign-off, and PHASE 3W in the completion rule.
 - **`<WORKBOOK_INDESIGN_ROOT>`** placeholder: the workbook InDesign files, INDB, links, and fonts stay outside `<BOOK_ROOT>` (for example, OneDrive), and no phase reads them.
 
 ### Changed

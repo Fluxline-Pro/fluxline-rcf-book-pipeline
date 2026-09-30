@@ -229,6 +229,7 @@ Also state:
 - [ ] Accessibility Approved
 - [ ] Kindle Approved
 - [ ] Audio Approved
+- [ ] Workbook Approved (eBook + print PDFs; PDF = DOCX = MD)
 - [ ] RAG Approved
 - [ ] Automation Approved (drafts-only rule verified)
 - [ ] Archive Complete
@@ -249,7 +250,7 @@ Also state:
 
 The chapter is **Published** only when:
 
-✅ PHASES 1, 2, 3, 3.5, 4, 5, 6, and 6.5 have passed their exit gates
+✅ PHASES 1, 2, 3, 3W, 3.5, 4, 5, 6, and 6.5 have passed their exit gates (3W: a current `WORKBOOK_READY.md` whose recorded PDF hashes match the files in `Workbook/`)
 ✅ The published package exists
 ✅ The archive package exists
 ✅ Master metadata is updated

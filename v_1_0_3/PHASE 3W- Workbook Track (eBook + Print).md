@@ -44,8 +44,8 @@ Run at the end of PHASE 2, alongside `GOVERNANCE_READY.md`:
 1. **DOCX = MD.** Extract the text of both and compare them word for word, ignoring only Markdown syntax. The expected result is 0 differences. A difference means the MD is regenerated from the DOCX (with a backup), never hand-patched.
 2. **Exercise registry.** Add this chapter's entries to `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json`: one per exercise, with `exerciseId`, `lesson`, `chapter`, `title`, `docx`, and `manuscriptMentions` (each place the chapter manuscript names it). **Blocking:** an exercise the manuscript mentions that the workbook manuscript doesn't have, or a number that differs between them.
 
-**Result:**
-- Both pass → `<CH_ROOT>/Workbook/Trigger/WORKBOOK_MANUSCRIPT_READY.md`, listing the DOCX and MD file names, their modified dates, the parity result, and the registry entries.
+**Result:** before writing either file, rename any existing `WORKBOOK_MANUSCRIPT_READY.md` to `WORKBOOK_MANUSCRIPT_READY_superseded_<YYYYMMDD_HHMM>.md`, so a failed re-run never leaves an old READY file in place. Then:
+- Both pass → `<CH_ROOT>/Workbook/Trigger/WORKBOOK_MANUSCRIPT_READY.md`, listing the DOCX and MD file names, their modified dates and SHA-256 hashes, the parity result, and the registry entries.
 - Otherwise → `WORKBOOK_MANUSCRIPT_INCOMPLETE.md` with the blockers.
 
 PHASE 3 does not start the workbook design without `WORKBOOK_MANUSCRIPT_READY.md`. Everything else in PHASE 3 may run without it.
@@ -84,7 +84,7 @@ Run when W2's files appear or change. Write `<CH_ROOT>/Governance/<ChapterName>_
    - Anything uncertain (a possible typo in the PDF, a change that alters an exercise's meaning, an exercise ID change) is **not** applied. It is listed for <AUTHOR> to decide.
 2. **Confirm PDF = DOCX = MD.** After the sync, all three give 0 word differences (ignoring page furniture: running heads, page numbers, and write-in lines).
 3. **Print and eBook match.** The print PDF has the same exercises, in the same order, with the same wording and exercise IDs as the eBook PDF. Page breaks may differ, since the page sizes differ.
-4. **Exercise registry.** Re-check the chapter's entries against the synced workbook and the chapter manuscript (blocking rules as in the W0 gate).
+4. **Exercise registry.** Re-check the chapter's entries against the synced workbook and the chapter manuscript (blocking rules as in the W0 gate). If the registry file, or this chapter's entries, don't exist yet (for example, a chapter built before v1.0.3 that skipped the W0 gate), create them now. **W3 never skips this step**, and `WORKBOOK_READY.md` can't be written without it.
 5. **Print preflight** (from the print PDF): 7×10 in trim plus bleed, CMYK output intent (PDF/X-4), fonts embedded, images at 300 ppi or better at placed size, and no RGB-only or spot colors the printer doesn't accept.
 6. **eBook checks:**
    - 8.5×11 in pages;
@@ -93,9 +93,16 @@ Run when W2's files appear or change. Write `<CH_ROOT>/Governance/<ChapterName>_
    - fillable fields (if used) tab in reading order;
    - a test print to Letter at 100% clips nothing.
 
-**Result:**
-- No blocking items, and <AUTHOR> has decided every uncertain sync item → `<CH_ROOT>/Workbook/Trigger/WORKBOOK_READY.md`. It lists the QA report, the two PDF file names and dates, the synced DOCX/MD versions, the number of sync changes, and any items <AUTHOR> accepted.
+**Result:** before writing either file, rename any existing `WORKBOOK_READY.md` to `WORKBOOK_READY_superseded_<YYYYMMDD_HHMM>.md`. A re-upload that fails W3 must never leave the previous READY file standing for the new PDFs. Then:
+- No blocking items, and <AUTHOR> has decided every uncertain sync item → `<CH_ROOT>/Workbook/Trigger/WORKBOOK_READY.md`. It lists:
+  - the QA report;
+  - the two PDF file names, dates, and **SHA-256 hashes**;
+  - the synced DOCX/MD versions and hashes;
+  - the number of sync changes;
+  - any items <AUTHOR> accepted.
 - Otherwise → `WORKBOOK_INCOMPLETE.md` with the blockers.
+
+**Readiness is bound to the files.** Every consumer of `WORKBOOK_READY.md` (W4, PHASE 6.5, PHASE 7) recomputes the hashes of the PDFs in `Workbook/` and treats the trigger as stale if any hash differs from the recorded one.
 
 `WORKBOOK_READY.md` does **not** block `DESIGN_READY.md` or anything in PHASES 4–6; the workbook is not a Kindle, audiobook, or RAG input. It is required for PHASE 6.5's workbook sub-certification and for PHASE 7.
 
@@ -122,7 +129,7 @@ A stale `WORKBOOK_READY.md` (older than a PHASE 4 Part 0 sync that flagged the w
 ### W4. Book assembly (<AUTHOR>, InDesign book file)
 
 **Entry gate:**
-- every chapter has a current `WORKBOOK_READY.md`;
+- every chapter has a current `WORKBOOK_READY.md` (not superseded, and its recorded PDF hashes match the files in `Workbook/`);
 - `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md` exists (PHASE 4 Part B step B0), so exercise IDs and manuscript wording are frozen.
 
 <AUTHOR> assembles the workbook InDesign book (INDB in `<WORKBOOK_INDESIGN_ROOT>`) with its front matter (title page, copyright, how to use this workbook, contents) and back matter, then exports and uploads:
