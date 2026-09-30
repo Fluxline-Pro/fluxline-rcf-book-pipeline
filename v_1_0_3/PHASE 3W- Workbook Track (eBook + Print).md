@@ -33,6 +33,7 @@
 |---|---|---|
 | Workbook manuscript, DOCX | `<CH_ROOT>/Workbook/<ChapterName>_Exercise<L.N>_Workbook.docx` | **Canonical.** The exercise text the workbook publishes |
 | Workbook manuscript, MD | `<CH_ROOT>/Workbook/<ChapterName>_Exercise<L.N>_Workbook.md` | **Replica** of the DOCX, same base name |
+| Companion workbook manuscript (optional) | `<CH_ROOT>/Workbook/<ChapterName>_Exercise<L.N>_<Part>_Workbook.docx` + `.md` | Extra workbook pages for the same exercise, such as write-in journal pages (e.g. `Ch5_…_Exercise2.1_DailyJournal_Workbook.docx`). The same DOCX = MD rule and the same gates apply, and the registry lists them under `companionFiles` |
 | Workbook Exercise Packet | `<CH_ROOT>/Workbook/<ChapterName>_WorkbookPacket.md` | PHASE 1 working material (anchor + companion exercises, prompts). Not the manuscript; content reaches the workbook only once it's in the DOCX |
 
 PHASE 1 Step 2 creates the DOCX and its MD replica. PHASE 2 governs the content like any derived artifact. If <AUTHOR> edits the DOCX, the MD is regenerated from it, with a backup in `Governance/_Backups/<YYYYMMDD>_<reason>/`.
@@ -41,7 +42,7 @@ PHASE 1 Step 2 creates the DOCX and its MD replica. PHASE 2 governs the content 
 
 Run at the end of PHASE 2, alongside `GOVERNANCE_READY.md`:
 
-1. **DOCX = MD.** Extract the text of both and compare them word for word, ignoring only Markdown syntax. The expected result is 0 differences. A difference means the MD is regenerated from the DOCX (with a backup), never hand-patched.
+1. **DOCX = MD** (the workbook manuscript and every companion file). Extract the text of both and compare them word for word, ignoring only Markdown syntax. The expected result is 0 differences. A difference means the MD is regenerated from the DOCX (with a backup), never hand-patched.
 2. **Exercise registry.** Add this chapter's entries to `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json`: one per exercise, with `exerciseId`, `lesson`, `chapter`, `title`, `docx`, and `manuscriptMentions` (each place the chapter manuscript names it). **Blocking:** an exercise the manuscript mentions that the workbook manuscript doesn't have, or a number that differs between them.
 
 **Result:** before writing either file, rename any existing `WORKBOOK_MANUSCRIPT_READY.md` to `WORKBOOK_MANUSCRIPT_READY_superseded_<YYYYMMDD_HHMM>.md`, so a failed re-run never leaves an old READY file in place. Then:
