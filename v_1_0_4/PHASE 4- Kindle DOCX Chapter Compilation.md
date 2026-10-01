@@ -170,11 +170,11 @@ Then write the trigger (renaming any older one to `*_superseded_<timestamp>.md`)
 
 ## Part 0 exit gate
 
-Step 0 may begin only when `Manuscript/Trigger/MANUSCRIPT_SYNCED.md` exists and is newer than `eBook/<ChapterName>_eBook.pdf`.
+Part 0 itself needs only the final eBook PDF and the manuscript (MD and DOCX); it writes `MANUSCRIPT_SYNCED.md` above. Step 0 may begin only when that trigger exists and is newer than `eBook/<ChapterName>_eBook.pdf`.
 
 ---
 
-## 0. Dependency check (do this before anything else)
+## 0. Dependency check (right after Part 0, before anything else in Part A)
 
 PHASE 4 depends on finished design work, because Kindle content is built from the eBook structure and the exported figures — not from the design HTML. Confirm, and stop if any item fails:
 

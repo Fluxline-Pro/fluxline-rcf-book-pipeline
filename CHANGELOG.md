@@ -18,6 +18,13 @@ The cloud RAG track can now run behind a governance gateway, and a nightly refre
 - **`cloud.consumers`** in `RAG_Config.json`: downstream products that build their own index from the cloud store, each with a `notifyUrl`, a `credentialEnv`, and any extra uploads it needs (for example figure images).
 - **Cloud vector metadata:** `part` and `lesson` on every line; `figureId` and `altText` on FigureRegistry chunks.
 - **Placeholders:** `<GATEWAY_URL>`, `<CLOUD_EMBED_FLOW>`, `<RAG_REFRESH_TIME>`.
+- **PHASE 5 §5A: promote or roll back both tracks together.** Track C is staged (its `current.json` flips only after validation and parity pass), and Track L is snapshotted before the chapter's vectors are replaced. A failed run restores the snapshot and discards the staged cloud folder, so the stores can't drift apart.
+- **`inputHash` in the index manifests:** a hash of every file PHASE 5 read for the chapter plus the track settings. The §3G refresh compares it to decide whether a chapter changed; the chunk-set hash alone can't see a changed input before PHASE 5 runs.
+- **`cloud.gateway.chatFlow`:** the gateway flow PHASE 6 cloud chat uses. Empty means no cloud chat in gateway mode, never a direct fallback.
+
+### Fixed
+
+- **PHASE 4:** the Part 0 exit gate and the Step 0 heading now say plainly that Part 0 starts from the final eBook PDF and writes `MANUSCRIPT_SYNCED.md`, and that Step 0 runs right after it. (The sequence was right; the old heading, "do this before anything else", read as if Step 0 came first.)
 
 ### Changed
 
