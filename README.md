@@ -6,7 +6,7 @@ It is a set of Markdown prompts. You paste a phase into an AI assistant (these w
 
 Built for *RCF: Resonance Core Framework* by Terence Waters at [Fluxline.pro](https://fluxline.pro), and shared for other authors who are building a real production pipeline rather than one-off prompts.
 
-**Current version: [v1.1](./v_1_1)** (release v1.1.1: README adds the editing passes) (previous: [v1.0.4](./v_1_0_4), [v1.0.3](./v_1_0_3), [v1.0.2](./v_1_0_2), [v1.0](./v1_0)) · See the [changelog](./CHANGELOG.md) for what changed and why.
+**Current version: v1.1.1** (phase files in [`v_1_1/`](./v_1_1), unchanged since v1.1; v1.1.1 adds the editing passes to this README) (previous: [v1.0.4](./v_1_0_4), [v1.0.3](./v_1_0_3), [v1.0.2](./v_1_0_2), [v1.0](./v1_0)) · See the [changelog](./CHANGELOG.md) for what changed and why.
 
 ---
 
@@ -18,7 +18,7 @@ This pipeline treats the manuscript as the only source of truth and makes every 
 
 ## Before the phases: the editing passes (PASS 0–7)
 
-The phases don't write the book. They start from a manuscript that has already been through seven editing passes, each with a single job, so a pass never has to fix structure, terminology, and commas all at once. Every pass kept its own folder, so any chapter can be traced back to the draft it came from.
+The phases don't write the book. They start from a manuscript that has already been through seven editing passes on top of the original draft (PASS 0), eight stages in all, each with a single job, so a pass never has to fix structure, terminology, and commas all at once. Every pass kept its own folder, so any chapter can be traced back to the draft it came from.
 
 | Pass | Focus | What it settles |
 |---|---|---|
@@ -38,7 +38,7 @@ The phases don't write the book. They start from a manuscript that has already b
 
 The final eBook PDF is what fully locks a chapter.
 
-You don't need seven passes, or these names. What matters is that the draft reaches a stage you won't rewrite before PHASE 1 starts (see `PLACEHOLDERS.md` → "PASS 7").
+You don't need seven passes, or these names. What matters is that the draft reaches a stage you won't rewrite before PHASE 1 starts (see [`v_1_1/PLACEHOLDERS.md`](./v_1_1/PLACEHOLDERS.md) → "PASS 7").
 
 ## The ten phases, plus the workbook track
 
