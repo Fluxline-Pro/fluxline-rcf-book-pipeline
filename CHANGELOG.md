@@ -5,6 +5,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [v1.1.1] — 2026-10-02
+
+**Folder:** `v_1_1/` (unchanged) · **Tag:** `v1_1_1_PROD`
+
+Documentation only. No phase file changed.
+
+### Added
+
+- **README: "Before the phases: the editing passes (PASS 0–7)".** What each editing pass settles, from the original draft (PASS 0) through PASS 6, the draft PHASE 0.9 audits. Also covers PASS 7, the semi-locked manuscript the phases take over, and the three ways it can still change.
+
+---
+
 ## [v1.1] — 2026-10-02
 
 **Folder:** `v_1_1/` · **Previous:** `v_1_0_4/` (unchanged, kept for books mid-flight) · **Tag:** `v1_1_PROD`

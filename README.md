@@ -6,7 +6,7 @@ It is a set of Markdown prompts. You paste a phase into an AI assistant (these w
 
 Built for *RCF: Resonance Core Framework* by Terence Waters at [Fluxline.pro](https://fluxline.pro), and shared for other authors who are building a real production pipeline rather than one-off prompts.
 
-**Current version: [v1.1](./v_1_1)** (previous: [v1.0.4](./v_1_0_4), [v1.0.3](./v_1_0_3), [v1.0.2](./v_1_0_2), [v1.0](./v1_0)) · See the [changelog](./CHANGELOG.md) for what changed and why.
+**Current version: [v1.1](./v_1_1)** (release v1.1.1: README adds the editing passes) (previous: [v1.0.4](./v_1_0_4), [v1.0.3](./v_1_0_3), [v1.0.2](./v_1_0_2), [v1.0](./v1_0)) · See the [changelog](./CHANGELOG.md) for what changed and why.
 
 ---
 
@@ -15,6 +15,30 @@ Built for *RCF: Resonance Core Framework* by Terence Waters at [Fluxline.pro](ht
 A book that ships in six formats has the same content living in twenty places: manuscript, workbook, slides, reference guides, narration script, eBook HTML, print layout, Kindle file, vector store, marketing copy. Each one drifts. A term gets redefined in the slides. A figure gets renumbered in print but not in Kindle. A marketing post claims something the book never says.
 
 This pipeline treats the manuscript as the only source of truth and makes every other artifact answer to it — with validation, correction, and a human sign-off at the end.
+
+## Before the phases: the editing passes (PASS 0–7)
+
+The phases don't write the book. They start from a manuscript that has already been through seven editing passes, each with a single job, so a pass never has to fix structure, terminology, and commas all at once. Every pass kept its own folder, so any chapter can be traced back to the draft it came from.
+
+| Pass | Focus | What it settles |
+|---|---|---|
+| **PASS 0 — Original draft** | The author's draft, as written | The raw material. Kept untouched as the reference point for every later pass. |
+| **PASS 1 — Coherence & restructure** | Big-picture structure | Each chapter has one clear job, ideas sit in the chapter that owns them, and the argument flows from start to finish. Sections move, merge, or split here. |
+| **PASS 2 — Term coherence** | The framework's vocabulary, chapter by chapter | Each core term means one thing wherever it's used, and is introduced before it's relied on. |
+| **PASS 3 — Term consistency & book architecture** | The same vocabulary across the whole book, plus the book's skeleton | Terms are consistent book-wide, and the architecture (parts, lessons, chapter order, recurring sections) is fixed. |
+| **PASS 4 — Voice, clarity & transitions** | How it reads | The author's voice holds throughout, dense passages are clarified, and chapters hand off to each other. |
+| **PASS 5 — Transitions, editing, spelling, grammar & references** | Line-level correctness | Copy edit and proofread. Transitions are smoothed, and citations and the reference list are complete. |
+| **PASS 6 — Tightening & automation** | Concision, and repeatable checks | The prose is tightened, and the checks a person shouldn't do by hand (term drift, repetition, formatting) are automated. This is the draft PHASE 0.9 audits. |
+| **PASS 7 — Full systemic arc edit & cohesion** | The book as one arc | One full read for the through-line, callbacks, and cohesion, with the PHASE 0.9 audit decisions applied. The output is the **semi-locked manuscript** the phases take over. |
+
+**Why "semi-locked":** after PASS 7, no phase rewrites the manuscript on its own. It changes only in three ways, each with a backup and a change log:
+- edits the author accepts from a proposals file;
+- safe reference fixes before design;
+- wording the author changed while laying out the eBook, copied back by PHASE 4 Part 0.
+
+The final eBook PDF is what fully locks a chapter.
+
+You don't need seven passes, or these names. What matters is that the draft reaches a stage you won't rewrite before PHASE 1 starts (see `PLACEHOLDERS.md` → "PASS 7").
 
 ## The ten phases, plus the workbook track
 
@@ -88,7 +112,7 @@ You do not need every phase. A pipeline that stops at PHASE 3.5 still gives you 
 
 These prompts are a working author's, not a sanitized template, so expect to change:
 
-- **Paths and names.** `<BOOK_ROOT>`, `<BOOK>`, `<BOOK_TITLE>`, `<AUTHOR>`, and the rest — see `PLACEHOLDERS.md`. "PASS 7" means the seventh editing pass in the pipeline this came from; substitute your own final-draft stage. The phases are written in the author's first person ("my book", "I approve every piece"), which reads correctly whoever runs them.
+- **Paths and names.** `<BOOK_ROOT>`, `<BOOK>`, `<BOOK_TITLE>`, `<AUTHOR>`, and the rest — see `PLACEHOLDERS.md`. "PASS 7" means the seventh editing pass ([see the passes above](#before-the-phases-the-editing-passes-pass-07)); substitute your own final-draft stage. The phases are written in the author's first person ("my book", "I approve every piece"), which reads correctly whoever runs them.
 - **The design system.** PHASE 3 expects a design system manual derived from your print layout — tokens, typography, components. Without one, the design phase has nothing authoritative to follow.
 - **Framework terminology.** The terminology lock names this book's concepts. Replace them with yours.
 - **Tools.** The defaults are Claude and Claude Design for generation, InDesign for print, XTTS for draft narration and Adobe Audition for the final recording, Ollama plus an ONNX/TEI embedder and ChromaDB for local RAG, optionally Azure OpenAI `text-embedding-3-large` with vectors in Azure Blob Storage for multilingual cloud RAG, and n8n plus OpenClaw for orchestration. Each is swappable; the gates and deliverables are what matter.
