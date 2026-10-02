@@ -56,7 +56,7 @@
 
 ---
 
-# PART A — VALIDATION OF OUTPUTS (Claude pre-fills evidence; <AUTHOR> confirms)
+# PART A — VALIDATION OF OUTPUTS (the local release check pre-fills evidence; <AUTHOR> confirms)
 
 ## PHASE 1 — Content Production
 
@@ -124,6 +124,8 @@
 - [ ] InDesign print files (manual) present
 
 ## PHASE 3W — Workbook
+
+*If the book's workbook profile says `enabled: false`, tick only "`WORKBOOK_NOT_APPLICABLE.md` present" and skip the rest of this section. Only the formats the profile lists are required.*
 
 - [ ] `Workbook/Trigger/WORKBOOK_MANUSCRIPT_READY.md` was present before the workbook design (DOCX = MD, exercise IDs registered)
 - [ ] Final workbook PDF(s) uploaded by <AUTHOR>, to `Workbook/<ChapterName>_Workbook_eBook.pdf` (8.5×11) [+ `_Workbook_Print.pdf` (7×10) if the book ships print] or to `<WORKBOOK_BOOK_ROOT>/…/<NN>_Ex_<L>_<N>_Chapter<C>.pdf` (InDesign files stay in `<WORKBOOK_INDESIGN_ROOT>`)
@@ -227,7 +229,7 @@ Move (never delete) working material:
 
 ---
 
-# PART B — LLM RECOMMENDATIONS (Claude completes before sign-off)
+# PART B — LLM RECOMMENDATIONS (drafted by the local LLM from the unmet checks, before sign-off)
 
 | # | Area | Observation (with evidence path) | Recommendation | Risk if ignored | <AUTHOR> decision (Accept / Defer / Reject) |
 |---|---|---|---|---|---|
@@ -271,7 +273,10 @@ Also state:
 
 The chapter is **Published** only when:
 
-✅ PHASES 1, 2, 3, 3W, 3.5, 4, 5, 6, and 6.5 have passed their exit gates (3W: a current `WORKBOOK_READY.md` whose recorded PDF hashes match the files in `Workbook/`)
+✅ PHASES 1, 2, 3, 3.5, 4, 5, 6, and 6.5 have passed their exit gates
+✅ The workbook is settled per the book's workbook profile (PHASE 3W W2): a current `WORKBOOK_READY.md` whose recorded hashes match the uploaded PDFs (in `Workbook/` or `<WORKBOOK_BOOK_ROOT>`, only the profile's formats), **or** `WORKBOOK_NOT_APPLICABLE.md` for a book without a workbook
+✅ References: no open critical or major finding in `_BookGovernance/References/<ChapterName>_ReferencesCheck.md` (PHASE 4 0R lets Kindle proceed with open findings; publication does not)
+✅ Every Part A item is ticked, or is unticked with <AUTHOR>'s written acceptance beside it
 ✅ The published package exists
 ✅ The archive package exists
 ✅ Master metadata is updated

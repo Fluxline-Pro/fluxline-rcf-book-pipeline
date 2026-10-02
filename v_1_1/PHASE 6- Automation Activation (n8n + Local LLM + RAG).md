@@ -117,7 +117,7 @@ Kindle DOCX validation · EPUB readiness · InDesign asset presence · PDF expor
 RAG query testing (per track) · RAG semantic map updates · CMS ingestion (drafts; cloud-grounded) · LMS ingestion (drafts)
 
 ### 3F. Final eBook watcher (book-level, notify only)
-Watches `Chapters/*/Final/eBook/<ChapterName>_eBook.pdf`. When a PDF is newer than the chapter's `MANUSCRIPT_SYNCED.md` (a new or re-exported final eBook), the watcher writes a notice to `/_BookAutomation/Notices/<YYYYMMDD>_<ChapterName>_eBookUpdated.md`. The notice says that PHASE 4 Part 0 is due, and that the chapter's Kindle build, audiobook passages, and RAG stores are stale until it runs. The watcher runs for every chapter, whatever its `automationStatus`, because it only notifies. It never syncs, edits, or rebuilds anything.
+Watches `Chapters/*/Final/eBook/<ChapterName>_eBook.pdf` and its accepted alternate name `<ChapterName>_eBookPDF.pdf` (v1.1; see PHASE 4 0.1). When a PDF is newer than the chapter's `MANUSCRIPT_SYNCED.md` (a new or re-exported final eBook), the watcher writes a notice to `/_BookAutomation/Notices/<YYYYMMDD>_<ChapterName>_eBookUpdated.md`. The notice says that PHASE 4 Part 0 is due, and that the chapter's Kindle build, audiobook passages, and RAG stores are stale until it runs. The watcher runs for every chapter, whatever its `automationStatus`, because it only notifies. It never syncs, edits, or rebuilds anything.
 
 ### 3G. Nightly RAG refresh (book-level, keeps both stores in sync)
 A scheduled n8n workflow at `<RAG_REFRESH_TIME>` (time-triggered, every night):
@@ -138,7 +138,7 @@ The refresh generates no content and publishes nothing. It rebuilds stores from 
 | `RAG_LOCAL_READY.md` | PHASE 5 (Track L) | local 3E; enables every **local** workflow |
 | `RAG_CLOUD_READY.md` | PHASE 5 (Track C) | cloud 3E; enables every **cloud** workflow |
 | `RAG_READY.md` | PHASE 5 (all enabled tracks) | enables the chapter for batch mode |
-| Final eBook PDF (newer than `MANUSCRIPT_SYNCED.md`) | <AUTHOR> (final export) | 3F notice only; PHASE 4 Part 0 is run by <AUTHOR> / Claude |
+| Final eBook PDF, `<ChapterName>_eBook.pdf` or `_eBookPDF.pdf` (newer than `MANUSCRIPT_SYNCED.md`) | <AUTHOR> (final export) | 3F notice; in v1.1 the chapter pipeline also starts PHASE 4 Part 0 automatically after 30 quiet minutes (see the overview §9) |
 | `<RAG_REFRESH_TIME>` nightly schedule | n8n | 3G (book-level; runs whatever the chapters' `automationStatus`) |
 | daily cron / weekly cron / manual | n8n | per workflow |
 

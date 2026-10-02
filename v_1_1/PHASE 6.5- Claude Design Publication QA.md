@@ -56,7 +56,8 @@ Evaluate all publication outputs for:
 | eBook HTML + exports | `<CH_ROOT>/eBook/` |
 | Kindle DOCX, HTML, metadata, figures | `<CH_ROOT>/Kindle/` (PHASE 4 Part A) |
 | Design layouts (eBook, Print 7×10, Workbook) | `<CH_ROOT>/DesignPacket/` |
-| Workbook manuscript (DOCX + MD), eBook + print PDFs, `WORKBOOK_READY.md`, latest WorkbookQA report | `<CH_ROOT>/Workbook/`, `<CH_ROOT>/Governance/<ChapterName>_WorkbookQA_*.md` |
+| Workbook manuscript (DOCX + MD), `WORKBOOK_READY.md` (or `WORKBOOK_NOT_APPLICABLE.md`), latest WorkbookQA report | `<CH_ROOT>/Workbook/`, `<CH_ROOT>/Governance/<ChapterName>_WorkbookQA_*.md` |
+| Workbook PDFs: the formats the book's workbook profile lists (PHASE 3W W2) | `<CH_ROOT>/Workbook/` (`location: chapter`), or `<WORKBOOK_BOOK_ROOT>/<section>/<NN>_Ex_<L>_<N>_Chapter<C>[_Print].pdf` (`location: book-root`), with the chapter matched by `Chapter<C>` and the exercises by the registry |
 | Audiobook final MP3 + narration script (drafts in `Audiobook/Drafts/` are out of scope) | `<CH_ROOT>/Audiobook/` |
 | InDesign print files | `<CH_ROOT>/InDesign/` |
 | RAG ingestion, index manifests (Local, Cloud), validation report | `<CH_ROOT>/RAG/` |
@@ -118,8 +119,16 @@ Check OPF completeness, NCX correctness, TOC anchors, publication metadata, lang
 ## 8. Print and audiobook package
 Print: print PDFs exist, trim size 7×10, figures present (layout quality is <AUTHOR>'s manual call).
 Workbook:
-- **Chapter mode:** a current `WORKBOOK_READY.md` (not superseded, newer than any PHASE 4 Part 0 sync that flagged the workbook, and with recorded PDF hashes that match the files in `Workbook/`), and a WorkbookQA report that shows PDF = DOCX = MD with no open blocking items.
-- **Book mode:** both workbook deliverables are present, the eBook at 8.5×11 in and the print interior at 7×10 in. The PHASE 3W assembly report lists no blocking items: book PDFs vs chapter workbook manuscripts, the exercise registry vs the synced manuscripts, full-color print preflight, eBook bookmarks and links.
+- **Workbook profile first (v1.1):** read `workbook` in the exercise registry (PHASE 3W W2). With `enabled: false`, accept `WORKBOOK_NOT_APPLICABLE.md` and record the Workbook sub-certification as **N/A**.
+- **Chapter mode:** a current `WORKBOOK_READY.md`:
+  - not superseded
+  - newer than any PHASE 4 Part 0 sync that flagged the workbook
+  - its recorded hashes match the uploaded PDFs, wherever the profile's `location` puts them (`Workbook/` or `<WORKBOOK_BOOK_ROOT>`)
+
+  Plus a WorkbookQA report that shows PDF = DOCX = MD with no open blocking items. Only the formats the profile lists are required.
+- **Book mode:**
+  - **Deliverables:** the workbook deliverables for the profile's `formats` are present: the eBook at 8.5×11 in, and the print interior at 7×10 in only when `print` is listed. Otherwise record print as **n/a** (copy that evidence from the W5 assembly report).
+  - **Assembly report:** the PHASE 3W report lists no blocking items. It checks the book PDFs against the chapter workbook manuscripts, the exercise registry against the synced manuscripts, eBook bookmarks and links, and full-color print preflight (only when print is shipped).
 - The workbook has no EPUB, Kindle, audiobook, or RAG checks.
 Audiobook: every section has <AUTHOR>'s final recording (no XTTS file from `Audiobook/Drafts/` anywhere in the set), running order matches the TOC and the Kindle reading order, file naming `<NN>_<Section>.mp3`, track list present, PHASE 4 Part C coverage and technical-spec results recorded, and no stale passages (recorded before the latest Kindle build of changed text).
 

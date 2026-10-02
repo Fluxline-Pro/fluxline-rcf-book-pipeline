@@ -30,6 +30,11 @@ Automation first. The author's two uploads (the final eBook PDF and the final wo
 - **Workbook candidate selection:** PHASE 1 writes extra exercises as candidates and lists them in `_Pipeline/WORKBOOK_SELECTION.md`. PHASE 2 adds only the ones the author ticks, renumbered without gaps, and stages a filtered packet for Claude Design.
 - **PHASE 3W W2 upload location:** the workbook PDF may go to `<WORKBOOK_BOOK_ROOT>/<section>/<NN>_Ex_<L>_<N>_Chapter<C>.pdf` instead of each chapter's `Workbook/` folder. The print workbook is optional per book.
 - **PHASE 3W uncertain sync items** go to `_Pipeline/P3W_DECISIONS.md` (a Decision column), mirroring PHASE 4's S3 handling.
+- **Workbook profile:** a book-level `workbook` object in the exercise registry: `enabled`, `formats` (`["ebook"]` or `["ebook","print"]`), and `location` (`chapter` or `book-root`). Every phase reads it, so none assumes a format.
+  - With no workbook, PHASE 2 writes `WORKBOOK_NOT_APPLICABLE.md`, which PHASE 6.5 and PHASE 7 accept.
+  - In the book-root layout, print PDFs carry a `_Print` suffix, and W3 waits until every exercise has every required format, so a partial upload never yields a READY file.
+- **PHASE 4 `_Pipeline/P4_DECISIONS.md`** is now specified: the table schema, how a re-run reads and applies it, and that it's archived once every row is decided.
+- **PHASE 7 completion rule:** also requires no open critical or major reference finding, and every Part A item ticked or explicitly accepted by the author.
 - **Master overview §9:** the automation map (event → automation → output → email), and what stays manual by design.
 - **Placeholders:** `<WORKBOOK_BOOK_ROOT>` and `<LOCAL_TOOLS_ROOT>`.
 

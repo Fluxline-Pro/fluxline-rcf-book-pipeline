@@ -74,16 +74,34 @@ PHASE 3 does not start the workbook design without `WORKBOOK_MANUSCRIPT_READY.md
 
 ### W2. Upload: the cue that the chapter's workbook is done
 
-When the exports are final, <AUTHOR> uploads them to **one** of these locations, chosen once per book:
+**The book's workbook profile (set once, v1.1).** `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json` carries a book-level `workbook` object. Every phase reads it, so no phase assumes a format:
+
+```json
+"workbook": { "enabled": true, "formats": ["ebook"], "location": "book-root" }
+```
+
+- `enabled: false`: the book has no workbook.
+  - PHASE 2 writes `<CH_ROOT>/Workbook/Trigger/WORKBOOK_NOT_APPLICABLE.md` in place of the W0 gate, and 3W doesn't run.
+  - PHASE 6.5 and PHASE 7 accept that file in place of `WORKBOOK_READY.md`.
+- `formats`: `["ebook"]` or `["ebook", "print"]`. Only the listed formats are required, uploaded, hashed, and checked. A missing format is never a defect.
+- `location`: `chapter` (each chapter's `Workbook/`) or `book-root` (`<WORKBOOK_BOOK_ROOT>`; see below).
+
+When the exports are final, <AUTHOR> uploads them to the location the profile names:
 
 - **The chapter's `Workbook/` folder:**
   - `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf`
   - `<CH_ROOT>/Workbook/<ChapterName>_Workbook_Print.pdf` (if the book ships a print workbook)
-- **The book's workbook folder (v1.1):** `<WORKBOOK_BOOK_ROOT>/<section folder>/<NN>_Ex_<L>_<N>_Chapter<C>.pdf`, laid out in reading order the same way as the assembled workbook (e.g. `03_Part_I_The_Self/01_Ex_1_1_Chapter1.pdf`).
-  - `Chapter<C>` in the file name ties the PDF to its chapter.
+- **The book's workbook folder (v1.1):** `<WORKBOOK_BOOK_ROOT>/<section folder>/`, laid out in reading order the same way as the assembled workbook.
+  - **eBook:** `<NN>_Ex_<L>_<N>_Chapter<C>.pdf` (e.g. `03_Part_I_The_Self/01_Ex_1_1_Chapter1.pdf`).
+  - **Print** (only if `formats` includes it): the same name plus `_Print`, i.e. `<NN>_Ex_<L>_<N>_Chapter<C>_Print.pdf`.
+  - `Chapter<C>` ties the PDF to its chapter, and `Ex_<L>_<N>` to its exercise.
   - Front matter and opener pages have no `Chapter<C>`, so they don't start a sync.
 
-**The upload is the trigger, and it completes PHASE 3.5 for the workbook.** Nothing is uploaded until it's final. After 30 minutes with no further changes, W3 runs automatically. A later re-upload (a file newer than `WORKBOOK_READY.md`) re-runs W3.
+**The upload is the trigger, and it completes PHASE 3.5 for the workbook.** Nothing is uploaded until it's final.
+- **W3 starts only when the upload is complete:** every exercise the registry assigns to the chapter has a PDF in every format the profile lists, and nothing has changed for 30 minutes.
+  - A partial upload (one exercise of two, or the eBook without a required print file) waits, and never produces a READY file.
+  - `WORKBOOK_READY.md` records the hash of every one of those files.
+- A later re-upload (a file newer than `WORKBOOK_READY.md`) re-runs W3.
 
 ### W3. Workbook sync and check (Claude)
 

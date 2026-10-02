@@ -139,7 +139,21 @@ If more than roughly 5% of paragraphs differ, or alignment fails for a whole sec
 
 ## 0.5 Resolve S3 items with <AUTHOR>
 
-Present the S3 list (location, manuscript text, PDF text, why it is flagged, recommendation). For each one <AUTHOR> chooses:
+Present the S3 list (location, manuscript text, PDF text, why it is flagged, recommendation).
+
+**The decision file (v1.1).** When <AUTHOR> isn't present, which is always the case in automated runs, write the list to `<CH_ROOT>/_Pipeline/P4_DECISIONS.md` as a table:
+
+| # | Location (heading › paragraph) | Manuscript text | eBook PDF text | Why flagged | Recommendation | **Decision** |
+|---|---|---|---|---|---|---|
+
+- Leave **Decision** blank. <AUTHOR> writes `Accept PDF`, `Keep manuscript`, or `Defer — <initials>`, then requests a re-run.
+- On every run, read this file first if it exists:
+  - Apply each decided row as below, and carry blank rows forward.
+  - Rename the file to `P4_DECISIONS_applied_<YYYYMMDD_HHMM>.md` once every row is decided and applied.
+  - Rows whose PDF text no longer matches (because the PDF was re-exported) are re-evaluated, not applied.
+- `MANUSCRIPT_SYNCED.md` can't be written while a row is blank.
+
+For each item <AUTHOR> chooses:
 - **Accept the PDF wording** → apply it to MD and DOCX (and the Glossary or FigureRegistry, if affected).
 - **Keep the manuscript wording** → the eBook layout is wrong; list it as a layout fix for the eBook InDesign book (and the print book, if it carries the same text). The PDF must be re-exported and Part 0 re-run for the chapter before the gate passes.
 - **Defer** → allowed only for non-substantive items, recorded with <AUTHOR>'s initials. A deferred item blocks nothing, but it is carried into the PHASE 7 release checklist.

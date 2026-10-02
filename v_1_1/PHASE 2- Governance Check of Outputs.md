@@ -774,7 +774,7 @@ After certification:
 
 PHASE 3 does not start without `GOVERNANCE_READY.md`.
 
-**Workbook manuscript gate (PHASE 3W, W0).** In the same run, confirm that the workbook manuscript's DOCX and MD replica match word for word, and that every exercise ID the chapter manuscript mentions is in `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json` and in the workbook DOCX. Then write `<CH_ROOT>/Workbook/Trigger/WORKBOOK_MANUSCRIPT_READY.md`, or `WORKBOOK_MANUSCRIPT_INCOMPLETE.md` with the blockers. The steps and blocking rules are in `PHASE 3W- Workbook Track (eBook + Print).md`. The PHASE 3 workbook design waits for this trigger; the rest of PHASE 3 doesn't.
+**Workbook manuscript gate (PHASE 3W, W0).** First read the book's workbook profile (`workbook` in `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json`; see PHASE 3W W2). If `enabled` is `false`, write `<CH_ROOT>/Workbook/Trigger/WORKBOOK_NOT_APPLICABLE.md` (date, the profile, "no workbook for this book") instead of the gate below, and skip the workbook selection and staging. The workbook then never blocks this or any later phase. Otherwise, in the same run, confirm that the workbook manuscript's DOCX and MD replica match word for word, and that every exercise ID the chapter manuscript mentions is in `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json` and in the workbook DOCX. Then write `<CH_ROOT>/Workbook/Trigger/WORKBOOK_MANUSCRIPT_READY.md`, or `WORKBOOK_MANUSCRIPT_INCOMPLETE.md` with the blockers. The steps and blocking rules are in `PHASE 3W- Workbook Track (eBook + Print).md`. The PHASE 3 workbook design waits for this trigger; the rest of PHASE 3 doesn't.
 
 ---
 
