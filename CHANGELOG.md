@@ -14,6 +14,7 @@ Documentation only. No phase file changed.
 ### Added
 
 - **README: "Before the phases: the editing passes (PASS 0–7)".** What each editing pass settles, from the original draft (PASS 0) through PASS 6, the draft PHASE 0.9 audits. Also covers PASS 7, the semi-locked manuscript the phases take over, and the three ways it can still change.
+- **README: current version** is labelled v1.1.1 (phase files in the unchanged `v_1_1/`). The pass count is stated as the original draft plus seven editing passes, and the PASS 7 note links to `v_1_1/PLACEHOLDERS.md`.
 
 ---
 
