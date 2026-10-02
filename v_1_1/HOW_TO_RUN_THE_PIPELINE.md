@@ -53,7 +53,14 @@ Work one chapter at a time, or several in parallel; the pipeline keeps each chap
 
 ### Step 1 — Drop the manuscript → PHASE 1 (content production)
 
-🧑 **You:** save the locked PASS 7 chapter as `Ch<N>_<PascalCaseTitle>.md` and `.docx` (both, with the same name) in `<PASS7_SOURCE>`.
+🧑 **You:**
+1. Work through the chapter's **PHASE 0.9 author-review notes** in the manuscript, and save the result as PASS 7.
+2. Review the chapter's **workbook exercise** against the same notes.
+3. When **both** are final, drop them into `<PASS7_SOURCE>` together:
+   - `Ch<N>_<PascalCaseTitle>.md` + `.docx`: the manuscript, both formats with the same name
+   - `Ch<N>_<PascalCaseTitle>_Exercise<L.N>_Workbook.docx` (+ `.md` if you have one): the exercise, e.g. `Ch6_ValuesVirtues_Exercise2.2_Workbook.docx`. Name any companion pages `..._Exercise<L.N>_<Part>_Workbook.docx`.
+
+   If a workbook draft lands first, it waits for its manuscript. The run starts about 2 minutes after the last file lands.
 
 🤖 **Automatic:** PHASE 1 starts about 2 minutes later. Claude:
 - copies the manuscript into the chapter folder
@@ -205,6 +212,7 @@ These run on their own whenever their inputs change, and email you when somethin
 | File | Where | What it does |
 |---|---|---|
 | `Ch<N>_<Title>.md` + `.docx` | `<PASS7_SOURCE>` | Starts PHASE 1 |
+| `Ch<N>_<Title>_Exercise<L.N>_Workbook.docx` | `<PASS7_SOURCE>` (with the manuscript) | Becomes the workbook manuscript in PHASE 1 |
 | `[x]` ticks | `_Pipeline/WORKBOOK_SELECTION.md` | Chooses the published workbook exercises |
 | `APPROVE_EDITORIAL.md` | `_Pipeline/` | Starts PHASE 2 |
 | `<ChapterName>_eBook.pdf` | `eBook/` | Completes 3.5 and starts PHASE 4 (locks the manuscript and glossary) |

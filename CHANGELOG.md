@@ -26,6 +26,7 @@ Automation first. The author's two uploads (the final eBook PDF and the final wo
 - **Glossary lock and drift:**
   - **PHASE 4 Part 0G** finalises the chapter glossary from the locked manuscript and rebuilds `_BookGovernance/Glossary/Master_Glossary`, which holds **locked chapters only**. It also writes `Glossary_DriftReport.md`, an early warning across all chapters.
   - **New `Glossary_Canonical.json`,** where the author records which chapter *defines* a term (`definedIn`), which only *prime* it (`primedIn`), and which should not carry it at all (`removeFrom`).
+- **The workbook exercise draft comes in with the manuscript:** `<ChapterName>_Exercise<L.N>_Workbook.docx`, reviewed against the same PHASE 0.9 notes, is dropped into `<PASS7_SOURCE>` with the manuscript. PHASE 1 adopts it as the workbook manuscript, without rewriting it.
 - **Workbook candidate selection:** PHASE 1 writes extra exercises as candidates and lists them in `_Pipeline/WORKBOOK_SELECTION.md`. PHASE 2 adds only the ones the author ticks, renumbered without gaps, and stages a filtered packet for Claude Design.
 - **PHASE 3W W2 upload location:** the workbook PDF may go to `<WORKBOOK_BOOK_ROOT>/<section>/<NN>_Ex_<L>_<N>_Chapter<C>.pdf` instead of each chapter's `Workbook/` folder. The print workbook is optional per book.
 - **PHASE 3W uncertain sync items** go to `_Pipeline/P3W_DECISIONS.md` (a Decision column), mirroring PHASE 4's S3 handling.

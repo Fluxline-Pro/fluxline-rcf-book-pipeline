@@ -68,6 +68,13 @@ Input chapters are located in:
 
 First action: copy the locked manuscript into `<CH_ROOT>/Manuscript/<ChapterName>_Manuscript.md` (and `.docx` if supplied). Every later step and phase reads the manuscript from there.
 
+**The workbook exercise comes in with it (v3.3).** <AUTHOR> reviews the chapter's workbook exercise alongside the manuscript, using its PHASE 0.9 notes, and drops both into `<PASS7_SOURCE>` together:
+- `<ChapterName>.md` + `.docx`: the locked manuscript
+- `<ChapterName>_Exercise<L.N>_Workbook.docx` (+ `.md` if <AUTHOR> has one): the reviewed workbook exercise, i.e. the "complementary workbook exercise" Step 2 refers to
+- companion pages, if any: `<ChapterName>_Exercise<L.N>_<Part>_Workbook.docx`
+
+Copy each workbook draft, under its own name, into `<CH_ROOT>/Workbook/` as the workbook manuscript. The DOCX is canonical; generate the MD replica if only the DOCX was supplied. Don't rewrite <AUTHOR>'s exercise. If the exercise ID in the file name differs from the one the manuscript names, flag it. With no draft supplied, build the workbook manuscript from the exercise the manuscript names, and note that the draft is missing.
+
 1. Create a “Chapter Review Packet” containing:
    - A 1-page chapter summary
    - Key insights and takeaways
