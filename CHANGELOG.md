@@ -5,6 +5,53 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [v1.1] — 2026-10-02
+
+**Folder:** `v_1_1/` · **Previous:** `v_1_0_4/` (unchanged, kept for books mid-flight) · **Tag:** `v1_1_PROD`
+
+Automation first. The author's two uploads (the final eBook PDF and the final workbook PDF) are now the switches that complete PHASE 3.5 and lock the text, and every step after them starts from an event, without anyone pasting a prompt. Three things were added along the way, each found while running the pipeline:
+- Claude Design built every generated workbook sub-exercise into a chapter's workbook, including some that belonged to later chapters.
+- Glossary definitions drifted between a chapter that primes a term and the chapter that defines it.
+- References were never verified at all.
+
+### Added
+
+- **`HOW_TO_RUN_THE_PIPELINE.md`:** a step-by-step operating guide. For each step it says what runs automatically, what the author does by hand (and where), and what "done" looks like.
+- **References check:**
+  - **PHASE 1 Step 10b:** in-text citations ↔ reference list, numbering order, DOIs verified on Crossref (title, year, first author), DOIs found for entries without one, link checks, and APA 7 basics.
+  - **Safe fixes go into the manuscript MD and DOCX before design:** DOI formatting, plus a DOI added when Crossref matches the entry unambiguously.
+  - **Everything else goes to the author** as Editorial Suggestions.
+  - **PHASE 4 Part 0R** re-checks report-only after the lock.
+  - Report: `_BookGovernance/References/`.
+- **Glossary lock and drift:**
+  - **PHASE 4 Part 0G** finalises the chapter glossary from the locked manuscript and rebuilds `_BookGovernance/Glossary/Master_Glossary`, which holds **locked chapters only**. It also writes `Glossary_DriftReport.md`, an early warning across all chapters.
+  - **New `Glossary_Canonical.json`,** where the author records which chapter *defines* a term (`definedIn`), which only *prime* it (`primedIn`), and which should not carry it at all (`removeFrom`).
+- **The workbook exercise draft comes in with the manuscript:** `<ChapterName>_Exercise<L.N>_Workbook.docx`, reviewed against the same PHASE 0.9 notes, is dropped into `<PASS7_SOURCE>` with the manuscript. PHASE 1 adopts it as the workbook manuscript, without rewriting it.
+- **Workbook candidate selection:** PHASE 1 writes extra exercises as candidates and lists them in `_Pipeline/WORKBOOK_SELECTION.md`. PHASE 2 adds only the ones the author ticks, renumbered without gaps, and stages a filtered packet for Claude Design.
+- **PHASE 3W W2 upload location:** the workbook PDF may go to `<WORKBOOK_BOOK_ROOT>/<section>/<NN>_Ex_<L>_<N>_Chapter<C>.pdf` instead of each chapter's `Workbook/` folder. The print workbook is optional per book.
+- **PHASE 3W uncertain sync items** go to `_Pipeline/P3W_DECISIONS.md` (a Decision column), mirroring PHASE 4's S3 handling.
+- **Workbook profile:** a book-level `workbook` object in the exercise registry: `enabled`, `formats` (`["ebook"]` or `["ebook","print"]`), and `location` (`chapter` or `book-root`). Every phase reads it, so none assumes a format.
+  - With no workbook, PHASE 2 writes `WORKBOOK_NOT_APPLICABLE.md`, which PHASE 6.5 and PHASE 7 accept.
+  - In the book-root layout, print PDFs carry a `_Print` suffix, and W3 waits until every exercise has every required format, so a partial upload never yields a READY file.
+- **PHASE 4 `_Pipeline/P4_DECISIONS.md`** is now specified: the table schema, how a re-run reads and applies it, and that it's archived once every row is decided.
+- **PHASE 7 completion rule:** also requires no open critical or major reference finding, and every Part A item ticked or explicitly accepted by the author.
+- **Master overview §9:** the automation map (event → automation → output → email), and what stays manual by design.
+- **Placeholders:** `<WORKBOOK_BOOK_ROOT>` and `<LOCAL_TOOLS_ROOT>`.
+
+### Changed
+
+- **PHASE 3.5 (v3.3):** the author's upload of the final eBook PDF (book) or the final workbook PDF (workbook) completes the phase. If PHASE 3.5 didn't write `DESIGN_READY.md`, PHASE 4 writes it as attested by the upload.
+- **PHASE 4 (v3.3):** the entry gate is the upload. The eBook PDF may be named `_eBook.pdf` or `_eBookPDF.pdf`. The checklist records 3.5 completion, 0R, and 0G.
+- **PHASE 7 (v3.3):** runs locally and automatically after PHASE 6.5, with no Claude.
+  - A deterministic check ticks every Part A item it can prove, with the evidence.
+  - The local LLM drafts Part B from the unmet checks only.
+  - The author gets an email with what's missing, or "ready for sign-off".
+  - New Part A and C items: references, glossary, 3.5 completion by upload, and workbook selection.
+- **PHASE 1 / PHASE 2 (v3.3):** workbook selection, references, and the glossary defining-chapter rule. Open critical or major reference findings block Design Ready.
+- **`MASTER_PIPELINE_OVERVIEW.md`:** the release note, phase table, deliverable map, trigger map, and LLM map.
+
+---
+
 ## [v1.0.4] — 2026-09-30
 
 **Folder:** `v_1_0_4/` · **Previous:** `v_1_0_3/` (unchanged, kept for books mid-flight)
