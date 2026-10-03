@@ -5,6 +5,42 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [v1.1.2] — 2026-10-03
+
+**Folder:** `v_1_1_2/` · **Previous:** `v_1_1/` (unchanged, kept for books mid-flight) · **Tag:** `v1_1_2_PROD`
+
+Print vs. eBook QA. The print layout was the one deliverable no phase checked: PHASE 4 asked the author to confirm that the print InDesign book carried the same wording as the eBook, and PHASE 6.5 checked only that print PDFs existed. Wording can drift between the two layouts, and print has faults the eBook can't show (widows, trim, bleed, image resolution). The author now uploads the print PDF, and a deterministic check compares it with the eBook.
+
+### Added
+
+- **PHASE 4 Part 0P, print vs. eBook QA (report-only):**
+  - **Input:** the author exports each finished section from the print InDesign book as a high-fidelity print PDF (7×10, printer's marks and bleed). It goes to `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf`; front matter goes to `FrontMatter/Final/<Section>/InDesign/<Section>_Print7x10.pdf`.
+  - **Text drift:** a word-by-word comparison with the final eBook PDF. Line breaks, hyphenation, spacing, running heads, and folios are ignored, and print-only differences the author logs in `<Section>_PrintOnlyDifferences.md` are skipped.
+  - **Layout:** widows, orphans, runts, stranded headings, 3+ stacked hyphens, doubled words, text in the 0.25 in safe zone or across the trim, trim and bleed size, unembedded or Type3 fonts, images under 300 ppi effective, RGB images, and blank pages.
+  - **Report:** `_BookGovernance/PrintQA/<Section>_PrintQA.md` + `.json`, at book level, so protected chapters are covered too. Severities are text *check* (3+ words) or *minor*, and layout *error*, *warn*, or *info*.
+  - **Runs automatically:** when the print or eBook PDF changes, after 5 quiet minutes. An email goes out when the findings change. Reference implementation: `print_check.py` in `<LOCAL_TOOLS_ROOT>`.
+  - **Gate:** non-blocking for Part A, but closed before PHASE 6.5 and PHASE 7. Closed means 0 text differences to check, 0 layout errors, and every warning fixed or accepted by the author.
+  - Nothing edits a layout or a manuscript. Wording that should reach the manuscript goes through Part 0 (fix the eBook, re-export).
+- **PHASE 3W W2b, print workbook QA:** the same check for the print workbook, only when the workbook profile's `formats` includes `print` (otherwise N/A). Print PDFs go to `<WORKBOOK_BOOK_ROOT>/InDesign/`:
+  - `<eBook stem>_Print7x10.pdf` is checked against that section's eBook PDF.
+  - Any other `*Print*.pdf` there is checked against the assembled workbook eBook PDF.
+  - Reports: `Workbook_<eBook stem>_PrintQA.md` or `Workbook_PrintQA.md`. The 8.5×11 eBook vs. 7×10 print page size is expected, not drift.
+- **PHASE 7 (v3.4):** Part A items for the print PDF upload, a closed 0P report, and reviewed warnings (plus the print workbook in the 3W section), a Part C **Print Approved**, and a completion-rule line.
+- **`HOW_TO_RUN_THE_PIPELINE.md`:** Step 5b (export and upload the print PDF, read the report, fix and re-export), a running-checks row, and cheat-sheet rows.
+- **Master overview:** the release note, phase table, deliverable map, folder map (`_BookGovernance/PrintQA/`), trigger map, and §9 event "print PDF uploaded / eBook re-exported → `print_check.py` → report → email".
+
+### Changed
+
+- **PHASE 4 (v3.4):**
+  - **0.6 print cross-check:** now evidenced by the 0P report. the author still confirms print-only differences, and logs them in `<ChapterName>_PrintOnlyDifferences.md`.
+  - **Print files in `InDesign/`:** PHASE 4 no longer says it never needs print files there. The print InDesign book still lives outside `<BOOK_ROOT>`, but its exported PDF is uploaded to `<CH_ROOT>/InDesign/`. It is never a sync source.
+  - The checklist records the 0P counts.
+- **PHASE 3W (v3.4):** in the `book-root` layout, print PDFs move from `<section>/<…>_Print.pdf` to `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf`. W3 steps 3 and 5 and the W5 preflight cite the print QA report.
+- **PHASE 6.5 (v3.4):** print is validated from the print QA reports instead of being re-checked. An open text check or layout error is a Major issue, and blocks the Print sub-certification.
+- **`PLACEHOLDERS.md`:** `print_check.py` is listed under `<LOCAL_TOOLS_ROOT>`, and the print trim row names the `_Print7x10.pdf` suffix.
+
+---
+
 ## [v1.1.1] — 2026-10-02
 
 **Folder:** `v_1_1/` (unchanged) · **Tag:** `v1_1_1_PROD`

@@ -6,7 +6,7 @@ It is a set of Markdown prompts. You paste a phase into an AI assistant (these w
 
 Built for *RCF: Resonance Core Framework* by Terence Waters at [Fluxline.pro](https://fluxline.pro), and shared for other authors who are building a real production pipeline rather than one-off prompts.
 
-**Current version: v1.1.1** (phase files in [`v_1_1/`](./v_1_1), unchanged since v1.1; v1.1.1 adds the editing passes to this README) (previous: [v1.0.4](./v_1_0_4), [v1.0.3](./v_1_0_3), [v1.0.2](./v_1_0_2), [v1.0](./v1_0)) · See the [changelog](./CHANGELOG.md) for what changed and why.
+**Current version: v1.1.2** (phase files in [`v_1_1_2/`](./v_1_1_2); adds the automated print vs. eBook QA) (previous: [v1.1 / v1.1.1](./v_1_1), [v1.0.4](./v_1_0_4), [v1.0.3](./v_1_0_3), [v1.0.2](./v_1_0_2), [v1.0](./v1_0)) · See the [changelog](./CHANGELOG.md) for what changed and why.
 
 ---
 
@@ -50,7 +50,7 @@ You don't need seven passes, or these names. What matters is that the draft reac
 | **3 — Design + Production** | Design-system-bound HTML for every asset, figure images, exports, the manual eBook and print layouts, and book-level assembly | Hand-off to QA |
 | **3W — Workbook track** | Runs from the end of 2 through 3.5.<br>• The workbook manuscript (DOCX canonical, MD replica) must match before Claude Design builds the workbook.<br>• The author produces the eBook PDF (8.5×11) and full-color print PDF (7×10) in InDesign. Uploading them is the cue that the workbook is done.<br>• Layout wording flows back so the PDF, DOCX, and MD match, and every exercise the manuscript mentions is checked.<br>• The book-level workbook is assembled after the final audit.<br>• No Kindle, audiobook, or RAG | `WORKBOOK_MANUSCRIPT_READY.md`, then `WORKBOOK_READY.md` |
 | **3.5 — Design QA** | Reviews the design output against the design system, accessibility, instructional quality, and Kindle readiness | `DESIGN_READY.md` |
-| **4 — Final-wording builds** | Syncs the manuscript (MD and DOCX) to the final eBook PDF and spot-checks it, then builds the Kindle files and, from those, the audiobook per chapter (an XTTS draft as a guide, the final narration recorded by the author), and assembles the book-level Kindle package and audiobook set | Kindle package + audiobook |
+| **4 — Final-wording builds** | Syncs the manuscript (MD and DOCX) to the final eBook PDF and spot-checks it, checks the uploaded 7×10 print PDF against the eBook (wording drift and print layout; report-only, closed before 6.5), then builds the Kindle files and, from those, the audiobook per chapter (an XTTS draft as a guide, the final narration recorded by the author), and assembles the book-level Kindle package and audiobook set | Kindle package + audiobook |
 | **5 — RAG (Local + Cloud)** | Rebuilds the chapter's canonical chunk set, re-embeds it into the local index (and the cloud index, if enabled, through a governance gateway when you have one), checks parity, writes the system prompt and query profiles | `RAG_READY.md` |
 | **6 — Automation** | Activates the n8n and OpenClaw workflows that generate marketing and design drafts from the grounded RAG, plus a nightly refresh that keeps both vector stores in sync when chapters change | Activation report |
 | **6.5 — Publication QA** | Validates EPUB, Kindle, print, the workbook, audiobook, metadata, and accessibility | Publishing Ready |
@@ -78,12 +78,13 @@ PHASE 0.9 is the exception: it audits the whole book at once, first on the draft
 ## Repository layout
 
 ```
-v_1_1/                     current release (automation first: upload-triggered phases, references check,
-                           glossary lock, local PHASE 7)
+v_1_1_2/                   current release (print vs. eBook QA: PHASE 4 Part 0P, PHASE 3W W2b)
   HOW_TO_RUN_THE_PIPELINE.md    the step-by-step operating guide (start here day to day)
   MASTER_PIPELINE_OVERVIEW.md   the tie-breaker: phases, gates, folders, deliverables, automation map
   PLACEHOLDERS.md               every token to replace, and what to leave alone
   PHASE 0.9 … PHASE 7           the ten phase prompts, plus PHASE 3W (workbook)
+v_1_1/                     previous release (automation first: upload-triggered phases, references check,
+                           glossary lock, local PHASE 7), kept for books mid-flight
 v_1_0_4/                   previous release (governed cloud track, nightly RAG refresh), kept for books mid-flight
 v_1_0_3/                   previous release (PHASE 3W workbook track), kept for books mid-flight
 v_1_0_2/                   earlier release (dual local + cloud RAG), kept for books mid-flight
@@ -95,12 +96,12 @@ CHANGELOG.md               what changed in each version, and why
 LICENSE                    GPL-3.0
 ```
 
-Start with **`v_1_1/MASTER_PIPELINE_OVERVIEW.md`** for the design, and **`v_1_1/HOW_TO_RUN_THE_PIPELINE.md`** for the day-to-day steps. It carries the phase table, the status ladder, the folder map, the deliverable map, and the trigger map, and it is the tie-breaker whenever a phase file and the overview disagree.
+Start with **`v_1_1_2/MASTER_PIPELINE_OVERVIEW.md`** for the design, and **`v_1_1_2/HOW_TO_RUN_THE_PIPELINE.md`** for the day-to-day steps. It carries the phase table, the status ladder, the folder map, the deliverable map, and the trigger map, and it is the tie-breaker whenever a phase file and the overview disagree.
 
 ## Getting started
 
 1. **Read the overview.** Ten minutes there saves an afternoon later.
-2. **Fill in the placeholders.** The phase files ship with tokens like `<BOOK_ROOT>`, `<BOOK>`, and `<AUTHOR>`. [`v_1_1/PLACEHOLDERS.md`](./v_1_1/PLACEHOLDERS.md) lists every one, with a find-and-replace script for PowerShell and bash, and says which concrete values (print trim, model names, "PASS 7") are examples rather than requirements.
+2. **Fill in the placeholders.** The phase files ship with tokens like `<BOOK_ROOT>`, `<BOOK>`, and `<AUTHOR>`. [`v_1_1_2/PLACEHOLDERS.md`](./v_1_1_2/PLACEHOLDERS.md) lists every one, with a find-and-replace script for PowerShell and bash, and says which concrete values (print trim, model names, "PASS 7") are examples rather than requirements.
 3. **Create the folder skeleton** from the overview's folder map — per chapter and at the book root.
 4. **Run PHASE 1 on one chapter.** Paste the phase, give it the locked manuscript, let it generate.
 5. **Run PHASE 2 on that same chapter** before generating a second one. It will find naming, metadata, and terminology problems while they are cheap to fix.
