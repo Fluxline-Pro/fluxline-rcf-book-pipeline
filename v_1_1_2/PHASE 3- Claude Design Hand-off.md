@@ -71,7 +71,7 @@ Every figure in the chapter's `FigureRegistry.json` must exist as a raster image
 | Track | Owner | Output |
 |---|---|---|
 | Print layout | **<AUTHOR>, manual in InDesign**, using `Ch<N>_Print7x10.dc.html` and `/InDesign/` prep as reference | `<CH_ROOT>/InDesign/<ChapterName>_Print.indd` + print PDF |
-| Workbook (eBook 8.5×11 + full-color print 7×10) | **<AUTHOR>, manual in InDesign**, from the Claude Design workbook; InDesign files stay in `<WORKBOOK_INDESIGN_ROOT>`. See `PHASE 3W- Workbook Track (eBook + Print).md` | `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf` + `_Workbook_Print.pdf` (the upload is the cue) |
+| Workbook (eBook 8.5×11 + full-color print 7×10) | **<AUTHOR>, manual in InDesign**, from the Claude Design workbook; InDesign files stay in `<WORKBOOK_INDESIGN_ROOT>`. See `PHASE 3W- Workbook Track (eBook + Print).md` | The workbook profile's location and formats (PHASE 3W W2): `chapter`: `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf` + `_Workbook_Print.pdf`; `book-root`: `<WORKBOOK_BOOK_ROOT>/<section>/<NN>_Ex_<L>_<N>_Chapter<C>.pdf` + `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf` (print only if listed; the upload is the cue) |
 | Audiobook | **Moved to PHASE 4 Part C** (recorded from the Kindle output; XTTS draft + <AUTHOR>'s Audition recording) | — |
 
 ## A4. Book assembly mode (once every chapter for the edition has passed PHASE 3.5)

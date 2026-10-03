@@ -247,7 +247,7 @@ The back-matter glossary (e.g. `BackMatter/Glossary/GLOSSARY.docx`) is <AUTHOR>'
 - **Chapters:** `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf`
 - **Front matter:** `<BOOK_ROOT>/FrontMatter/Final/<Section>/InDesign/<Section>_Print7x10.pdf`
 
-Keep one print PDF per folder. Rename an older export to `*_superseded_<timestamp>.pdf`, which the check skips. The final eBook PDF (0.1) must also be present; without both PDFs, 0P doesn't run. Without a print PDF, 0P is **pending**, not failed.
+Keep one print PDF per folder. Rename an older export to `*_superseded_<timestamp>.pdf`, which the check skips. The matching final eBook PDF must also be present: for chapters `<CH_ROOT>/eBook/<ChapterName>_eBook.pdf` (or `_eBookPDF.pdf`; 0.1), for front matter the section-local `<BOOK_ROOT>/FrontMatter/Final/<Section>/eBook/*.pdf`. Without both PDFs, 0P doesn't run. Without a print PDF, 0P is **pending**, not failed.
 
 **What is checked:**
 
@@ -287,11 +287,11 @@ Nothing in 0P edits a layout or a manuscript.
 
 **Re-run rule:** 0P re-runs automatically whenever the print PDF or the eBook PDF changes, once both have been quiet for 5 minutes. <AUTHOR> is emailed when the findings change (and if the check fails to run). Run it by hand with `print_check.py <ChapterName>` (or `--all`).
 
-**Workbook variant:** the same check covers the print workbook, when the workbook profile ships print (PHASE 3W W2b). Its print PDFs go to `<WORKBOOK_BOOK_ROOT>/InDesign/`:
-- `<eBook stem>_Print7x10.pdf` is checked against that section's workbook eBook PDF;
-- any other `*Print*.pdf` there is checked against the assembled workbook eBook PDF.
+**Workbook variant:** the same check covers the print workbook, when the workbook profile ships print (PHASE 3W W2b), in either profile location:
+- `book-root`: print PDFs go to `<WORKBOOK_BOOK_ROOT>/InDesign/`. `<eBook stem>_Print7x10.pdf` is checked against that section's workbook eBook PDF; any other `*Print*.pdf` there is checked against the assembled workbook eBook (the assembled export at `<WORKBOOK_BOOK_ROOT>` if present, else `_BookPublication/<BOOK>_WORKBOOK_EBOOK/<BOOK>_Workbook_eBook.pdf`).
+- `chapter`: `<CH_ROOT>/Workbook/<ChapterName>_Workbook_Print*.pdf` is checked against `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf`.
 
-Reports: `_BookGovernance/PrintQA/Workbook_<eBook stem>_PrintQA.md`, or `Workbook_PrintQA.md`. The workbook eBook is 8.5×11 in and its print is 7×10 in; that is expected, not drift. Workbook findings are closed in PHASE 3W, not here.
+Reports: `_BookGovernance/PrintQA/Workbook_<eBook stem>_PrintQA.md` or `Workbook_PrintQA.md` (`book-root`), `<ChapterName>_Workbook_PrintQA.md` (`chapter`). The workbook eBook is 8.5×11 in and its print is 7×10 in; that is expected, not drift. Workbook findings are closed in PHASE 3W, not here.
 
 **Gate:** 0P is non-blocking for Part 0, Step 0, and Part A. It must be **closed** before PHASE 6.5 and PHASE 7:
 - the latest report is newer than both PDFs;
@@ -302,7 +302,7 @@ Record the latest 0P counts in the PHASE 4 checklist.
 
 ## Part 0 exit gate
 
-Part 0 itself needs only the final eBook PDF and the manuscript (MD and DOCX); it writes `MANUSCRIPT_SYNCED.md` above, then runs 0R and 0G. 0P runs on its own trigger (the print PDF) and doesn't gate Step 0. Step 0 may begin only when that trigger exists and is newer than the eBook PDF (`eBook/<ChapterName>_eBook.pdf`, or `_eBookPDF.pdf`).
+Part 0 itself needs only the final eBook PDF and the manuscript (MD and DOCX); it writes `MANUSCRIPT_SYNCED.md` above, then runs 0R and 0G. 0P runs on its own trigger (the print PDF, paired with the chapter's eBook PDF or, for front matter, `FrontMatter/Final/<Section>/eBook/*.pdf`) and doesn't gate Step 0. Step 0 may begin only when that trigger exists and is newer than the eBook PDF (`eBook/<ChapterName>_eBook.pdf`, or `_eBookPDF.pdf`).
 
 ---
 

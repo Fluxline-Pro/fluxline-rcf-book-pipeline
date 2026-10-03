@@ -108,7 +108,7 @@ Rule: **one embedding model per track, for every chapter.** If a track's model o
 | Checklist | `<CH_ROOT>/<ChapterName>_PHASE5_RAGChecklist.md` | both |
 | Triggers | `<CH_ROOT>/RAG/Trigger/RAG_LOCAL_READY.md`, `RAG_CLOUD_READY.md`, `RAG_READY.md` (or `RAG_INCOMPLETE.md`) | per track / combined |
 
-Each index manifest records: track, store, collection name (local) or container and blob paths (cloud), embedding provider, model, dimensions, chunk count, chunk IDs, content hash of the chunk file (`chunkSetHash`), **`inputHash`** (SHA-256 over the sorted list of `path:sha256` for every file §1 read for this chapter, plus `chunkSetVersion` and both tracks' model and dimensions from `RAG_Config.json`), vector count for this chapter before and after, total index count before and after, timestamp, and the smoke-test result.
+Each index manifest records: track, store, collection name (local) or container and blob paths (cloud), embedding provider, model, dimensions, chunk count, chunk IDs, content hash of the chunk file (`chunkSetHash`), **`inputHash`** (SHA-256 over the sorted list of `path:sha256` for every file §1 read for this chapter, plus `chunkSetVersion` and **this track's own** embedding provider, model, and dimensions from `RAG_Config.json`; the other track's settings are not part of it, so changing one track's model re-embeds that track only), vector count for this chapter before and after, total index count before and after, timestamp, and the smoke-test result.
 
 The PHASE 1 files `<ChapterName>_RAG_chunks.jsonl` and `_RAG_metadata.json` stay in place. Mark them `superseded` in the ArtifactManifest; never delete them.
 
@@ -226,7 +226,7 @@ Output: `<CH_ROOT>/RAG/<ChapterName>_RAG_ValidationReport.md`, with a **Shared**
 
 The two stores must always describe the same chunk set, so they change together or not at all.
 
-- **Everything passed** (Shared, every enabled track, and parity): point `current.json` at the staged folder, update the chapter's entry in `<BOOK>/manifest.json`, and write both index manifests (with the same `chunkSetHash` and `inputHash`). Delete the Track L snapshot once promotion succeeds.
+- **Everything passed** (Shared, every enabled track, and parity): point `current.json` at the staged folder, update the chapter's entry in `<BOOK>/manifest.json`, and write both index manifests (with the same `chunkSetHash`; each with its own track's `inputHash`). Delete the Track L snapshot once promotion succeeds.
 - **Anything failed:** roll back. Delete the chapter's new Track L vectors and restore the snapshot; delete the staged Track C folder and leave `current.json` and the book manifest untouched; keep the previous index manifests. Both stores are then back on the previous, matching chunk set. Record the rollback and its reason in the checklist, and write `RAG_INCOMPLETE.md`.
 - **Between §4A and §5A** the local store briefly holds the new chunk set while cloud readers still see the old one. Nothing should read the chapter during that window: the PHASE 6 §3G refresh runs at night, and a manual run should pause the chapter's local workflows until §5A finishes.
 
@@ -283,7 +283,7 @@ Save `<CH_ROOT>/<ChapterName>_PHASE5_RAGChecklist.md`:
 - All metadata validated; semantic tags, governance, marketing, and design fields applied
 - **Track L:** model/dimensions, ChromaDB before/after counts, smoke test, `gateStatus: PASS | FAIL`
 - **Track C:** enabled/disabled; model/dimensions, Blob `current.json` before/after counts and `chunkSetHash`, smoke test (including multilingual), `gateStatus: PASS | FAIL | DISABLED`
-- Promotion (§5A): `promoted` or `rolledBack` (with the reason); `inputHash`
+- Promotion (§5A): `promoted` or `rolledBack` (with the reason); each track's `inputHash`
 - Parity result (if both enabled)
 - LLM environment state recorded (local and cloud)
 - Query profiles created

@@ -1,7 +1,7 @@
 # PHASE 3W: Workbook Track (eBook + Full-Color Print) (v3.4)
 
 **v3.4 changes (2026-10-03, release v1.1.2):**
-- **Print QA on upload (W2b):** when the book ships a print workbook, each print PDF uploaded to `<WORKBOOK_BOOK_ROOT>/InDesign/` is checked automatically against its eBook PDF: text drift plus print layout. This is the workbook variant of PHASE 4 Part 0P. With `formats: ["ebook"]` it is N/A.
+- **Print QA on upload (W2b):** when the book ships a print workbook, each print PDF uploaded to the profile's location (`book-root`: `<WORKBOOK_BOOK_ROOT>/InDesign/`; `chapter`: `<CH_ROOT>/Workbook/<ChapterName>_Workbook_Print*.pdf`) is checked automatically against its eBook PDF: text drift plus print layout. This is the workbook variant of PHASE 4 Part 0P. With `formats: ["ebook"]` it is N/A.
 - **Book-root print location:** in the `book-root` layout, print PDFs now go to `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf`, not next to the eBook PDF.
 - W3 steps 3 and 5 cite the print QA report as evidence, rather than repeating its checks.
 
@@ -95,7 +95,7 @@ When the exports are final, <AUTHOR> uploads them to the location the profile na
 
 - **The chapter's `Workbook/` folder:**
   - `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf`
-  - `<CH_ROOT>/Workbook/<ChapterName>_Workbook_Print.pdf` (if the book ships a print workbook)
+  - `<CH_ROOT>/Workbook/<ChapterName>_Workbook_Print.pdf` (if the book ships a print workbook; W2b accepts any `<ChapterName>_Workbook_Print*.pdf`, e.g. `_Workbook_Print7x10.pdf`)
 - **The book's workbook folder (v1.1):** `<WORKBOOK_BOOK_ROOT>/<section folder>/`, laid out in reading order the same way as the assembled workbook.
   - **eBook:** `<NN>_Ex_<L>_<N>_Chapter<C>.pdf` (e.g. `03_Part_I_The_Self/01_Ex_1_1_Chapter1.pdf`).
   - **Print** (only if `formats` includes it; v3.4): in `<WORKBOOK_BOOK_ROOT>/InDesign/`, named after the section's eBook PDF plus `_Print7x10`, i.e. `<WORKBOOK_BOOK_ROOT>/InDesign/<NN>_Ex_<L>_<N>_Chapter<C>_Print7x10.pdf`. The eBook stem is what pairs the two files (W2b).
@@ -114,18 +114,19 @@ When the exports are final, <AUTHOR> uploads them to the location the profile na
 
 The workbook print PDF gets the same deterministic check as the book's print PDF (PHASE 4 Part 0P; reference implementation `print_check.py` in `<LOCAL_TOOLS_ROOT>`). It runs automatically when a print PDF or its eBook PDF changes, after 5 quiet minutes, and emails <AUTHOR> when the findings change.
 
-| Mode | Print PDF in `<WORKBOOK_BOOK_ROOT>/InDesign/` | Compared with | Report in `<BOOK_ROOT>/_BookGovernance/PrintQA/` |
+| Mode | Print PDF | Compared with | Report in `<BOOK_ROOT>/_BookGovernance/PrintQA/` |
 |---|---|---|---|
-| **Per section** | `<eBook stem>_Print7x10.pdf` | the section's eBook PDF with that stem, anywhere in the workbook tree (e.g. `<section folder>/<eBook stem>.pdf`) | `Workbook_<eBook stem>_PrintQA.md` + `.json` |
-| **Whole workbook** | any other `*Print*.pdf` | the assembled workbook eBook PDF at `<WORKBOOK_BOOK_ROOT>` | `Workbook_PrintQA.md` + `.json` |
+| **Per section** (`book-root`) | `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf` | the section's eBook PDF with that stem, anywhere in the workbook tree (e.g. `<section folder>/<eBook stem>.pdf`) | `Workbook_<eBook stem>_PrintQA.md` + `.json` |
+| **Whole workbook** (`book-root`) | any other `*Print*.pdf` in `<WORKBOOK_BOOK_ROOT>/InDesign/` | the assembled workbook eBook: <AUTHOR>'s assembled export at `<WORKBOOK_BOOK_ROOT>` if one is kept there, otherwise W4's `_BookPublication/<BOOK>_WORKBOOK_EBOOK/<BOOK>_Workbook_eBook.pdf` | `Workbook_PrintQA.md` + `.json` |
+| **Per chapter** (`chapter`) | `<CH_ROOT>/Workbook/<ChapterName>_Workbook_Print*.pdf` (e.g. `_Workbook_Print.pdf` or `_Workbook_Print7x10.pdf`) | `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf` | `<ChapterName>_Workbook_PrintQA.md` + `.json` |
 
 - **Checked:** text drift against the eBook PDF (line breaks, hyphenation, spacing, running heads, and folios ignored), and the print layout checks: widows, orphans, runts, stranded headings, stacked hyphens, doubled words, safe zone and trim, 7×10 trim and bleed, embedded and Type3 fonts, images under 300 ppi, RGB images, blank pages. See PHASE 4 Part 0P for the severities.
 - **Page size:** the eBook is 8.5×11 in and the print is 7×10 in. That difference is expected; only wording is compared between them.
-- **Print-only differences:** <AUTHOR> logs them as quoted phrases in a `*PrintOnlyDifferences*.md` file at `<WORKBOOK_BOOK_ROOT>` (e.g. `Workbook_PrintOnlyDifferences.md`). The next run skips them.
+- **Print-only differences:** <AUTHOR> logs them as quoted phrases in a `*PrintOnlyDifferences*.md` file at `<WORKBOOK_BOOK_ROOT>` (e.g. `Workbook_PrintOnlyDifferences.md`), or, in the `chapter` layout, at `<CH_ROOT>` (the chapter's `<ChapterName>_PrintOnlyDifferences.md`). The next run skips them.
 - **Fixes:** layout and print wording go into the print InDesign workbook, then re-export. Wording that should reach the workbook manuscript goes into the eBook InDesign workbook, then re-export and re-upload, which re-runs W3.
 - Keep one print PDF per section; rename an older export `*_superseded_<timestamp>.pdf`.
 
-The `location: chapter` layout (`Workbook/<ChapterName>_Workbook_Print.pdf`) isn't covered by this check; W3 steps 3 and 5 are done by hand there.
+Both layouts are covered. In the `location: chapter` layout the check finds the print PDF only by the name `<ChapterName>_Workbook_Print*.pdf`; rename a print export with any other name to match before relying on the report.
 
 ### W3. Workbook sync and check (Claude)
 
@@ -142,7 +143,7 @@ Run when W2's files appear or change. Write `<CH_ROOT>/Governance/<ChapterName>_
 2. **Confirm PDF = DOCX = MD.** After the sync, all three give 0 word differences (ignoring page furniture: running heads, page numbers, and write-in lines).
 3. **Print and eBook match.** The print PDF has the same exercises, in the same order, with the same wording and exercise IDs as the eBook PDF. Page breaks may differ, since the page sizes differ. Evidence (v3.4): the W2b print QA report shows 0 text differences to check, and any remaining difference is logged as print-only. (Skip this, and step 5, when the book ships no print workbook; record "print: n/a".)
 4. **Exercise registry.** Re-check the chapter's entries against the synced workbook and the chapter manuscript (blocking rules as in the W0 gate). If the registry file, or this chapter's entries, don't exist yet (for example, a chapter built before v1.0.3 that skipped the W0 gate), create them now. **W3 never skips this step**, and `WORKBOOK_READY.md` can't be written without it.
-5. **Print preflight** (from the print PDF): 7×10 in trim plus bleed, CMYK output intent (PDF/X-4), fonts embedded, images at 300 ppi or better at placed size, and no RGB-only or spot colors the printer doesn't accept. Use the W2b report for trim, bleed, fonts, image resolution, and RGB images (0 layout errors; warnings fixed or accepted by <AUTHOR>). The CMYK output intent and spot colors are still checked here.
+5. **Print preflight** (from the print PDF): 7×10 in trim plus bleed, CMYK output intent (PDF/X-4), fonts embedded, images at 300 ppi or better at placed size, and no RGB-only or spot colors the printer doesn't accept. Use the W2b report (either layout) for trim, bleed, fonts, image resolution, and RGB images (0 layout errors; warnings fixed or accepted by <AUTHOR>). The CMYK output intent and spot colors are still checked here.
 6. **eBook checks:**
    - 8.5×11 in pages;
    - bookmarks cover every exercise, and internal links work;
@@ -153,7 +154,7 @@ Run when W2's files appear or change. Write `<CH_ROOT>/Governance/<ChapterName>_
 **Result:** before writing either file, rename any existing `WORKBOOK_READY.md` to `WORKBOOK_READY_superseded_<YYYYMMDD_HHMM>.md`. A re-upload that fails W3 must never leave the previous READY file standing for the new PDFs. Then:
 - No blocking items, and <AUTHOR> has decided every uncertain sync item → `<CH_ROOT>/Workbook/Trigger/WORKBOOK_READY.md`. It lists:
   - the QA report;
-  - the two PDF file names, dates, and **SHA-256 hashes**;
+  - the file name, date, and **SHA-256 hash** of every uploaded workbook PDF for this chapter's exercises, in the formats the profile lists (one or more exercises; eBook and/or print);
   - the synced DOCX/MD versions and hashes;
   - the number of sync changes;
   - any items <AUTHOR> accepted.
@@ -186,7 +187,7 @@ A stale `WORKBOOK_READY.md` (older than a PHASE 4 Part 0 sync that flagged the w
 ### W4. Book assembly (<AUTHOR>, InDesign book file)
 
 **Entry gate:**
-- every chapter has a current `WORKBOOK_READY.md` (not superseded, and its recorded PDF hashes match the files in `Workbook/`);
+- every chapter has a current `WORKBOOK_READY.md` (not superseded, and its recorded PDF hashes match the files in the profile's location, `Workbook/` or `<WORKBOOK_BOOK_ROOT>`);
 - `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md` exists (PHASE 4 Part B step B0), so exercise IDs and manuscript wording are frozen.
 
 <AUTHOR> assembles the workbook InDesign book (INDB in `<WORKBOOK_INDESIGN_ROOT>`) with its front matter (title page, copyright, how to use this workbook, contents) and back matter, then exports and uploads:
@@ -196,6 +197,8 @@ A stale `WORKBOOK_READY.md` (older than a PHASE 4 Part 0 sync that flagged the w
 | <BOOK>_WORKBOOK_EBOOK | `_BookPublication/<BOOK>_WORKBOOK_EBOOK/` | `<BOOK>_Workbook_eBook.pdf` (8.5×11 in) |
 | <BOOK>_WORKBOOK_PRINT_BOOK | `_BookPublication/<BOOK>_WORKBOOK_PRINT_BOOK/` | `<BOOK>_Workbook_Print.pdf` (7×10 in interior); `<BOOK>_Workbook_Cover.pdf` (full-wrap cover, if printed separately) |
 
+`<BOOK>_Workbook_eBook.pdf` is also the assembled workbook eBook that W2b compares a whole-workbook print PDF with, unless <AUTHOR> keeps an assembled eBook export at `<WORKBOOK_BOOK_ROOT>` (that one is used first).
+
 ### W5. Book check (Claude, report-only)
 
 Write `_BookPublication/<BOOK>_WORKBOOK_EBOOK/<BOOK>_Workbook_AssemblyReport.md`:
@@ -204,7 +207,7 @@ Write `_BookPublication/<BOOK>_WORKBOOK_EBOOK/<BOOK>_Workbook_AssemblyReport.md`
 - if the front and back matter have their own DOCX, they match the book PDFs too;
 - the contents page and bookmarks match the exercise registry;
 - the registry has no open blocking items against the synced chapter manuscripts;
-- the print interior passes the W3 step 5 preflight (with a whole-workbook print PDF in `<WORKBOOK_BOOK_ROOT>/InDesign/`, cite `Workbook_PrintQA.md` from W2b), and the page count and spine width are recorded for the cover;
+- the print interior passes the W3 step 5 preflight (with a whole-workbook print PDF in `<WORKBOOK_BOOK_ROOT>/InDesign/`, cite `Workbook_PrintQA.md` from W2b, which compares it with the assembled workbook eBook), and the page count and spine width are recorded for the cover;
 - the eBook passes the W3 step 6 checks for the whole book.
 
 PHASE 6.5 book mode certifies the workbook from this report; <AUTHOR> signs off in PHASE 7.

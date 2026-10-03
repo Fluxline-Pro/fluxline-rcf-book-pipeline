@@ -341,7 +341,7 @@ PHASE 1 is complete, and PHASE 2 may start, only when:
 - [ ] Every Step 1–11 artifact exists in its folder (or a documented "not applicable" note exists, e.g. Equations)
 - [ ] `<ChapterName>_EditorialSuggestions.md` has been reviewed by <AUTHOR> and accepted edits are applied and versioned
 - [ ] References check (Step 10b) ran; safe fixes applied; remaining findings are in the Editorial Suggestions
-- [ ] `_Pipeline/WORKBOOK_SELECTION.md` exists, and <AUTHOR> has ticked the candidates to publish (or none)
+- [ ] If the book's workbook profile is enabled: `_Pipeline/WORKBOOK_SELECTION.md` exists, and <AUTHOR> has ticked the candidates to publish (or none). With `enabled: false`: N/A (PHASE 2 writes `WORKBOOK_NOT_APPLICABLE.md`)
 - [ ] `<ChapterName>_ProductionChecklist.md` exists
 - [ ] `MARKETING_READY.md` or `MARKETING_INCOMPLETE.md` exists (PHASE 2 may still fix and flip it)
 

@@ -133,7 +133,7 @@
 - [ ] Final workbook PDF(s) uploaded by <AUTHOR>, to `Workbook/<ChapterName>_Workbook_eBook.pdf` (8.5×11) [+ `_Workbook_Print.pdf` (7×10) if the book ships print] or to `<WORKBOOK_BOOK_ROOT>/…/<NN>_Ex_<L>_<N>_Chapter<C>.pdf` [+ `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf` if the book ships print] (InDesign files stay in `<WORKBOOK_INDESIGN_ROOT>`)
 - [ ] Only <AUTHOR>-selected sub-exercises are in the workbook (`_Pipeline/WORKBOOK_SELECTION.md`; registry `subExercises` / `notSelected`)
 - [ ] Workbook PDF = DOCX = MD (latest WorkbookQA report, after the W3 sync)
-- [ ] Workbook print QA (v3.4; only if the profile ships print, otherwise N/A): latest `_BookGovernance/PrintQA/Workbook_<eBook stem>_PrintQA.md` for each of this chapter's exercises is newer than both PDFs, shows **0** text differences to check and **0** layout errors, and every warning is fixed, logged as print-only, or accepted by <AUTHOR>
+- [ ] Workbook print QA (v3.4; only if the profile ships print, otherwise N/A): latest W2b report, `_BookGovernance/PrintQA/<ChapterName>_Workbook_PrintQA.md` (`location: chapter`) or `Workbook_<eBook stem>_PrintQA.md` (or `Workbook_PrintQA.md`) for each of this chapter's exercises (`location: book-root`), is newer than both PDFs, shows **0** text differences to check and **0** layout errors, and every warning is fixed, logged as print-only, or accepted by <AUTHOR>
 - [ ] Latest `Governance/<ChapterName>_WorkbookQA_<timestamp>.md` has no open blocking items
 - [ ] `Workbook/Trigger/WORKBOOK_READY.md` present, and newer than any PHASE 4 Part 0 sync that flagged the workbook
 - [ ] This chapter's exercises are in `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json`, and every manuscript mention matches

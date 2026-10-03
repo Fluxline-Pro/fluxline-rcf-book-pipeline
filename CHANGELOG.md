@@ -21,10 +21,10 @@ Print vs. eBook QA. The print layout was the one deliverable no phase checked: P
   - **Runs automatically:** when the print or eBook PDF changes, after 5 quiet minutes. An email goes out when the findings change. Reference implementation: `print_check.py` in `<LOCAL_TOOLS_ROOT>`.
   - **Gate:** non-blocking for Part A, but closed before PHASE 6.5 and PHASE 7. Closed means 0 text differences to check, 0 layout errors, and every warning fixed or accepted by the author.
   - Nothing edits a layout or a manuscript. Wording that should reach the manuscript goes through Part 0 (fix the eBook, re-export).
-- **PHASE 3W W2b, print workbook QA:** the same check for the print workbook, only when the workbook profile's `formats` includes `print` (otherwise N/A). Print PDFs go to `<WORKBOOK_BOOK_ROOT>/InDesign/`:
-  - `<eBook stem>_Print7x10.pdf` is checked against that section's eBook PDF.
-  - Any other `*Print*.pdf` there is checked against the assembled workbook eBook PDF.
-  - Reports: `Workbook_<eBook stem>_PrintQA.md` or `Workbook_PrintQA.md`. The 8.5×11 eBook vs. 7×10 print page size is expected, not drift.
+- **PHASE 3W W2b, print workbook QA:** the same check for the print workbook, only when the workbook profile's `formats` includes `print` (otherwise N/A). It covers both workbook locations:
+  - `location: book-root`: print PDFs go to `<WORKBOOK_BOOK_ROOT>/InDesign/`. `<eBook stem>_Print7x10.pdf` is checked against that section's eBook PDF; any other `*Print*.pdf` there is checked against the assembled workbook eBook PDF. Reports: `Workbook_<eBook stem>_PrintQA.md` or `Workbook_PrintQA.md`.
+  - `location: chapter`: `<CH_ROOT>/Workbook/<ChapterName>_Workbook_Print*.pdf` is checked against `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf`. Report: `<ChapterName>_Workbook_PrintQA.md`.
+  - The 8.5×11 eBook vs. 7×10 print page size is expected, not drift.
 - **PHASE 7 (v3.4):** Part A items for the print PDF upload, a closed 0P report, and reviewed warnings (plus the print workbook in the 3W section), a Part C **Print Approved**, and a completion-rule line.
 - **`HOW_TO_RUN_THE_PIPELINE.md`:** Step 5b (export and upload the print PDF, read the report, fix and re-export), a running-checks row, and cheat-sheet rows.
 - **Master overview:** the release note, phase table, deliverable map, folder map (`_BookGovernance/PrintQA/`), trigger map, and §9 event "print PDF uploaded / eBook re-exported → `print_check.py` → report → email".
@@ -39,6 +39,17 @@ Print vs. eBook QA. The print layout was the one deliverable no phase checked: P
 - **PHASE 3W (v3.4):** in the `book-root` layout, print PDFs move from `<section>/<…>_Print.pdf` to `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf`. W3 steps 3 and 5 and the W5 preflight cite the print QA report.
 - **PHASE 6.5 (v3.4):** print is validated from the print QA reports instead of being re-checked. An open text check or layout error is a Major issue, and blocks the Print sub-certification.
 - **`PLACEHOLDERS.md`:** `print_check.py` is listed under `<LOCAL_TOOLS_ROOT>`, and the print trim row names the `_Print7x10.pdf` suffix.
+
+### Fixed (review)
+
+- **Workbook profile awareness:** the master overview's 3W entry gate, deliverable map, folder note, and trigger map, and PHASE 3's production-track row, now name only the profile's `formats` in its `location` (`chapter`: `Workbook/<ChapterName>_Workbook_eBook.pdf` + `_Workbook_Print.pdf`; `book-root`: `<section>/<NN>_Ex_<L>_<N>_Chapter<C>.pdf` + `InDesign/<eBook stem>_Print7x10.pdf`).
+- **W2b covers both workbook locations:** `location: chapter` is checked (`<CH_ROOT>/Workbook/<ChapterName>_Workbook_Print*.pdf` vs `_Workbook_eBook.pdf`, report `<ChapterName>_Workbook_PrintQA.md`). The "not covered" note and the manual fallback are gone from PHASE 3W; PHASE 4, 6.5, 7, the master overview, and HOW_TO name both report forms. PHASE 6.5's book-root print name is `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf`.
+- **Whole-workbook print QA input:** the assembled workbook eBook export at `<WORKBOOK_BOOK_ROOT>` if present, else W4's `<BOOK>_Workbook_eBook.pdf` (PHASE 3W W2b, W4, W5; PHASE 4).
+- **`WORKBOOK_READY.md` evidence:** hashes every uploaded workbook PDF for the chapter's exercises in the profile's formats, not "the two PDFs"; W4 matches them in the profile's location.
+- **PHASE 4 entry gate:** the final eBook PDF upload; `MANUSCRIPT_SYNCED.md` is Part 0's exit and the Step 0 / Part A entry (master overview).
+- **PHASE 4 Part 0P:** names the front-matter eBook input, `FrontMatter/Final/<Section>/eBook/*.pdf`.
+- **PHASE 1 exit gate:** `WORKBOOK_SELECTION.md` is required only when the workbook profile is enabled; otherwise N/A.
+- **RAG `inputHash` is per track:** shared content inputs plus that track's own provider, model, and dimensions, so changing one track re-embeds that track only (PHASE 5 manifests and §5A; PHASE 6 §3G).
 
 ---
 

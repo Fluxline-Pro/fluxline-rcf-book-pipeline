@@ -142,7 +142,7 @@ Steps 4 and 5 are independent, so do them in either order.
 
 🧑 **You:** when the chapter's print layout is finished (after Step 4's eBook upload):
 1. Export it from the print InDesign book as a high-fidelity print PDF: 7×10 in, with printer's marks and bleed.
-2. Save it as `InDesign/<ChapterName>_Print7x10.pdf`. Front matter: `FrontMatter/Final/<Section>/InDesign/<Section>_Print7x10.pdf`. Print workbook (only if the workbook ships print): `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf`.
+2. Save it as `InDesign/<ChapterName>_Print7x10.pdf`. Front matter: `FrontMatter/Final/<Section>/InDesign/<Section>_Print7x10.pdf`. Print workbook (only if the workbook ships print): `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf`, or `Workbook/<ChapterName>_Workbook_Print*.pdf` if the workbook profile's `location` is `chapter`.
    Keep one print PDF per section: rename an older export `*_superseded_<timestamp>.pdf`.
 
 🤖 **Automatic**, after 5 quiet minutes, and again whenever the print or eBook PDF changes:
@@ -244,7 +244,7 @@ These run on their own whenever their inputs change, and email you when somethin
 | `APPROVE_EDITORIAL.md` | `_Pipeline/` | Starts PHASE 2 |
 | `<ChapterName>_eBook.pdf` | `eBook/` | Completes 3.5 and starts PHASE 4 (locks the manuscript and glossary) |
 | `<NN>_Ex_<L>_<N>_Chapter<C>.pdf` | `<WORKBOOK_BOOK_ROOT>/…` | Completes 3.5 for the workbook and starts the 3W sync |
-| `<ChapterName>_Print7x10.pdf` | `InDesign/` (workbook: `<WORKBOOK_BOOK_ROOT>/InDesign/`) | Starts the print QA (PHASE 4 Part 0P) |
+| `<ChapterName>_Print7x10.pdf` | `InDesign/` (workbook: `<WORKBOOK_BOOK_ROOT>/InDesign/`, or `Workbook/<ChapterName>_Workbook_Print*.pdf` in the `chapter` layout) | Starts the print QA (PHASE 4 Part 0P; workbook: PHASE 3W W2b) |
 | `<ChapterName>_PrintOnlyDifferences.md` | `<CH_ROOT>` | Print-only wording the print QA should skip |
 | `<NN>_<ChapterName>.mp3` | `Audiobook/` | Starts audiobook QA |
 | Decision column | `_Pipeline/P4_DECISIONS.md`, `P3W_DECISIONS.md` | Your call on uncertain wording; then create the matching RERUN file |

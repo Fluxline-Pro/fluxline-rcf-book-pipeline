@@ -59,10 +59,10 @@ Evaluate all publication outputs for:
 | Kindle DOCX, HTML, metadata, figures | `<CH_ROOT>/Kindle/` (PHASE 4 Part A) |
 | Design layouts (eBook, Print 7×10, Workbook) | `<CH_ROOT>/DesignPacket/` |
 | Workbook manuscript (DOCX + MD), `WORKBOOK_READY.md` (or `WORKBOOK_NOT_APPLICABLE.md`), latest WorkbookQA report | `<CH_ROOT>/Workbook/`, `<CH_ROOT>/Governance/<ChapterName>_WorkbookQA_*.md` |
-| Workbook PDFs: the formats the book's workbook profile lists (PHASE 3W W2) | `<CH_ROOT>/Workbook/` (`location: chapter`), or `<WORKBOOK_BOOK_ROOT>/<section>/<NN>_Ex_<L>_<N>_Chapter<C>[_Print].pdf` (`location: book-root`), with the chapter matched by `Chapter<C>` and the exercises by the registry |
+| Workbook PDFs: the formats the book's workbook profile lists (PHASE 3W W2) | `location: chapter`: `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf` + `<CH_ROOT>/Workbook/<ChapterName>_Workbook_Print*.pdf`; `location: book-root`: `<WORKBOOK_BOOK_ROOT>/<section>/<NN>_Ex_<L>_<N>_Chapter<C>.pdf` + `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf`, with the chapter matched by `Chapter<C>` and the exercises by the registry |
 | Audiobook final MP3 + narration script (drafts in `Audiobook/Drafts/` are out of scope) | `<CH_ROOT>/Audiobook/` |
 | InDesign print files, incl. the print PDF `<ChapterName>_Print7x10.pdf` (v3.4) | `<CH_ROOT>/InDesign/` |
-| Print QA report (PHASE 4 Part 0P; workbook: PHASE 3W W2b) | `<BOOK_ROOT>/_BookGovernance/PrintQA/<ChapterName>_PrintQA.md` (+ `Workbook_<eBook stem>_PrintQA.md` if the workbook ships print) |
+| Print QA report (PHASE 4 Part 0P; workbook: PHASE 3W W2b) | `<BOOK_ROOT>/_BookGovernance/PrintQA/<ChapterName>_PrintQA.md` (+ the W2b report if the workbook ships print: `<ChapterName>_Workbook_PrintQA.md` for `location: chapter`, `Workbook_<eBook stem>_PrintQA.md` per exercise for `location: book-root`) |
 | RAG ingestion, index manifests (Local, Cloud), validation report | `<CH_ROOT>/RAG/` |
 | DSM | `<CH_ROOT>/DesignPacket/_ds/` |
 | Figure Registry, Version Metadata, Manifest | `<CH_ROOT>/Governance/` |
@@ -134,7 +134,7 @@ Workbook:
   - its recorded hashes match the uploaded PDFs, wherever the profile's `location` puts them (`Workbook/` or `<WORKBOOK_BOOK_ROOT>`)
 
   Plus a WorkbookQA report that shows PDF = DOCX = MD with no open blocking items. Only the formats the profile lists are required.
-  If the profile lists `print`, the W2b print QA report for each of the chapter's exercises is closed, by the same rule as the book's print above (v3.4).
+  If the profile lists `print`, the chapter's W2b print QA reports are closed, by the same rule as the book's print above (v3.4). W2b writes them for both locations: `<ChapterName>_Workbook_PrintQA.md` (`location: chapter`), or `Workbook_<eBook stem>_PrintQA.md` for each of the chapter's exercises (`location: book-root`).
 - **Book mode:**
   - **Deliverables:** the workbook deliverables for the profile's `formats` are present: the eBook at 8.5×11 in, and the print interior at 7×10 in only when `print` is listed. Otherwise record print as **n/a** (copy that evidence from the W5 assembly report).
   - **Assembly report:** the PHASE 3W report lists no blocking items. It checks the book PDFs against the chapter workbook manuscripts, the exercise registry against the synced manuscripts, eBook bookmarks and links, and full-color print preflight (only when print is shipped).
