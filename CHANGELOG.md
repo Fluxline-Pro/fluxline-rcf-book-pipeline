@@ -31,6 +31,7 @@ Print vs. eBook QA. The print layout was the one deliverable no phase checked: P
 
 ### Changed
 
+- **PHASE 7:** a PHASE 3W **workbook final check**: <AUTHOR> reviews the workbook eBook (8.5×11) and the full-color print (7×10) side by side (same exercises and order, usable write-in space, color and contrast, links), then signs off each format separately in Part C ("Workbook eBook Approved", "Workbook Print Approved"). "Audio Approved" notes that only the main book has an audiobook.
 - **PHASE 4 (v3.4):**
   - **0.6 print cross-check:** now evidenced by the 0P report. the author still confirms print-only differences, and logs them in `<ChapterName>_PrintOnlyDifferences.md`.
   - **Print files in `InDesign/`:** PHASE 4 no longer says it never needs print files there. The print InDesign book still lives outside `<BOOK_ROOT>`, but its exported PDF is uploaded to `<CH_ROOT>/InDesign/`. It is never a sync source.

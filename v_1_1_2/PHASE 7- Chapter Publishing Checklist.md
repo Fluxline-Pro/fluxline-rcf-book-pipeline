@@ -5,7 +5,7 @@
 > **Pipeline position:** PHASE 7 of 7 (Release) · **Upstream gate:** latest PHASE 6.5 report certifies **Publishing Ready** · **Downstream:** none (chapter becomes **Published**)
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
-**v3.4 changes (2026-10-03, release v1.1.2): print QA.** New Part A items for PHASE 4 Part 0P: the print PDF is uploaded, and the latest `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md` shows no open text difference to check and no layout error, with every warning fixed or accepted by <AUTHOR>. They replace the self-reported print cross-check. Part C gains **Print Approved**, and the completion rule requires a closed 0P report. The PHASE 3W section gains the same item for the print workbook (N/A when the workbook ships eBook only).
+**v3.4 changes (2026-10-03, release v1.1.2): print QA.** Also: a PHASE 3W **workbook final check** (eBook and print side by side) and separate Part C sign-offs for the workbook eBook and the workbook print. New Part A items for PHASE 4 Part 0P: the print PDF is uploaded, and the latest `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md` shows no open text difference to check and no layout error, with every warning fixed or accepted by <AUTHOR>. They replace the self-reported print cross-check. Part C gains **Print Approved**, and the completion rule requires a closed 0P report. The PHASE 3W section gains the same item for the print workbook (N/A when the workbook ships eBook only).
 
 **v3.3 changes (2026-10-02, release v1.1): PHASE 7 runs locally and automatically.**
 - **When it runs:** as soon as PHASE 6.5 finishes, whether or not it passed. A run that didn't pass simply lists what's missing.
@@ -137,6 +137,12 @@
 - [ ] Latest `Governance/<ChapterName>_WorkbookQA_<timestamp>.md` has no open blocking items
 - [ ] `Workbook/Trigger/WORKBOOK_READY.md` present, and newer than any PHASE 4 Part 0 sync that flagged the workbook
 - [ ] This chapter's exercises are in `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json`, and every manuscript mention matches
+- [ ] **Workbook final check: eBook + print side by side (v3.4, <AUTHOR>).** For this chapter's exercises, open the final workbook eBook PDF (8.5×11) and, if the profile ships print, the full-color print PDF (7×10) together and confirm:
+  - same exercises, sub-exercises, and order in both, matching the chapter's "In this exercise, you will…" list
+  - every prompt has room to write: write-in lines and boxes are present and usable at print size; nothing is cropped at the trim or lost in the gutter
+  - full-color print: color-coded elements stay distinguishable and text contrast is readable on paper (check a proof, if you have one); eBook: links and the table of contents work
+  - the workbook print QA (above) is closed
+  - <AUTHOR> signs off the workbook below (Part C: Workbook eBook Approved, Workbook Print Approved)
 
 ## PHASE 3.5 — Design QA
 
@@ -256,8 +262,9 @@ Also state:
 - [ ] Accessibility Approved
 - [ ] Kindle Approved
 - [ ] Print Approved (PHASE 4 Part 0P report closed; print-only differences logged)
-- [ ] Audio Approved
-- [ ] Workbook Approved (eBook + print PDFs; PDF = DOCX = MD)
+- [ ] Audio Approved (main book only: the workbook has no audiobook)
+- [ ] Workbook eBook Approved (8.5×11 PDF; PDF = DOCX = MD; workbook final check done)
+- [ ] Workbook Print Approved (full-color 7×10 PDF; workbook print QA closed; or N/A if the profile is eBook only)
 - [ ] References / Bibliography Approved
 - [ ] Glossary Approved (defining-chapter definitions; back-matter glossary updated)
 - [ ] RAG Approved
