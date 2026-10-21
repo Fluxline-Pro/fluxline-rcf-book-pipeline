@@ -1,5 +1,5 @@
 {
-  "_comment": "PHASE 3.5A style map: DOCX style name -> InDesign style name (colon form, group prefix included, exactly as in the IDML Resources/Styles.xml). Copy to <PRINT_DSM_ROOT>/style_map.json and confirm every value against the print DSM (RCF_Book_Print_Style_Map.md) and the template. Values below were derived from the DSM and checked to exist in Book_Templates_v4.idml, but the DOCX-side names are not confirmed, so every value is marked CONFIRM. idml_build.py treats any value that starts with CONFIRM or TODO as unmapped (it never guesses), so the build fails its checks until each entry is confirmed: delete the 'CONFIRM: ' prefix once checked. 'character' keys are DOCX character style names, or the direct-formatting keys direct:italic, direct:bold, direct:bold+italic, direct:superscript, direct:subscript. 'figures.path_pattern' is a glob in figures.tif_dir; {chapter} = <ChapterName>, {n} = figure number.",
+  "_comment": "PHASE 3.5A style map: DOCX style name -> InDesign style name (colon form, group prefix included, exactly as in the IDML Resources/Styles.xml). Copy to <PRINT_DSM_ROOT>/style_map.json and confirm every value against the print DSM (RCF_Book_Print_Style_Map.md) and the template. Values below were derived from the DSM and checked to exist in Book_Templates_v4.idml, but the DOCX-side names are not confirmed, so every value is marked CONFIRM. idml_build.py treats any value that starts with CONFIRM or TODO as unmapped (it never guesses), so the build fails its checks until each entry is confirmed: delete the 'CONFIRM: ' prefix once checked. 'character' keys are DOCX character style names, or the direct-formatting keys direct:italic, direct:bold, direct:bold+italic, direct:superscript, direct:subscript. 'figures.path_pattern' is a glob in figures.tif_dir (relative to <CH_ROOT>); {chapter} = <ChapterName>, {short} = Ch<N>, {n} = figure number. Print figures are CMYK TIFFs (Figures/CMYK/); the PNG/JPG files in Figures/RGB/ are the eBook masters and do not satisfy the print build. Callouts are not in the manuscript DOCX, so they need no entry here: they are placed during layout from the PHASE 1/2 callout recommendations.",
   "paragraph": {
     "Title": "CONFIRM: Chapter Opener Styles:Headline",
     "Subtitle": "CONFIRM: Chapter Opener Styles:Subheading",
@@ -16,11 +16,7 @@
     "Intense Quote": "CONFIRM: Callouts:Callout Red- Pullquote",
     "Caption": "CONFIRM: Captions:Caption Figure",
     "Bibliography": "CONFIRM: References:Hanging Indent Reference",
-    "Footnote Text": "CONFIRM: References:Paragraph with Beginning Footnote",
-    "Callout - Did You Know": "TODO: DOCX style name unknown; DSM maps Did You Know? to Callouts:Callout Yellow- Did You Know?",
-    "Callout - Insight": "TODO: DOCX style name unknown; DSM maps Insight Box to Callouts:Callout Green- Insight",
-    "Callout - Framework Highlight": "TODO: DOCX style name unknown; DSM maps Framework Highlight to Callouts:Callout Blue- Coherence",
-    "Callout - Core Value": "TODO: DOCX style name unknown; DSM maps Core Value box to Callouts:Callout Violet- Expansion"
+    "Footnote Text": "CONFIRM: References:Paragraph with Beginning Footnote"
   },
   "character": {
     "direct:italic": "CONFIRM: Body Character Styles:Emphasis",
@@ -31,8 +27,8 @@
     "Defined Term": "CONFIRM: Body Character Styles:Defined Term"
   },
   "figures": {
-    "path_pattern": "{chapter}_Fig{n}*.tif",
-    "tif_dir": "DesignPacket/figures_export",
+    "path_pattern": "{short}_Fig{n}_*.tif",
+    "tif_dir": "Figures/CMYK",
     "placeholder_style": "CONFIRM: Captions:Caption Figure"
   }
 }

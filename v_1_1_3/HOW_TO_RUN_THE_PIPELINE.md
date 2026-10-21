@@ -57,7 +57,8 @@ Work one chapter at a time, or several in parallel; the pipeline keeps each chap
 1. Work through the chapter's **PHASE 0.9 author-review notes** in the manuscript, and save the result as PASS 7. **Polish window (v1.1.3):** polish as much as you like now, in the **DOCX**, then regenerate the MD from it. Don't edit the MD on its own.
 2. Review the chapter's **workbook exercise** against the same notes.
 3. When **both** are final, drop them into `<PASS7_SOURCE>` together:
-   - `Ch<N>_<PascalCaseTitle>.md` + `.docx`: the manuscript, both formats with the same name
+   - `Ch<N>_<PascalCaseTitle>.md` + `.docx`: the manuscript, both formats with the same name. **This is the final wording** (v1.1.3): every later format is built from it.
+   - The chapter's **finished figures** in `Figures/`: the RGB masters in `Figures/RGB/` (PNG for illustrations, JPG for photos) and the CMYK print TIFFs in `Figures/CMYK/`. They must be in place before the eBook and print builds.
    - `Ch<N>_<PascalCaseTitle>_Exercise<L.N>_Workbook.docx` (+ `.md` if you have one): the exercise, e.g. `Ch6_ValuesVirtues_Exercise2.2_Workbook.docx`. Name any companion pages `..._Exercise<L.N>_<Part>_Workbook.docx`.
 
    If a workbook draft lands first, it waits for its manuscript. The run starts about 2 minutes after the last file lands.
@@ -105,7 +106,7 @@ PHASE 1 regenerates what those sections feed, and PHASE 2 re-validates. After th
 🤖 **Automatic, on request** (`_Pipeline/RERUN_P3.5A.md`, or run `idml_build.py` by hand): once the manuscript DOCX is in `Manuscript/`, the print build turns it into `InDesign/<ChapterName>_Import.txt`. Every paragraph and character style is set to the print template's style, through `<PRINT_DSM_ROOT>/style_map.json`. It also writes `_BuildManifest.json` and `_BuildReport.md` beside it. It never changes the manuscript or the template.
 
 🧑 **You:**
-1. Read `InDesign/<ChapterName>_BuildReport.md`. If anything is **unmapped**, add or confirm the entry in `<PRINT_DSM_ROOT>/style_map.json` (remove the `CONFIRM:` prefix once checked), then re-run. A missing figure needs its image in `DesignPacket/figures_export/` (TIFF) or at the FigureRegistry path.
+1. Read `InDesign/<ChapterName>_BuildReport.md`. If anything is **unmapped**, add or confirm the entry in `<PRINT_DSM_ROOT>/style_map.json` (remove the `CONFIRM:` prefix once checked), then re-run. A missing figure needs its CMYK TIFF in `Figures/CMYK/` (the RGB PNG/JPG in `Figures/RGB/` is for the eBook only).
 2. In InDesign, open a **copy** of the print template, and File → Place the import with **Show Import Options** → Use Tagged Text, **Load Styles**.
 3. Replace each `[[FIGURE N …]]` placeholder with its image, set the running heads, and lay out the chapter.
 4. Export the print PDF to `InDesign/<ChapterName>_Print7x10.pdf` (Step 5b).
@@ -118,7 +119,7 @@ PHASE 1 regenerates what those sections feed, and PHASE 2 re-validates. After th
 1. In **Claude Design**, use the PHASE 3 Part B prompt and the files in `DesignPacket/uploads/` to build the packet: deck, guides, reference guides, workbook, opener, figures, and the eBook / print 7×10 / workbook layouts.
 2. Export the figure images to `DesignPacket/figures_export/`, plus the slides (PPTX + PDF) and the eBook exports.
 3. Run the **PHASE 3.5 QA** (report-only), and fix the findings in Claude Design until it says Production Ready.
-4. Lay out the **eBook** and **print** books in InDesign, making your final wording edits there. The print chapter starts from the PHASE 3.5A import (Step 2b).
+4. Lay out the **print** book in InDesign from the PHASE 3.5A import (Step 2b). The eBook is built in Claude Design. **The wording is already final** (v1.1.3): it was settled in the DOCX before PHASE 1. A change you still need goes into the DOCX, with `MANUSCRIPT_REVISED.md`, not into a layout. Place the callouts you approved from the PHASE 1 recommendations.
 5. Lay out the **workbook** in InDesign.
 
 ✅ Design is finished, and you're ready to export the final PDFs.

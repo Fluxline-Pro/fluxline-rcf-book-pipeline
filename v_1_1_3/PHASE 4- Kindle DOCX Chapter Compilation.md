@@ -98,6 +98,8 @@ Transform the governed, design-validated PHASE 1–3.5 chapter outputs into a **
 
 **This is the one sanctioned manuscript edit after PHASE 2.** It records <AUTHOR>'s own layout-stage wording back into the manuscript. It never introduces new wording, and it follows the same paper trail as a governance fix: back up, log, version, and escalate anything uncertain.
 
+**The manuscript is final before PHASE 1 (release v1.1.3).** <AUTHOR> settles the wording in the DOCX before PHASE 1, and the eBook (Claude Design) and print (InDesign, from the PHASE 3.5A import) are built from it. Part 0 therefore expects **no differences**. It still runs as the safety check, and any difference it finds is reported and classified as before, so a layout-time edit can't slip past unrecorded.
+
 **Revisions and the print build (release v1.1.3).** Before the eBook lock, <AUTHOR> may revise the DOCX through `Manuscript/Trigger/MANUSCRIPT_REVISED.md` (PHASE 1, "Revision trigger"). The eBook PDF must already carry such a revision, so check it first (0.1). Part 0 still syncs the MD and the DOCX to the eBook PDF; that sync is the only time the pipeline writes to the manuscript, and the print build (PHASE 3.5A) never does. If Part 0 changes the DOCX after a 3.5A build, the build's manifest no longer matches: re-run 3.5A if print layout hasn't started, otherwise carry the change into the print document (Part 0P catches anything missed).
 
 ## 0.1 Hard stop: the eBook PDF must be uploaded

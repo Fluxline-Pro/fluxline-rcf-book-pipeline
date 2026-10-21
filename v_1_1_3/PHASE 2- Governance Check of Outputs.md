@@ -428,6 +428,18 @@ Most visually impactful quotes (verbatim from the manuscript).
 
 ---
 
+## Callout Candidates (v1.1.3)
+
+Validate `InDesign/<ChapterName>_CalloutRecommendations.md` from PHASE 1 Step 8:
+- every *verbatim* callout matches the manuscript word for word;
+- every *derived* line adds no claim, term, or number the chapter doesn't support;
+- every type is one the print DSM defines;
+- every placement points to a passage that exists.
+
+Fix a mismatch (Tier A), and flag anything that would need new wording (Tier C). List the callouts <AUTHOR> approved here, so PHASE 3 (eBook) and the print layout use the same set. Callouts never enter the manuscript or the PHASE 3.5A import.
+
+---
+
 ## Chapter Opening Concepts
 
 Hero page suggestions.

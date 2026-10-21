@@ -150,6 +150,14 @@ Copy each workbook draft, under its own name, into `<CH_ROOT>/Workbook/` as the 
    - Sidebar summaries
    - Layout notes
    - 2-3 suggested Figures for infographic designs to include in the chapter
+   - **Callout recommendations (v1.1.3).** Callouts aren't part of the manuscript; they come from this list. Save it as `<CH_ROOT>/InDesign/<ChapterName>_CalloutRecommendations.md`, one row per callout:
+     - the type, from the print DSM's callout set: Did You Know?, Insight, Framework Highlight / Coherence, Core Value / Expansion, Pull Quote;
+     - the text: verbatim from the manuscript, or for Did You Know? and Insight, a short derived line that adds no new claim, marked *derived*;
+     - the source passage (heading and quoted first words);
+     - the placement (after which paragraph);
+     - one line on why.
+
+     Aim for about 3–6 per chapter, plus the pull quotes above. <AUTHOR> marks each one approve or reject alongside the Editorial Suggestions. The approved ones are placed by hand in the eBook (Claude Design) and print (InDesign) layouts. Nothing is written into the manuscript.
    - Suggested chapter design layout spreads based on InDesign Templates for the chapter flow
    - These will be given to Claude Design to review and create mockups (PHASE 3)
 

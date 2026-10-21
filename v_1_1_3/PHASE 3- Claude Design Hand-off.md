@@ -62,7 +62,11 @@ The workbook PDFs are not Claude Design exports: <AUTHOR> exports them from InDe
 
 ### Figure image export (PHASE 4 dependency)
 
-Every figure in the chapter's `FigureRegistry.json` must exist as a raster image in `DesignPacket/figures_export/`, whether it was produced by Claude Design or drawn by <AUTHOR> during the print/eBook work:
+**Figure files (v1.1.3).** Figures are finished, and in the chapter's `Figures/` folder, before the eBook and print builds:
+- **RGB masters** in `Figures/RGB/`: PNG for illustrations, JPG for photos. They serve the eBook and Kindle.
+- **CMYK print TIFFs** in `Figures/CMYK/`, named `Ch<N>_Fig<#>_<Name>.tif`. They serve the print build (PHASE 3.5A) and InDesign.
+
+Every figure in the chapter's `FigureRegistry.json` must also exist as a raster image in `DesignPacket/figures_export/`, whether it was produced by Claude Design or drawn by <AUTHOR>:
 - Name: `<ChapterName>_Fig<#>_<Name>.png`
 - Minimum 1600 px on the long edge, RGB, transparent or white background
 - Alt text recorded in the FigureRegistry entry (PHASE 4 carries it into the Kindle metadata)

@@ -5,7 +5,9 @@
 **Release v1.1.3 (2026-10-21): print build.**
 - **New PHASE 3.5A, print build (automated tagged text).** `idml_build.py` turns the chapter's manuscript DOCX into an InDesign tagged-text import, `<CH_ROOT>/InDesign/<ChapterName>_Import.txt`, styled with the print template's own styles through `<PRINT_DSM_ROOT>/style_map.json`. It also writes a build manifest (hashes of the template, style map, and DOCX) and a report. <AUTHOR> places the import into a copy of the template, finishes the layout by hand, and exports the print PDF as before.
 - 3.5A never edits the manuscript, never writes to `<PRINT_DSM_ROOT>`, never calls InDesign, and never guesses an unmapped style. Its failures block only its own closure. PHASE 3.5 reads its report.
-- **Polish window:** before the PASS 7 drop, <AUTHOR> polishes in the DOCX and regenerates the MD (PHASE 1).
+- **The manuscript is final before PHASE 1:** <AUTHOR> polishes in the DOCX before the PASS 7 drop (the polish window) and regenerates the MD. The layouts are built from it rather than edited for wording. PHASE 4 Part 0 stays as the safety check and expects no differences.
+- **Figures:** finished before the eBook and print builds. RGB masters go in `Figures/RGB/` (PNG for illustrations, JPG for photos); CMYK print TIFFs go in `Figures/CMYK/`, which the print build requires.
+- **Callouts** are not in the manuscript. PHASE 1 recommends them (`InDesign/<ChapterName>_CalloutRecommendations.md`), PHASE 2 validates them, and <AUTHOR> places the approved ones in the layouts.
 - **Revision trigger:** `Manuscript/Trigger/MANUSCRIPT_REVISED.md` re-runs PHASE 1 for the changed sections, then PHASE 2 re-validates. PHASE 4 Part 0 stops if the trigger is newer than the eBook PDF.
 - **Workbook print build** (PHASE 3W W1b): ships off by default.
 

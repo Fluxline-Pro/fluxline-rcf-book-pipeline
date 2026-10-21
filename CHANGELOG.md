@@ -57,6 +57,13 @@ Print build. Print layout was the one format that started from nothing: the auth
   - the local tools rows.
 - **Master overview §4:** "No phase reads those folders" is replaced by "Phases read `<PRINT_DSM_ROOT>` only through PHASE 3.5A, and never write to it." The print InDesign book itself (INDB, links) may still live outside `<BOOK_ROOT>`.
 - **README:** current version v1.1.3, folder `v_1_1_3/`; `v_1_1_2/` is listed as the previous release.
+- **Author decisions folded in (2026-10-21, same release):**
+  - **Figure formats.** RGB masters go in `Figures/RGB/` (PNG for illustrations, JPG for photos) for the eBook and Kindle. CMYK TIFFs go in `Figures/CMYK/` for print. The print build now requires a TIFF: an RGB-only figure fails with "RGB only; CMYK TIFF missing".
+    - The FigureRegistry may carry `printImagePath`.
+    - The style map's figure pattern takes `{short}` (= `Ch<N>`), and its example defaults to `{short}_Fig{n}_*.tif` in `Figures/CMYK`.
+  - **Figures are finished before the eBook and print builds.** This is now part of the PHASE 3.5A gate.
+  - **The manuscript is final before PHASE 1.** The layouts are built from the DOCX, not edited for wording. PHASE 4 Part 0 stays as the safety check and now expects no differences.
+  - **Callouts are not in the manuscript.** PHASE 1 Step 8 writes `InDesign/<ChapterName>_CalloutRecommendations.md` (type, verbatim or derived text, source, placement, reason), and PHASE 2 validates it under new "Callout Candidates". The author places the approved callouts in the layouts. The callout `TODO` entries are dropped from the example style map.
 
 ### Fixed
 
