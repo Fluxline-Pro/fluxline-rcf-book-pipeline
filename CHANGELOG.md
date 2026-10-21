@@ -68,6 +68,8 @@ Print build. Print layout was the one format that started from nothing: the auth
 ### Fixed
 
 - `PLACEHOLDERS.md` in the copied folder named `v_1_1_2/` in its intro and in both replace scripts. It now names `v_1_1_3/`.
+- **Print export wording: bleed yes, printer's marks no.** Five places asked for a print PDF "with printer's marks and bleed", and the workbook print spec asked for "crop marks": HOW_TO_RUN Step 5b, PHASE 3.5A §6, PHASE 3W W1, PHASE 4 Part 0P, PHASE 7 Part A, and the master trigger map. KDP and IngramSpark want interiors with 0.125 in bleed on the top, bottom, and outside edge, none at the spine, and no printer's or crop marks. The author's exports already do this. All six files now say so, and Part 0P lists exported marks as a warning.
+  - **`print_check.py`** (`<LOCAL_TOOLS_ROOT>`) now checks bleed on the top, bottom, and outside edge only. It had flagged every page of a correct export (91 false warnings on Ch1–Ch2). It also warns if printer's marks were exported, i.e. the page is larger than the bleed.
 
 ### Defaults chosen for this release
 

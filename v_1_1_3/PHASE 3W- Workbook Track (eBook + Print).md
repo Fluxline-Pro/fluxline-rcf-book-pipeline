@@ -77,7 +77,7 @@ PHASE 3 does not start the workbook design without `WORKBOOK_MANUSCRIPT_READY.md
 | Export | Spec |
 |---|---|
 | **eBook** | **8.5×11 in** (US Letter) pages, RGB PDF. Bookmarks for every exercise, working internal links, document title and language set; fillable form fields are optional. Readers are encouraged to work on screen. If they print it anyway, it prints normally on a home printer: no bleed or crop marks, and margins wide enough (about 0.5 in or more) that nothing is clipped |
-| **Print** | **7×10 in**, full color, CMYK, PDF/X-4, bleed and crop marks per the printer's spec, a gutter wide enough to write near the spine, real write-in space (lines or boxes sized for handwriting) |
+| **Print** | **7×10 in**, full color, CMYK, PDF/X-4, 0.125 in bleed on the top, bottom, and outside edge and no printer's or crop marks (KDP and IngramSpark), a gutter wide enough to write near the spine, real write-in space (lines or boxes sized for handwriting) |
 
 ### W1b. Workbook print build (optional, off by default; release v1.1.3)
 

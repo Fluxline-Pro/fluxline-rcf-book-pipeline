@@ -157,7 +157,7 @@
 - [ ] Part 0G: glossary locked; the chapter is in the official `_BookGovernance/Glossary/Master_Glossary`; no open drift for it in `Glossary_DriftReport.md`
 - [ ] Part 0 follow-ups closed: every "must fix before release" item in the downstream impact list (pull quotes, voice samples, claims, narration) is fixed; deferred items listed here
 - [ ] Part 0 print cross-check recorded, citing the 0P report (print-only differences confirmed by <AUTHOR> and logged in `<ChapterName>_PrintOnlyDifferences.md`)
-- [ ] Part 0P: print PDF uploaded to `InDesign/<ChapterName>_Print7x10.pdf` (7×10, printer's marks and bleed)
+- [ ] Part 0P: print PDF uploaded to `InDesign/<ChapterName>_Print7x10.pdf` (7×10, bleed, no printer's marks)
 - [ ] Part 0P: latest `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md` is newer than both the print and eBook PDFs, and shows **0** text differences to check and **0** layout errors
 - [ ] Part 0P: every minor text difference and layout warning reviewed, and each one fixed, logged as print-only, or accepted by <AUTHOR> (acceptance written beside this item)
 - [ ] Step 0 dependency check passed (figures exported, manual print/eBook work finished)

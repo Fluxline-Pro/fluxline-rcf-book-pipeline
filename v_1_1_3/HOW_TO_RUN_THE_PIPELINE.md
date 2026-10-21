@@ -160,7 +160,7 @@ Steps 4 and 5 are independent, so do them in either order.
 ### Step 5b — Upload the print PDF → print QA (PHASE 4 Part 0P; report-only)
 
 🧑 **You:** when the chapter's print layout is finished (after Step 4's eBook upload):
-1. Export it from the print InDesign book as a high-fidelity print PDF: 7×10 in, with printer's marks and bleed.
+1. Export it from the print InDesign book as a high-fidelity print PDF: 7×10 in, with bleed on the top, bottom, and outside edge (0.125 in), no printer's marks (KDP and IngramSpark reject crop marks).
 2. Save it as `InDesign/<ChapterName>_Print7x10.pdf`. Front matter: `FrontMatter/Final/<Section>/InDesign/<Section>_Print7x10.pdf`. Print workbook (only if the workbook ships print): `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf`, or `Workbook/<ChapterName>_Workbook_Print*.pdf` if the workbook profile's `location` is `chapter`.
    Keep one print PDF per section: rename an older export `*_superseded_<timestamp>.pdf`.
 

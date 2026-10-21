@@ -250,7 +250,7 @@ The back-matter glossary (e.g. `BackMatter/Glossary/GLOSSARY.docx`) is <AUTHOR>'
 
 **Why:** <AUTHOR> lays out the print book in its own InDesign book. Wording can drift between the print and eBook layouts, and print has layout problems the eBook doesn't. This check catches both before release. It is deterministic (no LLM), and the reference implementation is `print_check.py` in `<LOCAL_TOOLS_ROOT>`.
 
-**Hard input: the print PDF.** When a section's print layout is finished, <AUTHOR> exports it from the print InDesign book as a high-fidelity print PDF: 7×10 in trim, with printer's marks and bleed. Upload it to:
+**Hard input: the print PDF.** When a section's print layout is finished, <AUTHOR> exports it from the print InDesign book as a high-fidelity print PDF: 7×10 in trim, with bleed on the top, bottom, and outside edge (0.125 in), no printer's marks. Upload it to:
 - **Chapters:** `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf`
 - **Front matter:** `<BOOK_ROOT>/FrontMatter/Final/<Section>/InDesign/<Section>_Print7x10.pdf`
 
@@ -265,7 +265,7 @@ Keep one print PDF per folder. Rename an older export to `*_superseded_<timestam
    - widows, orphans, runts (one-word last lines), and headings stranded at a page bottom
    - 3+ stacked hyphens, and doubled words
    - text inside the 0.25 in safe zone or across the trim
-   - trim size (7×10 in) and bleed (at least 0.125 in)
+   - trim size (7×10 in) and bleed (at least 0.125 in at the top, bottom, and outside edge; none is needed at the spine), and no printer's marks (the page must not be larger than the bleed)
    - fonts that aren't embedded, or are Type3
    - images under 300 ppi effective, and RGB images
    - blank pages
@@ -279,7 +279,7 @@ Keep one print PDF per folder. Rename an older export to `*_superseded_<timestam
 | **Text: check** | A difference of 3+ words | Reworded sentence, added or dropped line |
 | **Text: minor** | A difference of 1–2 words | One changed, added, or dropped word |
 | **Layout: error** | A print blocker | Wrong trim size, text across the trim, font not embedded, image under 200 ppi |
-| **Layout: warn** | Look at it, then fix or accept | Widow, orphan, runt, stranded heading, stacked hyphens, doubled word, safe zone, bleed under 0.125 in, Type3 font, image at 200–299 ppi |
+| **Layout: warn** | Look at it, then fix or accept | Widow, orphan, runt, stranded heading, stacked hyphens, doubled word, safe zone, bleed under 0.125 in at the top, bottom, or outside edge, printer's marks exported, Type3 font, image at 200–299 ppi |
 | **Layout: info** | Observation only | RGB image (check the printer's spec), blank page (intentional?) |
 
 The layout checks are heuristics: they point at places to look, not at certain faults.

@@ -220,7 +220,7 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 | `WORKBOOK_READY.md` / `WORKBOOK_INCOMPLETE.md` | `Workbook/Trigger/` | P3W W3 | P3W W4 (every chapter); P6.5 workbook sub-cert; P7 |
 | `DESIGN_READY.md` / `_INCOMPLETE` | `DesignPacket/Trigger/` | P3.5 | P4 entry; P6 3B/3D |
 | `MANUSCRIPT_SYNCED.md` / `MANUSCRIPT_SYNC_INCOMPLETE.md` | `Manuscript/Trigger/` | P4 Part 0 | P4 Step 0; P4 Part B; P5 entry |
-| **Print PDF** `<ChapterName>_Print7x10.pdf` (v1.1.2; workbook: `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf`, or `Workbook/<ChapterName>_Workbook_Print*.pdf` in the `chapter` layout) | `InDesign/` | <AUTHOR> (print export: 7×10, marks and bleed) | P4 0P / P3W W2b print QA (after 5 quiet minutes; re-runs when the print or eBook PDF changes); P6.5; P7 |
+| **Print PDF** `<ChapterName>_Print7x10.pdf` (v1.1.2; workbook: `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf`, or `Workbook/<ChapterName>_Workbook_Print*.pdf` in the `chapter` layout) | `InDesign/` | <AUTHOR> (print export: 7×10, bleed, no printer's marks) | P4 0P / P3W W2b print QA (after 5 quiet minutes; re-runs when the print or eBook PDF changes); P6.5; P7 |
 | `RAG_LOCAL_READY.md` | `RAG/Trigger/` | P5 Track L | P6 local workflows; local 3E |
 | `RAG_CLOUD_READY.md` | `RAG/Trigger/` | P5 Track C | P6 cloud workflows; cloud 3E |
 | `RAG_READY.md` / `_INCOMPLETE` | `RAG/Trigger/` | P5 (all enabled tracks) | P6 entry; batch mode |

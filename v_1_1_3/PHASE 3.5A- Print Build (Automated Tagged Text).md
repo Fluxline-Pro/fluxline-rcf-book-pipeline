@@ -102,7 +102,7 @@ Each run overwrites the three files; the manifest's hashes and timestamp identif
 3. Replace each `[[FIGURE N | … ]]` placeholder with the placed image named on it.
 4. Set the running heads, then lay out the chapter: openers, page breaks, widows and orphans.
 5. **Add the callouts.** Callouts aren't part of the manuscript, so the import has none. Place the ones you approved from the PHASE 1 callout recommendations (`InDesign/` prep, validated in PHASE 2), using the template's Callouts styles.
-6. Export the print PDF to `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf` (7×10 in, marks and bleed). PHASE 4 Part 0P checks it against the final eBook PDF.
+6. Export the print PDF to `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf` (7×10 in, bleed on the top, bottom, and outside edge (0.125 in), no printer's marks). PHASE 4 Part 0P checks it against the final eBook PDF.
 
 `DesignPacket/Ch<N>_Print7x10.dc.html` stays the design reference for the layout.
 
