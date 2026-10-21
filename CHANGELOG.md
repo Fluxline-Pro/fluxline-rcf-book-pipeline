@@ -5,6 +5,80 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [v1.1.3] — 2026-10-21
+
+**Folder:** `v_1_1_3/` · **Previous:** `v_1_1_2/` (unchanged, kept for books mid-flight)
+
+Print build. Print layout was the one format that started from nothing: the author placed the manuscript into an empty InDesign document and applied every style by hand, even though the print template already defines them all. PHASE 3.5A now generates a styled import from the manuscript DOCX, and the author's work starts at layout. The release also names the pre-PHASE 1 polish window and adds a trigger for revising the DOCX after PHASE 1.
+
+### Added
+
+- **PHASE 3.5A, print build (automated tagged text)**, new file `PHASE 3.5A- Print Build (Automated Tagged Text).md`:
+  - **Entry gate:** the DOCX is in `Chapters/<ChapterName>/Final/Manuscript/` and is newer than `AUDIT_CLEAR.md`, and `<PRINT_TEMPLATE_BOOK>` exists. `DESIGN_READY.md` is not required.
+  - **Inputs:** the manuscript DOCX (canonical), with the MD as a guard only (the MD is regenerated from the DOCX, never the reverse), plus the FigureRegistry, `<PRINT_DSM_ROOT>/style_map.json`, and the IDML template.
+  - **Outputs** in `Chapters/<ChapterName>/Final/InDesign/`:
+    - `<ChapterName>_Import.txt`: InDesign tagged text, UTF-16, with `<ParaStyle:…>`, `<CharStyle:…>`, and figure placeholder lines;
+    - `_BuildManifest.json`: SHA-256 of the template, style map, and DOCX; styles used; unmapped items; figures with resolved paths; running heads;
+    - `_BuildReport.md`.
+  - **Checks:** every style exists in the template's `Styles.xml` (colon form); no DOCX paragraph or run is unmapped; every figure resolves to a TIFF in `DesignPacket/figures_export/` or to the FigureRegistry path; running heads are set; the template hash is recorded. A failure blocks the closure of 3.5A only.
+  - **Manual finish:** place with Load Styles into a copy of the template, lay out, then export `InDesign/<ChapterName>_Print7x10.pdf` (checked by PHASE 4 Part 0P, as before).
+  - **Rules:** never edit the DOCX or MD; never write to `<PRINT_DSM_ROOT>`; never call InDesign; never guess an unmapped style.
+- **`idml_build.py`** in `<LOCAL_TOOLS_ROOT>` (reference implementation; `python-docx`, `zipfile`, `xml.etree` only):
+  - Exit codes: 0 pass, 1 check fail, 2 bad input.
+  - `--md` stops the build if the MD is newer than the DOCX.
+  - It refuses an output folder inside the template's or the style map's folder.
+  - Tests in `<LOCAL_TOOLS_ROOT>/tests/test_idml_build.py` (`unittest`; a synthetic IDML and DOCX built in a temp folder; no book files).
+- **`v_1_1_3/templates/style_map.example.json`:**
+  - paragraph and character maps, plus the direct-formatting keys (`direct:italic`, `direct:bold`, …) and a `figures` block (`path_pattern`, `tif_dir`, `placeholder_style`);
+  - values derived from the print DSM, and every one checked to exist in the current book template;
+  - every value marked `CONFIRM:` or `TODO:`, which the tool treats as unmapped until the author confirms it.
+- **Polish window (PHASE 1):** between `AUDIT_CLEAR.md` and the PASS 7 drop, the author polishes in the DOCX and regenerates the MD.
+- **Revision trigger, `Manuscript/Trigger/MANUSCRIPT_REVISED.md` (PHASE 1):** it lists the changed sections and the reason. It is valid after PHASE 1 and before the eBook lock. PHASE 1 re-runs from Step 1 onward for the changed sections only, and records the revision in the Production Checklist. PHASE 2 then re-validates, and 3.5A is re-run if print layout hasn't started.
+- **PHASE 3.5 §13A, Print build (3.5A):** requires zero unmapped items, zero missing figures, and a template and DOCX matching the ones the import was built from. A failure that blocks layout is Critical for the print track.
+- **PHASE 3W W1b, workbook print build:** one build per exercise, from `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json` and `<PRINT_TEMPLATE_WORKBOOK>`. Outputs go to `<CH_ROOT>/Workbook/InDesign/`. It is a second step, gated by a new workbook-profile key, `"printBuild"` (default `false`).
+- **PHASE 4 Part 0 (0.1):** a new stop. If `MANUSCRIPT_REVISED.md` is newer than the eBook PDF, Part 0 writes `MANUSCRIPT_SYNC_INCOMPLETE.md` and asks for a re-export instead of syncing.
+- **Placeholders:** `<PRINT_DSM_ROOT>` (= `<BOOK_ROOT>/_PrintDSM`), `<PRINT_TEMPLATE_BOOK>`, `<PRINT_TEMPLATE_WORKBOOK>`; `idml_build.py` in the `<LOCAL_TOOLS_ROOT>` list. Both replace scripts are updated, with `<PRINT_DSM_ROOT>` replaced before the template tokens.
+- **`HOW_TO_RUN_THE_PIPELINE.md`:**
+  - the polish window in Step 1, and revising the manuscript after Step 2;
+  - new Step 2b (read the build report, place, lay out, export);
+  - `3.5A` in the RERUN list;
+  - cheat-sheet rows for `MANUSCRIPT_REVISED.md`, `RERUN_P3.5A.md`, `style_map.json`, and `_Import.txt`.
+
+### Changed
+
+- **PHASE 3 A3:** the print layout track was "manual in InDesign". It is now **"PHASE 3.5A generated import, then manual finish"**, and its output is the print PDF at `InDesign/<ChapterName>_Print7x10.pdf`. `Ch<N>_Print7x10.dc.html` stays the design reference. The workbook row points to the optional W1b build.
+- **Master overview:**
+  - the release note;
+  - phase table row **3.5A**;
+  - the flow (polish window, 3.5A, the revision loop);
+  - the deliverable map;
+  - the folder map: `_PrintDSM/` (read-only), the `InDesign/` build outputs, and `Manuscript/Trigger/MANUSCRIPT_REVISED.md`;
+  - the trigger map: `MANUSCRIPT_REVISED.md`, the 3.5A outputs, and `AUDIT_CLEAR.md` → 3.5A entry;
+  - the local tools rows.
+- **Master overview §4:** "No phase reads those folders" is replaced by "Phases read `<PRINT_DSM_ROOT>` only through PHASE 3.5A, and never write to it." The print InDesign book itself (INDB, links) may still live outside `<BOOK_ROOT>`.
+- **README:** current version v1.1.3, folder `v_1_1_3/`; `v_1_1_2/` is listed as the previous release.
+- **Author decisions folded in (2026-10-21, same release):**
+  - **Figure formats.** RGB masters go in `Figures/RGB/` (PNG for illustrations, JPG for photos) for the eBook and Kindle. CMYK TIFFs go in `Figures/CMYK/` for print. The print build now requires a TIFF: an RGB-only figure fails with "RGB only; CMYK TIFF missing".
+    - The FigureRegistry may carry `printImagePath`.
+    - The style map's figure pattern takes `{short}` (= `Ch<N>`), and its example defaults to `{short}_Fig{n}_*.tif` in `Figures/CMYK`.
+  - **Figures are finished before the eBook and print builds.** This is now part of the PHASE 3.5A gate.
+  - **The manuscript is final before PHASE 1.** The layouts are built from the DOCX, not edited for wording. PHASE 4 Part 0 stays as the safety check and now expects no differences.
+  - **Callouts are not in the manuscript.** PHASE 1 Step 8 writes `InDesign/<ChapterName>_CalloutRecommendations.md` (type, verbatim or derived text, source, placement, reason), and PHASE 2 validates it under new "Callout Candidates". The author places the approved callouts in the layouts. The callout `TODO` entries are dropped from the example style map.
+
+### Fixed
+
+- `PLACEHOLDERS.md` in the copied folder named `v_1_1_2/` in its intro and in both replace scripts. It now names `v_1_1_3/`.
+- **Print export wording: bleed yes, printer's marks no.** Five places asked for a print PDF "with printer's marks and bleed", and the workbook print spec asked for "crop marks": HOW_TO_RUN Step 5b, PHASE 3.5A §6, PHASE 3W W1, PHASE 4 Part 0P, PHASE 7 Part A, and the master trigger map. KDP and IngramSpark want interiors with 0.125 in bleed on the top, bottom, and outside edge, none at the spine, and no printer's or crop marks. The author's exports already do this. All six files now say so, and Part 0P lists exported marks as a warning.
+  - **`print_check.py`** (`<LOCAL_TOOLS_ROOT>`) now checks bleed on the top, bottom, and outside edge only. It had flagged every page of a correct export (91 false warnings on Ch1–Ch2). It also warns if printer's marks were exported, i.e. the page is larger than the bleed.
+
+### Defaults chosen for this release
+
+1. **Tagged text is the only output.** Generating an IDML document directly is deferred.
+2. **`style_map.json` lives in `<PRINT_DSM_ROOT>`**, next to the template it maps to, not in `DesignPacket/_ds/`.
+3. **The workbook build ships off by default** (`"printBuild": false`). The book build is tested first.
+
+---
+
 ## [v1.1.2] — 2026-10-03
 
 **Folder:** `v_1_1_2/` · **Previous:** `v_1_1/` (unchanged, kept for books mid-flight) · **Tag:** `v1_1_2_PROD`
