@@ -3,6 +3,8 @@
 > **Pipeline position:** PHASE 4 of 7 (Kindle) · **Upstream gate:** the final eBook PDF is uploaded, which completes PHASE 3.5 (v3.3); `DESIGN_READY.md` is written by PHASE 3.5 or, if absent, attested by the upload · **Downstream:** PHASE 5 RAG Rebuild
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
+**Release v1.1.3 (2026-10-21):** Part 0 has a new stop in 0.1. If `Manuscript/Trigger/MANUSCRIPT_REVISED.md` is newer than the eBook PDF, Part 0 asks for a re-export instead of syncing, which would undo the revision. There is also a note on the PHASE 3.5A print build.
+
 **v3.4 changes (2026-10-03, release v1.1.2):**
 - **New Part 0P, print vs. eBook QA (report-only):** <AUTHOR> uploads each finished section's print PDF (7×10, exported from the print InDesign book) to `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf`. A deterministic check (no LLM) compares its text with the final eBook PDF and flags print-layout problems. It doesn't block Part A, but it must be closed before PHASE 6.5 and PHASE 7.
 - **The print cross-check in 0.6 is now evidenced by the 0P report.** <AUTHOR> still confirms the print-only differences, and logs them in `<ChapterName>_PrintOnlyDifferences.md`.
@@ -96,6 +98,8 @@ Transform the governed, design-validated PHASE 1–3.5 chapter outputs into a **
 
 **This is the one sanctioned manuscript edit after PHASE 2.** It records <AUTHOR>'s own layout-stage wording back into the manuscript. It never introduces new wording, and it follows the same paper trail as a governance fix: back up, log, version, and escalate anything uncertain.
 
+**Revisions and the print build (release v1.1.3).** Before the eBook lock, <AUTHOR> may revise the DOCX through `Manuscript/Trigger/MANUSCRIPT_REVISED.md` (PHASE 1, "Revision trigger"). The eBook PDF must already carry such a revision, so check it first (0.1). Part 0 still syncs the MD and the DOCX to the eBook PDF; that sync is the only time the pipeline writes to the manuscript, and the print build (PHASE 3.5A) never does. If Part 0 changes the DOCX after a 3.5A build, the build's manifest no longer matches: re-run 3.5A if print layout hasn't started, otherwise carry the change into the print document (Part 0P catches anything missed).
+
 ## 0.1 Hard stop: the eBook PDF must be uploaded
 
 Look for `<CH_ROOT>/eBook/<ChapterName>_eBook.pdf` (or `<ChapterName>_eBookPDF.pdf`), the final PDF exported from <AUTHOR>'s eBook InDesign book. (If the eBook is exported as one book-level PDF, save this chapter's pages under that name.) Its upload completes PHASE 3.5: if `DesignPacket/Trigger/DESIGN_READY.md` is missing, write it now, stating "PHASE 3.5 complete: attested by <AUTHOR>'s upload of <file> on <date>" and citing the latest DesignQA report, if any.
@@ -110,6 +114,7 @@ If the file is **missing**, empty, cannot be opened, or has no extractable text 
 PHASE 5, 6, 6.5, and 7 cannot start for a chapter without a PHASE 4 `PASS`, so a missing PDF halts the chapter from PHASE 4 onward. Part B cannot start while any chapter is blocked here.
 
 Also stop, and ask, if:
+- **`Manuscript/Trigger/MANUSCRIPT_REVISED.md` is newer than the eBook PDF** (v1.1.3). The manuscript was revised after this eBook was exported, so the PDF doesn't carry the revision, and syncing to it would undo the revision. Write `MANUSCRIPT_SYNC_INCOMPLETE.md` with `Blocked: manuscript revised after the eBook export (<revision date>) — re-export the eBook PDF`, list the revised sections from the trigger file, and ask <AUTHOR> to bring them into the eBook InDesign book and re-export. Part 0 runs again when the new PDF lands.
 - `<CH_ROOT>/Manuscript/<ChapterName>_Manuscript.md` or `_Manuscript.docx` is missing. Both are kept in sync; do not create the DOCX from scratch without <AUTHOR>'s go-ahead.
 - The PDF looks like a draft rather than the final layout: a Claude Design export, a watermark, placeholder figures, or a chapter title or number that does not match.
 

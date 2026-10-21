@@ -3,6 +3,8 @@
 > **Pipeline position:** PHASE 3 of 7 (Design + Production) · **Upstream gate:** `Governance/Trigger/GOVERNANCE_READY.md` exists · **Downstream:** PHASE 3.5 Design QA
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
+**Release v1.1.3 (2026-10-21): print build.** The print layout track (A3) now starts from a generated, styled import: PHASE 3.5A writes `InDesign/<ChapterName>_Import.txt` from the manuscript DOCX and the print template, and <AUTHOR> finishes the layout by hand. `Ch<N>_Print7x10.dc.html` is still the design reference.
+
 **v3.2 changes (2026-09-30 workbook track):** the workbook is tracked in `PHASE 3W- Workbook Track (eBook + Print).md`.
 - Claude Design still builds the workbook, now from the workbook manuscript, and only once `Workbook/Trigger/WORKBOOK_MANUSCRIPT_READY.md` exists.
 - <AUTHOR> produces the eBook (8.5×11 in) and full-color print (7×10 in) PDFs in InDesign from it, and uploads them to `Workbook/`.
@@ -49,7 +51,7 @@ Save into `<CH_ROOT>/DesignPacket/` using the layout already established in Chap
 | Figures (one per FigureRegistry entry) | `DesignPacket/packet/figures/Ch<N>_Fig<#>_<Name>.dc.html` |
 | **Exported figure images (required by PHASE 4)** | `DesignPacket/figures_export/<ChapterName>_Fig<#>_<Name>.png` |
 | eBook chapter layout | `DesignPacket/Ch<N>_eBook.dc.html` |
-| Print 7×10 chapter layout (InDesign reference) | `DesignPacket/Ch<N>_Print7x10.dc.html` |
+| Print 7×10 chapter layout (InDesign design reference; the styled import text comes from PHASE 3.5A) | `DesignPacket/Ch<N>_Print7x10.dc.html` |
 | Workbook eBook (8.5×11) + Print 7×10 layout, built from the workbook manuscript (requires `WORKBOOK_MANUSCRIPT_READY.md`; <AUTHOR> produces the PDFs from it in InDesign, see PHASE 3W) | `DesignPacket/Ch<N>_Workbook_eBook_Print7x10.dc.html` |
 
 Claude Design project files keep the `Ch<N>_` short prefix Claude Design assigns (accepted exception to the `<ChapterName>_` rule). **Exports** use the full convention:
@@ -70,8 +72,8 @@ Every figure in the chapter's `FigureRegistry.json` must exist as a raster image
 
 | Track | Owner | Output |
 |---|---|---|
-| Print layout | **<AUTHOR>, manual in InDesign**, using `Ch<N>_Print7x10.dc.html` and `/InDesign/` prep as reference | `<CH_ROOT>/InDesign/<ChapterName>_Print.indd` + print PDF |
-| Workbook (eBook 8.5×11 + full-color print 7×10) | **<AUTHOR>, manual in InDesign**, from the Claude Design workbook; InDesign files stay in `<WORKBOOK_INDESIGN_ROOT>`. See `PHASE 3W- Workbook Track (eBook + Print).md` | The workbook profile's location and formats (PHASE 3W W2): `chapter`: `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf` + `_Workbook_Print.pdf`; `book-root`: `<WORKBOOK_BOOK_ROOT>/<section>/<NN>_Ex_<L>_<N>_Chapter<C>.pdf` + `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf` (print only if listed; the upload is the cue) |
+| Print layout | **PHASE 3.5A generated import, then manual finish** (v1.1.3): `idml_build.py` turns the manuscript DOCX into `InDesign/<ChapterName>_Import.txt`, styled with the print template's styles; <AUTHOR> places it into a copy of the template and lays out the chapter in InDesign. `Ch<N>_Print7x10.dc.html` and the `/InDesign/` prep stay the design reference. See `PHASE 3.5A- Print Build (Automated Tagged Text).md` | `<CH_ROOT>/InDesign/<ChapterName>_Import.txt` + `_BuildManifest.json` + `_BuildReport.md` (3.5A) → <AUTHOR>'s InDesign document → `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf` |
+| Workbook (eBook 8.5×11 + full-color print 7×10) | **<AUTHOR>, in InDesign**, from the Claude Design workbook (an optional generated print import, off by default: PHASE 3W W1b); InDesign files stay in `<WORKBOOK_INDESIGN_ROOT>`. See `PHASE 3W- Workbook Track (eBook + Print).md` | The workbook profile's location and formats (PHASE 3W W2): `chapter`: `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf` + `_Workbook_Print.pdf`; `book-root`: `<WORKBOOK_BOOK_ROOT>/<section>/<NN>_Ex_<L>_<N>_Chapter<C>.pdf` + `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf` (print only if listed; the upload is the cue) |
 | Audiobook | **Moved to PHASE 4 Part C** (recorded from the Kindle output; XTTS draft + <AUTHOR>'s Audition recording) | — |
 
 ## A4. Book assembly mode (once every chapter for the edition has passed PHASE 3.5)

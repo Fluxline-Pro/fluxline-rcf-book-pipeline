@@ -3,6 +3,8 @@
 > **Pipeline position:** PHASE 3.5 of 7 (Design QA gate) · **Upstream gate:** PHASE 3 exit gate · **Downstream:** PHASE 4 Kindle DOCX
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
+**Release v1.1.3 (2026-10-21):** new §13A, **Print build (3.5A)**. The QA reads the PHASE 3.5A build report and manifest: zero unmapped items, zero missing figures, and a template and DOCX that match the ones the import was built from. A failure that blocks layout is Critical for the print track; it doesn't block `DESIGN_READY.md`.
+
 **v3.3 changes (2026-10-02, release v1.1): the upload completes PHASE 3.5.** The QA loop below is unchanged; run it while the design and InDesign work are in progress. What *closes* PHASE 3.5 is <AUTHOR>'s upload of the final PDF:
 - **Book chapter (or front matter / back matter section):** the final eBook PDF, `<CH_ROOT>/eBook/<ChapterName>_eBook.pdf`. This locks the chapter manuscript and starts PHASE 4.
   - If `DESIGN_READY.md` doesn't exist yet, PHASE 4 writes it as *"PHASE 3.5 complete: attested by <AUTHOR>'s upload of <file> on <date>"*, citing the latest DesignQA report if there is one.
@@ -403,6 +405,19 @@ PHASE 4 builds the Kindle files from these assets, so confirm each one:
 - [ ] `Governance/<ChapterName>_VersionMetadata.json` states the version the Kindle build will carry
 
 Any unchecked item is a **Critical** issue: it blocks `DESIGN_READY.md`, and therefore blocks PHASE 4.
+
+---
+
+# 13A. PRINT BUILD (3.5A) (release v1.1.3)
+
+Read the latest `<CH_ROOT>/InDesign/<ChapterName>_BuildReport.md` and `_BuildManifest.json` from PHASE 3.5A. Don't re-run the build here; report what it found. If the chapter has no build yet, record **Print build: not run** (Informational).
+
+- [ ] **Zero unmapped items:** the manifest's `unmapped` list is empty (no DOCX paragraph, run, or figure placeholder without a confirmed style).
+- [ ] **Zero missing figures:** every figure has a `resolvedPath`, and the manifest lists every FigureRegistry entry the chapter shows.
+- [ ] **Matching template version:** the manifest's template SHA-256 equals the SHA-256 of `<PRINT_TEMPLATE_BOOK>` now, and its DOCX SHA-256 equals the current manuscript DOCX. If either differs, the import is stale: re-run 3.5A before layout continues.
+- [ ] No mapped style is missing from the template (`missingInTemplate` empty), and the running heads are set.
+
+**Severity.** A failure that **blocks layout** (unmapped styles, a missing figure, or a stale template or DOCX) is **Critical** for the print track: list it under Critical Issues, and the print layout must not continue from that import. In keeping with PHASE 3.5A §5, it blocks only the closure of 3.5A and the print layout; it does **not** block `DESIGN_READY.md`, PHASE 4, or Kindle, which don't use the print build. Anything else in the report is Minor.
 
 ---
 

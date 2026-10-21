@@ -1,5 +1,7 @@
 # PHASE 3W: Workbook Track (eBook + Full-Color Print) (v3.4)
 
+**Release v1.1.3 (2026-10-21):** new **W1b, workbook print build**. It generates a styled InDesign import for each workbook exercise from the exercise registry and `<PRINT_TEMPLATE_WORKBOOK>`, using the PHASE 3.5A tool. It ships **off by default** (`"printBuild": false` in the workbook profile).
+
 **v3.4 changes (2026-10-03, release v1.1.2):**
 - **Print QA on upload (W2b):** when the book ships a print workbook, each print PDF uploaded to the profile's location (`book-root`: `<WORKBOOK_BOOK_ROOT>/InDesign/`; `chapter`: `<CH_ROOT>/Workbook/<ChapterName>_Workbook_Print*.pdf`) is checked automatically against its eBook PDF: text drift plus print layout. This is the workbook variant of PHASE 4 Part 0P. With `formats: ["ebook"]` it is N/A.
 - **Book-root print location:** in the `book-root` layout, print PDFs now go to `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf`, not next to the eBook PDF.
@@ -77,6 +79,18 @@ PHASE 3 does not start the workbook design without `WORKBOOK_MANUSCRIPT_READY.md
 | **eBook** | **8.5×11 in** (US Letter) pages, RGB PDF. Bookmarks for every exercise, working internal links, document title and language set; fillable form fields are optional. Readers are encouraged to work on screen. If they print it anyway, it prints normally on a home printer: no bleed or crop marks, and margins wide enough (about 0.5 in or more) that nothing is clipped |
 | **Print** | **7×10 in**, full color, CMYK, PDF/X-4, bleed and crop marks per the printer's spec, a gutter wide enough to write near the spine, real write-in space (lines or boxes sized for handwriting) |
 
+### W1b. Workbook print build (optional, off by default; release v1.1.3)
+
+A second step after the book's print build (PHASE 3.5A), for books that ship a print workbook. It is **off by default**: it runs only when the workbook profile (W2) has `"printBuild": true` **and** `formats` includes `print`. The book build is tested first; turn this on once the book's import has been through a real layout.
+
+- **Source list:** `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json`. One build per registry entry for the chapter, from the entry's `docx` (the workbook manuscript, canonical).
+- **Template:** `<PRINT_TEMPLATE_WORKBOOK>`, with the `style_map.json` beside it (the workbook's own print DSM folder). Both are read-only, as in 3.5A.
+- **Tool:** the same `idml_build.py`, with `--template "<PRINT_TEMPLATE_WORKBOOK>"`, `--chapter-name <ChapterName>_Exercise<L.N>`, and `--chapter-title` from the registry's `title`.
+- **Outputs:** `<CH_ROOT>/Workbook/InDesign/<ChapterName>_Exercise<L.N>_Import.txt`, `_BuildManifest.json`, `_BuildReport.md`, in both workbook layouts.
+- **Checks, rules, and manual finish:** as PHASE 3.5A §5–§7. The print PDF then follows W2 / W2b as before.
+
+With `printBuild` false or absent, record **workbook print build: off** and skip this step. It is never a defect.
+
 ### W2. Upload: the cue that the chapter's workbook is done
 
 **The book's workbook profile (set once, v1.1).** `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json` carries a book-level `workbook` object. Every phase reads it, so no phase assumes a format:
@@ -90,6 +104,7 @@ PHASE 3 does not start the workbook design without `WORKBOOK_MANUSCRIPT_READY.md
   - PHASE 6.5 and PHASE 7 accept that file in place of `WORKBOOK_READY.md`.
 - `formats`: `["ebook"]` or `["ebook", "print"]`. Only the listed formats are required, uploaded, hashed, and checked. A missing format is never a defect.
 - `location`: `chapter` (each chapter's `Workbook/`) or `book-root` (`<WORKBOOK_BOOK_ROOT>`; see below).
+- `printBuild` (v1.1.3, optional; default `false`): `true` turns on the W1b workbook print build. It has an effect only when `formats` includes `print`.
 
 When the exports are final, <AUTHOR> uploads them to the location the profile names:
 

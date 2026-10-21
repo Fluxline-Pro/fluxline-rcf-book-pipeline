@@ -1,6 +1,6 @@
-# How to Run the Pipeline (v1.1.2)
+# How to Run the Pipeline (v1.1.3)
 
-**For:** <AUTHOR> · **Book:** *<BOOK_TITLE>* — <EDITION> · **Pipeline:** release v1.1.2 (phase files v3.3; PHASE 3W, 4, 6.5, and 7 at v3.4)
+**For:** <AUTHOR> · **Book:** *<BOOK_TITLE>* — <EDITION> · **Pipeline:** release v1.1.3 (phase files v3.3; PHASE 3W, 4, 6.5, and 7 at v3.4; new PHASE 3.5A v1.0)
 
 This is the operating guide: what to do, in what order, one step at a time. The PHASE files hold the full rules; `MASTER_PIPELINE_OVERVIEW.md` holds every path, gate, and trigger, and wins if anything here disagrees.
 
@@ -13,7 +13,7 @@ This is the operating guide: what to do, in what order, one step at a time. The 
 1. **Your uploads are the switches.** The final **eBook PDF** locks a chapter's manuscript, and the final **workbook PDF** locks its workbook manuscript. Everything downstream starts from those two uploads, so upload only final exports.
 2. **Email is your inbox for the pipeline.** You're only emailed when you're needed, or when something is ready for you. No email means it's still running, or nothing needs you.
 3. **Nothing publishes itself.** Every generated item is a draft, and only you approve, sign off, and mark a chapter Published.
-4. **To redo a step,** create `<CH_ROOT>/_Pipeline/RERUN_P<n>.md`, where `<n>` is 1, 2, 3W, 4, 5, 6, 6.5, or 7. Anything you write inside is passed to Claude.
+4. **To redo a step,** create `<CH_ROOT>/_Pipeline/RERUN_P<n>.md`, where `<n>` is 1, 2, 3W, 3.5A, 4, 5, 6, 6.5, or 7. Anything you write inside is passed to Claude.
 5. **Where to look:** `<CH_ROOT>/_Pipeline/STATUS.md` shows a chapter's phase history.
 
 ---
@@ -54,7 +54,7 @@ Work one chapter at a time, or several in parallel; the pipeline keeps each chap
 ### Step 1 — Drop the manuscript → PHASE 1 (content production)
 
 🧑 **You:**
-1. Work through the chapter's **PHASE 0.9 author-review notes** in the manuscript, and save the result as PASS 7.
+1. Work through the chapter's **PHASE 0.9 author-review notes** in the manuscript, and save the result as PASS 7. **Polish window (v1.1.3):** polish as much as you like now, in the **DOCX**, then regenerate the MD from it. Don't edit the MD on its own.
 2. Review the chapter's **workbook exercise** against the same notes.
 3. When **both** are final, drop them into `<PASS7_SOURCE>` together:
    - `Ch<N>_<PascalCaseTitle>.md` + `.docx`: the manuscript, both formats with the same name
@@ -94,13 +94,31 @@ Work one chapter at a time, or several in parallel; the pipeline keeps each chap
 
 If PHASE 2 needs you, resolve the listed items (Needs Author Review, Tier C proposals), then create `_Pipeline/RERUN_P2.md`.
 
+**Revising the manuscript later (v1.1.3).** To change the manuscript after PHASE 1, but before you upload the final eBook PDF:
+1. Edit the DOCX in `Manuscript/`, regenerate the MD from it, and bump the version.
+2. Create `Manuscript/Trigger/MANUSCRIPT_REVISED.md` listing the changed sections and why.
+
+PHASE 1 regenerates what those sections feed, and PHASE 2 re-validates. After the eBook upload, change wording in the eBook instead.
+
+### Step 2b — Print build → PHASE 3.5A (automatic import, then your layout)
+
+🤖 **Automatic, on request** (`_Pipeline/RERUN_P3.5A.md`, or run `idml_build.py` by hand): once the manuscript DOCX is in `Manuscript/`, the print build turns it into `InDesign/<ChapterName>_Import.txt`. Every paragraph and character style is set to the print template's style, through `<PRINT_DSM_ROOT>/style_map.json`. It also writes `_BuildManifest.json` and `_BuildReport.md` beside it. It never changes the manuscript or the template.
+
+🧑 **You:**
+1. Read `InDesign/<ChapterName>_BuildReport.md`. If anything is **unmapped**, add or confirm the entry in `<PRINT_DSM_ROOT>/style_map.json` (remove the `CONFIRM:` prefix once checked), then re-run. A missing figure needs its image in `DesignPacket/figures_export/` (TIFF) or at the FigureRegistry path.
+2. In InDesign, open a **copy** of the print template, and File → Place the import with **Show Import Options** → Use Tagged Text, **Load Styles**.
+3. Replace each `[[FIGURE N …]]` placeholder with its image, set the running heads, and lay out the chapter.
+4. Export the print PDF to `InDesign/<ChapterName>_Print7x10.pdf` (Step 5b).
+
+✅ The build report says **PASS** and the chapter is laid out from it.
+
 ### Step 3 — Design and layout → PHASE 3 + 3.5 (manual)
 
 🧑 **You, in Claude Design and InDesign:**
 1. In **Claude Design**, use the PHASE 3 Part B prompt and the files in `DesignPacket/uploads/` to build the packet: deck, guides, reference guides, workbook, opener, figures, and the eBook / print 7×10 / workbook layouts.
 2. Export the figure images to `DesignPacket/figures_export/`, plus the slides (PPTX + PDF) and the eBook exports.
 3. Run the **PHASE 3.5 QA** (report-only), and fix the findings in Claude Design until it says Production Ready.
-4. Lay out the **eBook** and **print** books in InDesign, making your final wording edits there.
+4. Lay out the **eBook** and **print** books in InDesign, making your final wording edits there. The print chapter starts from the PHASE 3.5A import (Step 2b).
 5. Lay out the **workbook** in InDesign.
 
 ✅ Design is finished, and you're ready to export the final PDFs.
@@ -242,6 +260,10 @@ These run on their own whenever their inputs change, and email you when somethin
 | `Ch<N>_<Title>_Exercise<L.N>_Workbook.docx` | `<PASS7_SOURCE>` (with the manuscript) | Becomes the workbook manuscript in PHASE 1 |
 | `[x]` ticks | `_Pipeline/WORKBOOK_SELECTION.md` | Chooses the published workbook exercises |
 | `APPROVE_EDITORIAL.md` | `_Pipeline/` | Starts PHASE 2 |
+| `MANUSCRIPT_REVISED.md` (changed sections + reason) | `Manuscript/Trigger/` | After PHASE 1 and before the eBook upload: re-runs PHASE 1 for those sections, then PHASE 2 re-validates (v1.1.3) |
+| `RERUN_P3.5A.md` | `_Pipeline/` | Runs the print build: `InDesign/<ChapterName>_Import.txt` + `_BuildManifest.json` + `_BuildReport.md` (v1.1.3) |
+| `style_map.json` entries | `<PRINT_DSM_ROOT>` | Map DOCX styles to the print template's styles for the print build; remove `CONFIRM:` once checked (v1.1.3) |
+| `<ChapterName>_Import.txt` | `InDesign/` | Not a trigger: place it into a copy of the print template (Show Import Options → Load Styles), then lay out |
 | `<ChapterName>_eBook.pdf` | `eBook/` | Completes 3.5 and starts PHASE 4 (locks the manuscript and glossary) |
 | `<NN>_Ex_<L>_<N>_Chapter<C>.pdf` | `<WORKBOOK_BOOK_ROOT>/…` | Completes 3.5 for the workbook and starts the 3W sync |
 | `<ChapterName>_Print7x10.pdf` | `InDesign/` (workbook: `<WORKBOOK_BOOK_ROOT>/InDesign/`, or `Workbook/<ChapterName>_Workbook_Print*.pdf` in the `chapter` layout) | Starts the print QA (PHASE 4 Part 0P; workbook: PHASE 3W W2b) |

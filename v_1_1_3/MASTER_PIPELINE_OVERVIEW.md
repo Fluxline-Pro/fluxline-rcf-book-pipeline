@@ -1,7 +1,14 @@
 # MASTER PIPELINE OVERVIEW
 
 **Book:** *<BOOK_TITLE>* — <EDITION>
-**Author:** <AUTHOR> · **Pipeline version:** v3.4 / release v1.1.2 (aligned 2026-10-03)
+**Author:** <AUTHOR> · **Pipeline version:** v3.4 / release v1.1.3 (aligned 2026-10-21)
+**Release v1.1.3 (2026-10-21): print build.**
+- **New PHASE 3.5A, print build (automated tagged text).** `idml_build.py` turns the chapter's manuscript DOCX into an InDesign tagged-text import, `<CH_ROOT>/InDesign/<ChapterName>_Import.txt`, styled with the print template's own styles through `<PRINT_DSM_ROOT>/style_map.json`. It also writes a build manifest (hashes of the template, style map, and DOCX) and a report. <AUTHOR> places the import into a copy of the template, finishes the layout by hand, and exports the print PDF as before.
+- 3.5A never edits the manuscript, never writes to `<PRINT_DSM_ROOT>`, never calls InDesign, and never guesses an unmapped style. Its failures block only its own closure. PHASE 3.5 reads its report.
+- **Polish window:** before the PASS 7 drop, <AUTHOR> polishes in the DOCX and regenerates the MD (PHASE 1).
+- **Revision trigger:** `Manuscript/Trigger/MANUSCRIPT_REVISED.md` re-runs PHASE 1 for the changed sections, then PHASE 2 re-validates. PHASE 4 Part 0 stops if the trigger is newer than the eBook PDF.
+- **Workbook print build** (PHASE 3W W1b): ships off by default.
+
 **Release v1.1.2 (2026-10-03): print vs. eBook QA.** <AUTHOR> uploads each finished section's 7×10 print PDF to `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf` (workbook: `<WORKBOOK_BOOK_ROOT>/InDesign/`, or `<CH_ROOT>/Workbook/<ChapterName>_Workbook_Print*.pdf` in the `chapter` layout). A deterministic local check (PHASE 4 **Part 0P**; workbook: PHASE 3W **W2b**) compares its wording with the final eBook PDF and flags print-layout problems. It reports to `_BookGovernance/PrintQA/` and emails when the findings change. It is report-only and doesn't block Kindle, but it must be closed before PHASE 6.5 and PHASE 7. It replaces the self-reported print cross-check.
 
 **Release v1.1 (2026-10-02): automation first.**
@@ -48,6 +55,7 @@
 | **2** Governance | `PHASE 2- Governance Check of Outputs.md` | Validate, fix (Tier A/B), propose (Tier C), certify, stage the design handoff | PHASE 1 exit | `GOVERNANCE_READY.md` (certified Design Ready) | per chapter + batch |
 | **3** Design + Production | `PHASE 3- Claude Design Hand-off.md` | Claude Design HTML packet + exports + **figure image export**; manual eBook + print InDesign books; eBook/print book assembly (audiobook moved to PHASE 4) | `GOVERNANCE_READY.md` | Handoff to 3.5 | per chapter + book assembly |
 | **3W** Workbook track | `PHASE 3W- Workbook Track (eBook + Print).md` | Workbook manuscript DOCX = MD gate (end of 2); Claude Design builds the workbook (3); <AUTHOR> produces the eBook (8.5×11) + print (7×10) PDFs in InDesign and uploads them; **W2b:** print QA on each print upload (v1.1.2; only if print ships); Claude syncs layout wording back (PDF = DOCX = MD) and checks the registry, preflight, and eBook. Book-level workbook assembled after B0. No Kindle, audiobook, or RAG | `GOVERNANCE_READY.md` → `WORKBOOK_MANUSCRIPT_READY.md`; the workbook PDFs in the profile's `formats` (eBook, plus print if listed) uploaded to the profile's `location` (`Workbook/` or `<WORKBOOK_BOOK_ROOT>`) | `WORKBOOK_READY.md` (per chapter); workbook assembly report (per book) | per chapter, then once per book |
+| **3.5A** Print build (v1.1.3) | `PHASE 3.5A- Print Build (Automated Tagged Text).md` | Deterministic (`idml_build.py`): manuscript DOCX + `<PRINT_DSM_ROOT>/style_map.json` + `<PRINT_TEMPLATE_BOOK>` → styled InDesign tagged-text import, build manifest, report. Checks: styles exist, nothing unmapped, figures resolve, running heads set, template hash recorded. <AUTHOR> then places it, lays out, and exports the print PDF. Never edits the manuscript, writes to `<PRINT_DSM_ROOT>`, or calls InDesign | DOCX in `Manuscript/`, newer than `AUDIT_CLEAR.md`; `<PRINT_TEMPLATE_BOOK>` exists (`DESIGN_READY.md` not required) | `<ChapterName>_Import.txt` + `_BuildManifest.json` + `_BuildReport.md` with every check passing (failures block 3.5A closure only) | per chapter, on request; re-run when the DOCX, map, or template changes |
 | **3.5** Design QA | `PHASE 3.5- Claude QA of Design Artifacts.md` | Report-only QA → fix loop; **Kindle Readiness check (§13)** | PHASE 3 exit | `DESIGN_READY.md` (Production Ready + Kindle Ready). **Completed by <AUTHOR>'s upload of the final eBook PDF** (book) / final workbook PDF (workbook) — v1.1 | per chapter |
 | **4** Final-wording builds (Kindle + audiobook) | `PHASE 4- Kindle DOCX Chapter Compilation.md` | **Part 0:** sync manuscript MD + DOCX to the final eBook PDF · **0R:** references re-check (report-only) · **0G:** glossary lock + master glossary rebuild · **0P:** print vs. eBook QA on the uploaded print PDF (report-only, v1.1.2; closed before 6.5) · **Part A:** Kindle DOCX + HTML + metadata + figures per chapter · **Part 0.7:** audit spot check (PHASE 0.9 Mode P) · **Part C:** narration refresh + XTTS audiobook per chapter · **Part B:** B0 final delta audit (PHASE 0.9 Mode D), then book-level `<BOOK>_KINDLE_EBOOK` and `<BOOK>_AUDIOBOOK` | `DESIGN_READY.md` + final eBook PDF uploaded (Part 0 writes `MANUSCRIPT_SYNCED.md`, which Step 0 / Part A then require) | Part A checklist PASS; Part B package complete | per chapter / section, then once per book |
 | **5** RAG (Local + Cloud) + LLM | `PHASE 5- RAG Rebuild & Local LLM Setup (Per Chapter).md` | Canonical chunk set; Track L ChromaDB rebuild; Track C Blob vector file rewrite (if enabled); parity check; system prompt, query profiles | PHASE4 PASS + `MANUSCRIPT_SYNCED.md` | `RAG_LOCAL_READY.md` (+ `RAG_CLOUD_READY.md` if enabled) → `RAG_READY.md` | per chapter |
@@ -56,8 +64,10 @@
 | **7** Release | `PHASE 7- Chapter Publishing Checklist.md` | **Local, automatic (v1.1):** deterministic validation of every Part A item with evidence, local-LLM recommendations from the gaps, emailed to <AUTHOR>; then <AUTHOR>'s sign-off | PHASE 6.5 finished (Publishing Ready to sign) | **Published** | per chapter |
 
 ```
-PASS 6 (tighten) ─▶ 0.9 audit ─▶ PASS 7 (voice; pseudo-locked)
+PASS 6 (tighten) ─▶ 0.9 audit ─▶ PASS 7 (voice; pseudo-locked) ─▶ polish window (DOCX, then MD from it)
   ─▶ 1 ─▶ 2 ─▶ 3 ─▶ 3.5 ─▶ eBook + print InDesign books (final wording edits)
+        ├─ 3.5A print build (after 1; DOCX + template ─▶ styled import) ─▶ manual print layout ─▶ print PDF ─▶ 4 0P
+        └─ MANUSCRIPT_REVISED.md (before the eBook lock) ─▶ 1 (changed sections) ─▶ 2 re-validates ─▶ 3.5A re-run
         └─ 3W workbook: WORKBOOK_MANUSCRIPT_READY (end of 2) ─▶ Claude Design workbook (3) ─▶ InDesign eBook + print
                           ─▶ upload PDFs ─▶ W3 sync + check (PDF = DOCX = MD) ─▶ WORKBOOK_READY
   ─▶ 4: Part 0 sync + 0.7 spot check ─▶ Part A Kindle ─▶ Part C audiobook (script from the Kindle output; XTTS draft; <AUTHOR> records in Audition)
@@ -101,6 +111,7 @@ PHASES 4, 5, and 6 don't change the status; they gate by checklist (`gateStatus`
 | **PHASE 3** (+3.5) | <BOOK>_EBOOK_PDF&EPUB | `_BookPublication/<BOOK>_EBOOK/` |
 | | <BOOK>_PRINT_BOOK (manual InDesign) | `_BookPublication/<BOOK>_PRINT_BOOK/` |
 | | Exported figure images (PHASE 4 dependency) | `<CH_ROOT>/DesignPacket/figures_export/` |
+| **PHASE 3.5A (per chapter; v1.1.3)** | Styled print import (InDesign tagged text) + build manifest + build report | `<CH_ROOT>/InDesign/<ChapterName>_Import.txt`, `_BuildManifest.json`, `_BuildReport.md` (workbook, if W1b is on: `<CH_ROOT>/Workbook/InDesign/<ChapterName>_Exercise<L.N>_*`) |
 | **PHASE 3W (per chapter)** | Workbook manuscript: DOCX (canonical) + MD (replica), synced to the eBook PDF in W3 | `<CH_ROOT>/Workbook/<ChapterName>_Exercise<L.N>_Workbook.docx` / `.md` |
 | | Workbook eBook PDF (8.5×11) + full-color print PDF (7×10, if `formats` lists print) (<AUTHOR>, InDesign), in the profile's `location` | `chapter`: `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf` + `_Workbook_Print.pdf`; `book-root`: `<WORKBOOK_BOOK_ROOT>/<section>/<NN>_Ex_<L>_<N>_Chapter<C>.pdf` + `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf` |
 | | Workbook QA report | `<CH_ROOT>/Governance/<ChapterName>_WorkbookQA_<YYYYMMDD_HHMM>.md` |
@@ -148,7 +159,7 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 **Book root:** `<BOOK_ROOT>` — your book's root folder, e.g. `D:\Books\<BOOK_SLUG>`. Every path below is relative to it.
 **Chapter root:** `<CH_ROOT>` = `<BOOK_ROOT>/Chapters/<ChapterName>/Final/`
 **Chapter name:** `Ch<N>_<PascalCaseTitle>` (e.g. `Ch1_YourChapterTitle`)
-**Print InDesign book:** <AUTHOR> may keep the print InDesign book (INDB, templates, linked assets) in separate print folders outside `<BOOK_ROOT>`. No phase reads those folders. From v1.1.2, the exported print PDF is uploaded to `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf`, and PHASE 4 Part 0P checks it against the eBook PDF. The final **eBook** PDF stays the only layout text PHASE 4 Part 0 syncs the manuscript to.
+**Print InDesign book:** <AUTHOR> may keep the print InDesign book (INDB, linked assets) in separate print folders outside `<BOOK_ROOT>`. The print templates (IDML), the print DSM, and `style_map.json` live in `<PRINT_DSM_ROOT>` (`<BOOK_ROOT>/_PrintDSM`). Phases read `<PRINT_DSM_ROOT>` only through PHASE 3.5A, and never write to it. From v1.1.2, the exported print PDF is uploaded to `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf`, and PHASE 4 Part 0P checks it against the eBook PDF. The final **eBook** PDF stays the only layout text PHASE 4 Part 0 syncs the manuscript to.
 **Workbook InDesign files:** <AUTHOR> keeps them (documents, INDB, links, fonts) in `<WORKBOOK_INDESIGN_ROOT>`, outside `<BOOK_ROOT>` (for example, OneDrive). No phase reads them; PHASE 3W checks only the exported PDFs uploaded to the workbook profile's location, `Workbook/` or `<WORKBOOK_BOOK_ROOT>` (eBook 8.5×11 in; print 7×10 in, if the profile lists it).
 **File names:** `<ChapterName>_<ArtifactType>.<ext>`; Marketing: `<ChapterName>_MKT_<Type>.<ext>`; Claude Design project files: `Ch<N>_<Type>.dc.html` (accepted exception)
 
@@ -160,6 +171,7 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 │   ├── Audit/                    config, canonical terms, EvalSet/, <RUN_ID>/, Trigger/ [P0.9]
 │   ├── PrintQA/                  <Section>_PrintQA.md + .json, Workbook_*_PrintQA.md [P4 0P, P3W W2b]
 │   └── Workbook/                 Workbook_ExerciseRegistry.json                    [P3W]
+├── _PrintDSM/                    <PRINT_DSM_ROOT>: print templates (IDML), print DSM, style_map.json — READ-ONLY [read by P3.5A only]
 ├── _BookPublication/             six book deliverables + _Masters/                 [P3 assembly, P3W, P4 Part B, P6.5]
 ├── _BookAutomation/              AutomationIndex.json, n8n/, OpenClaw/, Notices/   [P6]
 ├── _FinalizedReleases/           signed PHASE 7 checklists                         [P7]
@@ -169,13 +181,13 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 ├── BackMatter/<Section>/         {Audiobook, eBook, Kindle}/                       [P3, P4]
 └── Chapters/<ChapterName>/
     ├── Final/
-    │   ├── Manuscript/           PASS 7 copy, EditorialSuggestions [P1]; synced to eBook PDF, ManuscriptSync report, Trigger/ [P4 Part 0]
+    │   ├── Manuscript/           PASS 7 copy, EditorialSuggestions [P1]; Trigger/MANUSCRIPT_REVISED.md (<AUTHOR>, v1.1.3); synced to eBook PDF, ManuscriptSync report, Trigger/ [P4 Part 0]
     │   ├── ReviewPacket/  Training/  ReferenceGuides/  Slides/                     [P1; exports P3]
     │   ├── Workbook/             packet, workbook manuscript DOCX (canonical) + MD [P1]; Trigger/ [P2 → P3W]; eBook + print PDFs [P3W]
     │   ├── Equations/                                                              [P1]
     │   ├── eBook/                HTML blocks + metadata [P1]; PDF/EPUB exports [P3]; final eBook PDF (required by P4 Part 0)
     │   ├── Kindle/               DOCX, HTML, metadata, figures/                    [P4]
-    │   ├── InDesign/             prep [P1]; print PDF <ChapterName>_Print7x10.pdf (<AUTHOR>) [P3 → P4 0P]
+    │   ├── InDesign/             prep [P1]; _Import.txt, _BuildManifest.json, _BuildReport.md [P3.5A]; print PDF <ChapterName>_Print7x10.pdf (<AUTHOR>) [P3 → P4 0P]
     │   ├── Audiobook/            script, markers [P1]; script from Kindle, Drafts/ (XTTS), final MP3 [P4 Part C]
     │   ├── RAG/                  PHASE 1 packet; Ingestion, Chunks/, Index/, Trigger/ [P1, P5]
     │   ├── Marketing/            Intake/, Seeds/, Trigger/ [P1]; Generated/        [P6]
@@ -195,7 +207,9 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 | **Final workbook PDF** `<NN>_Ex_<L>_<N>_Chapter<C>.pdf` (v1.1 option) — completes PHASE 3.5 for the workbook | `<WORKBOOK_BOOK_ROOT>/<section>/` | <AUTHOR> (final export) | P3W W3 (after 30 quiet minutes) |
 | `WORKBOOK_SELECTION.md` (ticked) | `_Pipeline/` | P1 (candidates) → <AUTHOR> | P2 workbook selection |
 | `Glossary_Canonical.json` | `_BookGovernance/Glossary/` | <AUTHOR> | P2 glossary; P4 0G; glossary rollup |
-| `AUDIT_CLEAR.md` / `AUDIT_INCOMPLETE.md` | `_BookGovernance/Audit/Trigger/` | P0.9 Mode F | P1 entry |
+| `AUDIT_CLEAR.md` / `AUDIT_INCOMPLETE.md` | `_BookGovernance/Audit/Trigger/` | P0.9 Mode F | P1 entry; P3.5A entry (the DOCX must be newer) |
+| `MANUSCRIPT_REVISED.md` (v1.1.3): changed sections + reason, one dated section per revision | `Manuscript/Trigger/` | <AUTHOR> (after PHASE 1, before the eBook lock; DOCX edited, MD regenerated) | P1 re-run from Step 1 for the changed sections → P2 re-validation; P3.5A re-run; P4 Part 0 stop (if newer than the eBook PDF: re-export) |
+| `<ChapterName>_Import.txt` + `_BuildManifest.json` + `_BuildReport.md` (v1.1.3) | `InDesign/` | P3.5A (`idml_build.py`) | <AUTHOR> (place into a copy of the template; manual layout); P3.5 §13A print-build review |
 | `AUDIT_FINAL_CLEAR.md` / `AUDIT_FINAL_INCOMPLETE.md` | `_BookGovernance/Audit/Trigger/` | P0.9 Mode D (P4 B0) | P4 Part B; P5 cloud release-ready flag; P6.5 book mode; P7 |
 | `MARKETING_READY.md` / `_INCOMPLETE` | `Marketing/Trigger/` | P1, re-validated P2 | P6 3A marketing workflows |
 | `GOVERNANCE_READY.md` / `_INCOMPLETE` | `Governance/Trigger/` | P2 | P3 entry; P6 3C |
@@ -249,7 +263,7 @@ Rules: triggers only fire workflows for chapters whose `automationStatus` is `ac
 | Claude (Cowork) | Book audit, artifact generation, governance fixes, QA reports, Kindle compile, RAG build, recommendations | 0.9, 1, 2, 3.5, 3W (checks), 4, 5, 6.5, 7 (Part B) |
 | Local LLM (Ollama) for the audit (optional) | PHASE 0.9 passes run chapter by chapter with a running ledger, so an 8k-context model can run them | 0.9 |
 | Local LLM (Ollama, e.g. phi4 14B) — v1.1 | PHASE 7 Part B recommendations (from the unmet checks only); writing/voice checks; grounded chat over the book | 7 (+ tools) |
-| Deterministic local tools (no LLM) — v1.1 | References check (Crossref), glossary rollup + drift, print vs. eBook QA (v1.1.2), PHASE 7 Part A evidence | 1, 3W, 4, 7 |
+| Deterministic local tools (no LLM) — v1.1 | References check (Crossref), glossary rollup + drift, print vs. eBook QA (v1.1.2), print build to tagged text (`idml_build.py`, v1.1.3), PHASE 7 Part A evidence | 1, 3W, 3.5A, 4, 7 |
 | Claude Design | DSM-bound HTML packet, layouts, exports; applies HTML fixes | 3 (and fixes from 3.5 / 6.5) |
 | Ollama: drafting model (default Qwen2.5 14B Instruct) | Grounded marketing/design drafts | 5 (configure), 6 (run) |
 | ONNX/TEI embedding container (default `nomic-ai/nomic-embed-text-v1.5`) | Local embeddings for `<RAG_COLLECTION>` (Track L); one model for all chapters | 5, 6 (query embeddings) |
@@ -289,7 +303,7 @@ Every step after one of <AUTHOR>'s uploads is started by an event, not by pastin
 |---|---|
 | **Orchestrator: n8n** (the "Chapter Pipeline" workflow) | Watches for files and runner events, decides what runs next, and emails <AUTHOR>. It never edits book files. |
 | **Runner** (a scheduled script) | Runs one job at a time: Claude headless for the generative phases (1, 2, 3W, 4, 5, 6, 6.5), or a local tool (PHASE 7). It re-checks each entry gate, enforces protected chapters, and reports results back to n8n. |
-| **Local tools** (`<LOCAL_TOOLS_ROOT>`, run on a schedule by the local orchestrator) | Deterministic checks plus the local LLM: references check, glossary rollup and drift, print QA (`print_check.py`, v1.1.2), release check, audiobook QA, writing/voice check. These are report-only, so they may cover every chapter. |
+| **Local tools** (`<LOCAL_TOOLS_ROOT>`, run on a schedule by the local orchestrator) | Deterministic checks plus the local LLM: references check, glossary rollup and drift, print QA (`print_check.py`, v1.1.2), release check, audiobook QA, writing/voice check. These are report-only, so they may cover every chapter. The PHASE 3.5A print build (`idml_build.py`, v1.1.3) also runs here, on request; it writes only to the chapter's `InDesign/` folder. |
 
 | Event (made by) | Automation | Output · email |
 |---|---|---|

@@ -3,6 +3,14 @@
 > **Pipeline position:** PHASE 1 of 7 (Creation) · **Upstream gate:** PASS 7 manuscript locked by <AUTHOR> **and** `_BookGovernance/Audit/Trigger/AUDIT_CLEAR.md` (PHASE 0.9) · **Downstream:** PHASE 2 Governance
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md` in this folder. If this file and the Overview ever disagree, the Overview wins and the discrepancy is logged.
 
+> **Polish window (release v1.1.3).** Between `AUDIT_CLEAR.md` and the PASS 7 drop, <AUTHOR> may polish the chapter freely. Polish in the **DOCX** (canonical), then regenerate the MD from it; never edit the MD on its own. PHASE 1 starts only when both files land in `<PASS7_SOURCE>`, so nothing downstream sees a half-polished draft. Once PHASE 1 has started, a further change to the DOCX is a **revision** (below), not polish. PHASE 3.5A (print build) requires a DOCX newer than `AUDIT_CLEAR.md`, which a polished DOCX always is.
+
+> **Revision trigger: `Manuscript/Trigger/MANUSCRIPT_REVISED.md` (release v1.1.3).** If <AUTHOR> changes the manuscript DOCX after PHASE 1 has run, and before the final eBook PDF locks it (PHASE 4 Part 0), <AUTHOR>:
+> 1. edits the DOCX in `<CH_ROOT>/Manuscript/`, regenerates the MD from it, and bumps the version;
+> 2. creates `<CH_ROOT>/Manuscript/Trigger/MANUSCRIPT_REVISED.md`, listing **the changed sections** (heading, or a quoted first line) and **the reason** for each.
+>
+> PHASE 1 then re-runs from **Step 1 onward** (the generation steps after the first-action copy), for the changed sections only: it regenerates each artifact that draws on a changed section, leaves the rest untouched, and records the revision (date, sections, reason, artifacts regenerated) in the Production Checklist. Editorial Suggestions are written only for the changed sections. **PHASE 2 then re-validates** the chapter as on any re-run (the same as `RERUN_P2.md`), and a stale `GOVERNANCE_READY.md` is superseded. If print layout hasn't started, re-run PHASE 3.5A. The file is kept after the run as the revision record; a later revision adds a new dated section to it. After the eBook PDF is uploaded, wording changes go through the eBook instead (PHASE 4 Part 0 checks for this file).
+
 **v3.3 changes (2026-10-02, release v1.1):**
 - **Step 2:** extra workbook exercises are now *candidates*. They stay in the Workbook Packet, and the author ticks the ones to publish in `_Pipeline/WORKBOOK_SELECTION.md`. Until then, the workbook manuscript holds only the chapter's own exercise. Found when Claude Design built every generated sub-exercise into a chapter's workbook, including some that belonged to later chapters.
 - **New Step 10b, references check:** the chapter's citations and reference list are verified, and safe fixes (DOI format, a Crossref-verified DOI added) are written into the manuscript MD and DOCX **before design**, so the eBook carries them. Everything else becomes an Editorial Suggestion.
