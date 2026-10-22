@@ -5,6 +5,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [Unreleased]
+
+### Changed
+
+- **Workbook how-to steps are roman** (the author, 2026-10-22; PHASE 3W W1c), matching Exercises 1.1 and 1.2. Italic is used only for quoted speech and deliberate emphasis. The print styles are named: "Workbook Subparagraph Under Heading" for the step text and "Numbering Roboto Mono Red" for the numbers. This edits the released `v_1_2_2/` text as a clarification. Exercise 1.3's DOCX, MD, and eBook were updated to match.
+
+---
+
 ## [v1.2.2] — 2026-10-22
 
 **Folder:** `v_1_2_2/` · **Previous:** `v_1_2_1/` (unchanged, kept for books mid-flight) · **Tag:** `v1_2_2_PROD`
