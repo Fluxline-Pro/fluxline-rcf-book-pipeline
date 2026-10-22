@@ -113,6 +113,8 @@ The workbook half of PHASE 3.5B (§5 there).
    - emphasis follows the DOCX;
    - if the steps push a page over, tighten the spacing above the box on that page, never the type or the write-in space.
 
+   **Codex "Exercise(s) completed"** lists a checkbox for every exercise in the chapter, including the main exercise when it is unlettered: Exercise 1.3's Codex reads 1.3 · 1.3a · 1.3b · 1.3c, while Exercise 1.2's main exercise is itself 1.2a. The workbook DOCX/MD line matches.
+
    The workbook eBook design system's HowToBox component (`.wb-box__steps`, `.wb-box__num`) carries the style. In print, the exercise builder sets the same numbering in the how-to box.
 3. **Output:** `<CH_ROOT>/Workbook/<NN>-<n>_Exercise_<L>_<N>_<Name>.idml`, with optional proofs in `Workbook/_Proofs/`.
 
