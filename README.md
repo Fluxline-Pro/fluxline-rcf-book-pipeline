@@ -6,11 +6,11 @@ It is a set of Markdown prompts. You paste a phase into an AI assistant (these w
 
 Built for *RCF: Resonance Core Framework* by Terence Waters at [Fluxline.pro](https://fluxline.pro), and shared for other authors who are building a real production pipeline rather than one-off prompts.
 
-**Current version: v1.2.2** (phase files in [`v_1_2_2/`](./v_1_2_2)). v1.2.2 makes three Design System artifacts the source for every export: the book eBook, the workbook eBook, and the design packet. It also adds the workbook's numbered "How to work this exercise" steps. v1.2 added PHASE 3.5B, the **eBook-first print build**: the eBook is built first, then the print documents are generated as ready-to-open InDesign **IDML** files that replicate it, for both the chapter and its workbook exercise. v1.2.1 added:
+**Current version: v1.2.3** (phase files in [`v_1_2_3/`](./v_1_2_3)). v1.2.3 refines print and the workbook: print callouts are separate frames copied from the template, and the workbook's how-to steps are roman with italic parentheticals. v1.2.2 made three Design System artifacts the source for every export: the book eBook, the workbook eBook, and the design packet. It also adds the workbook's numbered "How to work this exercise" steps. v1.2 added PHASE 3.5B, the **eBook-first print build**: the eBook is built first, then the print documents are generated as ready-to-open InDesign **IDML** files that replicate it, for both the chapter and its workbook exercise. v1.2.1 added:
 - print pagination and spacing rules;
 - an automatic PHASE 3 start once governance passes: Gemini figure prompts, a checklist of RGB and CMYK files to make, and the design packet built as Claude artifacts.
 
-Previous versions: [v1.2.1](./v_1_2_1), [v1.2](./v_1_2), [v1.1.3](./v_1_1_3), [v1.1.2](./v_1_1_2), [v1.1 / v1.1.1](./v_1_1), [v1.0.4](./v_1_0_4), [v1.0.3](./v_1_0_3), [v1.0.2](./v_1_0_2), [v1.0](./v1_0) · See the [changelog](./CHANGELOG.md) for what changed and why.
+Previous versions: [v1.2.2](./v_1_2_2), [v1.2.1](./v_1_2_1), [v1.2](./v_1_2), [v1.1.3](./v_1_1_3), [v1.1.2](./v_1_1_2), [v1.1 / v1.1.1](./v_1_1), [v1.0.4](./v_1_0_4), [v1.0.3](./v_1_0_3), [v1.0.2](./v_1_0_2), [v1.0](./v1_0) · See the [changelog](./CHANGELOG.md) for what changed and why.
 
 ---
 
@@ -83,8 +83,8 @@ PHASE 0.9 is the exception: it audits the whole book at once, first on the draft
 ## Repository layout
 
 ```
-v_1_2_2/                   current release (design systems are the source for every export; numbered
-                           workbook how-to steps)
+v_1_2_3/                   current release (print callouts as separate template frames; roman how-to steps)
+v_1_2_2/                   previous release (design systems are the source for every export), kept for books mid-flight
 v_1_2_1/                   previous release (print layout rules; automatic PHASE 3 start), kept for books mid-flight
   HOW_TO_RUN_THE_PIPELINE.md    the step-by-step operating guide (start here day to day)
   MASTER_PIPELINE_OVERVIEW.md   the tie-breaker: phases, gates, folders, deliverables, automation map
@@ -108,12 +108,12 @@ CHANGELOG.md               what changed in each version, and why
 LICENSE                    GPL-3.0
 ```
 
-Start with **`v_1_2_2/MASTER_PIPELINE_OVERVIEW.md`** for the design, and **`v_1_2_2/HOW_TO_RUN_THE_PIPELINE.md`** for the day-to-day steps. It carries the phase table, the status ladder, the folder map, the deliverable map, and the trigger map, and it is the tie-breaker whenever a phase file and the overview disagree.
+Start with **`v_1_2_3/MASTER_PIPELINE_OVERVIEW.md`** for the design, and **`v_1_2_3/HOW_TO_RUN_THE_PIPELINE.md`** for the day-to-day steps. It carries the phase table, the status ladder, the folder map, the deliverable map, and the trigger map, and it is the tie-breaker whenever a phase file and the overview disagree.
 
 ## Getting started
 
 1. **Read the overview.** Ten minutes there saves an afternoon later.
-2. **Fill in the placeholders.** The phase files ship with tokens like `<BOOK_ROOT>`, `<BOOK>`, and `<AUTHOR>`. [`v_1_2_2/PLACEHOLDERS.md`](./v_1_2_2/PLACEHOLDERS.md) lists every one, with a find-and-replace script for PowerShell and bash, and says which concrete values (print trim, model names, "PASS 7") are examples rather than requirements.
+2. **Fill in the placeholders.** The phase files ship with tokens like `<BOOK_ROOT>`, `<BOOK>`, and `<AUTHOR>`. [`v_1_2_3/PLACEHOLDERS.md`](./v_1_2_3/PLACEHOLDERS.md) lists every one, with a find-and-replace script for PowerShell and bash, and says which concrete values (print trim, model names, "PASS 7") are examples rather than requirements.
 3. **Create the folder skeleton** from the overview's folder map — per chapter and at the book root.
 4. **Run PHASE 1 on one chapter.** Paste the phase, give it the locked manuscript, let it generate.
 5. **Run PHASE 2 on that same chapter** before generating a second one. It will find naming, metadata, and terminology problems while they are cheap to fix.
