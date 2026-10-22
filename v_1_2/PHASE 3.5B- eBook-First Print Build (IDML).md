@@ -95,6 +95,23 @@ Not covered by this rule:
 
 A quote that is already italic in an italic paragraph is set roman, so it still stands out.
 
+**Print pagination and spacing (<AUTHOR>, 2026-10-22, after the Chapter 3 build).** These rules apply to print only, not the eBook:
+- **No widows or orphans.** A heading never ends a page; it stays with the paragraph after it. No paragraph leaves a single line at the bottom or top of a page. White space at the bottom of a page is acceptable when this happens.
+- **Facing pages align top and bottom where possible.** The last lines of a spread's left and right pages sit at the same depth. When that isn't possible (a heading that must move to the next page, as with "The Mind Is the Interpreter" in Chapter 3), white space or uneven pages are acceptable. Never stretch spacing or tracking to force it.
+- **Keep callouts and paragraphs whole** when splitting them would leave a widowed or orphaned line. A callout is never split across pages.
+- **Separate callouts and figures, preferably on different pages,** for visual interest. If a figure and a callout would share a page, move the callout to the page before (for example, Chapter 3's Figure 1 and its green callout).
+- **One pica (12 pt) of space before and after** every callout, figure, and caption.
+- **Red callouts (pull quotes) and italic paragraphs** (centered italic lines, italic asides) take no space from the paragraph before them: set that paragraph's space after to 0, so the callout's own spacing is the only gap.
+
+The builder applies what the styles can carry:
+- keep-with-next on headings;
+- keep-together on callouts and short paragraphs;
+- at least 2 lines at the start and end of split paragraphs;
+- the 12 pt spacing;
+- space after set to 0 before red callouts and italic paragraphs.
+
+It reports figure/callout pairs that land close together. <AUTHOR> settles facing-page alignment and any remaining moves in the finish (§9).
+
 **Never write to `_PrintDSM`.** The templates and <AUTHOR>'s finished documents there are read-only. The builders open them as zips and write somewhere else (§7).
 
 ## 3. eBook first (8.5×11, Claude Design)
@@ -234,13 +251,16 @@ A structural proof can be rendered through Adobe's InDesign rendering service. T
 | Callouts | Each callout uses the print template's style for its kind; no eBook color or motif is used |
 | Footnotes and references | Every footnote is in the text; the reference list ends with the manuscript's last reference |
 | Opener | The chapter or exercise title and epigraph are correct; the master's text is overridden, not showing through |
+| Pagination (print) | No heading ends a page; no single-line widow or orphan; no callout split across pages (checked in the proof; fixed in the finish) |
+| Spacing (print) | 12 pt before and after callouts, figures, and captions; 0 pt after the paragraph before a red callout or italic paragraph |
+| Figures vs. callouts | No figure and callout share a page where it can be avoided; pairs listed in the report |
 | Valid IDML | Every XML part parses; the IDML opens in InDesign (or renders in the proof) |
 
 ## 9. Manual finish (<AUTHOR>, InDesign)
 
 1. Open the IDML. Re-apply or activate fonts where InDesign reports missing ones (Adobe Fonts).
 2. Relink the figures if the links moved, then check the anchored figures and captions.
-3. Check the callout badges, opener, spacing, and page breaks. Smart Text Reflow adds or removes pages at the end.
+3. Check the callout badges, opener, spacing, and page breaks: align facing pages top and bottom where possible, and move a callout off a figure's page (§2, "Print pagination and spacing"). Smart Text Reflow adds or removes pages at the end.
 4. Save as INDD in the print book (INDB), and export the print PDF to:
    - the book: `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf`;
    - the workbook: the W2 location.

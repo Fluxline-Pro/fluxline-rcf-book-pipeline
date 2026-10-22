@@ -9,6 +9,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ### Added
 
+- **Print pagination and spacing rules** (the author, 2026-10-22, after reviewing the Chapter 3 print build; PHASE 3.5B §2, §8, §9). Print only:
+  - no widows or orphans, with white space accepted;
+  - facing pages aligned top and bottom where possible, uneven pages accepted otherwise;
+  - callouts and paragraphs never split into widowed or orphaned lines;
+  - callouts and figures kept apart, preferably on different pages;
+  - 1 pica before and after callouts, figures, and captions;
+  - no space after the paragraph before a red callout or an italic paragraph.
+
+  The builder applies what the styles carry (keeps, spacing) and reports figure/callout pairs. The author settles facing-page alignment in the finish.
+- **Design packet as Claude artifacts** (the author, 2026-10-22; PHASE 3 A2b). Claude Design is no longer required. A design packet DSM (`<PACKET_DSM_ROOT>`, new placeholder) is extracted once from a finished chapter's DesignPacket (tokens, components, content patterns) and approved by the author. Every later chapter's packet is built from it, as individual private artifacts; the slide deck uses the Slides artifact type for PPTX and PDF export. The eBook, print, and workbook layout rows in A2 now point to `_eBookDSM` and PHASE 3.5B.
 - **Styling rule: quoted speech is emphasized** (the author, 2026-10-22; PHASE 3.5B §2). Real or hypothetical quoted speech and self-talk ("I am experiencing chest tightening." "How might I do this action?") is always set in italics, in the eBook and print layouts of the book and the workbook. It is styling only; the DOCX wording is unchanged. Pull quotes, epigraphs, titles, scare quotes, and citations are excluded.
 
 ---

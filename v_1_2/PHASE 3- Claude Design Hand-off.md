@@ -3,6 +3,8 @@
 > **Pipeline position:** PHASE 3 of 7 (Design + Production) · **Upstream gate:** `Governance/Trigger/GOVERNANCE_READY.md` exists · **Downstream:** PHASE 3.5 Design QA
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
+**Design packet as Claude artifacts (2026-10-22).** The design packet no longer needs a separate Claude Design project. Claude builds each A2 output as an individual artifact from a design packet DSM (`<PACKET_DSM_ROOT>`) made once from a finished chapter's DesignPacket. See **A2b**. The Part B prompt remains the design brief.
+
 **Release v1.2 (2026-10-22): eBook first, then print IDML.** The chapter's eBook page is built first. PHASE 3.5B then generates the print IDMLs (chapter and workbook exercise) that replicate it, and <AUTHOR> finishes them in InDesign. See `PHASE 3.5B- eBook-First Print Build (IDML).md`.
 
 **Release v1.1.3 (2026-10-21): print build.** The print layout track (A3) now starts from a generated, styled import: PHASE 3.5A writes `InDesign/<ChapterName>_Import.txt` from the manuscript DOCX and the print template, and <AUTHOR> finishes the layout by hand. `Ch<N>_Print7x10.dc.html` is still the design reference.
@@ -55,6 +57,45 @@ Save into `<CH_ROOT>/DesignPacket/` using the layout already established in Chap
 | eBook chapter layout | `DesignPacket/Ch<N>_eBook.dc.html` |
 | Print 7×10 chapter layout (InDesign design reference; the styled import text comes from PHASE 3.5A) | `DesignPacket/Ch<N>_Print7x10.dc.html` |
 | Workbook eBook (8.5×11) + Print 7×10 layout, built from the workbook manuscript (requires `WORKBOOK_MANUSCRIPT_READY.md`; <AUTHOR> produces the PDFs from it in InDesign, see PHASE 3W) | `DesignPacket/Ch<N>_Workbook_eBook_Print7x10.dc.html` |
+
+**Superseded rows (v1.2):**
+- the eBook chapter layout is now `<EBOOK_DSM_ROOT>/Chapter<N>_eBook.dc.html`;
+- the print layout is now the PHASE 3.5B IDML;
+- the workbook layouts are now the workbook's `_eBookDSM` pages and the PHASE 3.5B exercise IDML.
+
+Every other row is built as a Claude artifact (A2b).
+
+### A2b. Building the design packet as Claude artifacts (2026-10-22)
+
+Claude Design is no longer required for the packet. Claude builds every output in A2 as an **individual private artifact**, styled by one shared design packet DSM.
+
+**1. One-time setup: the design packet DSM** (`<PACKET_DSM_ROOT>`, e.g. `<BOOK_ROOT>/_PacketDSM`):
+- Start from a finished chapter's DesignPacket, the most recent one <AUTHOR> approved (for example Chapter 2 or 3):
+  - its tokens and styles (`DesignPacket/_ds/<dsm-slug>-*/`: tokens, `styles.css`, `readme.md`);
+  - its packet outputs (deck, facilitator and learner guides, one-pagers, job aid, figures, opener, packet index).
+- From these, extract one DSM:
+  - **tokens:** color, type, spacing, radius, shadow;
+  - **components:** slide layouts, one-pager grid, guide sections, callouts, tables, figure frame, opener;
+  - **content patterns:** section order and the boilerplate each output carries.
+- Save it to `<PACKET_DSM_ROOT>` and, with <AUTHOR>'s permission, publish it as a private design system artifact.
+- <AUTHOR> approves it once. From then on, it's read-only, like `_PrintDSM`. Changing it is <AUTHOR>'s decision, and a changed DSM is re-approved.
+
+**2. Per chapter:**
+- Build each A2 output (slide deck, facilitator guide, learner guide, reference one-pagers, job aid, review packet, chapter opener, figures, packet index):
+  - as its own artifact;
+  - from the DSM;
+  - with the content staged in `DesignPacket/uploads/` by PHASE 2.
+- **Rules:**
+  - the Part B rules apply (authoritative source, accessibility, instructional design, consistency);
+  - verbatim text matches the manuscript;
+  - ™ on RCF marks;
+  - figures use the RGB masters from `Figures/RGB/`.
+- **Saving:** the local copy goes to the A2 path, as `.html` instead of `.dc.html`. Publish each output as a **private** artifact only with <AUTHOR>'s permission, and record its link in `DesignPacket/Ch<N>_Packet_Index.html`.
+- **Exports:**
+  - the slide deck is built from the Slides artifact type, which downloads as PPTX and PDF, to `Slides/<ChapterName>_SlideDeck.pptx` / `.pdf`;
+  - figure images go to `DesignPacket/figures_export/`, as before.
+
+**3. QA:** PHASE 3.5 reviews the artifacts as it reviewed Claude Design files, against the packet DSM instead of `_ds/`.
 
 Claude Design project files keep the `Ch<N>_` short prefix Claude Design assigns (accepted exception to the `<ChapterName>_` rule). **Exports** use the full convention:
 - `<CH_ROOT>/Slides/<ChapterName>_SlideDeck.pptx` and `.pdf`
