@@ -5,6 +5,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- **Styling rule: quoted speech is emphasized** (the author, 2026-10-22; PHASE 3.5B §2). Real or hypothetical quoted speech and self-talk ("I am experiencing chest tightening." "How might I do this action?") is always set in italics, in the eBook and print layouts of the book and the workbook. It is styling only; the DOCX wording is unchanged. Pull quotes, epigraphs, titles, scare quotes, and citations are excluded.
+
+---
+
 ## [v1.2] — 2026-10-22
 
 **Folder:** `v_1_2/` · **Previous:** `v_1_1_3/` (unchanged, kept for books mid-flight) · **Tag:** `v1_2_PROD`

@@ -81,6 +81,20 @@ These rules apply to every print build from this release on.
 - Callouts and their content may also be copied and re-worded.
 - These copying rules apply **only to the workbook**. The book builds its callouts from the print styles.
 
+**Quoted speech is emphasized (<AUTHOR>, 2026-10-22).** Words in quotation marks that someone says, thinks, or might ask themselves are always set in italics, whether the quote is real or hypothetical ("I am experiencing chest tightening." "How might I do this action?"):
+- in the eBook, as `<em>`;
+- in print, through the template's italic character style, or Italic applied directly where the paragraph style has none.
+
+This applies to the eBook and print layouts, in the book and the workbook. It is styling only: the wording, the quotation marks, and the DOCX stay as they are.
+
+Not covered by this rule:
+- pull quotes and epigraphs, which already have their own styles;
+- titles of works;
+- single terms in quotation marks (scare quotes);
+- citations.
+
+A quote that is already italic in an italic paragraph is set roman, so it still stands out.
+
 **Never write to `_PrintDSM`.** The templates and <AUTHOR>'s finished documents there are read-only. The builders open them as zips and write somewhere else (§7).
 
 ## 3. eBook first (8.5×11, Claude Design)
