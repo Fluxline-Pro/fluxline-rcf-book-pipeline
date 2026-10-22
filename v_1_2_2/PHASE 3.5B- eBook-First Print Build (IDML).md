@@ -177,7 +177,7 @@ So the result opens exactly like the chapters already laid out. Use the template
 - **Opener page:** the chapter number word, title, and epigraph.
 - **Body:** **one main story** threaded through full-page, 1-column body frames. Everything is in the text flow:
   - **Paragraphs, headings, lists, and pull quotes** get the paragraph styles <AUTHOR>'s finished chapter uses.
-  - **Callouts are separate objects, never inline in the body story** (<AUTHOR>, 2026-10-22). Callouts built inline in the text don't format correctly in InDesign.
+  - **Callouts are separate objects, never inline in the body story** (<AUTHOR>, 2026-10-22). This applies to print only, book and workbook; the eBook is unaffected. Callouts built inline in the text don't format correctly in InDesign. The workbook builder already places its callouts (safety, how-to box, reflection box) as separate frames cloned from the previous exercise, and that must stay so.
     - Copy each callout's component as it stands from the book template's **Body Page Spread C** master (`<PRINT_TEMPLATE_BOOK>`): the text frame with its Callout paragraph style, eyebrow character style, and circular badge group (Green Insight, Blue Coherence, Violet Expansion, Yellow Did You Know?, Red or Black Pullquote).
     - Place the copy on the body page and edit it in place, replacing only the eyebrow text and the body text.
     - The component's first line is the eyebrow, then a line break, then a small spacer character. **Never delete that spacer.** The callout's body text starts immediately after it.
