@@ -31,7 +31,6 @@ Tokens look like `<THIS>`. A few also appear inside example file names (`<BOOK>_
 | `<LOCAL_TOOLS_ROOT>` | (v1.1) Folder with the local automation scripts the phases name as reference implementations: `references_check.py`, `glossary_rollup.py`, `release_check.py`, `print_check.py` (v1.1.2), `idml_build.py` (v1.1.3, PHASE 3.5A print build), `ebook_paginate.py`, `ebook_print.py`, `idml_chapter_build.py`, `idml_workbook_build.py` (v1.2, PHASE 3.5B) | `D:\Automation\LocalAI` |
 | `<PRINT_DSM_ROOT>` | (v1.1.3) The print design system folder: the print templates (IDML), the print DSM, and `style_map.json` (DOCX style → InDesign style). Also holds <AUTHOR>'s finished chapter IDMLs, which PHASE 3.5B builds on. Read only by PHASE 3.5A and 3.5B, and never written to by any phase. The IDML files in it are always taken as current | `<BOOK_ROOT>/_PrintDSM` |
 | `<EBOOK_DSM_ROOT>` | (v1.2) The eBook design system folder (Claude Design): the DSM, fonts, figures, and the chapters' `Chapter<N>_eBook.dc.html` page files. PHASE 3.5B writes the eBook page files here; on the print side it is read for content only | `<BOOK_ROOT>/_eBookDSM` |
-| `<PACKET_DSM_ROOT>` | (2026-10-22) The design packet DSM: tokens, components, and content patterns extracted once from a finished chapter's DesignPacket. PHASE 3 builds every chapter's packet as Claude artifacts from it (A2b). Read-only after <AUTHOR> approves it | `<BOOK_ROOT>/_PacketDSM` |
 | `<PRINT_TEMPLATE_BOOK>` | (v1.1.3) The book's print template (IDML) in `<PRINT_DSM_ROOT>`, used by PHASE 3.5A | `<PRINT_DSM_ROOT>/Book_Templates_v4.idml` |
 | `<PRINT_TEMPLATE_WORKBOOK>` | (v1.1.3, optional) The workbook's print template (IDML), used by the PHASE 3W workbook print build (off by default). Usually in the workbook's own `_PrintDSM/` | `D:\Books\MYBOOK_WORKBOOK_FIRST_EDITION\_PrintDSM\Workbook_Templates_v4.idml` |
 | `<CH_ROOT>` | Derived, not set by you: `<BOOK_ROOT>/Chapters/<ChapterName>/Final/` | — |
@@ -65,7 +64,6 @@ $map = [ordered]@{
   # <PRINT_DSM_ROOT> before <PRINT_TEMPLATE_*>, which may contain it
   '<PRINT_DSM_ROOT>' = 'D:\Books\MYBOOK_FIRST_EDITION\_PrintDSM'
   '<EBOOK_DSM_ROOT>' = 'D:\Books\MYBOOK_FIRST_EDITION\_eBookDSM'
-  '<PACKET_DSM_ROOT>' = 'D:\Books\MYBOOK_FIRST_EDITION\_PacketDSM'
   '<PRINT_TEMPLATE_BOOK>' = 'D:\Books\MYBOOK_FIRST_EDITION\_PrintDSM\Book_Templates_v4.idml'
   '<PRINT_TEMPLATE_WORKBOOK>' = 'D:\Books\MYBOOK_WORKBOOK_FIRST_EDITION\_PrintDSM\Workbook_Templates_v4.idml'
 }
@@ -84,7 +82,7 @@ bash / macOS / Linux:
 ```bash
 cd v_1_2
 # Same rule: longer tokens first, so <BOOK> does not eat <BOOK_ROOT>.
-sed -i 's|<BOOK_ROOT>|/Books/MYBOOK_FIRST_EDITION|g; s|<BOOK_SLUG>|MYBOOK_FIRST_EDITION|g; s|<BOOK_TITLE>|The Quiet Engine|g; s|<PASS7_SOURCE>|/Books/MYBOOK_FIRST_EDITION/_PASS7|g; s|<DRAFT_SOURCE>|/Books/MYBOOK_FIRST_EDITION/_PASS6|g; s|<WORKBOOK_INDESIGN_ROOT>|/Users/a.writer/OneDrive/InDesign/MYBOOK_Workbook|g; s|<WORKBOOK_BOOK_ROOT>|/Books/MYBOOK_WORKBOOK_FIRST_EDITION|g; s|<LOCAL_TOOLS_ROOT>|/Automation/LocalAI|g; s|<PRINT_DSM_ROOT>|/Books/MYBOOK_FIRST_EDITION/_PrintDSM|g; s|<EBOOK_DSM_ROOT>|/Books/MYBOOK_FIRST_EDITION/_eBookDSM|g; s|<PACKET_DSM_ROOT>|/Books/MYBOOK_FIRST_EDITION/_PacketDSM|g; s|<PRINT_TEMPLATE_BOOK>|/Books/MYBOOK_FIRST_EDITION/_PrintDSM/Book_Templates_v4.idml|g; s|<PRINT_TEMPLATE_WORKBOOK>|/Books/MYBOOK_WORKBOOK_FIRST_EDITION/_PrintDSM/Workbook_Templates_v4.idml|g; s|<BOOK>|MYBOOK|g; s|<EDITION>|First Edition|g; s|<AUTHOR>|A. Writer|g; s|<DSM_NAME>|Quiet Engine DSM|g; s|<dsm-slug>|quiet-engine-dsm|g; s|<RAG_COLLECTION>|quiet_engine_book|g; s|<RAG_BLOB_CONTAINER>|quiet-engine-book-rag|g; s|<GATEWAY_URL>|https://governance.example.com|g; s|<CLOUD_EMBED_FLOW>|book-embed|g; s|<RAG_REFRESH_TIME>|22:00|g' *.md
+sed -i 's|<BOOK_ROOT>|/Books/MYBOOK_FIRST_EDITION|g; s|<BOOK_SLUG>|MYBOOK_FIRST_EDITION|g; s|<BOOK_TITLE>|The Quiet Engine|g; s|<PASS7_SOURCE>|/Books/MYBOOK_FIRST_EDITION/_PASS7|g; s|<DRAFT_SOURCE>|/Books/MYBOOK_FIRST_EDITION/_PASS6|g; s|<WORKBOOK_INDESIGN_ROOT>|/Users/a.writer/OneDrive/InDesign/MYBOOK_Workbook|g; s|<WORKBOOK_BOOK_ROOT>|/Books/MYBOOK_WORKBOOK_FIRST_EDITION|g; s|<LOCAL_TOOLS_ROOT>|/Automation/LocalAI|g; s|<PRINT_DSM_ROOT>|/Books/MYBOOK_FIRST_EDITION/_PrintDSM|g; s|<EBOOK_DSM_ROOT>|/Books/MYBOOK_FIRST_EDITION/_eBookDSM|g; s|<PRINT_TEMPLATE_BOOK>|/Books/MYBOOK_FIRST_EDITION/_PrintDSM/Book_Templates_v4.idml|g; s|<PRINT_TEMPLATE_WORKBOOK>|/Books/MYBOOK_WORKBOOK_FIRST_EDITION/_PrintDSM/Workbook_Templates_v4.idml|g; s|<BOOK>|MYBOOK|g; s|<EDITION>|First Edition|g; s|<AUTHOR>|A. Writer|g; s|<DSM_NAME>|Quiet Engine DSM|g; s|<dsm-slug>|quiet-engine-dsm|g; s|<RAG_COLLECTION>|quiet_engine_book|g; s|<RAG_BLOB_CONTAINER>|quiet-engine-book-rag|g; s|<GATEWAY_URL>|https://governance.example.com|g; s|<CLOUD_EMBED_FLOW>|book-embed|g; s|<RAG_REFRESH_TIME>|22:00|g' *.md
 ```
 
 On macOS use `sed -i ''` instead of `sed -i`.

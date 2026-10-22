@@ -5,10 +5,24 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
-## [Unreleased]
+## [v1.2.1] — 2026-10-22
+
+**Folder:** `v_1_2_1/` · **Previous:** `v_1_2/` (unchanged, kept for books mid-flight) · **Tag:** `v1_2_1_PROD`
+
+The author's feedback after the first eBook-first print build (Chapter 3 and Exercise 1.3, "about 95% of the way there"):
+- print rules for the last 5%;
+- PHASE 3 now starts on its own when PHASE 2 passes;
+- figure prompts, with a checklist of what to make in Photoshop, are generated for every chapter.
 
 ### Added
 
+- **PHASE 3 A0, automatic start** (release v1.2.1). `GOVERNANCE_READY.md` starts PHASE 3 for the chapter (protected chapters run it in chat):
+  - **Step 1, figure prompts and checklist:** `Figures/<ChapterName>_FigurePrompts.md`, with `Figures/RGB/`, `CMYK/`, and `Drafts/` created. Each figure gets the manuscript lines and caption, a Google Gemini prompt (house style, manuscript-exact labels, at least 2400 px, no title in the image), a no-text fallback, a check against the manuscript, and save-as names.
+    - **Figure checklist:** what the author must make in Photoshop. Each figure gets an RGB master (PNG or JPG) in `Figures/RGB/` and a CMYK TIFF (300 ppi at the placed width, LZW, flattened) in `Figures/CMYK/`, with the Photoshop steps.
+    - **Figure suggestions** for figures the chapter could use. They are added only with the author's approval.
+    - After the files are made: a check against the manuscript, then a FigureRegistry update (paths, tool used, alt text).
+  - **Step 2, design packet:** built as artifacts from the packet DSM once `<PACKET_DSM_ROOT>/DSM_APPROVED.md` exists. They are published as private artifacts only with the runner config's `designPacket.publishArtifacts` standing permission; otherwise the packet is built locally and the author is emailed.
+- **HOW_TO_RUN Step 2d**, two cheat-sheet rows (`<ChapterName>_FigurePrompts.md`, `DSM_APPROVED.md`), and the master overview's release note and trigger map.
 - **Print pagination and spacing rules** (the author, 2026-10-22, after reviewing the Chapter 3 print build; PHASE 3.5B §2, §8, §9). Print only:
   - no widows or orphans, with white space accepted;
   - facing pages aligned top and bottom where possible, uneven pages accepted otherwise;

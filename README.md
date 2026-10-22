@@ -6,7 +6,11 @@ It is a set of Markdown prompts. You paste a phase into an AI assistant (these w
 
 Built for *RCF: Resonance Core Framework* by Terence Waters at [Fluxline.pro](https://fluxline.pro), and shared for other authors who are building a real production pipeline rather than one-off prompts.
 
-**Current version: v1.2** (phase files in [`v_1_2/`](./v_1_2)). It adds PHASE 3.5B, the **eBook-first print build**: the eBook is built first, then the print documents are generated as ready-to-open InDesign **IDML** files that replicate it, for both the chapter and its workbook exercise. Previous versions: [v1.1.3](./v_1_1_3), [v1.1.2](./v_1_1_2), [v1.1 / v1.1.1](./v_1_1), [v1.0.4](./v_1_0_4), [v1.0.3](./v_1_0_3), [v1.0.2](./v_1_0_2), [v1.0](./v1_0)) · See the [changelog](./CHANGELOG.md) for what changed and why.
+**Current version: v1.2.1** (phase files in [`v_1_2_1/`](./v_1_2_1)). v1.2 added PHASE 3.5B, the **eBook-first print build**: the eBook is built first, then the print documents are generated as ready-to-open InDesign **IDML** files that replicate it, for both the chapter and its workbook exercise. v1.2.1 adds:
+- print pagination and spacing rules;
+- an automatic PHASE 3 start once governance passes: Gemini figure prompts, a checklist of RGB and CMYK files to make, and the design packet built as Claude artifacts.
+
+Previous versions: [v1.2](./v_1_2), [v1.1.3](./v_1_1_3), [v1.1.2](./v_1_1_2), [v1.1 / v1.1.1](./v_1_1), [v1.0.4](./v_1_0_4), [v1.0.3](./v_1_0_3), [v1.0.2](./v_1_0_2), [v1.0](./v1_0)) · See the [changelog](./CHANGELOG.md) for what changed and why.
 
 ---
 
@@ -79,13 +83,14 @@ PHASE 0.9 is the exception: it audits the whole book at once, first on the draft
 ## Repository layout
 
 ```
-v_1_2/                     current release (eBook-first print build: PHASE 3.5B generates the chapter and
-                           workbook-exercise print IDMLs from the finished eBook)
+v_1_2_1/                   current release (print layout rules; PHASE 3 starts automatically after PHASE 2:
+                           figure prompts + checklist, design packet as Claude artifacts)
   HOW_TO_RUN_THE_PIPELINE.md    the step-by-step operating guide (start here day to day)
   MASTER_PIPELINE_OVERVIEW.md   the tie-breaker: phases, gates, folders, deliverables, automation map
   PLACEHOLDERS.md               every token to replace, and what to leave alone
   PHASE 0.9 … PHASE 7           the phase prompts, plus PHASE 3W (workbook), PHASE 3.5A and 3.5B (print builds)
   templates/style_map.example.json   starting point for <PRINT_DSM_ROOT>/style_map.json (PHASE 3.5A)
+v_1_2/                     previous release (eBook-first print build: PHASE 3.5B IDMLs), kept for books mid-flight
 v_1_1_3/                   previous release (PHASE 3.5A tagged-text print import, polish window,
                            MANUSCRIPT_REVISED.md revision trigger), kept for books mid-flight
 v_1_1_2/                   previous release (print vs. eBook QA: PHASE 4 Part 0P, PHASE 3W W2b), kept for books mid-flight
@@ -102,12 +107,12 @@ CHANGELOG.md               what changed in each version, and why
 LICENSE                    GPL-3.0
 ```
 
-Start with **`v_1_2/MASTER_PIPELINE_OVERVIEW.md`** for the design, and **`v_1_2/HOW_TO_RUN_THE_PIPELINE.md`** for the day-to-day steps. It carries the phase table, the status ladder, the folder map, the deliverable map, and the trigger map, and it is the tie-breaker whenever a phase file and the overview disagree.
+Start with **`v_1_2_1/MASTER_PIPELINE_OVERVIEW.md`** for the design, and **`v_1_2_1/HOW_TO_RUN_THE_PIPELINE.md`** for the day-to-day steps. It carries the phase table, the status ladder, the folder map, the deliverable map, and the trigger map, and it is the tie-breaker whenever a phase file and the overview disagree.
 
 ## Getting started
 
 1. **Read the overview.** Ten minutes there saves an afternoon later.
-2. **Fill in the placeholders.** The phase files ship with tokens like `<BOOK_ROOT>`, `<BOOK>`, and `<AUTHOR>`. [`v_1_2/PLACEHOLDERS.md`](./v_1_2/PLACEHOLDERS.md) lists every one, with a find-and-replace script for PowerShell and bash, and says which concrete values (print trim, model names, "PASS 7") are examples rather than requirements.
+2. **Fill in the placeholders.** The phase files ship with tokens like `<BOOK_ROOT>`, `<BOOK>`, and `<AUTHOR>`. [`v_1_2_1/PLACEHOLDERS.md`](./v_1_2_1/PLACEHOLDERS.md) lists every one, with a find-and-replace script for PowerShell and bash, and says which concrete values (print trim, model names, "PASS 7") are examples rather than requirements.
 3. **Create the folder skeleton** from the overview's folder map — per chapter and at the book root.
 4. **Run PHASE 1 on one chapter.** Paste the phase, give it the locked manuscript, let it generate.
 5. **Run PHASE 2 on that same chapter** before generating a second one. It will find naming, metadata, and terminology problems while they are cheap to fix.
@@ -127,7 +132,7 @@ Each new chapter and exercise is then generated on those, so it opens looking li
 These prompts are a working author's, not a sanitized template, so expect to change:
 
 - **Paths and names.** `<BOOK_ROOT>`, `<BOOK>`, `<BOOK_TITLE>`, `<AUTHOR>`, and the rest — see `PLACEHOLDERS.md`. "PASS 7" means the seventh editing pass ([see the passes above](#before-the-phases-the-editing-passes-pass-07)); substitute your own final-draft stage. The phases are written in the author's first person ("my book", "I approve every piece"), which reads correctly whoever runs them.
-- **The design system.** PHASE 3 expects a design system manual derived from your print layout — tokens, typography, components. Without one, the design phase has nothing authoritative to follow.
+- **The design system.** PHASE 3 expects a design system manual derived from your print layout — tokens, typography, components. Without one, the design phase has nothing authoritative to follow. From v1.2.1 the design packet is built as Claude artifacts from a packet DSM you extract once from a finished chapter (`<PACKET_DSM_ROOT>`), so no separate design tool is required.
 - **Framework terminology.** The terminology lock names this book's concepts. Replace them with yours.
 - **Tools.** The defaults are Claude and Claude Design for generation, InDesign for print (with the print IDMLs generated from the eBook since v1.2), XTTS for draft narration and Adobe Audition for the final recording, Ollama plus an ONNX/TEI embedder and ChromaDB for local RAG, optionally Azure OpenAI `text-embedding-3-large` with vectors in Azure Blob Storage for multilingual cloud RAG, and n8n plus OpenClaw for orchestration. Each is swappable; the gates and deliverables are what matter.
 - **Optional deliverables.** Workbook, training materials, and audiobook are separable. Drop what your book does not have, and say so in the checklist rather than leaving the item silently blank.
