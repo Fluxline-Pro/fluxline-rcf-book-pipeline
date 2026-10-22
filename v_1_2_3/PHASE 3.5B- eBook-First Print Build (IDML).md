@@ -298,6 +298,7 @@ A structural proof can be rendered through Adobe's InDesign rendering service. T
    - the workbook: the W2 location.
 
    Both are 7×10 in, with 0.125 in bleed and no printer's marks. PHASE 4 Part 0P (book) and PHASE 3W W2b (workbook) check the PDFs as before.
+5. **Export the finished document as IDML into `<PRINT_DSM_ROOT>`** (book) or the workbook's `_PrintDSM/` (<AUTHOR>, 2026-10-22). The next chapter or exercise is built on it, so it carries your latest styling and fixes. Save refreshed copies of the templates there too whenever they change.
 
 ## 10. Rules
 

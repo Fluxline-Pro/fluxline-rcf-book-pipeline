@@ -5,6 +5,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- **Finish step: export the finished document as IDML into `_PrintDSM`** (the author, 2026-10-22; PHASE 3.5B §9), so the next build starts from it. Templates are refreshed there too.
+- **Chapter builder:** callouts are separate frames copied from the template's master C (`idml_callouts.py`). The builder also adds keeps (headings with the next paragraph, at least 2 lines at each end of a break), 12 pt around figures, captions, and callouts, and 0 pt before pull quotes and centered italics, and it reports figure/callout pairs.
+
+---
+
 ## [v1.2.3] — 2026-10-22
 
 **Folder:** `v_1_2_3/` · **Previous:** `v_1_2_2/` (unchanged, kept for books mid-flight) · **Tag:** `v1_2_3_PROD`
