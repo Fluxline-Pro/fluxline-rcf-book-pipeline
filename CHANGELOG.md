@@ -22,7 +22,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
   - New components go into the system first, with the author's approval.
   - New §8 check, "Design system (eBook)".
   - First run: Chapter 3 and Exercise 1.3 re-exported pixel-identical.
-- **PHASE 3W W1c** builds the exercise eBook pages from the workbook eBook system. **PHASE 3 A2b**: the packet DSM is the Design System artifact.
+- **PHASE 3W W1c** builds the exercise eBook pages from the workbook eBook system.
+- **"How to work this exercise" = numbered steps** (the author, 2026-10-22; PHASE 3W W1c). Every workbook how-to box lists its instructions as steps 01, 02, 03 … in red, in two columns, as in Exercise 1.2, in the eBook and in print. A one-paragraph DOCX how-to is split at sentence ends only, with the wording verbatim. The workbook eBook design system's HowToBox component was updated (version 3). Exercise 1.3's three boxes (1.3a, 1.3b, 1.3c) were converted, with the 1.3b opener spacing tightened, and re-exported. **PHASE 3 A2b**: the packet DSM is the Design System artifact.
 
 ---
 

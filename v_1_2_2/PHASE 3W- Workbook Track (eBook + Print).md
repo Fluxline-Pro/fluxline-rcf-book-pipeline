@@ -106,6 +106,14 @@ The workbook half of PHASE 3.5B (§5 there).
    - the Codex and closing pages.
 
    It re-words them from the exercise DOCX, word for word, on 1-column pages only.
+
+   **"How to work this exercise" is always numbered steps** (<AUTHOR>, 2026-10-22), in the eBook and in print, as in Exercise 1.2:
+   - each instruction is its own step, numbered **01, 02, 03 …** in red, in two columns;
+   - when the DOCX gives the how-to as one paragraph, split it at sentence ends only, keeping any parenthetical with its sentence, so that the steps joined back together equal the DOCX paragraph;
+   - emphasis follows the DOCX;
+   - if the steps push a page over, tighten the spacing above the box on that page, never the type or the write-in space.
+
+   The workbook eBook design system's HowToBox component (`.wb-box__steps`, `.wb-box__num`) carries the style. In print, the exercise builder sets the same numbering in the how-to box.
 3. **Output:** `<CH_ROOT>/Workbook/<NN>-<n>_Exercise_<L>_<N>_<Name>.idml`, with optional proofs in `Workbook/_Proofs/`.
 
 The design rules, checks, and manual finish are those of PHASE 3.5B §2, §8, and §9. The print PDF then follows W2 / W2b as before.
