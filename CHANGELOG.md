@@ -5,14 +5,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
-## [Unreleased]
+## [v1.2.3] — 2026-10-22
+
+**Folder:** `v_1_2_3/` · **Previous:** `v_1_2_2/` (unchanged, kept for books mid-flight) · **Tag:** `v1_2_3_PROD`
+
+Refinements from the author's review of the Chapter 3 and Exercise 1.3 print builds.
 
 ### Changed
 
 - **Print callouts are separate objects** (the author, 2026-10-22; PHASE 3.5B §4). This covers the print book and the print workbook, not the eBook. Each callout is copied from the book template's Body Page Spread C master and edited in place, never built inline in the body story. The spacer after the eyebrow's line break is kept, and the text starts right after it. The book builder's callout code changes before the Chapter 4 print build.
 - **How-to step emphasis:** parentheticals are italic, parentheses included, and a phrase the author marks may be bold italic (PHASE 3W W1c). Exercise 1.3's DOCX, MD, and eBook were updated.
-
-- **Workbook how-to steps are roman** (the author, 2026-10-22; PHASE 3W W1c), matching Exercises 1.1 and 1.2. Italic is used only for quoted speech and deliberate emphasis. The print styles are named: "Workbook Subparagraph Under Heading" for the step text and "Numbering Roboto Mono Red" for the numbers. This edits the released `v_1_2_2/` text as a clarification. Exercise 1.3's DOCX, MD, and eBook were updated to match.
+- **Workbook how-to steps are roman** (the author, 2026-10-22; PHASE 3W W1c), matching Exercises 1.1 and 1.2. Italic is used only for quoted speech and deliberate emphasis. The print styles are named: "Workbook Subparagraph Under Heading" for the step text and "Numbering Roboto Mono Red" for the numbers. Exercise 1.3's DOCX, MD, and eBook were updated to match.
 
 ---
 
