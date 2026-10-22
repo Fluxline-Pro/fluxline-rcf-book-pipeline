@@ -2,11 +2,11 @@
 
 A phase-by-phase AI workflow for taking a finished book manuscript all the way to published formats — eBook, print, Kindle, audiobook, training materials, a RAG knowledge base, and grounded marketing — without losing control of the manuscript or the voice.
 
-It is a set of Markdown prompts. You paste a phase into an AI assistant (these were written against Claude, Claude Design, and a local LLM, and read fine in most assistants), it produces that phase's outputs, and a gate decides whether the chapter moves on. Nothing here is code you install.
+It is a set of Markdown prompts. You paste a phase into an AI assistant (these were written against Claude, Claude Design, and a local LLM, and read fine in most assistants), it produces that phase's outputs, and a gate decides whether the chapter moves on. Nothing here is code you install. Where a phase relies on a deterministic script, such as the print builds that write InDesign IDML, the phase file specifies it as a reference implementation you run from your own tools folder.
 
 Built for *RCF: Resonance Core Framework* by Terence Waters at [Fluxline.pro](https://fluxline.pro), and shared for other authors who are building a real production pipeline rather than one-off prompts.
 
-**Current version: v1.1.3** (phase files in [`v_1_1_3/`](./v_1_1_3); adds the PHASE 3.5A print build: a styled InDesign import generated from the chapter DOCX) (previous: [v1.1.2](./v_1_1_2), [v1.1 / v1.1.1](./v_1_1), [v1.0.4](./v_1_0_4), [v1.0.3](./v_1_0_3), [v1.0.2](./v_1_0_2), [v1.0](./v1_0)) · See the [changelog](./CHANGELOG.md) for what changed and why.
+**Current version: v1.2** (phase files in [`v_1_2/`](./v_1_2)). It adds PHASE 3.5B, the **eBook-first print build**: the eBook is built first, then the print documents are generated as ready-to-open InDesign **IDML** files that replicate it, for both the chapter and its workbook exercise. Previous versions: [v1.1.3](./v_1_1_3), [v1.1.2](./v_1_1_2), [v1.1 / v1.1.1](./v_1_1), [v1.0.4](./v_1_0_4), [v1.0.3](./v_1_0_3), [v1.0.2](./v_1_0_2), [v1.0](./v1_0)) · See the [changelog](./CHANGELOG.md) for what changed and why.
 
 ---
 
@@ -49,6 +49,7 @@ You don't need seven passes, or these names. What matters is that the draft reac
 | **2 — Governance** | Validates everything against the manuscript, fixes what is safely fixable, proposes the rest, and certifies the chapter | `GOVERNANCE_READY.md` |
 | **3 — Design + Production** | Design-system-bound HTML for every asset, figure images, exports, the manual eBook and print layouts, and book-level assembly | Hand-off to QA |
 | **3W — Workbook track** | Runs from the end of 2 through 3.5.<br>• The workbook manuscript (DOCX canonical, MD replica) must match before Claude Design builds the workbook.<br>• The author produces the eBook PDF (8.5×11) and full-color print PDF (7×10) in InDesign. Uploading them is the cue that the workbook is done.<br>• Layout wording flows back so the PDF, DOCX, and MD match, and every exercise the manuscript mentions is checked.<br>• The book-level workbook is assembled after the final audit.<br>• No Kindle, audiobook, or RAG | `WORKBOOK_MANUSCRIPT_READY.md`, then `WORKBOOK_READY.md` |
+| **3.5A / 3.5B — Print build** | Generates the print layout instead of starting InDesign from an empty page.<br>• **3.5B** (v1.2, default) builds the eBook first. It then writes the chapter's and the workbook exercise's 7×10 print IDMLs, which replicate the eBook, on the author's own finished print documents: one-column masters, CMYK TIFFs, and the print template's callouts.<br>• **3.5A** (v1.1.3) writes a styled tagged-text import from the DOCX.<br>• The author opens the result in InDesign, checks it, and exports the print PDF | Chapter + exercise IDMLs in the chapter's `InDesign/` and `Workbook/` folders |
 | **3.5 — Design QA** | Reviews the design output against the design system, accessibility, instructional quality, and Kindle readiness | `DESIGN_READY.md` |
 | **4 — Final-wording builds** | Syncs the manuscript (MD and DOCX) to the final eBook PDF and spot-checks it, checks the uploaded 7×10 print PDF against the eBook (wording drift and print layout; report-only, closed before 6.5), then builds the Kindle files and, from those, the audiobook per chapter (an XTTS draft as a guide, the final narration recorded by the author), and assembles the book-level Kindle package and audiobook set | Kindle package + audiobook |
 | **5 — RAG (Local + Cloud)** | Rebuilds the chapter's canonical chunk set, re-embeds it into the local index (and the cloud index, if enabled, through a governance gateway when you have one), checks parity, writes the system prompt and query profiles | `RAG_READY.md` |
@@ -78,13 +79,15 @@ PHASE 0.9 is the exception: it audits the whole book at once, first on the draft
 ## Repository layout
 
 ```
-v_1_1_3/                   current release (print build: PHASE 3.5A tagged-text import, polish window,
-                           MANUSCRIPT_REVISED.md revision trigger)
+v_1_2/                     current release (eBook-first print build: PHASE 3.5B generates the chapter and
+                           workbook-exercise print IDMLs from the finished eBook)
   HOW_TO_RUN_THE_PIPELINE.md    the step-by-step operating guide (start here day to day)
   MASTER_PIPELINE_OVERVIEW.md   the tie-breaker: phases, gates, folders, deliverables, automation map
   PLACEHOLDERS.md               every token to replace, and what to leave alone
-  PHASE 0.9 … PHASE 7           the phase prompts, plus PHASE 3W (workbook) and PHASE 3.5A (print build)
+  PHASE 0.9 … PHASE 7           the phase prompts, plus PHASE 3W (workbook), PHASE 3.5A and 3.5B (print builds)
   templates/style_map.example.json   starting point for <PRINT_DSM_ROOT>/style_map.json (PHASE 3.5A)
+v_1_1_3/                   previous release (PHASE 3.5A tagged-text print import, polish window,
+                           MANUSCRIPT_REVISED.md revision trigger), kept for books mid-flight
 v_1_1_2/                   previous release (print vs. eBook QA: PHASE 4 Part 0P, PHASE 3W W2b), kept for books mid-flight
 v_1_1/                     previous release (automation first: upload-triggered phases, references check,
                            glossary lock, local PHASE 7), kept for books mid-flight
@@ -99,18 +102,25 @@ CHANGELOG.md               what changed in each version, and why
 LICENSE                    GPL-3.0
 ```
 
-Start with **`v_1_1_3/MASTER_PIPELINE_OVERVIEW.md`** for the design, and **`v_1_1_3/HOW_TO_RUN_THE_PIPELINE.md`** for the day-to-day steps. It carries the phase table, the status ladder, the folder map, the deliverable map, and the trigger map, and it is the tie-breaker whenever a phase file and the overview disagree.
+Start with **`v_1_2/MASTER_PIPELINE_OVERVIEW.md`** for the design, and **`v_1_2/HOW_TO_RUN_THE_PIPELINE.md`** for the day-to-day steps. It carries the phase table, the status ladder, the folder map, the deliverable map, and the trigger map, and it is the tie-breaker whenever a phase file and the overview disagree.
 
 ## Getting started
 
 1. **Read the overview.** Ten minutes there saves an afternoon later.
-2. **Fill in the placeholders.** The phase files ship with tokens like `<BOOK_ROOT>`, `<BOOK>`, and `<AUTHOR>`. [`v_1_1_3/PLACEHOLDERS.md`](./v_1_1_3/PLACEHOLDERS.md) lists every one, with a find-and-replace script for PowerShell and bash, and says which concrete values (print trim, model names, "PASS 7") are examples rather than requirements.
+2. **Fill in the placeholders.** The phase files ship with tokens like `<BOOK_ROOT>`, `<BOOK>`, and `<AUTHOR>`. [`v_1_2/PLACEHOLDERS.md`](./v_1_2/PLACEHOLDERS.md) lists every one, with a find-and-replace script for PowerShell and bash, and says which concrete values (print trim, model names, "PASS 7") are examples rather than requirements.
 3. **Create the folder skeleton** from the overview's folder map — per chapter and at the book root.
 4. **Run PHASE 1 on one chapter.** Paste the phase, give it the locked manuscript, let it generate.
 5. **Run PHASE 2 on that same chapter** before generating a second one. It will find naming, metadata, and terminology problems while they are cheap to fix.
 6. **Keep going one chapter at a time** until you trust the output, then batch.
 
-You do not need every phase. A pipeline that stops at PHASE 3.5 still gives you governed, design-consistent chapter assets. Phases 5 and 6 only matter if you want a local RAG and automated drafting.
+You do not need every phase. A pipeline that stops at PHASE 3.5 still gives you governed, design-consistent chapter assets.
+
+**Print from the eBook (v1.2).** If you lay out print in InDesign, PHASE 3.5B needs three things in your print design folder (`_PrintDSM`):
+- the print templates;
+- one chapter you have already finished by hand;
+- for the workbook, one finished exercise.
+
+Each new chapter and exercise is then generated on those, so it opens looking like the ones you've already laid out. Fonts that load from Adobe Fonts may need re-activating when you open the file. Phases 5 and 6 only matter if you want a local RAG and automated drafting.
 
 ## Adapting it to your book
 
@@ -119,7 +129,7 @@ These prompts are a working author's, not a sanitized template, so expect to cha
 - **Paths and names.** `<BOOK_ROOT>`, `<BOOK>`, `<BOOK_TITLE>`, `<AUTHOR>`, and the rest — see `PLACEHOLDERS.md`. "PASS 7" means the seventh editing pass ([see the passes above](#before-the-phases-the-editing-passes-pass-07)); substitute your own final-draft stage. The phases are written in the author's first person ("my book", "I approve every piece"), which reads correctly whoever runs them.
 - **The design system.** PHASE 3 expects a design system manual derived from your print layout — tokens, typography, components. Without one, the design phase has nothing authoritative to follow.
 - **Framework terminology.** The terminology lock names this book's concepts. Replace them with yours.
-- **Tools.** The defaults are Claude and Claude Design for generation, InDesign for print, XTTS for draft narration and Adobe Audition for the final recording, Ollama plus an ONNX/TEI embedder and ChromaDB for local RAG, optionally Azure OpenAI `text-embedding-3-large` with vectors in Azure Blob Storage for multilingual cloud RAG, and n8n plus OpenClaw for orchestration. Each is swappable; the gates and deliverables are what matter.
+- **Tools.** The defaults are Claude and Claude Design for generation, InDesign for print (with the print IDMLs generated from the eBook since v1.2), XTTS for draft narration and Adobe Audition for the final recording, Ollama plus an ONNX/TEI embedder and ChromaDB for local RAG, optionally Azure OpenAI `text-embedding-3-large` with vectors in Azure Blob Storage for multilingual cloud RAG, and n8n plus OpenClaw for orchestration. Each is swappable; the gates and deliverables are what matter.
 - **Optional deliverables.** Workbook, training materials, and audiobook are separable. Drop what your book does not have, and say so in the checklist rather than leaving the item silently blank.
 
 ## Contributing

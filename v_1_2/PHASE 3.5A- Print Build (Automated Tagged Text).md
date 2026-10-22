@@ -5,6 +5,8 @@
 
 **New in release v1.1.3 (2026-10-21).** Until now, print layout started from an empty InDesign document: <AUTHOR> placed the manuscript and applied every paragraph and character style by hand. PHASE 3.5A generates an **InDesign tagged-text file** from the chapter DOCX, with every paragraph and character style already set to the print template's styles. <AUTHOR> places it into a copy of the template, and the layout work starts from styled text.
 
+**Release v1.2:** PHASE 3.5B (`PHASE 3.5B- eBook-First Print Build (IDML).md`) is now the default print build: it generates the print IDML itself, replicating the finished eBook. 3.5A stays available for a chapter whose eBook isn't built yet, or for a plain styled import.
+
 **What it is not.** It doesn't lay out pages, place images, or export a PDF. It never opens InDesign, never edits the manuscript, and never changes the template. Layout stays <AUTHOR>'s manual work (§6). Generating an IDML document directly is deferred to a later release; tagged text is the only output.
 
 **Reference implementation:** `idml_build.py` in `<LOCAL_TOOLS_ROOT>` (deterministic; no LLM; `python-docx` plus the Python standard library), with unit tests in `<LOCAL_TOOLS_ROOT>/tests/test_idml_build.py`.

@@ -3,6 +3,8 @@
 > **Pipeline position:** PHASE 3.5 of 7 (Design QA gate) · **Upstream gate:** PHASE 3 exit gate · **Downstream:** PHASE 4 Kindle DOCX
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
+**Release v1.2 (2026-10-22):** new §13B, **Print IDML (3.5B)**. The QA reads the PHASE 3.5B build report and runs the §8 checks. A failure is Critical for the print track and doesn't block `DESIGN_READY.md`.
+
 **Release v1.1.3 (2026-10-21):** new §13A, **Print build (3.5A)**. The QA reads the PHASE 3.5A build report and manifest: zero unmapped items, zero missing figures, and a template and DOCX that match the ones the import was built from. A failure that blocks layout is Critical for the print track; it doesn't block `DESIGN_READY.md`.
 
 **v3.3 changes (2026-10-02, release v1.1): the upload completes PHASE 3.5.** The QA loop below is unchanged; run it while the design and InDesign work are in progress. What *closes* PHASE 3.5 is <AUTHOR>'s upload of the final PDF:
@@ -418,6 +420,23 @@ Read the latest `<CH_ROOT>/InDesign/<ChapterName>_BuildReport.md` and `_BuildMan
 - [ ] No mapped style is missing from the template (`missingInTemplate` empty), and the running heads are set.
 
 **Severity.** A failure that **blocks layout** (unmapped styles, a missing figure, or a stale template or DOCX) is **Critical** for the print track: list it under Critical Issues, and the print layout must not continue from that import. In keeping with PHASE 3.5A §5, it blocks only the closure of 3.5A and the print layout; it does **not** block `DESIGN_READY.md`, PHASE 4, or Kindle, which don't use the print build. Anything else in the report is Minor.
+
+# 13B. PRINT IDML (3.5B) (release v1.2)
+
+Read the latest PHASE 3.5B build report (the builders' JSON reports and any `_Proofs/` PDF). Don't re-run the build here. If the chapter has no IDML yet, record **Print IDML: not run** (Informational).
+
+- [ ] **One column:** no 2-column master, frame, or spread.
+- [ ] **Text complete:** every eBook block (chapter) and every DOCX paragraph (exercise) is in the IDML, and the pull quotes match the DOCX word for word.
+- [ ] **Figures:**
+  - every figure links a CMYK TIFF from `Figures/CMYK/` and no RGB file;
+  - effective ppi is ≥ 300, or the figure is flagged.
+- [ ] **Callouts** use the print template's styles; no eBook color, motif, or diamond is carried over.
+- [ ] **Footnotes and references** are complete; the reference list ends with the manuscript's last reference.
+- [ ] **Opener:** the title and epigraph are correct, and none of the master's text shows through.
+
+**Severity:**
+- **Critical** for the print track: missing text, an RGB figure, or a 2-column page. These don't block `DESIGN_READY.md`, PHASE 4, or Kindle.
+- **Minor:** spacing or badge-position notes.
 
 ---
 
