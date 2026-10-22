@@ -177,7 +177,11 @@ So the result opens exactly like the chapters already laid out. Use the template
 - **Opener page:** the chapter number word, title, and epigraph.
 - **Body:** **one main story** threaded through full-page, 1-column body frames. Everything is in the text flow:
   - **Paragraphs, headings, lists, and pull quotes** get the paragraph styles <AUTHOR>'s finished chapter uses.
-  - **Callouts** become inline paragraphs in the print template's Callout styles. The eyebrow line and the circular badge are an anchored group.
+  - **Callouts are separate objects, never inline in the body story** (<AUTHOR>, 2026-10-22). Callouts built inline in the text don't format correctly in InDesign.
+    - Copy each callout's component as it stands from the book template's **Body Page Spread C** master (`<PRINT_TEMPLATE_BOOK>`): the text frame with its Callout paragraph style, eyebrow character style, and circular badge group (Green Insight, Blue Coherence, Violet Expansion, Yellow Did You Know?, Red or Black Pullquote).
+    - Place the copy on the body page and edit it in place, replacing only the eyebrow text and the body text.
+    - The component's first line is the eyebrow, then a line break, then a small spacer character. **Never delete that spacer.** The callout's body text starts immediately after it.
+    - The body story flows around the callout (text wrap), so the callout keeps the 1-pica spacing rule.
   - **Figures** are anchored frames (above the line, full column width) linking the CMYK TIFF, with the caption in the caption style. Alt text comes from the eBook.
   - **Footnotes and references** use the footnote and reference styles: the red footnote marker, the hanging-indent reference list, and the footnote paragraph.
 - **Running heads:** set through the document's text variables (chapter number and title).

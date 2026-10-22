@@ -110,7 +110,7 @@ The workbook half of PHASE 3.5B (§5 there).
    **"How to work this exercise" is always numbered steps** (<AUTHOR>, 2026-10-22), in the eBook and in print, as in Exercise 1.2:
    - each instruction is its own step, numbered **01, 02, 03 …** in red, in two columns;
    - when the DOCX gives the how-to as one paragraph, split it at sentence ends only, keeping any parenthetical with its sentence, so that the steps joined back together equal the DOCX paragraph;
-   - steps are roman, as in Exercises 1.1 and 1.2: italic only for quoted speech and deliberate emphasis, never a whole how-to paragraph. In print, the step text is "Workbook Styles: Workbook Subparagraph Under Heading" and the numbers are "Body Character Styles: Numbering Roboto Mono Red";
+   - steps are roman, as in Exercises 1.1 and 1.2: italic only for quoted speech and deliberate emphasis, never a whole how-to paragraph. Parentheticals in the steps are italic, parentheses included; a key phrase <AUTHOR> marks may be bold italic (Exercise 1.3a: "it is information"). In print, the step text is "Workbook Styles: Workbook Subparagraph Under Heading" and the numbers are "Body Character Styles: Numbering Roboto Mono Red";
    - if the steps push a page over, tighten the spacing above the box on that page, never the type or the write-in space.
 
    **Codex "Exercise(s) completed"** lists a checkbox for every exercise in the chapter, including the main exercise when it is unlettered: Exercise 1.3's Codex reads 1.3 · 1.3a · 1.3b · 1.3c, while Exercise 1.2's main exercise is itself 1.2a. The workbook DOCX/MD line matches.
