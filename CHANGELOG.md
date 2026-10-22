@@ -5,6 +5,80 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [v1.2] — 2026-10-22
+
+**Folder:** `v_1_2/` · **Previous:** `v_1_1_3/` (unchanged, kept for books mid-flight) · **Tag:** `v1_2_PROD`
+
+eBook-first print build (IDML). v1.1.3 gave the print track a styled text import, but figures, callouts, and the layout itself were still placed by hand. In v1.2 the print documents are generated as InDesign IDML files that replicate the finished eBook:
+- the chapter (7×10);
+- the workbook exercise (7×10).
+
+Each is built on the author's own finished print documents, so a new chapter opens looking like the ones already laid out. The order is fixed: the eBook first, then print. It is a minor release because it adds new functionality: the pipeline now writes IDML.
+
+First run: Chapter 3 and Exercise 1.3 of *RCF*, built on Chapter 2 and Exercise 1.2, with structural proofs rendered through Adobe's InDesign service.
+
+### Added
+
+- **PHASE 3.5B, eBook-first print build**, new file `PHASE 3.5B- eBook-First Print Build (IDML).md`:
+  - **Entry gate:**
+    - the final DOCX;
+    - finished figures (RGB in `Figures/RGB/`, CMYK TIFF in `Figures/CMYK/`);
+    - the print template and the author's last finished chapter or exercise IDML;
+    - the eBook page reviewed.
+  - **eBook first (§3):** the chapter's `<EBOOK_DSM_ROOT>/Chapter<N>_eBook.dc.html` is built from the DOCX (and the Claude Design draft) and paginated to 8.5×11. A real-render pass checks it, and footnotes stay with their block. Then the contents page and the page numbers that follow are updated, a review PDF is printed, and the page is published as a private artifact with the author's permission. The workbook gets the same treatment, in its own `_eBookDSM/`.
+  - **Chapter IDML (§4):** one main story through full-page 1-column frames, built on the author's last finished chapter IDML (its masters, styles, swatches, and opener). Paragraph styles follow the finished chapter. Callouts use the print template's Callout styles, with an anchored badge. Figures are anchored and link the CMYK TIFFs, with captions. Footnote and reference styles, running heads through text variables, and Smart Text Reflow (adds pages, deletes empty ones) complete it.
+  - **Exercise IDML (§5):** cloned piece by piece from the previous exercise's IDML: the opener, ruled lines, tables, grids, badges, callouts, example panels, cards, Codex, and closing. The text is re-worded from the exercise DOCX, word for word, with text heights measured in the real fonts. The opener frames keep their ids, so the master's text stays overridden.
+  - **Optional structural proof (§6)** through Adobe's InDesign rendering, with the author's permission (it uploads to their Creative Cloud). Fonts are substituted on the render server, so the proof checks structure and content, not line breaks.
+  - **Placement (§7):**
+    - `<CH_ROOT>/InDesign/<NNN>_Chapter<N>_<Title>.idml`;
+    - `<CH_ROOT>/Workbook/<NN>-<n>_Exercise_<L>_<N>_<Name>.idml`;
+    - proofs in `_Proofs/`.
+  - **Checks (§8):** one column; complete text (pull quotes word for word); CMYK figures at ≥ 300 effective ppi or flagged; print callout styles; footnotes and references complete; opener correct; valid IDML.
+  - **Manual finish (§9):** fonts, links, a final check, then the print PDF export as before.
+- **Design rules (the author, 2026-10-22), PHASE 3.5B §2:**
+  - **Sources:** print uses `_PrintDSM` only; `_eBookDSM` is read for content only.
+  - **Image formats:** TIFF (CMYK) for print and PNG/JPG (RGB) for the eBook, never swapped.
+  - **Columns:** one-column masters only, and never 2-column spreads.
+  - **Look:** print matches the eBook's overall design without its heavy color, in black, white, and gold. Callouts keep their content and spacing.
+  - **Motifs:** no eBook motifs, diamonds, or extra colors, except the quote callouts and the print template's own multi-color callouts (never the eBook versions).
+  - **Margins and spacing:** margins are used end to end, and spacing is consistent.
+  - **Figure size:** figures are resized to the column, and one too large or too small is flagged.
+  - **Workbook only:** tables, ruled lines, and circular badges are copied from the templates or the previous exercise.
+- **Reference implementations** in `<LOCAL_TOOLS_ROOT>`:
+  - `ebook_paginate.py`;
+  - `ebook_print.py` (waits for fonts, images, and a stable page count; checks the embedded fonts);
+  - `idml_chapter_build.py`;
+  - `idml_workbook_build.py`. Its page plan is per exercise; the component layer is shared.
+- **PHASE 3.5 §13B, Print IDML (3.5B):** the QA reads the build report and the §8 checks.
+  - Missing text, an RGB figure, or a 2-column page is Critical for the print track.
+  - None of these blocks `DESIGN_READY.md`.
+- **PHASE 3W W1c, exercise print IDML:** the workbook half of 3.5B: eBook pages first, then the cloned print IDML into `Workbook/`.
+- **Placeholder `<EBOOK_DSM_ROOT>`** (= `<BOOK_ROOT>/_eBookDSM`), with both replace scripts updated. `<LOCAL_TOOLS_ROOT>` lists the four new tools. `<PRINT_DSM_ROOT>` also holds the author's finished chapter IDMLs.
+- **`HOW_TO_RUN_THE_PIPELINE.md`:**
+  - new Step 2c (eBook first, then the print IDMLs);
+  - `3.5B` in the RERUN list;
+  - a cheat-sheet row for `RERUN_P3.5B.md`.
+
+### Changed
+
+- **PHASE 3 A3 print layout:** the default is now the PHASE 3.5B generated IDML, then the author's finish. The 3.5A import remains the alternative. The workbook row names the 3.5B exercise IDML.
+- **PHASE 3.5A:** a note that 3.5B is the default print build. 3.5A stays available for a chapter without an eBook yet, or for a plain styled import.
+- **Master overview:**
+  - the release note;
+  - phase table row **3.5B**;
+  - the flow;
+  - the deliverable map;
+  - the folder map: `_eBookDSM/`, the IDMLs in `InDesign/` and `Workbook/`, and `_Proofs/`;
+  - the trigger map;
+  - the local tools rows.
+- **Master overview §4:** phases read `<PRINT_DSM_ROOT>` through 3.5A and 3.5B, and still never write to it.
+- **README:**
+  - current version v1.2, folder `v_1_2/`, with `v_1_1_3/` listed as previous;
+  - a 3.5A / 3.5B row in the phase table;
+  - a note on what the print build needs in `_PrintDSM`.
+
+---
+
 ## [v1.1.3] — 2026-10-21
 
 **Folder:** `v_1_1_3/` · **Previous:** `v_1_1_2/` (unchanged, kept for books mid-flight)
