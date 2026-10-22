@@ -5,6 +5,29 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [v1.2.2] — 2026-10-22
+
+**Folder:** `v_1_2_2/` · **Previous:** `v_1_2_1/` (unchanged, kept for books mid-flight) · **Tag:** `v1_2_2_PROD`
+
+### Added
+
+- **Design systems are the source for every export** (the author, 2026-10-22). Three Design System artifacts:
+  - the book eBook (`<EBOOK_DESIGN_SYSTEM>`);
+  - the workbook eBook (`<WORKBOOK_EBOOK_DESIGN_SYSTEM>`);
+  - the design packet (`<PACKET_DESIGN_SYSTEM>`, mirrored locally in `<PACKET_DSM_ROOT>`).
+
+  New placeholders, with both replace scripts updated.
+- **PHASE 3.5B §3a, design system alignment.** Each eBook page links its system's `dsm/<slug>/tokens.css` and `bundle.css` after its own styles and carries an `rcf:design-system` meta. The files come from `dsm_css.py` (new reference tool in `<LOCAL_TOOLS_ROOT>`), which turns the system's `tokens.json`, `bundle.css`, and fonts into a local stylesheet folder with a `DSM.json` record.
+  - Re-export after any system change. Compare the renders before and after.
+  - New components go into the system first, with the author's approval.
+  - New §8 check, "Design system (eBook)".
+  - First run: Chapter 3 and Exercise 1.3 re-exported pixel-identical.
+- **PHASE 3W W1c** builds the exercise eBook pages from the workbook eBook system.
+- **"How to work this exercise" = numbered steps** (the author, 2026-10-22; PHASE 3W W1c). Every workbook how-to box lists its instructions as steps 01, 02, 03 … in red, in two columns, as in Exercise 1.2, in the eBook and in print. A one-paragraph DOCX how-to is split at sentence ends only, with the wording verbatim. The workbook eBook design system's HowToBox component was updated (version 3). Exercise 1.3's three boxes (1.3a, 1.3b, 1.3c) were converted, with the 1.3b opener spacing tightened, and re-exported.
+- **Codex "Exercise(s) completed" includes an unlettered main exercise** (PHASE 3W W1c). Exercise 1.3's Codex gained its missing 1.3 checkbox, in the eBook and in the workbook DOCX/MD. **PHASE 3 A2b**: the packet DSM is the Design System artifact.
+
+---
+
 ## [v1.2.1] — 2026-10-22
 
 **Folder:** `v_1_2_1/` · **Previous:** `v_1_2/` (unchanged, kept for books mid-flight) · **Tag:** `v1_2_1_PROD`
