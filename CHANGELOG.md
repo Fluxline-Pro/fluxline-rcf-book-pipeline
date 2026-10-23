@@ -7,10 +7,36 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ## [Unreleased]
 
+---
+
+## [v1.2.4] — 2026-10-22
+
+**Folder:** `v_1_2_4/` · **Previous:** `v_1_2_3/` (unchanged, kept for books mid-flight) · **Tag:** `v1_2_4_PROD`
+
+The author's review of the Chapter 4 and Exercise 1.4 builds, and the workbook eBook's structure.
+
 ### Added
 
 - **Finish step: export the finished document as IDML into `_PrintDSM`** (the author, 2026-10-22; PHASE 3.5B §9), so the next build starts from it. Templates are refreshed there too.
-- **Chapter builder:** callouts are separate frames copied from the template's master C (`idml_callouts.py`). The builder also adds keeps (headings with the next paragraph, at least 2 lines at each end of a break), 12 pt around figures, captions, and callouts, and 0 pt before pull quotes and centered italics, and it reports figure/callout pairs.
+- **Chapter builder:** callouts are separate frames copied from the template's master C (`idml_callouts.py`). The builder also:
+  - adds keeps: headings stay with the next paragraph, and at least 2 lines stay at each end of a break;
+  - sets 12 pt around figures, captions, and callouts, and 0 pt before pull quotes and centered italics;
+  - reports figure/callout pairs.
+- **In-text figure references** (PHASE 3.5B §2, §8). In "(see Figure N)", the "Figure N" takes the "Caption Figure Roboto Mono" character style in print, and `figure-text` in the eBook (now in the book eBook design system). The chapter builder applies it even when the eBook source has no span. Chapter 4's eBook references were wrapped.
+- **Numbered question badges** (PHASE 3W W1c). Numbered questions (Reflection Questions) lead with a color circle: 1 green, 2 blue, 3 yellow, 4 orange, and so on.
+  - Print: the exercise builder copies the template's numbered badge groups and indents the question and hint 25.6 pt beside each one.
+  - eBook: `.wb-num` in the workbook eBook design system.
+  - Exercise 1.4's eBook Reflection Questions were updated.
+- **Workbook eBook page numbering and final PDFs** (PHASE 3W W1c).
+  - Page numbers follow the assembled eBook, and each page file's own default page matches its place there.
+  - Structure: front matter in roman (Contents now two pages; Values/Virtues/DRIVEs and the first journal set after the Prologue); Part I starts at 1; the nine remaining journal sets are in the back.
+  - Finals are exported per section, tagged, with title, author, language, and bookmarks (`ebook_print.py --tagged`).
+- **Chapters start on a right-hand page** (PHASE 3.5B §2, §8, §9). The chapter's page parity is checked in the finish.
+
+### Changed
+
+- **Workbook write-in questions are Montserrat bold** in the eBook, matching print's "Workbook Prompt" styles; hints stay Merriweather italic (PHASE 3W W1c; workbook eBook design system). Exercises 1.2–1.4 were re-exported.
+- **Exercise openers show no page number** in the workbook eBook (Exercises 1.3 and 1.4 fixed; design system updated).
 
 ---
 
