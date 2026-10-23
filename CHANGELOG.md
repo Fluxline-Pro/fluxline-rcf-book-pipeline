@@ -7,6 +7,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ## [Unreleased]
 
+### Documentation
+
+- **README: choosing your path.** Running the pipeline AI-assisted, with AI only for checking, or with no AI (the phases as a checklist-and-gate system), with steps for each path, AI-disclosure guidance, and a short guide to adopting the pipeline for other publishing work.
+
 ---
 
 ## [v1.2.4] — 2026-10-22
