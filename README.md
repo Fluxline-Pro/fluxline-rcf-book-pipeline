@@ -6,6 +6,8 @@ It is a set of Markdown prompts. You paste a phase into an AI assistant (these w
 
 Built for *RCF: Resonance Core Framework* by Terence Waters at [Fluxline.pro](https://fluxline.pro), and shared for other authors who are building a real production pipeline rather than one-off prompts.
 
+**AI is optional.** You can run the pipeline AI-assisted, with AI only for checking, or entirely by hand as a checklist-and-gate system. See [Choosing your path](#choosing-your-path-with-ai-with-less-ai-or-without-it), and [Adopting it for your publishing work](#adopting-it-for-your-publishing-work) for what to tell someone who wants to use it.
+
 **Current version: v1.2.4** (phase files in [`v_1_2_4/`](./v_1_2_4)). v1.2.4 sets the workbook eBook's page numbering and final PDFs, makes write-in questions Montserrat, adds numbered badge circles, styles in-text figure references in print, and starts every chapter on a right-hand page. v1.2.3 refined print and the workbook: print callouts are separate frames copied from the template, and the workbook's how-to steps are roman with italic parentheticals. v1.2.2 made three Design System artifacts the source for every export: the book eBook, the workbook eBook, and the design packet. It also adds the workbook's numbered "How to work this exercise" steps. v1.2 added PHASE 3.5B, the **eBook-first print build**: the eBook is built first, then the print documents are generated as ready-to-open InDesign **IDML** files that replicate it, for both the chapter and its workbook exercise. v1.2.1 added:
 - print pagination and spacing rules;
 - an automatic PHASE 3 start once governance passes: Gemini figure prompts, a checklist of RGB and CMYK files to make, and the design packet built as Claude artifacts.
@@ -128,6 +130,65 @@ You do not need every phase. A pipeline that stops at PHASE 3.5 still gives you 
 - for the workbook, one finished exercise.
 
 Each new chapter and exercise is then generated on those, so it opens looking like the ones you've already laid out. Fonts that load from Adobe Fonts may need re-activating when you open the file. Phases 5 and 6 only matter if you want a local RAG and automated drafting.
+
+## Choosing your path: with AI, with less AI, or without it
+
+The pipeline was built with AI doing much of the drafting, but **the gates are the product, not the AI**. Every phase says what has to exist and what has to be true before a chapter moves on. Whether a person or a model produces that work is your choice, phase by phase. Pick the path that fits your book, your budget, and your comfort, and you can change your mind later.
+
+### Path 1 — AI-assisted (the way it was built)
+
+An AI assistant drafts the derived material, and you review and approve every piece.
+
+1. Fill in the placeholders and set up the folders ([Getting started](#getting-started)).
+2. For each chapter, paste the phase file into your assistant (Claude was the reference), attach the locked manuscript, and let it produce the phase's outputs.
+3. Read what it produced. Accept, reject, or edit; nothing in the manuscript changes without your say-so.
+4. Let the gate decide: the next phase starts only when its trigger file exists (`GOVERNANCE_READY.md`, `DESIGN_READY.md`, and so on).
+5. Optionally automate the hand-offs (n8n, a local runner), as described in `HOW_TO_RUN_THE_PIPELINE.md`. Automation only drafts; you still approve.
+
+**Good for:** authors with many chapters, many formats, or a workbook and training materials to keep in sync.
+
+### Path 2 — AI for checking only (you do the writing)
+
+You write and design everything yourself, and use AI or scripts only to **check** your work.
+
+- **You create** the review packet, guides, slide outline, workbook, eBook, print layout, narration script, and marketing copy, using each phase file as your checklist of what to make and where it goes.
+- **The checks do the tedious part:** paste a finished chapter's files into PHASE 2 (governance) and ask only for the report. It tells you where a term drifted, a quote no longer matches the manuscript, or a figure number is wrong. Turn off any "fix" step and fix things yourself.
+- **The deterministic tools need no AI at all:** the references check, glossary rollup, print-vs-eBook comparison, print checks, and the IDML print builders are plain scripts (see `MASTER_PIPELINE_OVERVIEW.md`, "Deterministic local tools").
+
+**Good for:** authors who want their own hand on every word but don't want to proofread twenty files by eye.
+
+### Path 3 — No AI (a manual production system)
+
+Everything still works as a **checklist and gate system**, run by you (or your editor or team) with ordinary tools.
+
+1. **Use each phase file as a written procedure.** Skip the "paste this into an assistant" lines; read the inputs, outputs, checks, and gate for each phase, and do them by hand.
+2. **Keep the same files and folders.** The folder map, file names, and trigger files still tell you, and anyone helping you, exactly where a chapter stands.
+3. **Do the governance check as a review.** PHASE 2's checklist (terminology, quotes, figures, metadata) becomes your editor's review sheet.
+4. **Leave out what assumes a model:** PHASE 5 (the RAG knowledge base) and PHASE 6 (automated drafting) are optional; mark them N/A in the chapter checklist rather than leaving them blank.
+5. **Keep the human sign-off.** PHASE 7's checklist and signature work the same way without AI.
+
+**Good for:** authors, small presses, or publishers whose policies don't allow generative AI, or who simply want a disciplined, repeatable production process.
+
+### Whichever path you choose
+
+- **The manuscript stays the single source of truth.** Nothing else, AI-made or hand-made, overrides it.
+- **You approve everything that ships.** The pipeline never publishes on its own.
+- **Disclose AI use honestly.** If AI generated text, images, or other content in your book, say so in the front matter, and check each retailer's current rules before you publish. Amazon KDP, for example, asks you to disclose AI-generated content when you publish; content you wrote and only edited or brainstormed with AI tools is treated differently. Keep a record of which tool made what (the FigureRegistry has a "tool used" field for exactly this).
+- **Mix freely.** Many authors use AI for checks and figures, and do the writing and layout themselves. Record your choice per phase in the chapter's production checklist so the rest of the pipeline knows what to expect.
+
+## Adopting it for your publishing work
+
+If someone asks you how to use this for their own books, here is the short version to share:
+
+1. **Start with one chapter, not the whole book.** Run it end to end once (or as far as you need) before committing.
+2. **Get your manuscript to a stage you won't rewrite.** The pipeline starts after editing; it doesn't replace an editor ([the editing passes](#before-the-phases-the-editing-passes-pass-07) show one way to get there).
+3. **Choose your path above** (AI-assisted, AI for checks, or no AI), and write it down.
+4. **Replace the placeholders** with your folders, title, and author name using `PLACEHOLDERS.md`; swap in your own terms, design system, and templates.
+5. **Keep only the formats you need.** eBook only? Stop at PHASE 3.5 and PHASE 4's Kindle step. No workbook or audiobook? Mark them N/A.
+6. **Respect the gates.** The value is in never moving a chapter on until its checks pass, whoever does the work.
+7. **Use the latest version folder** (`v_1_2_4/` today) for new books; older folders are kept only so books already in progress can finish on the version they started with.
+8. **Mind the license.** The pipeline is GPL-3.0: free to use and adapt, and changes you share keep the same license. Your book's content stays yours.
+9. **Share what you learn.** If you adapt it for a different kind of book or toolchain, a pull request helps the next author ([Contributing](#contributing)).
 
 ## Adapting it to your book
 
