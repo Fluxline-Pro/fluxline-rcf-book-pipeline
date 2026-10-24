@@ -8,11 +8,11 @@ Built for *RCF: Resonance Core Framework* by Terence Waters at [Fluxline.pro](ht
 
 **AI is optional.** You can run the pipeline AI-assisted, with AI only for checking, or entirely by hand as a checklist-and-gate system. See [Choosing your path](#choosing-your-path-with-ai-with-less-ai-or-without-it), and [Adopting it for your publishing work](#adopting-it-for-your-publishing-work) for what to tell someone who wants to use it.
 
-**Current version: v1.2.4** (phase files in [`v_1_2_4/`](./v_1_2_4)). v1.2.4 sets the workbook eBook's page numbering and final PDFs, makes write-in questions Montserrat, adds numbered badge circles, styles in-text figure references in print, and starts every chapter on a right-hand page. v1.2.3 refined print and the workbook: print callouts are separate frames copied from the template, and the workbook's how-to steps are roman with italic parentheticals. v1.2.2 made three Design System artifacts the source for every export: the book eBook, the workbook eBook, and the design packet. It also adds the workbook's numbered "How to work this exercise" steps. v1.2 added PHASE 3.5B, the **eBook-first print build**: the eBook is built first, then the print documents are generated as ready-to-open InDesign **IDML** files that replicate it, for both the chapter and its workbook exercise. v1.2.1 added:
+**Current version: v1.2.5** (phase files in [`v_1_2_5/`](./v_1_2_5)). v1.2.5 adds PHASE 2.5, the **manuscript lock audit**: each chapter's full content audit now runs after governance and before design, the author decides every finding, the fixes go into the DOCX, and the manuscript is locked (`MANUSCRIPT_LOCKED.md`). Every design and production phase requires the lock, and the end-of-book audit is reduced to a cross-chapter consistency check. v1.2.4 sets the workbook eBook's page numbering and final PDFs, makes write-in questions Montserrat, adds numbered badge circles, styles in-text figure references in print, and starts every chapter on a right-hand page. v1.2.3 refined print and the workbook: print callouts are separate frames copied from the template, and the workbook's how-to steps are roman with italic parentheticals. v1.2.2 made three Design System artifacts the source for every export: the book eBook, the workbook eBook, and the design packet. It also adds the workbook's numbered "How to work this exercise" steps. v1.2 added PHASE 3.5B, the **eBook-first print build**: the eBook is built first, then the print documents are generated as ready-to-open InDesign **IDML** files that replicate it, for both the chapter and its workbook exercise. v1.2.1 added:
 - print pagination and spacing rules;
 - an automatic PHASE 3 start once governance passes: Gemini figure prompts, a checklist of RGB and CMYK files to make, and the design packet built as Claude artifacts.
 
-Previous versions: [v1.2.3](./v_1_2_3), [v1.2.2](./v_1_2_2), [v1.2.1](./v_1_2_1), [v1.2](./v_1_2), [v1.1.3](./v_1_1_3), [v1.1.2](./v_1_1_2), [v1.1 / v1.1.1](./v_1_1), [v1.0.4](./v_1_0_4), [v1.0.3](./v_1_0_3), [v1.0.2](./v_1_0_2), [v1.0](./v1_0) · See the [changelog](./CHANGELOG.md) for what changed and why.
+Previous versions: [v1.2.4](./v_1_2_4), [v1.2.3](./v_1_2_3), [v1.2.2](./v_1_2_2), [v1.2.1](./v_1_2_1), [v1.2](./v_1_2), [v1.1.3](./v_1_1_3), [v1.1.2](./v_1_1_2), [v1.1 / v1.1.1](./v_1_1), [v1.0.4](./v_1_0_4), [v1.0.3](./v_1_0_3), [v1.0.2](./v_1_0_2), [v1.0](./v1_0) · See the [changelog](./CHANGELOG.md) for what changed and why.
 
 ---
 
@@ -40,19 +40,20 @@ The phases don't write the book. They start from a manuscript that has already b
 **Why "semi-locked":** after PASS 7, no phase rewrites the manuscript on its own. It changes only in three ways, each with a backup and a change log:
 - edits the author accepts from a proposals file;
 - safe reference fixes before design;
-- wording the author changed while laying out the eBook, copied back by PHASE 4 Part 0.
+- fixes the author approves in the PHASE 2.5 lock audit, made in the DOCX first.
 
-The final eBook PDF is what fully locks a chapter.
+PHASE 2.5 then locks the chapter (`MANUSCRIPT_LOCKED.md`, v1.2.5). After the lock, a change needs a revision note with the author's written approval, and the chapter is re-locked.
 
 You don't need seven passes, or these names. What matters is that the draft reaches a stage you won't rewrite before PHASE 1 starts (see [`v_1_1/PLACEHOLDERS.md`](./v_1_1/PLACEHOLDERS.md) → "PASS 7").
 
-## The ten phases, plus the workbook track
+## The eleven phases, plus the workbook track
 
 | Phase | What it does | Ends with |
 |---|---|---|
-| **0.9 — Book audit** | Audits the whole draft for drift (terms, definitions, acronyms, equations, thresholds, lists, figures, cross-references) **before PASS 7**, and again as a final delta once every chapter is synced to its final eBook PDF. Report-only; you resolve the canonical decisions | `AUDIT_CLEAR.md`, then `AUDIT_FINAL_CLEAR.md` |
+| **0.9 — Book audit** | Audits the whole draft for drift (terms, definitions, acronyms, equations, thresholds, lists, figures, cross-references) **before PASS 7**. Its passes run again per chapter in PHASE 2.5, and at the end it checks the book for conflicts between chapters and for changes since each lock. Report-only; you resolve the canonical decisions | `AUDIT_CLEAR.md`, then `AUDIT_FINAL_CLEAR.md` |
 | **1 — Creation** | Generates every chapter artifact from the locked manuscript: review packet, workbook, training materials, reference guides, slide outline, eBook prep, print prep, narration script, RAG packet, and a grounded marketing intake packet | Production checklist |
 | **2 — Governance** | Validates everything against the manuscript, fixes what is safely fixable, proposes the rest, and certifies the chapter | `GOVERNANCE_READY.md` |
+| **2.5 — Manuscript lock audit** (v1.2.5) | Reads the chapter in full for content problems (definition conflicts, cross-references, term drift, list counts, glossary gaps, acronyms, heading anchors, figures) **before design**. You decide every finding; the approved fixes go into the DOCX, then the MD; the chapter is locked, with its file hashes recorded. Everything after it requires the lock | `MANUSCRIPT_LOCKED.md` |
 | **3 — Design + Production** | Design-system-bound HTML for every asset, figure images, exports, the manual eBook and print layouts, and book-level assembly | Hand-off to QA |
 | **3W — Workbook track** | Runs from the end of 2 through 3.5.<br>• The workbook manuscript (DOCX canonical, MD replica) must match before Claude Design builds the workbook.<br>• The author produces the eBook PDF (8.5×11) and full-color print PDF (7×10) in InDesign. Uploading them is the cue that the workbook is done.<br>• Layout wording flows back so the PDF, DOCX, and MD match, and every exercise the manuscript mentions is checked.<br>• The book-level workbook is assembled after the final audit.<br>• No Kindle, audiobook, or RAG | `WORKBOOK_MANUSCRIPT_READY.md`, then `WORKBOOK_READY.md` |
 | **3.5A / 3.5B — Print build** | Generates the print layout instead of starting InDesign from an empty page.<br>• **3.5B** (v1.2, default) builds the eBook first. It then writes the chapter's and the workbook exercise's 7×10 print IDMLs, which replicate the eBook, on the author's own finished print documents: one-column masters, CMYK TIFFs, and the print template's callouts.<br>• **3.5A** (v1.1.3) writes a styled tagged-text import from the DOCX.<br>• The author opens the result in InDesign, checks it, and exports the print PDF | Chapter + exercise IDMLs in the chapter's `InDesign/` and `Workbook/` folders |
@@ -64,17 +65,17 @@ You don't need seven passes, or these names. What matters is that the draft reac
 | **7 — Release** | Final verification, the assistant's recommendations, and the author's signature | **Published** |
 
 ```
-Draft ─▶ 0.9 audit ─▶ Locked manuscript ─▶ 1 ─▶ 2 ─▶ 3 ─▶ 3.5 ─▶ 4 ─▶ 5 ─▶ 6 ─▶ 6.5 ─▶ 7 ─▶ Published
-                                                                (0.9 final delta at 4 Part B)
-                            ▲       │
-                            └───────┘ fix loop
+Draft ─▶ 0.9 audit ─▶ Semi-locked manuscript ─▶ 1 ─▶ 2 ─▶ 2.5 lock ─▶ 3 ─▶ 3.5 ─▶ 4 ─▶ 5 ─▶ 6 ─▶ 6.5 ─▶ 7 ─▶ Published
+                                                                (0.9 consistency check at 4 Part B)
+                                 ▲       │
+                                 └───────┘ fix loop
 ```
 
-PHASE 0.9 is the exception: it audits the whole book at once, first on the draft before PASS 7 and again as a final delta at PHASE 4 Part B. Every other phase runs chapter by chapter, including 6 and 6.5. Four of them add a book-level mode that runs once — PHASE 3 (eBook and print assembly), PHASE 3W (the workbook's eBook and print books, after the final audit), PHASE 4 Part B (the Kindle package and audiobook set), and PHASE 6.5 book mode (publication QA of the assembled files) — each waiting until every chapter has cleared the gate before it. PHASE 2 and PHASE 6 also offer a batch mode for running several chapters in one pass.
+PHASE 0.9 is the exception: it audits the whole book at once, first on the draft before PASS 7 and again as a cross-chapter consistency check at PHASE 4 Part B. Its per-chapter passes run in PHASE 2.5. Every other phase runs chapter by chapter, including 6 and 6.5. Four of them add a book-level mode that runs once — PHASE 3 (eBook and print assembly), PHASE 3W (the workbook's eBook and print books, after the final audit), PHASE 4 Part B (the Kindle package and audiobook set), and PHASE 6.5 book mode (publication QA of the assembled files) — each waiting until every chapter has cleared the gate before it. PHASE 2 and PHASE 6 also offer a batch mode for running several chapters in one pass.
 
 ## Principles the phases enforce
 
-- **The manuscript is locked.** No phase edits it. Suggested changes go into a proposals file that you accept or reject, and the version increments before governance runs. The one exception is PHASE 4 Part 0: wording you changed while laying out the eBook is copied back from the final eBook PDF, with a backup, a change log, a version bump, and anything uncertain left for you to decide. Without that PDF, PHASE 4 does not start.
+- **The manuscript is locked before design.** No phase edits it on its own. Suggested changes go into a proposals file or a decisions log that you accept or reject, with a backup, a change log, and a version bump. PHASE 2.5 locks the chapter once you've decided every content finding, and every design and production phase checks the lock. After it, a change needs your written approval and a re-lock; PHASE 4 Part 0 only confirms the final eBook PDF still matches, and asks you about any difference.
 - **One source of truth, ranked.** Manuscript → normalized glossary → learning metadata and figure registry → everything derived. Conflicts always resolve downward.
 - **Gates, not vibes.** Each phase has an entry condition, an exit condition, and a trigger file that says it passed. A phase cannot start because it feels ready.
 - **Fix with a paper trail.** The governance phase backs up before editing, logs every change with before-and-after, escalates anything ambiguous to you, and never deletes.
@@ -85,14 +86,15 @@ PHASE 0.9 is the exception: it audits the whole book at once, first on the draft
 ## Repository layout
 
 ```
-v_1_2_4/                   current release (workbook eBook numbering and finals; Montserrat questions; numbered badges; figure references)
+v_1_2_5/                   current release (PHASE 2.5 manuscript lock audit; the lock gates design and production; B0 reduced)
+v_1_2_4/                   previous release (workbook eBook numbering and finals; Montserrat questions; numbered badges; figure references), kept for books mid-flight
 v_1_2_3/                   previous release (print callouts as separate template frames; roman how-to steps), kept for books mid-flight
 v_1_2_2/                   previous release (design systems are the source for every export), kept for books mid-flight
 v_1_2_1/                   previous release (print layout rules; automatic PHASE 3 start), kept for books mid-flight
   HOW_TO_RUN_THE_PIPELINE.md    the step-by-step operating guide (start here day to day)
   MASTER_PIPELINE_OVERVIEW.md   the tie-breaker: phases, gates, folders, deliverables, automation map
   PLACEHOLDERS.md               every token to replace, and what to leave alone
-  PHASE 0.9 … PHASE 7           the phase prompts, plus PHASE 3W (workbook), PHASE 3.5A and 3.5B (print builds)
+  PHASE 0.9 … PHASE 7           the phase prompts, plus PHASE 2.5 (lock audit, v1.2.5), PHASE 3W (workbook), PHASE 3.5A and 3.5B (print builds)
   templates/style_map.example.json   starting point for <PRINT_DSM_ROOT>/style_map.json (PHASE 3.5A)
 v_1_2/                     previous release (eBook-first print build: PHASE 3.5B IDMLs), kept for books mid-flight
 v_1_1_3/                   previous release (PHASE 3.5A tagged-text print import, polish window,
@@ -111,15 +113,15 @@ CHANGELOG.md               what changed in each version, and why
 LICENSE                    GPL-3.0
 ```
 
-Start with **`v_1_2_4/MASTER_PIPELINE_OVERVIEW.md`** for the design, and **`v_1_2_4/HOW_TO_RUN_THE_PIPELINE.md`** for the day-to-day steps. It carries the phase table, the status ladder, the folder map, the deliverable map, and the trigger map, and it is the tie-breaker whenever a phase file and the overview disagree.
+Start with **`v_1_2_5/MASTER_PIPELINE_OVERVIEW.md`** for the design, and **`v_1_2_5/HOW_TO_RUN_THE_PIPELINE.md`** for the day-to-day steps. It carries the phase table, the status ladder, the folder map, the deliverable map, and the trigger map, and it is the tie-breaker whenever a phase file and the overview disagree.
 
 ## Getting started
 
 1. **Read the overview.** Ten minutes there saves an afternoon later.
-2. **Fill in the placeholders.** The phase files ship with tokens like `<BOOK_ROOT>`, `<BOOK>`, and `<AUTHOR>`. [`v_1_2_4/PLACEHOLDERS.md`](./v_1_2_4/PLACEHOLDERS.md) lists every one, with a find-and-replace script for PowerShell and bash, and says which concrete values (print trim, model names, "PASS 7") are examples rather than requirements.
+2. **Fill in the placeholders.** The phase files ship with tokens like `<BOOK_ROOT>`, `<BOOK>`, and `<AUTHOR>`. [`v_1_2_5/PLACEHOLDERS.md`](./v_1_2_5/PLACEHOLDERS.md) lists every one, with a find-and-replace script for PowerShell and bash, and says which concrete values (print trim, model names, "PASS 7") are examples rather than requirements.
 3. **Create the folder skeleton** from the overview's folder map — per chapter and at the book root.
 4. **Run PHASE 1 on one chapter.** Paste the phase, give it the locked manuscript, let it generate.
-5. **Run PHASE 2 on that same chapter** before generating a second one. It will find naming, metadata, and terminology problems while they are cheap to fix.
+5. **Run PHASE 2 on that same chapter** before generating a second one. It will find naming, metadata, and terminology problems while they are cheap to fix. Then run **PHASE 2.5** and lock the chapter before any design work.
 6. **Keep going one chapter at a time** until you trust the output, then batch.
 
 You do not need every phase. A pipeline that stops at PHASE 3.5 still gives you governed, design-consistent chapter assets.
@@ -186,7 +188,7 @@ If someone asks you how to use this for their own books, here is the short versi
 4. **Replace the placeholders** with your folders, title, and author name using `PLACEHOLDERS.md`; swap in your own terms, design system, and templates.
 5. **Keep only the formats you need.** eBook only? Stop at PHASE 3.5 and PHASE 4's Kindle step. No workbook or audiobook? Mark them N/A.
 6. **Respect the gates.** The value is in never moving a chapter on until its checks pass, whoever does the work.
-7. **Use the latest version folder** (`v_1_2_4/` today) for new books; older folders are kept only so books already in progress can finish on the version they started with.
+7. **Use the latest version folder** (`v_1_2_5/` today) for new books; older folders are kept only so books already in progress can finish on the version they started with.
 8. **Mind the license.** The pipeline is GPL-3.0: free to use and adapt, and changes you share keep the same license. Your book's content stays yours.
 9. **Share what you learn.** If you adapt it for a different kind of book or toolchain, a pull request helps the next author ([Contributing](#contributing)).
 
