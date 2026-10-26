@@ -21,13 +21,14 @@ Each pair of formats was already checked on its own: Part 0 (eBook against manus
 - **Pass 1** (after Part 0 / 0R / 0G / 0P, before Part A) covers the manuscript DOCX and MD, the eBook PDF, the print PDF, the narration script, and the workbook's exercise numbers and titles. Part A starts only on PASS.
 - **Pass 2** (after Part C) adds the Kindle DOCX and the audiobook QA. PHASE 5 and PHASE 6.5 start only on PASS.
 - **Review loop:** differences are accepted with `--accept "<reason>"` (recorded in `<Section>_Accepted.json`), or fixed at the source.
+- **Numeric comparison** in the DOCX/MD, manuscript/eBook, manuscript/script and Kindle checks: "three", "3" and "3rd" agree, "three" and "4" are reported as "number differs" with the words around them.
 - **Triggers:** automatic (the local watcher, once every input exists and nothing has changed for 5 minutes; an email only on HOLD) or manual (`Manuscript/Trigger/RUN_CONGRUENCY.md`).
 - Chapters without a lock (the first book's Ch1 to Ch5) are reported only and never held.
 - Updated: PHASE 4, MASTER_PIPELINE_OVERVIEW, HOW_TO_RUN_THE_PIPELINE (new Step 5c), PLACEHOLDERS. All other phase files are unchanged from v1.2.5.
 
 ### Known limitations
 
-- **Numbers are compared as a class.** The shared word comparison maps every digit and number word to one token, so "three steps" against "4 steps" is not reported. Exercise numbers are checked on their own; a numeric comparison is planned.
+- **Numbers outside the body text are not compared by value:** the reference list (left to `references_check.py`) and, in the narration script, numbers above 100 (years and page ranges are read aloud differently). Inside the body text, numbers are compared by value (see Added).
 - **Pass 1 needs the print PDF,** so PHASE 4 now waits for it, where before print could arrive later.
 - **Moved text is matched only when identical** (a footnote set at the page foot); a footnote reflowed with different wording shows as a missing and an extra passage.
 - **`--accept` is by text, not by place.** The same wording difference elsewhere in the section is accepted with it.
