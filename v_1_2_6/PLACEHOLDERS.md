@@ -1,6 +1,6 @@
 # Placeholders
 
-Every phase file in `v_1_2_5/` is written against placeholder tokens instead of one author's folders. Replace them once, and the whole pipeline points at your book.
+Every phase file in `v_1_2_6/` is written against placeholder tokens instead of one author's folders. Replace them once, and the whole pipeline points at your book.
 
 Tokens look like `<THIS>`. A few also appear inside example file names (`<BOOK>_Kindle.docx`), so a plain find-and-replace across the folder is enough.
 
@@ -78,7 +78,7 @@ $map = [ordered]@{
 # UTF-8 without BOM, LF endings, trailing newline preserved — the files contain
 # em dashes and arrows, and Set-Content would rewrite the encoding.
 $utf8 = New-Object System.Text.UTF8Encoding $false
-Get-ChildItem v_1_2_5\*.md | ForEach-Object {
+Get-ChildItem v_1_2_6\*.md | ForEach-Object {
   $t = [System.IO.File]::ReadAllText($_.FullName, $utf8)
   foreach ($k in $map.Keys) { $t = $t.Replace($k, $map[$k]) }
   [System.IO.File]::WriteAllText($_.FullName, $t, $utf8)
@@ -88,7 +88,7 @@ Get-ChildItem v_1_2_5\*.md | ForEach-Object {
 bash / macOS / Linux:
 
 ```bash
-cd v_1_2_5
+cd v_1_2_6
 # Same rule: longer tokens first, so <BOOK> does not eat <BOOK_ROOT>.
 sed -i 's|<BOOK_ROOT>|/Books/MYBOOK_FIRST_EDITION|g; s|<BOOK_SLUG>|MYBOOK_FIRST_EDITION|g; s|<BOOK_TITLE>|The Quiet Engine|g; s|<PASS7_SOURCE>|/Books/MYBOOK_FIRST_EDITION/_PASS7|g; s|<DRAFT_SOURCE>|/Books/MYBOOK_FIRST_EDITION/_PASS6|g; s|<WORKBOOK_INDESIGN_ROOT>|/Users/a.writer/OneDrive/InDesign/MYBOOK_Workbook|g; s|<WORKBOOK_BOOK_ROOT>|/Books/MYBOOK_WORKBOOK_FIRST_EDITION|g; s|<LOCAL_TOOLS_ROOT>|/Automation/LocalAI|g; s|<PRINT_DSM_ROOT>|/Books/MYBOOK_FIRST_EDITION/_PrintDSM|g; s|<EBOOK_DSM_ROOT>|/Books/MYBOOK_FIRST_EDITION/_eBookDSM|g; s|<PACKET_DSM_ROOT>|/Books/MYBOOK_FIRST_EDITION/_PacketDSM|g; s|<EBOOK_DESIGN_SYSTEM>|https://claude.ai/artifact/your-book-ebook-system|g; s|<WORKBOOK_EBOOK_DESIGN_SYSTEM>|https://claude.ai/artifact/your-workbook-ebook-system|g; s|<PACKET_DESIGN_SYSTEM>|https://claude.ai/artifact/your-packet-system|g; s|<PRINT_TEMPLATE_BOOK>|/Books/MYBOOK_FIRST_EDITION/_PrintDSM/Book_Templates_v4.idml|g; s|<PRINT_TEMPLATE_WORKBOOK>|/Books/MYBOOK_WORKBOOK_FIRST_EDITION/_PrintDSM/Workbook_Templates_v4.idml|g; s|<BOOK>|MYBOOK|g; s|<EDITION>|First Edition|g; s|<AUTHOR>|A. Writer|g; s|<DSM_NAME>|Quiet Engine DSM|g; s|<dsm-slug>|quiet-engine-dsm|g; s|<RAG_COLLECTION>|quiet_engine_book|g; s|<RAG_BLOB_CONTAINER>|quiet-engine-book-rag|g; s|<GATEWAY_URL>|https://governance.example.com|g; s|<CLOUD_EMBED_FLOW>|book-embed|g; s|<RAG_REFRESH_TIME>|22:00|g' *.md
 ```

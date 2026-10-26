@@ -25,6 +25,14 @@ Each pair of formats was already checked on its own: Part 0 (eBook against manus
 - Chapters without a lock (the first book's Ch1 to Ch5) are reported only and never held.
 - Updated: PHASE 4, MASTER_PIPELINE_OVERVIEW, HOW_TO_RUN_THE_PIPELINE (new Step 5c), PLACEHOLDERS. All other phase files are unchanged from v1.2.5.
 
+### Known limitations
+
+- **Numbers are compared as a class.** The shared word comparison maps every digit and number word to one token, so "three steps" against "4 steps" is not reported. Exercise numbers are checked on their own; a numeric comparison is planned.
+- **Pass 1 needs the print PDF,** so PHASE 4 now waits for it, where before print could arrive later.
+- **Moved text is matched only when identical** (a footnote set at the page foot); a footnote reflowed with different wording shows as a missing and an extra passage.
+- **`--accept` is by text, not by place.** The same wording difference elsewhere in the section is accepted with it.
+- Two phase files (3.5B, 3W) changed line endings only (CRLF to LF) when copied.
+
 ---
 
 ## [v1.2.5] — 2026-10-24

@@ -258,7 +258,7 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 🧑 **Then:**
 1. Open the report. The first table shows each format's status; each difference has its page or segment.
 2. For each difference: fix the file that is wrong and re-export (the check re-runs by itself), or accept it as intended. Narration-only text (figure descriptions, the spoken pointer in place of the references) is accepted once.
-3. To accept what the report shows: `python congruency_check.py <ChapterName> --accept "<reason>"`.
+3. To accept what the report shows: `python congruency_check.py <ChapterName> --accept "<reason>"` (add `--keys K1,K2`, from the report's Key column, to accept only some). Read each difference first; never accept a wording difference you haven't looked at.
 4. A file listed as older than the manuscript needs re-exporting.
 
 ✅ **Done when:** the verdict is **PASS**. Part A (Kindle) starts only on PASS. For a chapter without a lock (the first book's Ch1 to Ch5) the report is for information and never holds anything.

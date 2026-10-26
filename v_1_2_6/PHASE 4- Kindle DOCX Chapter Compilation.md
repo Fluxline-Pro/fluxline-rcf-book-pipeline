@@ -353,7 +353,7 @@ Part 0 itself needs only the final eBook PDF and the manuscript (MD and DOCX); i
 | eBook PDF ↔ print PDF | the latest 0P result (0P is re-run if it is older than either PDF) | differences with both page numbers, and the layout error count |
 | Manuscript ↔ narration script | what the narrator is told to read | differences with the segment id; narration-only descriptions (figures, the spoken pointer in place of references) show up here and are accepted once |
 | Manuscript ↔ workbook | exercise number and title in the manuscript heading, the exercise registry, the workbook DOCX/MD and the print IDML | any number or title that disagrees |
-| Freshness | every file against `MANUSCRIPT_LOCKED.md` (both hashes and the revision date); a derived file older than the manuscript is listed | the stale-file list |
+| Freshness | every file against `MANUSCRIPT_LOCKED.md` (both hashes and the revision date), or against `MANUSCRIPT_SYNCED.md` when Part 0 changed the manuscript after the lock with <AUTHOR>'s decision and nothing was edited since; a derived file older than the manuscript is listed | the stale-file list |
 
 Folios, footnote numbers, figure labels, pull quotes that repeat body text, and text that only moved are not differences.
 
@@ -361,7 +361,9 @@ Folios, footnote numbers, figure labels, pull quotes that repeat body text, and 
 - **PASS:** no stale file, no missing input, and every difference is either gone or accepted.
 - **HOLD:** anything else. The report says why.
 
-**Deciding a HOLD.** <AUTHOR> reads the report and, for each difference, either fixes the file that is wrong (the manuscript through `MANUSCRIPT_REVISED.md`; a layout in InDesign; the script in the Audiobook folder) and re-exports, or accepts it as intended. Accepting is `congruency_check.py <ChapterName> --accept "<reason>"`, which records the currently reported differences in `CongruencyQA/<ChapterName>_Accepted.json`; it applies only to the differences shown in the report. The check re-runs on its own when an input changes (HOW_TO_RUN, Step 5c).
+**Deciding a HOLD.** <AUTHOR> reads the report and, for each difference, either fixes the file that is wrong (the manuscript through `MANUSCRIPT_REVISED.md`; a layout in InDesign; the script in the Audiobook folder) and re-exports, or accepts it as intended. Accepting is `congruency_check.py <ChapterName> --accept "<reason>"`, which records the currently reported differences in `CongruencyQA/<ChapterName>_Accepted.json`; it applies only to the differences shown in the report, never with `--all`. To accept only some, add `--keys K1,K2` (the Key column of the report). Read each difference first: a wording difference between formats is a real error until you have decided otherwise.
+
+**Known limit:** numbers are compared as a class, not by value, because the shared word comparison treats every digit and number word as the same token. A changed count ("three steps" against "four") is not reported by the text checks. Exercise numbers are checked separately (workbook row); a numeric comparison is planned. The check re-runs on its own when an input changes (HOW_TO_RUN, Step 5c).
 
 **Gate:** Part A starts only when the latest pass 1 report for the chapter is PASS and is newer than every input. A chapter without a lock (the first book's Ch1 to Ch5) is checked and reported, and is never held by it.
 
