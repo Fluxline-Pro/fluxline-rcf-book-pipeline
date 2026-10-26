@@ -5,6 +5,37 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [v1.2.6] — 2026-10-26
+
+**Folder:** `v_1_2_6/` · **Previous:** `v_1_2_5/` (unchanged, kept for books mid-flight) · **Tag:** `v1_2_6_PROD` (after the author's review)
+
+One congruency check across every format.
+
+### Why
+
+Each pair of formats was already checked on its own: Part 0 (eBook against manuscript), 0P (print against eBook), Part C (audio against its script). Nothing combined them into one result, and three things were not checked at all: the narration script against the locked manuscript, the freshness of every file against `MANUSCRIPT_LOCKED.md`, and the book's exercise numbers and titles against the workbook.
+
+### Added
+
+- **PHASE 4 Step 0C, the congruency check** (`congruency_check.py <Section> [--pass 1|2]`, deterministic, no LLM, report-only), reusing the Part 0 text comparison, the 0P print QA result, and the audiobook QA text rules. The report (`_BookGovernance/CongruencyQA/<Section>_Congruency.md` + `.json`) has a status row for each format, every difference with its page or segment, a stale-file list, and a **PASS / HOLD** verdict.
+- **Pass 1** (after Part 0 / 0R / 0G / 0P, before Part A) covers the manuscript DOCX and MD, the eBook PDF, the print PDF, the narration script, and the workbook's exercise numbers and titles. Part A starts only on PASS.
+- **Pass 2** (after Part C) adds the Kindle DOCX and the audiobook QA. PHASE 5 and PHASE 6.5 start only on PASS.
+- **Review loop:** differences are accepted with `--accept "<reason>"` (recorded in `<Section>_Accepted.json`), or fixed at the source.
+- **Numeric comparison** in the DOCX/MD, manuscript/eBook, manuscript/script and Kindle checks: "three", "3" and "3rd" agree, "three" and "4" are reported as "number differs" with the words around them.
+- **Triggers:** automatic (the local watcher, once every input exists and nothing has changed for 5 minutes; an email only on HOLD) or manual (`Manuscript/Trigger/RUN_CONGRUENCY.md`).
+- Chapters without a lock (the first book's Ch1 to Ch5) are reported only and never held.
+- Updated: PHASE 4, MASTER_PIPELINE_OVERVIEW, HOW_TO_RUN_THE_PIPELINE (new Step 5c), PLACEHOLDERS. All other phase files are unchanged from v1.2.5.
+
+### Known limitations
+
+- **Numbers outside the body text are not compared by value:** the reference list (left to `references_check.py`) and, in the narration script, numbers above 100 (years and page ranges are read aloud differently). Inside the body text, numbers are compared by value (see Added).
+- **Pass 1 needs the print PDF,** so PHASE 4 now waits for it, where before print could arrive later.
+- **Moved text is matched only when identical** (a footnote set at the page foot); a footnote reflowed with different wording shows as a missing and an extra passage.
+- **`--accept` is by text, not by place.** The same wording difference elsewhere in the section is accepted with it.
+- Two phase files (3.5B, 3W) changed line endings only (CRLF to LF) when copied.
+
+---
+
 ## [v1.2.5] — 2026-10-24
 
 **Folder:** `v_1_2_5/` · **Previous:** `v_1_2_4/` (unchanged, kept for books mid-flight) · **Tag:** `v1_2_5_PROD` (after the author's review)
