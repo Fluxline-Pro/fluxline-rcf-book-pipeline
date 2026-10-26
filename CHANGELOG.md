@@ -5,11 +5,72 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
-## [Unreleased]
+## [v1.2.6] — 2026-10-26
+
+**Folder:** `v_1_2_6/` · **Previous:** `v_1_2_5/` (unchanged, kept for books mid-flight) · **Tag:** `v1_2_6_PROD` (after the author's review)
+
+One congruency check across every format.
+
+### Why
+
+Each pair of formats was already checked on its own: Part 0 (eBook against manuscript), 0P (print against eBook), Part C (audio against its script). Nothing combined them into one result, and three things were not checked at all: the narration script against the locked manuscript, the freshness of every file against `MANUSCRIPT_LOCKED.md`, and the book's exercise numbers and titles against the workbook.
+
+### Added
+
+- **PHASE 4 Step 0C, the congruency check** (`congruency_check.py <Section> [--pass 1|2]`, deterministic, no LLM, report-only), reusing the Part 0 text comparison, the 0P print QA result, and the audiobook QA text rules. The report (`_BookGovernance/CongruencyQA/<Section>_Congruency.md` + `.json`) has a status row for each format, every difference with its page or segment, a stale-file list, and a **PASS / HOLD** verdict.
+- **Pass 1** (after Part 0 / 0R / 0G / 0P, before Part A) covers the manuscript DOCX and MD, the eBook PDF, the print PDF, the narration script, and the workbook's exercise numbers and titles. Part A starts only on PASS.
+- **Pass 2** (after Part C) adds the Kindle DOCX and the audiobook QA. PHASE 5 and PHASE 6.5 start only on PASS.
+- **Review loop:** differences are accepted with `--accept "<reason>"` (recorded in `<Section>_Accepted.json`), or fixed at the source.
+- **Numeric comparison** in the DOCX/MD, manuscript/eBook, manuscript/script and Kindle checks: "three", "3" and "3rd" agree, "three" and "4" are reported as "number differs" with the words around them.
+- **Triggers:** automatic (the local watcher, once every input exists and nothing has changed for 5 minutes; an email only on HOLD) or manual (`Manuscript/Trigger/RUN_CONGRUENCY.md`).
+- Chapters without a lock (the first book's Ch1 to Ch5) are reported only and never held.
+- Updated: PHASE 4, MASTER_PIPELINE_OVERVIEW, HOW_TO_RUN_THE_PIPELINE (new Step 5c), PLACEHOLDERS. All other phase files are unchanged from v1.2.5.
+
+### Known limitations
+
+- **Numbers outside the body text are not compared by value:** the reference list (left to `references_check.py`) and, in the narration script, numbers above 100 (years and page ranges are read aloud differently). Inside the body text, numbers are compared by value (see Added).
+- **Pass 1 needs the print PDF,** so PHASE 4 now waits for it, where before print could arrive later.
+- **Moved text is matched only when identical** (a footnote set at the page foot); a footnote reflowed with different wording shows as a missing and an extra passage.
+- **`--accept` is by text, not by place.** The same wording difference elsewhere in the section is accepted with it.
+- Two phase files (3.5B, 3W) changed line endings only (CRLF to LF) when copied.
+
+---
+
+## [v1.2.5] — 2026-10-24
+
+**Folder:** `v_1_2_5/` · **Previous:** `v_1_2_4/` (unchanged, kept for books mid-flight) · **Tag:** `v1_2_5_PROD` (after the author's review)
+
+The manuscript is now audited and locked **before** design.
+
+### Why
+
+Until now, the full content audit of each chapter (PHASE 0.9 Mode D) ran at the very end, in PHASE 4 Part B. By then the design packet, the eBook, the print IDMLs, and even an audiobook recording already existed. When the audit found something (a definition that disagreed with another chapter, a wrong cross-reference, a list count), the fix had to go back into the manuscript and then through every format again. Chapter 3's audio had already been recorded when its findings came in.
+
+The audit belongs where a fix is still one edit in one file: after governance, before anything is designed, laid out, or recorded.
+
+### Added
+
+- **New PHASE 2.5, Manuscript Lock Audit** (`PHASE 2.5- Manuscript Lock Audit.md`), between PHASE 2 and PHASE 3. Per chapter, it:
+  - runs PHASE 0.9's read-through passes (Pass 1 → Pass 2, Mode P) on the governed chapter against the book ledger, with the full content categories: definition conflicts, cross-references, term drift, list counts, glossary gaps, acronyms, heading anchors, and figures (plus equations, thresholds, and known corrections);
+  - writes a findings report and a **decisions log** (`Manuscript/<ChapterName>_LockDecisions.md`), where the author decides every finding: `Fix`, `Fix: <wording>`, `Keep — <reason>`, `Canonical: …`, or `Defer — <chapter>` for a cross-chapter item whose other chapter isn't locked yet;
+  - applies the approved fixes to the **DOCX first** (canonical), then brings the MD in line with `docx_md_sync.py`, re-checks the changed sections, and updates verbatim quotes of the old wording in the chapter's derived files;
+  - writes **`Manuscript/Trigger/MANUSCRIPT_LOCKED.md`**, recording the DOCX and MD SHA-256 hashes, the run ID, and the decision counts, plus a locked snapshot in `Manuscript/_Locked/`.
+- **A lock gate on every design and production phase:** PHASE 3 (A0 now starts from the lock), 3.5, 3.5A, 3.5B, 3W (W1 onward), and 4 (Part 0, Part A, and Part C). A lock is stale when a recorded hash no longer matches the file, or when `MANUSCRIPT_REVISED.md` has a newer section.
+- **Status ladder:** a new **Locked** milestone, awarded by PHASE 2.5, between Design Ready and Production Ready.
+- `docx_md_sync.py` is listed with the reference tools in `PLACEHOLDERS.md` (`<LOCAL_TOOLS_ROOT>`).
+
+### Changed
+
+- **After the lock, any change needs `MANUSCRIPT_REVISED.md` and the author's approval.** Each new section carries an `Approved: <initials> <date>` line. PHASE 1 then re-runs for the changed sections, PHASE 2 re-validates, and PHASE 2.5 runs a delta audit and writes a new lock (PHASE 1, PHASE 2.5 §7).
+- **PHASE 4 Part 0** expects no differences from the locked manuscript. Any S1 or S2 difference is now a post-lock change and needs the author's decision in `_Pipeline/P4_DECISIONS.md`, like an S3 item. `MANUSCRIPT_SYNCED.md` records the new hashes.
+- **PHASE 4 Part B, B0 (PHASE 0.9 Mode D) is reduced** to a cross-chapter consistency check plus a check of what changed in each chapter since its lock. It is no longer a full content audit, and it doesn't reopen a manuscript except for a genuine cross-chapter conflict, with the author's approval.
+- **PHASE 4 Part C:** the audiobook is recorded only after the lock, so a re-recording should never be needed.
+- `MASTER_PIPELINE_OVERVIEW.md` (phase table, flow, status ladder, deliverables, folder map, trigger table, automation events), `HOW_TO_RUN_THE_PIPELINE.md` (new Step 2a), PHASE 0.9 (Mode L and the reduced Mode D), PHASE 2, 6.5, and 7 updated to match.
 
 ### Documentation
 
 - **README: choosing your path.** Running the pipeline AI-assisted, with AI only for checking, or with no AI (the phases as a checklist-and-gate system), with steps for each path, AI-disclosure guidance, and a short guide to adopting the pipeline for other publishing work.
+- README updated for v1.2.5: current version, the phase table, and the flow.
 
 ---
 
