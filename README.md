@@ -8,7 +8,7 @@ Built for *RCF: Resonance Core Framework* by Terence Waters at [Fluxline.pro](ht
 
 **AI is optional.** You can run the pipeline AI-assisted, with AI only for checking, or entirely by hand as a checklist-and-gate system. See [Choosing your path](#choosing-your-path-with-ai-with-less-ai-or-without-it), and [Adopting it for your publishing work](#adopting-it-for-your-publishing-work) for what to tell someone who wants to use it.
 
-**Current version: v1.2.5** (phase files in [`v_1_2_5/`](./v_1_2_5)). v1.2.5 adds PHASE 2.5, the **manuscript lock audit**: each chapter's full content audit now runs after governance and before design, the author decides every finding, the fixes go into the DOCX, and the manuscript is locked (`MANUSCRIPT_LOCKED.md`). Every design and production phase requires the lock, and the end-of-book audit is reduced to a cross-chapter consistency check. v1.2.4 sets the workbook eBook's page numbering and final PDFs, makes write-in questions Montserrat, adds numbered badge circles, styles in-text figure references in print, and starts every chapter on a right-hand page. v1.2.3 refined print and the workbook: print callouts are separate frames copied from the template, and the workbook's how-to steps are roman with italic parentheticals. v1.2.2 made three Design System artifacts the source for every export: the book eBook, the workbook eBook, and the design packet. It also adds the workbook's numbered "How to work this exercise" steps. v1.2 added PHASE 3.5B, the **eBook-first print build**: the eBook is built first, then the print documents are generated as ready-to-open InDesign **IDML** files that replicate it, for both the chapter and its workbook exercise. v1.2.1 added:
+**Current version: v1.2.6** (phase files in [`v_1_2_6/`](./v_1_2_6)). v1.2.6 adds Step 0C in PHASE 4, the **congruency check**: one deterministic report (PASS or HOLD) that the manuscript, eBook, print PDF, narration script and workbook say the same thing and every file is current against the lock; pass 1 gates the Kindle build, pass 2 (after the audiobook) gates PHASE 5 and 6.5. v1.2.5 adds PHASE 2.5, the **manuscript lock audit**: each chapter's full content audit now runs after governance and before design, the author decides every finding, the fixes go into the DOCX, and the manuscript is locked (`MANUSCRIPT_LOCKED.md`). Every design and production phase requires the lock, and the end-of-book audit is reduced to a cross-chapter consistency check. v1.2.4 sets the workbook eBook's page numbering and final PDFs, makes write-in questions Montserrat, adds numbered badge circles, styles in-text figure references in print, and starts every chapter on a right-hand page. v1.2.3 refined print and the workbook: print callouts are separate frames copied from the template, and the workbook's how-to steps are roman with italic parentheticals. v1.2.2 made three Design System artifacts the source for every export: the book eBook, the workbook eBook, and the design packet. It also adds the workbook's numbered "How to work this exercise" steps. v1.2 added PHASE 3.5B, the **eBook-first print build**: the eBook is built first, then the print documents are generated as ready-to-open InDesign **IDML** files that replicate it, for both the chapter and its workbook exercise. v1.2.1 added:
 - print pagination and spacing rules;
 - an automatic PHASE 3 start once governance passes: Gemini figure prompts, a checklist of RGB and CMYK files to make, and the design packet built as Claude artifacts.
 
@@ -86,7 +86,8 @@ PHASE 0.9 is the exception: it audits the whole book at once, first on the draft
 ## Repository layout
 
 ```
-v_1_2_5/                   current release (PHASE 2.5 manuscript lock audit; the lock gates design and production; B0 reduced)
+v_1_2_6/                   current release (PHASE 4 Step 0C congruency check; gates Part A and PHASE 5/6.5)
+v_1_2_5/                   previous release (PHASE 2.5 manuscript lock audit; the lock gates design and production; B0 reduced), kept for books mid-flight
 v_1_2_4/                   previous release (workbook eBook numbering and finals; Montserrat questions; numbered badges; figure references), kept for books mid-flight
 v_1_2_3/                   previous release (print callouts as separate template frames; roman how-to steps), kept for books mid-flight
 v_1_2_2/                   previous release (design systems are the source for every export), kept for books mid-flight
@@ -113,12 +114,12 @@ CHANGELOG.md               what changed in each version, and why
 LICENSE                    GPL-3.0
 ```
 
-Start with **`v_1_2_5/MASTER_PIPELINE_OVERVIEW.md`** for the design, and **`v_1_2_5/HOW_TO_RUN_THE_PIPELINE.md`** for the day-to-day steps. It carries the phase table, the status ladder, the folder map, the deliverable map, and the trigger map, and it is the tie-breaker whenever a phase file and the overview disagree.
+Start with **`v_1_2_6/MASTER_PIPELINE_OVERVIEW.md`** for the design, and **`v_1_2_6/HOW_TO_RUN_THE_PIPELINE.md`** for the day-to-day steps. It carries the phase table, the status ladder, the folder map, the deliverable map, and the trigger map, and it is the tie-breaker whenever a phase file and the overview disagree.
 
 ## Getting started
 
 1. **Read the overview.** Ten minutes there saves an afternoon later.
-2. **Fill in the placeholders.** The phase files ship with tokens like `<BOOK_ROOT>`, `<BOOK>`, and `<AUTHOR>`. [`v_1_2_5/PLACEHOLDERS.md`](./v_1_2_5/PLACEHOLDERS.md) lists every one, with a find-and-replace script for PowerShell and bash, and says which concrete values (print trim, model names, "PASS 7") are examples rather than requirements.
+2. **Fill in the placeholders.** The phase files ship with tokens like `<BOOK_ROOT>`, `<BOOK>`, and `<AUTHOR>`. [`v_1_2_6/PLACEHOLDERS.md`](./v_1_2_6/PLACEHOLDERS.md) lists every one, with a find-and-replace script for PowerShell and bash, and says which concrete values (print trim, model names, "PASS 7") are examples rather than requirements.
 3. **Create the folder skeleton** from the overview's folder map — per chapter and at the book root.
 4. **Run PHASE 1 on one chapter.** Paste the phase, give it the locked manuscript, let it generate.
 5. **Run PHASE 2 on that same chapter** before generating a second one. It will find naming, metadata, and terminology problems while they are cheap to fix. Then run **PHASE 2.5** and lock the chapter before any design work.
@@ -188,7 +189,7 @@ If someone asks you how to use this for their own books, here is the short versi
 4. **Replace the placeholders** with your folders, title, and author name using `PLACEHOLDERS.md`; swap in your own terms, design system, and templates.
 5. **Keep only the formats you need.** eBook only? Stop at PHASE 3.5 and PHASE 4's Kindle step. No workbook or audiobook? Mark them N/A.
 6. **Respect the gates.** The value is in never moving a chapter on until its checks pass, whoever does the work.
-7. **Use the latest version folder** (`v_1_2_5/` today) for new books; older folders are kept only so books already in progress can finish on the version they started with.
+7. **Use the latest version folder** (`v_1_2_6/` today) for new books; older folders are kept only so books already in progress can finish on the version they started with.
 8. **Mind the license.** The pipeline is GPL-3.0: free to use and adapt, and changes you share keep the same license. Your book's content stays yours.
 9. **Share what you learn.** If you adapt it for a different kind of book or toolchain, a pull request helps the next author ([Contributing](#contributing)).
 
