@@ -86,7 +86,7 @@ Save to `<BOOK_ROOT>/_BookGovernance/Copilot/COPILOT_KINDLE_REVIEW_<YYYYMMDD>.md
 
 ## Gate effect
 
-Confirmed blocking findings must be fixed in the Kindle build (then rebuild and review the changed parts) or accepted by <AUTHOR> in writing before Part B is called done. EPUB validation, Kindle Previewer and device previews stay required where the workflow has them. The report feeds PHASE 6.5.
+Confirmed blocking findings must be fixed in the Kindle build (then rebuild and review the changed parts) or accepted by `<AUTHOR>` in writing before Part B is called done. EPUB validation, Kindle Previewer and device previews stay required where the workflow has them. The report feeds PHASE 6.5.
 
 ## What invalidates the result
 

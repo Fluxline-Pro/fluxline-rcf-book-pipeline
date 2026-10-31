@@ -87,11 +87,11 @@ Fill in `manuscriptSha256`, then save as `<CH_ROOT>/Governance/Copilot/COPILOT_D
 
 | Copilot outcome | Effect |
 |---|---|
-| PASS | Nothing blocks. PHASE 3.5 still runs every one of its own checks and <AUTHOR> still signs off |
-| CONDITIONAL PASS | Non-blocking findings are added to the DesignQA report as `Needs Author Review`; <AUTHOR> accepts or fixes them |
-| FAIL / AUTHOR DECISION REQUIRED | Blocking findings are verified by Claude (a finding Claude can't reproduce is marked `not reproduced`) and stay open until fixed or accepted by <AUTHOR> |
+| PASS | Nothing blocks. PHASE 3.5 still runs every one of its own checks and `<AUTHOR>` still signs off |
+| CONDITIONAL PASS | Non-blocking findings are added to the DesignQA report as `Needs Author Review`; `<AUTHOR>` accepts or fixes them |
+| FAIL / AUTHOR DECISION REQUIRED | Blocking findings are verified by Claude (a finding Claude can't reproduce is marked `not reproduced`) and stay open until fixed or accepted by `<AUTHOR>` |
 
-A Copilot `PASS` never writes `DESIGN_READY.md`. Only PHASE 3.5 does, after <AUTHOR>'s sign-off.
+A Copilot `PASS` never writes `DESIGN_READY.md`. Only PHASE 3.5 does, after `<AUTHOR>`'s sign-off.
 
 ## What invalidates the result
 

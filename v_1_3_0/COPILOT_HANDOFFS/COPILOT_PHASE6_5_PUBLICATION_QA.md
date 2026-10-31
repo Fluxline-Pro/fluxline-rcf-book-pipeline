@@ -93,10 +93,10 @@ Fill in `manuscriptSha256`; save to `<CH_ROOT>/Governance/Copilot/COPILOT_PUBLIC
 PHASE 6.5's report gains a **Copilot cross-format review** section. The result **Publishing Ready** requires all of:
 1. the deterministic checks pass (congruency pass 2, references, RAG validators, EPUB validation, preflight where the workflow has them);
 2. the required human checks are done (device previews, proofs);
-3. a Copilot review exists and is current (or <AUTHOR> has added a `publication-qa` waiver to `Governance/Copilot/Copilot_Waivers.md`);
-4. every blocking finding is resolved, or accepted by <AUTHOR> in writing;
+3. a Copilot review exists and is current (or `<AUTHOR>` has added a `publication-qa` waiver to `Governance/Copilot/Copilot_Waivers.md`);
+4. every blocking finding is resolved, or accepted by `<AUTHOR>` in writing;
 5. unresolved findings from Phase 2.5 (research), 3.5 (design) and 4 (final eBook, print, Kindle) are closed or accepted;
-6. <AUTHOR>'s sign-off in PHASE 7.
+6. `<AUTHOR>`'s sign-off in PHASE 7.
 
 ## What invalidates the result
 

@@ -120,6 +120,8 @@ These are concrete because a working example teaches faster than a blank. Change
 
 ## Two conventions worth keeping
 
+GitHub's Markdown view hides an unrecognised `<TOKEN>` written outside a code span as if it were an HTML tag ("accepted by  in writing"). The source files are intact; the Copilot handoff files wrap tokens in backticks so they stay visible when read there. The replacement scripts above work on either form.
+
 **Chapter naming.** `Ch<N>_<PascalCaseTitle>` is what lets governance catch drift automatically. Any stable convention works, but pick one before chapter one — renaming mid-book means touching every manifest, trigger, and vector.
 
 **`Final/` as the chapter root.** Phases 4 onward read only from `Chapters/<ChapterName>/Final/`. That one rule is what keeps a half-finished draft from reaching a published file.

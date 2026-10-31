@@ -396,7 +396,7 @@ All of these are **you** using Microsoft Copilot (the Microsoft 365 Premium acco
 
 > pipeline writes the handoff list → you open Copilot → you upload the named files → you paste the prompt from the named file (the block under "Prompt") → Copilot answers → you fill in the front-matter block and save the answer at the named path → Claude validates it and checks every finding → differences are reconciled → you decide → the gate moves on.
 
-Before you start, read `COPILOT_HANDOFFS/COPILOT_HANDOFF_STANDARD.md` once (status labels, upload limits, privacy check). Don't upload secrets or unrelated files. A report with the wrong manuscript hash, or listing other files, is rejected as stale. A Copilot `PASS` never certifies anything.
+A dedicated Copilot agent (`COPILOT_AGENT_INSTRUCTIONS.md`) is optional: the handoff files are authoritative and complete on their own, and Researcher is always started separately. Before you start, read `COPILOT_HANDOFFS/COPILOT_HANDOFF_STANDARD.md` once (status labels, upload limits, privacy check). Don't upload secrets or unrelated files. A report with the wrong manuscript hash, or listing other files, is rejected as stale. A Copilot `PASS` never certifies anything.
 
 ### 1. Research verification (PHASE 2.5; required when `copilotRequired: yes`)
 
@@ -404,7 +404,7 @@ Before you start, read `COPILOT_HANDOFFS/COPILOT_HANDOFF_STANDARD.md` once (stat
 |---|---|
 | **When** | After the PHASE 2.5 audit run, while you fill in the decisions log |
 | **Why** | A second, independent model checks externally verifiable claims and citations that Claude's Pass 4 also checked |
-| **Upload** | The chapter DOCX, reference list, glossary; optionally the findings report, the `ScienceClaims` file (after Copilot has made its own list), Deep Researcher reports, the claims registry |
+| **Upload** | **Stage 1 (first):** the chapter DOCX, reference list, glossary. Copilot returns its own claim inventory and stops. **Stage 2 (after you write `STAGE 2 FILES ATTACHED`):** the `ScienceClaims` file, Deep Researcher reports or evidence bundle, optionally the audit findings report and the claims registry. One conversation |
 | **Mode / prompt** | Researcher · `COPILOT_HANDOFFS/COPILOT_PHASE2_5_RESEARCH_REVIEW.md` |
 | **Output / save to** | `COPILOT_RESEARCH_REPORT.md` → `<CH_ROOT>/Governance/Research/` |
 | **Pass / fail** | Blocking findings (High claims unsupported/overstated, bad or fabricated citations, contradictions, undecided author-decision items) stop `RESEARCH_CLEAR.md`; non-blocking ones don't |
@@ -422,8 +422,8 @@ Before you start, read `COPILOT_HANDOFFS/COPILOT_HANDOFF_STANDARD.md` once (stat
 | **Why** | A further generator, working from the approved passage and the Visual DSM |
 | **Upload** | The passage, the condensed Visual DSM, the registry row, the terminology lock, 1 to 2 approved earlier images (at most 5 images) |
 | **Mode / prompt** | Create · `Figures/Copilot/<FigureID>_CopilotHandoff.md` (from `COPILOT_PHASE3_IMAGE_GENERATION.md`) |
-| **Output / save to** | Images → `Figures/Drafts/` (`<FigureID>_copilot_<date>_<n>.png`); alt text and rationale → `Figures/Copilot/<FigureID>_AltText_Rationale.md` |
-| **Pass / fail** | You choose or reject. Nothing is `approved` here |
+| **Output / save to** | One image per request (Option 1; ask for Option 2 as a separate request): `Figures/Drafts/<FigureID>_copilot_<date>_opt<n>.png`; alt text and rationale → `Figures/Copilot/<FigureID>_opt<n>_AltText_Rationale.md`; one `revisionHistory` entry per generation |
+| **Pass / fail** | You keep or reject each candidate. Nothing is `approved` here |
 | **Next** | Finish in Photoshop/Illustrator; PHASE 3 A0 updates the registry (provenance, `aiGenerated: true`); PHASE 3.5 §15 checks it |
 | **You approve** | The image, the alt text, the rationale |
 | **Invalidated by** | A change to the passage, the DSM, or the caption |

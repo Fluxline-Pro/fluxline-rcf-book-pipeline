@@ -1,8 +1,8 @@
-# COPILOT_PHASE3_IMAGE_GENERATION (prompt v1.0)
+# COPILOT_PHASE3_IMAGE_GENERATION (prompt v1.1)
 
-**Step:** PHASE 3, A0 (figures) · **Copilot mode:** Create (image generation) · **Output:** image files + `<FigureID>_AltText_Rationale.md` · **Consumed by:** the figure registry (PHASE 3 A0) and PHASE 3.5 design QA
+**Step:** PHASE 3, A0 (figures) · **Copilot mode:** Create (image generation) · **Output:** one image per request + `<FigureID>_opt<n>_AltText_Rationale.md` · **Consumed by:** the figure registry (PHASE 3 A0) and PHASE 3.5 design QA
 
-Follows `COPILOT_HANDOFF_STANDARD.md`. This is an **additional generator** next to Gemini and Firefly. It does not replace the Visual DSM, Claude Design, Photoshop/Illustrator/InDesign, or <AUTHOR>'s judgment. No generated image becomes canonical until PHASE 3.5 and <AUTHOR> approve it.
+Follows `COPILOT_HANDOFF_STANDARD.md`. This is an **additional generator** next to Gemini and Firefly. It does not replace the Visual DSM, Claude Design, Photoshop/Illustrator/InDesign, or `<AUTHOR>`'s judgment. No generated image becomes canonical until PHASE 3.5 and `<AUTHOR>` approve it.
 
 ## When to run it
 
@@ -71,15 +71,16 @@ ACCESSIBILITY INTENT
 The image must carry its meaning through shape and arrangement, not colour alone, and must read in greyscale.
 
 TASK
-1. Generate <N> distinct options for this one figure (not variations of one drawing: different compositions of the same idea).
-2. After the images, in text, give for the option I choose (ask me which): (a) alt text of 125 characters or fewer; (b) a long description of 2 to 4 sentences; (c) a visual rationale of 2 to 3 sentences saying which part of the passage each element shows. Keep these separate from the image.
+1. Generate ONE image for this figure: Option <n> (the first request is Option 1). Do not generate a batch or a set of variations. If I want another composition I will ask for Option 2, then Option 3, each as a separate request.
+2. After the image, in text, give for this option only: (a) alt text of 125 characters or fewer; (b) a long description of 2 to 4 sentences; (c) a visual rationale of 2 to 3 sentences saying which part of the passage each element shows. Keep these separate from the image.
 3. Say plainly which parts of the passage the image does not show.
+4. State: "AI-generated (Microsoft Copilot), Option <n>, an RGB concept, not a print-ready file."
 
 OUTPUT
-Images, then the text items (a) to (c). No extra commentary.
+The one image, then the text items (a) to (c) and the statement in task 4. No extra commentary.
 
 GATE EFFECT
-The images are drafts for the author's selection. They are not canonical until the author approves them and they pass design QA.
+The image is one recorded candidate. It is not canonical until the author approves it and it passes design QA.
 
 LIMITATIONS
 The image is AI-generated and is a concept at the generator's native resolution, not a print-ready file. The author finishes or redraws it for print.
@@ -91,12 +92,15 @@ HUMAN APPROVAL
 The author chooses, edits or rejects every image.
 ```
 
-## After Copilot answers
+## After Copilot answers: one generation, one recorded candidate
 
-1. Save every image you might use to `<CH_ROOT>/Figures/Drafts/` as `<FigureID>_copilot_<YYYYMMDD>_<n>.png`, even the ones you reject (the revision history).
-2. Save the text answers to `<CH_ROOT>/Figures/Copilot/<FigureID>_AltText_Rationale.md`, with the standard front matter.
-3. Choose one. Finish it in Photoshop or Illustrator to the print and eBook specs; save the finals as the PHASE 3 A0 save-as names (`Figures/RGB`, `Figures/CMYK`).
-4. Update the figure registry row (below). Claude does this in PHASE 3 A0 when you say which option you picked; or do it by hand.
+The rule is **one prompt execution → one generated candidate → one recorded revision**. Never keep a batch under one name.
+
+1. Save the image to `<CH_ROOT>/Figures/Drafts/` as `<FigureID>_copilot_<YYYYMMDD>_opt<n>.png` (`opt1`, `opt2`, ...; if you regenerate the same option on the same day, add `_r2`). Keep every candidate, including the ones you reject.
+2. Save Copilot's text for that candidate to `<CH_ROOT>/Figures/Copilot/<FigureID>_opt<n>_AltText_Rationale.md`, with the standard front matter (`handoff`, `chapter`, `reviewDate`, `copilotMode: Create`, `filesUploaded`, `deviations`).
+3. Add one entry to the figure's `revisionHistory` for this generation: date, option number, file name, prompt version, DSM version, generator, outcome (`candidate` / `rejected` / `chosen`) and the author's one-line reason.
+4. If you want another composition, ask for **Option 2** as a new request in the same chat (or a fresh chat with the same handoff), then Option 3 if needed; each one is saved and recorded as in steps 1 to 3. Iterating is fine; each result is a distinct governed generation.
+5. When you choose one, set its `approval` to `pending` in the registry (PHASE 3.5 and you approve it later), finish it in Photoshop or Illustrator to the print and eBook specs, and save the finals as the PHASE 3 A0 save-as names (`Figures/RGB`, `Figures/CMYK`). The final's registry row points to the chosen option's file.
 
 ## Figure registry columns added in v1.3.0
 
@@ -106,25 +110,25 @@ PHASE 3 A0 already writes number, caption, spec, accents, status, paths, tool us
 |---|---|
 | `sourceSection` | Manuscript section the figure illustrates |
 | `generator` | `Copilot Create` · `Gemini` · `Firefly` · `Illustrator` · `Photoshop` · `hand-drawn` ... |
-| `promptVersion` | e.g. `COPILOT_PHASE3_IMAGE_GENERATION v1.0` |
+| `promptVersion` | e.g. `COPILOT_PHASE3_IMAGE_GENERATION v1.1` |
 | `dsmVersion` | Visual DSM version used |
 | `generatedOn` | Date |
 | `aiGenerated` | `true` when any AI tool produced the base image. Required for the production record |
 | `approval` | `pending` · `approved <initials> <date>` · `rejected` |
-| `filename` | Final file name(s) |
+| `filename` | The chosen candidate's file name and the final file name(s) |
 | `placement` | Chapter opener, inline, full page ... |
 | `dimensions` | Pixel size as generated, and the print and eBook target |
 | `colorMode` | `RGB concept` · `RGB final` · `CMYK final` |
 | `resolutionStatus` | `native <w>x<h>` · `upscaled/redrawn to <ppi> ppi` · `needs rework` |
-| `altText`, `longDescription`, `rationale` | From Copilot's text, edited by <AUTHOR> |
-| `rights` | Provenance and rights note, for example "AI-generated (Microsoft Copilot), finished by <AUTHOR>; no third-party material supplied" |
-| `revisionHistory` | Dated list: option chosen, edits, re-generations |
+| `altText`, `longDescription`, `rationale` | From Copilot's text, edited by `<AUTHOR>` |
+| `rights` | Provenance and rights note, for example "AI-generated (Microsoft Copilot), finished by `<AUTHOR>`; no third-party material supplied" |
+| `revisionHistory` | One entry per generation or edit: date, option number, file name, prompt version, DSM version, generator, outcome (`candidate` / `rejected` / `chosen`), one-line reason |
 
 A figure whose `aiGenerated` is true feeds the AI-use disclosure check in PHASE 7.
 
 ## Gate effect
 
-A Copilot image enters PHASE 3.5 (design QA) like any other figure. It is `pending` until PHASE 3.5 has checked it against the DSM and the accessibility rules, and <AUTHOR> has written `approved`. PHASE 3.5 will not certify a chapter Production Ready while a figure is `pending` or its resolution status is `RGB concept` with no finished version.
+A Copilot image enters PHASE 3.5 (design QA) like any other figure. It is `pending` until PHASE 3.5 has checked it against the DSM and the accessibility rules, and `<AUTHOR>` has written `approved`. PHASE 3.5 will not certify a chapter Production Ready while a figure is `pending` or its resolution status is `RGB concept` with no finished version.
 
 ## Limitations
 

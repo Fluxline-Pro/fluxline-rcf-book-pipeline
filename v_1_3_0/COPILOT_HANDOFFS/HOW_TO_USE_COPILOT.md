@@ -1,8 +1,10 @@
 # How to use Copilot in the pipeline (author's guide, v1.3.0)
 
-**For:** <AUTHOR> · **Short version:** Copilot is your second reviewer and an extra image maker. Claude builds and keeps the gates. You start every Copilot step, and nothing Copilot says changes a file until you decide.
+**For:** `<AUTHOR>` · **Short version:** Copilot is your second reviewer and an extra image maker. Claude builds and keeps the gates. You start every Copilot step, and nothing Copilot says changes a file until you decide.
 
 ## One-time setup
+
+**The handoff contract is authoritative. Persistent agent instructions reduce repetition but are not required for correctness.** Setting up the agent is optional; you can paste `COPILOT_AGENT_INSTRUCTIONS.md` at the start of a session instead, or skip it.
 
 1. Create the Copilot agent (or saved instructions) from `COPILOT_AGENT_INSTRUCTIONS.md` (paste the fenced block; the Instructions field allows 8,000 characters and the block is about 5,200). Whether your Premium plan includes Agent Builder is not documented: if it doesn't, paste the block as the first message of each session. **Research verification must be run in Researcher mode directly** (an agent can't be switched to Researcher), so paste the block there, then the handoff prompt.
 2. Keep these open in a folder you can reach from Copilot's upload dialog: the `COPILOT_HANDOFFS/` prompt files, and the chapter's `Governance/Research/Copilot_Research_Handoff.md` packet where one exists.
@@ -26,8 +28,8 @@ If a required Copilot step isn't possible (allowance used up, no access), add a 
 | PHASE | Step | Use Copilot to | Mode | Upload | Prompt file | Save as (under `<CH_ROOT>/`) | Required? | Then |
 |---|---|---|---|---|---|---|---|---|
 | 0.9, 1, 2 | none | (nothing: Claude and the local tools do these) | | | | | | |
-| **2.5** | §3.2b | Verify the chapter's claims and citations independently of Claude | **Researcher** | chapter DOCX, glossary; later the ScienceClaims file and Deep Researcher results | `COPILOT_PHASE2_5_RESEARCH_REVIEW.md` | `Governance/Research/COPILOT_RESEARCH_REPORT.md` | When the lock has `copilotRequired: yes` | `RERUN_P2.5.md` → reconciliation → you decide → `RESEARCH_CLEAR.md` → lock |
-| 3 | A0 (figures) | Make a concept image for a figure (extra to Gemini/Firefly) | **Create** | passage, `DSM_CopilotCard.md`, registry row, 1–2 approved images | `COPILOT_PHASE3_IMAGE_GENERATION.md` (one handoff per figure in `Figures/Copilot/`) | images → `Figures/Drafts/`; text → `Figures/Copilot/<FigureID>_AltText_Rationale.md` | Optional | finish in Photoshop; Claude updates the registry (`aiGenerated: true`); PHASE 3.5 checks |
+| **2.5** | §3.2b | Verify the chapter's claims and citations independently of Claude | **Researcher** | **Stage 1:** chapter DOCX, reference list, glossary (Copilot makes its own claim list, then stops). **Stage 2:** the ScienceClaims file and Deep Researcher results, after you write `STAGE 2 FILES ATTACHED` | `COPILOT_PHASE2_5_RESEARCH_REVIEW.md` | `Governance/Research/COPILOT_RESEARCH_REPORT.md` | When the lock has `copilotRequired: yes` | `RERUN_P2.5.md` → reconciliation → you decide → `RESEARCH_CLEAR.md` → lock |
+| 3 | A0 (figures) | Make a concept image for a figure (extra to Gemini/Firefly) | **Create** | passage, `DSM_CopilotCard.md`, registry row, 1–2 approved images | `COPILOT_PHASE3_IMAGE_GENERATION.md` (one handoff per figure in `Figures/Copilot/`) | one image per request (Option 1; another composition is a separate request) → `Figures/Drafts/<FigureID>_copilot_<date>_opt<n>.png`; text → `Figures/Copilot/<FigureID>_opt<n>_AltText_Rationale.md` | Optional | finish in Photoshop; Claude updates the registry (`aiGenerated: true`); PHASE 3.5 checks |
 | 3.5 | §15 | Second look at the exported chapter for DSM, hierarchy, captions, drift | Chat | chapter PDF (a copy outside `eBook/`), DSM card, manuscript, registry | `COPILOT_PHASE3_5_DESIGN_REVIEW.md` | `Governance/Copilot/COPILOT_DESIGN_REVIEW_<date>.md` | Optional | `RERUN_P3.5.md` |
 | **4** | Step 0F | Final read of the eBook PDF before it becomes the wording source | Chat | eBook PDF, manuscript MD (+DOCX), reference list, registry, terminology lock, DSM card, research clearance files | `COPILOT_PHASE4_FINAL_EBOOK_REVIEW.md` | `Governance/Copilot/COPILOT_FINAL_EBOOK_REVIEW_<date>.md` | When `copilotRequired: yes` | `RERUN_P4.md` → `Final_eBook_Gate_<date>.md` → Part 0 |
 | 4 | 0P (before your InDesign verification, Step 0V) | Check the print PDF for drift, order, folios, clipping | Chat | print PDF (reduced copy if > 50 MB), eBook PDF, manuscript, print DSM card, registry | `COPILOT_PRINT_PDF_REVIEW.md` | `Governance/Copilot/COPILOT_PRINT_PDF_REVIEW_<date>.md` | Optional | `RERUN_P4.md` |
@@ -64,7 +66,7 @@ When unsure, tell Claude; it re-runs only the changed sections.
 
 ## Your six Ch1–6 packets
 
-Each chapter already has `Governance/Research/Copilot_Research_Handoff.md` and `ChN_DeepResearcher_Evidence_Bundle.md`. For each: Step 1 uploads → paste the prompt → wait for Copilot's own claim list → Step 2 uploads → save the report → tell Claude. Add a "Copilot research retrofit" section (with your approval line) to the chapter's `MANUSCRIPT_REVISED.md` before any wording change is made. No image handoffs are needed for Ch1–6.
+Each chapter already has `Governance/Research/Copilot_Research_Handoff.md` and `ChN_DeepResearcher_Evidence_Bundle.md`. For each, in one Researcher conversation: **STAGE 1 UPLOADS** (DOCX, reference list, glossary) → paste the prompt → Copilot returns its own claim inventory and stops → read it → **STAGE 2 UPLOADS** (ScienceClaims file and the Deep Researcher evidence bundle) → write `STAGE 2 FILES ATTACHED` → save the report → tell Claude. Add a "Copilot research retrofit" section (with your approval line) to the chapter's `MANUSCRIPT_REVISED.md` before any wording change is made. No image handoffs are needed for Ch1–6.
 
 ## If Copilot behaves oddly
 

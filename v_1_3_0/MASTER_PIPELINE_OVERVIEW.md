@@ -436,6 +436,6 @@ Every step after one of <AUTHOR>'s uploads is started by an event, not by pastin
 | PHASE 6.5 finished | PHASE 7 local release check | Pre-filled checklist · "what's missing" or "ready for sign-off" |
 | Print PDF uploaded to `InDesign/` (chapter, front matter, or `<WORKBOOK_BOOK_ROOT>/InDesign/`) or as `Workbook/<ChapterName>_Workbook_Print*.pdf`, or the matching eBook PDF re-exported (<AUTHOR>) — v1.1.2 | Print QA, `print_check.py` (PHASE 4 0P / 3W W2b; report-only; after 5 quiet minutes) | `_BookGovernance/PrintQA/<Section>_PrintQA.md` + `.json` · email when the findings change, or if the check fails |
 | Any manuscript, glossary, or `GLOSSARY.docx` change | References re-check (report-only) · glossary rollup | Reports in `_BookGovernance/` · email when the findings change |
-| `_Pipeline/RERUN_P<n>.md` (<AUTHOR>; `<n>` = 1, 2, 2.5, 3W, 4, 5, 6, 6.5, 7) | Re-runs that phase; notes inside go to Claude | As for that phase |
+| `_Pipeline/RERUN_P<n>.md` (<AUTHOR>; `<n>` = 1, 2, 2.5, 3W, 3.5, 4, 5, 6, 6.5, 7) | Re-runs that phase; notes inside go to Claude | As for that phase |
 
 Manual by design: PHASE 0.9; PHASE 3 and 3.5 (Claude Design, InDesign); the audiobook recording (PHASE 4 Part C); book assembly (PHASE 3 book mode, 3W W4–W5, PHASE 4 Part B); every approval; and the PHASE 7 sign-off.

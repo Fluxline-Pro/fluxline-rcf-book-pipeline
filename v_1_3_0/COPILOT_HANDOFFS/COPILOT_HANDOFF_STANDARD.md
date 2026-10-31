@@ -4,9 +4,11 @@ Every Microsoft Copilot step in the pipeline follows this contract. The per-step
 
 ## What a handoff is
 
-A handoff is a **human-in-the-loop** step. The pipeline prepares a list of files and a prompt; <AUTHOR> opens Microsoft Copilot (the personal Microsoft 365 Premium account), uploads the named files, pastes the prompt, and saves what comes back to the named location. Nothing in this pipeline (Claude, the runner, n8n, Microsoft Graph, or any script) calls, drives, or has access to <AUTHOR>'s personal Copilot. If a phase file ever appears to say otherwise, this standard wins.
+**The handoff contract is authoritative. Persistent agent instructions reduce repetition but are not required for correctness.** A dedicated Copilot agent or saved custom instructions (`COPILOT_AGENT_INSTRUCTIONS.md`) are optional: every handoff file is complete enough to run in a plain Copilot conversation. Researcher is always a separately started specialist session.
 
-Copilot is an **independent reviewer and artifact producer, not a source of truth.** Its output is evidence and drafts. Nothing it produces becomes canonical until <AUTHOR> accepts it and it enters the pipeline through the normal governed path (the decisions log, `MANUSCRIPT_REVISED.md`, the figure registry, or a phase gate).
+A handoff is a **human-in-the-loop** step. The pipeline prepares a list of files and a prompt; `<AUTHOR>` opens Microsoft Copilot (the personal Microsoft 365 Premium account), uploads the named files, pastes the prompt, and saves what comes back to the named location. Nothing in this pipeline (Claude, the runner, n8n, Microsoft Graph, or any script) calls, drives, or has access to `<AUTHOR>`'s personal Copilot. If a phase file ever appears to say otherwise, this standard wins.
+
+Copilot is an **independent reviewer and artifact producer, not a source of truth.** Its output is evidence and drafts. Nothing it produces becomes canonical until `<AUTHOR>` accepts it and it enters the pipeline through the normal governed path (the decisions log, `MANUSCRIPT_REVISED.md`, the figure registry, or a phase gate).
 
 ## Source-of-truth order (all handoffs)
 
@@ -33,9 +35,9 @@ Parts A to D, F to I, K and L are written inside the prompt block that the autho
 | G | **Output schema** | Exact headings, tables, status labels, artifact name |
 | H | **Gate effect** | How the output changes the pipeline |
 | I | **Limitations** | What still needs deterministic tools or a human |
-| J | **Return-to-pipeline** | Where <AUTHOR> saves the output, and which phase reads it |
+| J | **Return-to-pipeline** | Where `<AUTHOR>` saves the output, and which phase reads it |
 | K | **Privacy / source check** | Nothing secret in the uploads |
-| L | **Human approval** | Nothing is canonical without <AUTHOR>'s acceptance |
+| L | **Human approval** | Nothing is canonical without `<AUTHOR>`'s acceptance |
 
 ## Common rules (copied into every prompt as parts C, K and L)
 
@@ -43,7 +45,7 @@ Parts A to D, F to I, K and L are written inside the prompt block that the autho
 
 **K. Privacy / source check.** Before uploading, confirm the files contain no secrets, credentials, API keys, private keys, signing files, tokens, bank or tax data, customer lists, or unrelated personal or business data. Upload only the files in the manifest. Manuscripts you have not published are your own unreleased work: uploading them to your own Copilot account is your decision, and you should know that your Microsoft account's data and privacy settings apply.
 
-**L. Human approval.** Every finding is a recommendation. <AUTHOR> accepts, changes, or rejects each one. A finding that changes the manuscript goes through PHASE 2.5 (before the lock) or `MANUSCRIPT_REVISED.md` (after it).
+**L. Human approval.** Every finding is a recommendation. `<AUTHOR>` accepts, changes, or rejects each one. A finding that changes the manuscript goes through PHASE 2.5 (before the lock) or `MANUSCRIPT_REVISED.md` (after it).
 
 ## Status labels
 
@@ -52,9 +54,9 @@ Parts A to D, F to I, K and L are written inside the prompt block that the autho
 **Gate outcomes (QA reviews):** `PASS` · `CONDITIONAL PASS` · `FAIL` · `AUTHOR DECISION REQUIRED`
 
 - `PASS`: no blocking findings; limitations stated.
-- `CONDITIONAL PASS`: only non-blocking findings remain, each listed with an owner. <AUTHOR> must accept them in writing.
+- `CONDITIONAL PASS`: only non-blocking findings remain, each listed with an owner. `<AUTHOR>` must accept them in writing.
 - `FAIL`: at least one blocking finding is open.
-- A Copilot `PASS` is **never** a certification. It means "this reviewer found nothing blocking in what it could inspect". <AUTHOR> signs off separately.
+- A Copilot `PASS` is **never** a certification. It means "this reviewer found nothing blocking in what it could inspect". `<AUTHOR>` signs off separately.
 
 ## What Copilot reviews and what it does not
 

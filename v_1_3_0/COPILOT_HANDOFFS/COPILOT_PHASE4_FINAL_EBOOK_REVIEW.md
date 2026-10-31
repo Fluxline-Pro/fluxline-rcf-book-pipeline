@@ -1,12 +1,12 @@
 # COPILOT_PHASE4_FINAL_EBOOK_REVIEW (prompt v1.0)
 
-**Step:** PHASE 4, Part 0, Step 0F: final eBook PDF review before the PDF becomes final · **Copilot mode:** Chat with uploads · **Output:** `COPILOT_FINAL_EBOOK_REVIEW.md` · **Consumed by:** PHASE 4 Step 0F (Claude) · **Gate:** the eBook PDF is not accepted as the final wording source (Steps 0.2 to 0.4) until this review has an outcome <AUTHOR> accepts
+**Step:** PHASE 4, Part 0, Step 0F: final eBook PDF review before the PDF becomes final · **Copilot mode:** Chat with uploads · **Output:** `COPILOT_FINAL_EBOOK_REVIEW.md` · **Consumed by:** PHASE 4 Step 0F (Claude) · **Gate:** the eBook PDF is not accepted as the final wording source (Steps 0.2 to 0.4) until this review has an outcome `<AUTHOR>` accepts
 
 Follows `COPILOT_HANDOFF_STANDARD.md`.
 
 ## When to run it
 
-When <AUTHOR> has uploaded the final eBook PDF (`eBook/<ChapterName>_eBook.pdf`) and PHASE 4 Part 0 step 0.1 (the lock and freshness check) has passed, **before** Steps 0.2 to 0.4 apply any layout wording to the manuscript. Requires `MANUSCRIPT_LOCKED.md` and, for chapters with `copilotRequired: yes` in their lock, `RESEARCH_CLEAR.md`.
+When `<AUTHOR>` has uploaded the final eBook PDF (`eBook/<ChapterName>_eBook.pdf`) and PHASE 4 Part 0 step 0.1 (the lock and freshness check) has passed, **before** Steps 0.2 to 0.4 apply any layout wording to the manuscript. Requires `MANUSCRIPT_LOCKED.md` and, for chapters with `copilotRequired: yes` in their lock, `RESEARCH_CLEAR.md`.
 
 This is an independent final-reader and artifact pass. It is not a replacement for PHASE 4's own Part 0 text comparison (Claude reads the PDF and syncs the MD/DOCX), for 0P, or for 0C.
 
@@ -104,14 +104,14 @@ Nothing is applied to the manuscript or PDF without the author's decision.
 
 ## Gate effect
 
-| Outcome (after Claude's verification and <AUTHOR>'s decisions) | Effect |
+| Outcome (after Claude's verification and `<AUTHOR>`'s decisions) | Effect |
 |---|---|
 | PASS | Part 0 continues with 0.2 |
-| CONDITIONAL PASS | Continues once <AUTHOR> accepts each non-blocking finding in `_Pipeline/P4_DECISIONS.md` |
+| CONDITIONAL PASS | Continues once `<AUTHOR>` accepts each non-blocking finding in `_Pipeline/P4_DECISIONS.md` |
 | FAIL | Stops. Blocking findings are fixed in the eBook (re-upload the PDF and run the review again, for the changed pages) or accepted in writing |
-| AUTHOR DECISION REQUIRED | Stops until <AUTHOR> decides |
+| AUTHOR DECISION REQUIRED | Stops until `<AUTHOR>` decides |
 
-A finding marked "may invalidate research clearance" is handled by the rule below. If <AUTHOR> accepts a wording change that alters an empirical claim, it goes through `MANUSCRIPT_REVISED.md`, PHASE 2.5's delta audit (including a Copilot research re-run on those sections), and a new lock.
+A finding marked "may invalidate research clearance" is handled by the rule below. If `<AUTHOR>` accepts a wording change that alters an empirical claim, it goes through `MANUSCRIPT_REVISED.md`, PHASE 2.5's delta audit (including a Copilot research re-run on those sections), and a new lock.
 
 ## What invalidates the result
 
@@ -119,4 +119,4 @@ A new eBook PDF upload (the review covers the changed pages again), or a manuscr
 
 ## Limitations
 
-This is an AI review of what Copilot can read and see in the PDF. Preflight, colour, fonts, metadata, tags, EPUB validation and device rendering remain with deterministic tools and <AUTHOR>. It does not replace PHASE 4 Part 0's own comparison or the congruency check.
+This is an AI review of what Copilot can read and see in the PDF. Preflight, colour, fonts, metadata, tags, EPUB validation and device rendering remain with deterministic tools and `<AUTHOR>`. It does not replace PHASE 4 Part 0's own comparison or the congruency check.

@@ -86,7 +86,7 @@ Fill in `manuscriptSha256`; save to `<CH_ROOT>/Governance/Copilot/COPILOT_PRINT_
 
 ## Gate effect
 
-Informational for the print build, and an input to PHASE 6.5. A blocking finding that Claude confirms must be fixed in InDesign (then re-export and re-run for the changed pages) or accepted by <AUTHOR> in writing. The print file's own gate remains: InDesign preflight, printer specifications and a proof copy where the workflow has them.
+Informational for the print build, and an input to PHASE 6.5. A blocking finding that Claude confirms must be fixed in InDesign (then re-export and re-run for the changed pages) or accepted by `<AUTHOR>` in writing. The print file's own gate remains: InDesign preflight, printer specifications and a proof copy where the workflow has them.
 
 ## What invalidates the result
 
