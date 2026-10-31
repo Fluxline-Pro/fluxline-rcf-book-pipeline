@@ -35,6 +35,8 @@ Claude consumes the saved report ◀── you save it where it says ◀── C
 | `COPILOT_KINDLE_REVIEW.md` | PHASE 4 Part B (optional) | Chat | `COPILOT_KINDLE_REVIEW.md` | Part B, PHASE 6.5 |
 | `COPILOT_PHASE6_5_PUBLICATION_QA.md` | PHASE 6.5 | Chat | `COPILOT_PUBLICATION_QA.md` | one input to Publishing Ready, never the whole gate |
 
+`COPILOT_AGENT_INSTRUCTIONS.md` is the standing role prompt for a dedicated Copilot agent (paste it into the agent's Instructions); `HOW_TO_USE_COPILOT.md` is the author's one-page guide to where Copilot is used, by PHASE.
+
 `RESEARCH_RECONCILIATION.md` is **Claude's** output (PHASE 2.5 §3.2b), not a Copilot prompt: it compares the manuscript claim, Claude's Pass 4 conclusion, Copilot's conclusion, any source disagreement, the recommended resolution, and your decision.
 
 ## Where files go
