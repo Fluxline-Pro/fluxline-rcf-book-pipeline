@@ -1,6 +1,6 @@
 # How to Run the Pipeline (v1.3.0)
 
-**For:** <AUTHOR> · **Book:** *<BOOK_TITLE>* — <EDITION> · **Pipeline:** release v1.3.0 (phase files v3.3; PHASE 3W, 4, 6.5, and 7 at v3.4; PHASE 3.5A and 3.5B v1.0; PHASE 2.5 v1.1)
+**For:** <AUTHOR> · **Book:** *<BOOK_TITLE>* — <EDITION> · **Pipeline:** release v1.3.0 (each phase file's own version is in the table in `MASTER_PIPELINE_OVERVIEW.md`, section 1)
 
 **New in v1.2.5: the manuscript is locked before design.** After governance (PHASE 2), PHASE 2.5 reads the chapter for content problems and gives you a decisions log. You decide every finding, the fixes go into the DOCX (then the MD), and the chapter is locked. Design, print, the workbook, Kindle, and the audiobook all start from the locked text (Step 2a).
 
@@ -16,7 +16,7 @@ This is the operating guide: what to do, in what order, one step at a time. The 
 - ✅ **Done when:** the file or email that tells you the step is finished.
 
 **The golden rules:**
-1. **The lock comes first, then your uploads are the switches.** PHASE 2.5 locks a chapter's manuscript before design (`MANUSCRIPT_LOCKED.md`, v1.2.5). After that, the final **eBook PDF** starts PHASE 4, and the final **workbook PDF** locks the workbook manuscript. Upload only final exports.
+1. **The lock comes first, then your uploads are the switches.** PHASE 2.5 locks a chapter's manuscript before design (`MANUSCRIPT_LOCKED.md`, v1.2.5). After that, the final **eBook PDF** starts PHASE 4 (it does not create the lock), and the final **workbook PDF** starts the workbook sync. Upload only final exports.
 2. **Email is your inbox for the pipeline.** You're only emailed when you're needed, or when something is ready for you. No email means it's still running, or nothing needs you.
 3. **Nothing publishes itself.** Every generated item is a draft, and only you approve, sign off, and mark a chapter Published. A Copilot report is evidence, never a verdict or a gate on its own.
 4. **To redo a step,** create `<CH_ROOT>/_Pipeline/RERUN_P<n>.md`, where `<n>` is 1, 2, 2.5, 3W, 3.5, 3.5A, 3.5B, 4, 5, 6, 6.5, or 7. Anything you write inside is passed to Claude.
@@ -132,7 +132,7 @@ If PHASE 2 needs you, resolve the listed items (Needs Author Review, Tier C prop
 1. Edit the DOCX in `Manuscript/`, bring the MD in line with `docx_md_sync.py`, and bump the version.
 2. Add a dated section to `Manuscript/Trigger/MANUSCRIPT_REVISED.md`: the changed sections, the reason, and **`Approved: <initials> <date>`**. A section without that line is ignored.
 
-PHASE 1 regenerates what those sections feed, PHASE 2 re-validates, and PHASE 2.5 runs a delta audit of the changed sections and writes a new lock. Anything already built from the old text (the eBook, the print IDMLs, the workbook) needs the change carried in by hand; PHASE 4 stops until the eBook PDF is re-exported.
+PHASE 1 regenerates what those sections feed, PHASE 2 re-validates, and PHASE 2.5 runs a delta audit of the changed sections and writes a new lock. Saving the REVISED file starts nothing: create `RERUN_P1.md`, then `RERUN_P2.md`, then `RERUN_P2.5.md`, in that order. Anything already built from the old text (the eBook, the print IDMLs, the workbook) needs the change carried in by hand; PHASE 4 stops until the eBook PDF is re-exported.
 
 ### Step 2b — Print build → PHASE 3.5A (automatic import, then your layout)
 
@@ -146,32 +146,14 @@ PHASE 1 regenerates what those sections feed, PHASE 2 re-validates, and PHASE 2.
 
 ✅ The build report says **PASS** and the chapter is laid out from it.
 
-### Step 2c — eBook first, then the print IDMLs → PHASE 3.5B (v1.2, the default print build)
-
-🤖 **Automatic, on request** (`_Pipeline/RERUN_P3.5B.md`, or ask Claude), once the chapter is locked (`MANUSCRIPT_LOCKED.md`, v1.2.5):
-1. The chapter's eBook page, `<EBOOK_DSM_ROOT>/Chapter<N>_eBook.dc.html`, is built from the DOCX (and the Claude Design draft, if there is one). It is paginated to 8.5×11 and printed to a review PDF. With your permission, it is published as a private artifact. The same happens for the exercise's workbook eBook page.
-2. The print IDMLs then replicate the eBook:
-   - the chapter, built on your last finished chapter IDML in `<PRINT_DSM_ROOT>`, goes to `InDesign/<NNN>_Chapter<N>_<Title>.idml`;
-   - the exercise, cloned from your previous exercise IDML, goes to `Workbook/<NN>-<n>_Exercise_<L>_<N>_<Name>.idml`.
-3. Optionally, with your permission, a structural proof is rendered through Adobe and saved in `_Proofs/`.
-
-🧑 **You:**
-1. Review the eBook artifact or PDF.
-2. Open each IDML in InDesign. Re-apply fonts where needed (the proofs use substitutes), and check the callout badges, figures, and page breaks.
-3. Export the print PDFs (Step 5b).
-
-The design rules are in PHASE 3.5B §2: one column only; black, white, and gold; the template's print callouts; CMYK TIFFs for print only.
-
-✅ Both IDMLs are in place with the build report's flags addressed, and the print PDFs are exported.
-
-### Step 2d — Figures and the design packet → PHASE 3 A0 (automatic after the lock, v1.2.5)
+### Step 2c — Training materials, figures and the design packet → PHASE 3 A0 (automatic after the lock, v1.2.5)
 
 🤖 **Automatic:** when PHASE 2.5 issues `MANUSCRIPT_LOCKED.md` (before v1.2.5: when PHASE 2 issued `GOVERNANCE_READY.md`), PHASE 3 starts.
 - It writes `Figures/<ChapterName>_FigurePrompts.md`, containing:
   - a **figure checklist**: what to make, in RGB and CMYK;
   - a **Gemini prompt** for each figure, with a no-text fallback;
   - **figure suggestions** for you to accept or decline.
-- It builds the **design packet** as artifacts from the packet DSM.
+- It builds the **design packet** (deck, guides, **training materials**, reference guides, workbook) as artifacts from the packet DSM.
 - You get an email when both are ready.
 
 🧑 **You:**
@@ -181,16 +163,34 @@ The design rules are in PHASE 3.5B §2: one column only; black, white, and gold;
 2. Accept or decline the figure suggestions. An accepted suggestion goes into the registry and the manuscript before the build.
 3. Review the packet artifacts.
 
-✅ Every checklist row says **final**, and the FigureRegistry records the tool used. The eBook and print builds (Step 2c) can then run.
+✅ Every checklist row says **final**, and the FigureRegistry records the tool used. The eBook pass and the print build (Step 2d) can then run.
 
-### Step 3 — Design and layout → PHASE 3 + 3.5 (manual)
+### Step 2d — eBook pass, your notes, then the print IDMLs → PHASE 3.5B (v1.2, the default print build)
+
+References and manuscript are already finished and locked (PHASE 2.5). Everything here is for the book **and** the workbook exercise. **Print is required:** you review it, edit it, and pass it off.
+
+1. 🤖 **eBook pass (on request):** create `_Pipeline/RERUN_P3.5B.md` with `ebook` on the first line (or ask Claude). The chapter's eBook page, `<EBOOK_DSM_ROOT>/Chapter<N>_eBook.dc.html`, is built from the DOCX (and the Claude Design draft, if there is one), paginated to 8.5×11, and printed to a review PDF. With your permission it is published as a private artifact. The same happens for the exercise's workbook eBook page.
+2. 🧑 **You review the eBook and write your notes.** Layout notes go back into the eBook page. A wording change is a **`MANUSCRIPT_REVISED.md` change** (DOCX first, then a new lock), made **before** the print build, so the print replicates locked text.
+3. 🤖 **Print IDML (on request):** when your notes are applied (or you say there are none), create `_Pipeline/RERUN_P3.5B.md` with `idml` on the first line. The print IDMLs then replicate the eBook:
+   - the chapter, built on your last finished chapter IDML in `<PRINT_DSM_ROOT>`, goes to `InDesign/<NNN>_Chapter<N>_<Title>.idml`;
+   - the exercise, cloned from your previous exercise IDML, goes to `Workbook/<NN>-<n>_Exercise_<L>_<N>_<Name>.idml`.
+   Optionally, with your permission, a structural proof is rendered through Adobe and saved in `_Proofs/`.
+4. 🧑 **You, in InDesign:** open each IDML, re-apply fonts where needed (the proofs use substitutes), check the callout badges, figures, and page breaks, edit, and pass it off. You are the final print authority; 3.5B is the default route and 3.5A the fallback, and neither decides.
+5. 🧑 Export the print PDFs (Step 5b).
+
+The design rules are in PHASE 3.5B §2: one column only; black, white, and gold; the template's print callouts; CMYK TIFFs for print only.
+
+✅ Both IDMLs are in place with the build report's flags addressed, and the print PDFs are exported.
+
+### Step 3 — Design updates, then QA → PHASE 3 + 3.5 (manual)
+
+This follows the order in Steps 2c and 2d: the packet and figures, your updates, the eBook pass and your notes, then the print pass-off.
 
 🧑 **You, in Claude Design and InDesign:**
-1. In **Claude Design**, use the PHASE 3 Part B prompt and the files in `DesignPacket/uploads/` to build the packet: deck, guides, reference guides, workbook, opener, figures, and the eBook / print 7×10 / workbook layouts.
+1. In **Claude Design**, use the PHASE 3 Part B prompt and the files in `DesignPacket/uploads/` to build or update the packet: deck, guides, **training materials**, reference guides, workbook, opener, figures, and the eBook / print 7×10 / workbook layouts.
 2. Export the figure images to `DesignPacket/figures_export/`, plus the slides (PPTX + PDF) and the eBook exports.
-3. Run the **PHASE 3.5 QA** (report-only), and fix the findings in Claude Design until it says Production Ready.
-4. Finish the **print** book in InDesign from the PHASE 3.5B IDML (Step 2c), or lay it out from the PHASE 3.5A import (Step 2b). The eBook is built in Claude Design. **The wording is locked** (v1.2.5): it was settled in the DOCX before PHASE 1 and audited in PHASE 2.5. A change you still need goes into the DOCX, with an approved `MANUSCRIPT_REVISED.md` section and a re-lock, not into a layout. Place the callouts you approved from the PHASE 1 recommendations.
-5. Lay out the **workbook** in InDesign.
+3. Finish the eBook pass and the print book as in Step 2d (your notes, then the print IDML created from the eBook; you review, edit and pass off the print book and the workbook's). **The wording is locked** (v1.2.5): it was settled in the DOCX before PHASE 1 and audited in PHASE 2.5. A change you still need goes into the DOCX, with an approved `MANUSCRIPT_REVISED.md` section and a re-lock, not into a layout. Place the callouts you approved from the PHASE 1 recommendations. Lay out the **workbook** in InDesign.
+4. Run the **PHASE 3.5 QA** (report-only) once the print pass-off is done, and fix the findings until it says Production Ready.
 
 ✅ Design is finished, and you're ready to export the final PDFs.
 
@@ -209,7 +209,7 @@ The design rules are in PHASE 3.5B §2: one column only; black, white, and gold;
 
 ✅ The PHASE 4 checklist shows `gateStatus: PASS`, and PHASE 5 starts on its own.
 
-**Reference or glossary findings** don't block Kindle; they reach you by email. A reference fix after lock goes into InDesign: re-export the eBook PDF, and Part 0 re-syncs automatically.
+**Reference or glossary findings** don't block Kindle; they reach you by email. References are finished and locked before any PHASE 3 build (PHASE 2.5), so a reference fix after the lock is a **`MANUSCRIPT_REVISED.md` change** (DOCX first, delta audit, new lock), not an edit made only in InDesign.
 
 ### Step 5 — Upload the final workbook PDF → PHASE 3W (workbook sync)
 
@@ -261,7 +261,7 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 1. Check the chapter's eBook and print books, and the workbook's eBook and print, in InDesign for final anomalies. Fix them there (wording that should reach the manuscript goes through the DOCX and `MANUSCRIPT_REVISED.md`, or Part 0's decision list).
 2. Re-export the PDFs: the eBook PDF to `eBook/`, the print PDF to `InDesign/<ChapterName>_Print7x10.pdf`, the workbook PDFs as Step 5 says. Part 0 (Step 4) and 0P (Step 5b) re-run by themselves; for `copilotRequired: yes`, a new eBook PDF first re-opens Step 0F (a new Copilot review or a `final-ebook` waiver) for the changed pages. If you ran the optional Copilot print review, use its confirmed findings as a checklist.
 3. Wait until the Part 0 and 0P results are closed (nothing left to check; warnings fixed or accepted).
-4. **Create `Manuscript/Trigger/LAYOUT_VERIFIED.md` yourself** (the template is in PHASE 4, Step 0V). Claude never writes it.
+4. **Create `Manuscript/Trigger/LAYOUT_VERIFIED.md` yourself** (the template is in PHASE 4, Step 0V). Claude never writes it. Then **create `_Pipeline/RERUN_P4.md`**: creating `LAYOUT_VERIFIED.md` alone wakes nothing.
 
 🤖 **Automatic:** checks the file is newer than every PDF and the manuscript, Part 0 is synced, DOCX = MD, 0P is closed, and the workbook is ready (`WORKBOOK_READY.md`, and its print QA closed). If not, `LAYOUT_VERIFY_INCOMPLETE.md` lists what is open and Kindle does not start. A later export makes the confirmation stale; confirm again.
 
@@ -294,6 +294,8 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 ✅ The QA report has nothing open, or only items you accept.
 
 ### Step 7 — RAG, automation, publication QA → PHASES 5, 6, 6.5 (automatic)
+
+**This comes last, after all of the chapter's files are finished:** the manuscript, the eBook and print books (chapter and workbook, verified by you), Kindle, and the audiobook. The RAG index is built from the final wording; automations follow.
 
 🤖 **Automatic chain:** PHASE 5 builds the chapter's RAG index (local, and cloud if enabled) → PHASE 6 runs the automation and marketing activation tests → PHASE 6.5 runs publication QA.
 
@@ -363,14 +365,14 @@ These run on their own whenever their inputs change, and email you when somethin
 | `APPROVE_EDITORIAL.md` | `_Pipeline/` | Starts PHASE 2 |
 | Decision column | `Manuscript/<ChapterName>_LockDecisions.md` | Your call on each lock-audit finding; then create `RERUN_P2.5.md` (v1.2.5) |
 | `RERUN_P2.5.md` | `_Pipeline/` | Applies your lock-audit decisions (DOCX, then MD) and locks the manuscript: `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` (v1.2.5) |
-| `MANUSCRIPT_REVISED.md` (changed sections + reason; after the lock, `Approved: <initials> <date>`) | `Manuscript/Trigger/` | After PHASE 1: re-runs PHASE 1 for those sections, then PHASE 2 re-validates (v1.1.3), then PHASE 2.5 re-locks (v1.2.5) |
+| `MANUSCRIPT_REVISED.md` (changed sections + reason; after the lock, `Approved: <initials> <date>`) | `Manuscript/Trigger/` | Records a change. You then create `RERUN_P1.md` (those sections), `RERUN_P2.md` (re-validates, v1.1.3), `RERUN_P2.5.md` (delta audit and a new lock, v1.2.5) in turn |
 | `RERUN_P3.5A.md` | `_Pipeline/` | Runs the print build: `InDesign/<ChapterName>_Import.txt` + `_BuildManifest.json` + `_BuildReport.md` (v1.1.3) |
 | `<ChapterName>_FigurePrompts.md` | `Figures/` | Not a trigger: written by PHASE 3 A0. Make the figures it lists (RGB + CMYK) and decide its suggestions (v1.2.1) |
 | `DSM_APPROVED.md` | `<PACKET_DSM_ROOT>` | Created once by you after reviewing the packet DSM; lets PHASE 3 build packets automatically (v1.2.1) |
-| `RERUN_P3.5B.md` | `_Pipeline/` | Runs the eBook-first print build: the eBook page, then `InDesign/<NNN>_Chapter<N>_<Title>.idml` and `Workbook/<NN>-<n>_Exercise_…idml` (v1.2) |
+| `RERUN_P3.5B.md` | `_Pipeline/` | First line `ebook` (or anything else): builds only the eBook page and its review PDF. First line `idml`: builds `InDesign/<NNN>_Chapter<N>_<Title>.idml` and `Workbook/<NN>-<n>_Exercise_…idml`, and requires the eBook to be reviewed first (v1.2, two-step from v1.3.0) |
 | `style_map.json` entries | `<PRINT_DSM_ROOT>` | Map DOCX styles to the print template's styles for the print build; remove `CONFIRM:` once checked (v1.1.3) |
 | `<ChapterName>_Import.txt` | `InDesign/` | Not a trigger: place it into a copy of the print template (Show Import Options → Load Styles), then lay out |
-| `<ChapterName>_eBook.pdf` | `eBook/` | Completes 3.5 and starts PHASE 4 (locks the manuscript and glossary) |
+| `<ChapterName>_eBook.pdf` | `eBook/` | Completes 3.5 and starts PHASE 4 (does not create the manuscript lock: PHASE 2.5 did) |
 | `<NN>_Ex_<L>_<N>_Chapter<C>.pdf` | `<WORKBOOK_BOOK_ROOT>/…` | Completes 3.5 for the workbook and starts the 3W sync |
 | `<ChapterName>_Print7x10.pdf` | `InDesign/` (workbook: `<WORKBOOK_BOOK_ROOT>/InDesign/`, or `Workbook/<ChapterName>_Workbook_Print*.pdf` in the `chapter` layout) | Starts the print QA (PHASE 4 Part 0P; workbook: PHASE 3W W2b) |
 | `RUN_CONGRUENCY.md` (v1.2.6) | `Manuscript/Trigger/` (Parts: `Trigger/`) | Runs the congruency check now (`pass 2` on the first line for pass 2) |
@@ -389,6 +391,22 @@ These run on their own whenever their inputs change, and email you when somethin
 - Confirm the services in section 0 are up. Uploads made while n8n was down aren't seen: re-save the file, or create the RERUN file.
 
 ---
+
+## What wakes the runner (v1.3.0)
+
+The phase runner watches only the events in the table below; anything else you create does nothing until you also create a `RERUN` file. Separate local watchers handle the print-PDF check (Step 5b), `RUN_CONGRUENCY.md` (Step 5c) and the nightly RAG refresh (PHASE 6). (Ch1 to Ch5 are protected: the runner ignores their files, and you run their phases with Claude in chat.)
+
+| What you do | Wakes the runner? | Then do |
+|---|---|---|
+| Drop the manuscript in `<PASS7_SOURCE>` | Yes: PHASE 1 | none |
+| Create `_Pipeline/APPROVE_EDITORIAL.md` | Yes: PHASE 2 | none |
+| Upload the final eBook PDF to `eBook/`, or create `DesignPacket/Trigger/DESIGN_READY.md` | Yes: PHASE 4 (after 30 quiet minutes) | none; for `copilotRequired: yes` Step 0F pauses it |
+| Upload the final workbook PDF | Yes: PHASE 3W W3 | none |
+| Create `_Pipeline/RERUN_P<n>.md` | Yes: re-runs that phase | none |
+| Save a Copilot report (research, final eBook, design, print, Kindle, publication) | **No** | create the `RERUN_P<n>.md` the handoff names (`2.5`, `4`, `3.5`, `6.5`) |
+| Add a line to `Copilot_Waivers.md` | **No** | create the matching `RERUN_P<n>.md` |
+| Create `LAYOUT_VERIFIED.md` | **No** | create `_Pipeline/RERUN_P4.md` |
+| Create `MANUSCRIPT_REVISED.md` sections | **No** | create `RERUN_P1.md`, then `RERUN_P2.md`, then `RERUN_P2.5.md`, in that order |
 
 ## Copilot checkpoints (v1.3.0)
 

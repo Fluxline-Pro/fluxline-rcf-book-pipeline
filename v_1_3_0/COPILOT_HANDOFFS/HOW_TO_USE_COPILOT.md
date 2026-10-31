@@ -19,7 +19,7 @@
 | **1** Creation | Builds the chapter's files from your manuscript | 🤖 starts when you drop the manuscript; 🧠 writes them | Review the editorial suggestions | No |
 | **2** Governance | Validates and certifies the chapter | 🤖 / 🧠 | ✋ Approve or reject proposed changes | No |
 | **2.5** Lock audit | Reads the chapter in full, then locks the manuscript | 🤖 / 🧠 audit, reconcile, apply | ✋ **Decide every finding**, then ask for the re-run | **Yes: research review** (Researcher) |
-| **3** Design + figures | Figure prompts and the design packet | 🤖 / 🧠 | Make the figures (Photoshop); design in Claude Design | **Optional: image generation** (Create) |
+| **3** Design + figures | Training materials, figures and the design packet; then the eBook pass, **your notes**, and the print IDML created from the eBook (book and workbook) | 🤖 / 🧠 | Make the figures (Photoshop); review the eBook and write notes; **review, edit and pass off the print book in InDesign** | **Optional: image generation** (Create) |
 | **3.5** Design QA | Checks the design against the design system | 🧠 | ✋ Say it's Production Ready | Optional: design review |
 | **3W** Workbook | Workbook manuscript and layouts | 🤖 / 🧠 checks | Produce the workbook eBook and print PDFs | No |
 | **4** Part 0 | Compares the manuscript with your final eBook PDF | 🤖 / 🧠 | ✋ Decide any wording differences | **Yes: final eBook review** (Step 0F) |

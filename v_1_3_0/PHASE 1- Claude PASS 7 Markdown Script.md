@@ -5,13 +5,13 @@
 
 > **Polish window (release v1.1.3).** Between `AUDIT_CLEAR.md` and the PASS 7 drop, <AUTHOR> may polish the chapter freely. Polish in the **DOCX** (canonical), then regenerate the MD from it; never edit the MD on its own. PHASE 1 starts only when both files land in `<PASS7_SOURCE>`, so nothing downstream sees a half-polished draft. Once PHASE 1 has started, a further change to the DOCX is a **revision** (below), not polish. PHASE 3.5A (print build) requires a DOCX newer than `AUDIT_CLEAR.md`, which a polished DOCX always is.
 
-> **Revision trigger: `Manuscript/Trigger/MANUSCRIPT_REVISED.md` (release v1.1.3).** If <AUTHOR> changes the manuscript DOCX after PHASE 1 has run, and before the final eBook PDF locks it (PHASE 4 Part 0), <AUTHOR>:
+> **Revision trigger: `Manuscript/Trigger/MANUSCRIPT_REVISED.md` (release v1.1.3).** If <AUTHOR> changes the manuscript DOCX after PHASE 1 has run, and before PHASE 2.5 locks it (after the lock, the same change goes through the same file with <AUTHOR>'s approval line), <AUTHOR>:
 > 1. edits the DOCX in `<CH_ROOT>/Manuscript/`, regenerates the MD from it, and bumps the version;
 > 2. creates `<CH_ROOT>/Manuscript/Trigger/MANUSCRIPT_REVISED.md`, listing **the changed sections** (heading, or a quoted first line) and **the reason** for each.
 >
 > **After the manuscript lock (PHASE 2.5, release v1.2.5),** each new section of `MANUSCRIPT_REVISED.md` also needs <AUTHOR>'s approval line, `Approved: <initials> <date>`; a section without it is not acted on. Bring the MD in line with `docx_md_sync.py` rather than regenerating it by hand. After PHASE 2 re-validates, PHASE 2.5 runs a delta audit of the changed sections and writes a new `MANUSCRIPT_LOCKED.md`; until then the old lock is stale and PHASE 3 onward wait.
 >
-> PHASE 1 then re-runs from **Step 1 onward** (the generation steps after the first-action copy), for the changed sections only: it regenerates each artifact that draws on a changed section, leaves the rest untouched, and records the revision (date, sections, reason, artifacts regenerated) in the Production Checklist. Editorial Suggestions are written only for the changed sections. **PHASE 2 then re-validates** the chapter as on any re-run (the same as `RERUN_P2.md`), and a stale `GOVERNANCE_READY.md` is superseded. If print layout hasn't started, re-run PHASE 3.5A. The file is kept after the run as the revision record; a later revision adds a new dated section to it. After the eBook PDF is uploaded, wording changes go through the eBook instead (PHASE 4 Part 0 checks for this file).
+> PHASE 1 then re-runs from **Step 1 onward** (the generation steps after the first-action copy), for the changed sections only: it regenerates each artifact that draws on a changed section, leaves the rest untouched, and records the revision (date, sections, reason, artifacts regenerated) in the Production Checklist. Editorial Suggestions are written only for the changed sections. **PHASE 2 then re-validates** the chapter as on any re-run (<AUTHOR> creates `RERUN_P1.md`, then `RERUN_P2.md`, then `RERUN_P2.5.md`; saving the REVISED file wakes nothing) (the same as `RERUN_P2.md`), and a stale `GOVERNANCE_READY.md` is superseded. If print layout hasn't started, re-run PHASE 3.5A. The file is kept after the run as the revision record; a later revision adds a new dated section to it. After the lock, the same file is the only route for wording changes (PHASE 2.5 section 0); PHASE 4 Part 0 is a safety net for wording the eBook PDF carries, not an edit path.
 
 **v3.3 changes (2026-10-02, release v1.1):**
 - **Step 2:** extra workbook exercises are now *candidates*. They stay in the Workbook Packet, and the author ticks the ones to publish in `_Pipeline/WORKBOOK_SELECTION.md`. Until then, the workbook manuscript holds only the chapter's own exercise. Found when Claude Design built every generated sub-exercise into a chapter's workbook, including some that belonged to later chapters.
@@ -68,8 +68,8 @@ File naming: `<ChapterName>_<ArtifactType>.<ext>` (see Step 14).
 
 # INPUT
 
-You will receive a finalized PASS 7 manuscript for a single chapter of my book.
-This manuscript is fully locked and ready for production. Using this chapter,
+You will receive an editorially complete (semi-locked) PASS 7 manuscript for a single chapter of my book.
+It is ready for production work, but the formal lock comes later, in PHASE 2.5. Do not modify it. Using this chapter,
 perform the following tasks and save all outputs into:
 `<CH_ROOT>` = `<BOOK_ROOT>/Chapters/<ChapterName>/Final/`
 
