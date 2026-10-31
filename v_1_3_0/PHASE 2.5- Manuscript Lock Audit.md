@@ -233,7 +233,7 @@ clearedAt: <ISO date-time>
 docxSha256: <hash>      # equals MANUSCRIPT_LOCKED.md docxSha256
 mdSha256: <hash>
 passFour: <ScienceClaims file>  (High <n> · Medium <n> · sourcesChecked <n of n>)
-copilotReport: <file name>   |   waived — <reason> (<initials> <date>)
+copilotReport: <file name>   |   waived — <reason> (<initials> <date>) [backup: Claude run <file>, if one was made; recorded as a backup, never as a Copilot review]
 copilotReportSha256: <one line per report: report file, its reviewedSha256 (from the handoff file it names), sections covered>
 reconciliation: Governance/Research/RESEARCH_RECONCILIATION.md  (rows <n> · decided <n> · blocking open 0)
 changesAfterReport: none | softened-only (<n> rows, listed) | rerun sections: <list>

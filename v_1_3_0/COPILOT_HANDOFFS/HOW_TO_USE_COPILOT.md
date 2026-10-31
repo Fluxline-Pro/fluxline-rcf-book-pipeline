@@ -9,7 +9,7 @@
 1. Create the Copilot agent (or saved instructions) from `COPILOT_AGENT_INSTRUCTIONS.md` (paste the fenced block; the Instructions field allows 8,000 characters and the block is about 5,200). Whether your Premium plan includes Agent Builder is not documented: if it doesn't, paste the block as the first message of each session. **Research verification must be run in Researcher mode directly** (an agent can't be switched to Researcher), so paste the block there, then the handoff prompt.
 2. Keep these open in a folder you can reach from Copilot's upload dialog: the `COPILOT_HANDOFFS/` prompt files, and the chapter's `Governance/Research/Copilot_Research_Handoff.md` packet where one exists.
 3. First run only: ask Copilot "List the files you can see" after uploading. If Researcher cannot see uploaded files on your plan, paste the text into the chat instead, and tell Claude so the handoff can be updated.
-4. Copilot's limits (checked October 2026; they change): 20 files per conversation, 50 MB each; PDF, DOCX, XLSX, PPTX, MD, TXT, JSON, CSV and images are accepted, **EPUB and IDML are not**. Images come in three sizes (1024×1024, 1024×1536, 1536×1024) and are RGB concepts, never print files. Researcher may have a monthly query allowance.
+4. Copilot's limits (checked October 2026; they change): 20 files per conversation, 50 MB each; PDF, DOCX, XLSX, PPTX, MD, TXT, JSON, CSV and images are accepted, **EPUB and IDML are not**. Images come in three sizes (1024×1024, 1024×1536, 1536×1024) and are RGB concepts, never print files. Researcher is included with Microsoft 365 Premium with extensive usage. Microsoft does not currently publish a fixed Researcher query count for Premium. Feature limits may vary by feature, entry point, system conditions, and service changes. Copilot provides in-product notifications when applicable limits are approached or reached. Batch a chapter's research into one efficient Researcher run (a pipeline preference, not a published quota).
 
 ## The routine (every time)
 
@@ -21,7 +21,7 @@
 6. Claude checks the report (hash, file list, every source named) and brings you only the items that need your decision.
 7. You decide. Claude applies decisions through the normal route (the PHASE 2.5 decisions log, or `MANUSCRIPT_REVISED.md`).
 
-If a required Copilot step isn't possible (allowance used up, no access), add a line to `Governance/Copilot/Copilot_Waivers.md`: `research: waived — <reason> (<initials> <date>)` (also `final-ebook`, `publication-qa`). Waivers are copied into the reports; they are never silent.
+If a required Copilot step isn't possible (a usage limit is reached, no access, Researcher temporarily unavailable), you can wait, or use Claude as a backup for research (the backup path in `COPILOT_HANDOFF_STANDARD.md`: less independent, recorded as a backup, never as a Copilot review). Either way, add a line to `Governance/Copilot/Copilot_Waivers.md`: `research: waived — <reason> (<initials> <date>)` (also `final-ebook`, `publication-qa`). Waivers are copied into the reports; they are never silent.
 
 ## Where Copilot appears, by PHASE
 

@@ -502,4 +502,4 @@ A dedicated Copilot agent (`COPILOT_AGENT_INSTRUCTIONS.md`) is optional: the han
 
 ### Waivers
 
-Any required Copilot step can be waived by a line in `Governance/Copilot/Copilot_Waivers.md`: `research`, `final-ebook` or `publication-qa`, then `: waived — <reason> (<initials> <date>)`. Claude copies it into the report and the PHASE 7 checklist; it is never silent. If Copilot is unavailable (the monthly allowance is used up, the model changes), a waiver, or a delay, is the correct response; do not paper over it.
+Any required Copilot step can be waived by a line in `Governance/Copilot/Copilot_Waivers.md`: `research`, `final-ebook` or `publication-qa`, then `: waived — <reason> (<initials> <date>)`. Claude copies it into the report and the PHASE 7 checklist; it is never silent. If Copilot is unavailable (a usage limit is reached, the service or model changes), a waiver, a delay, or, for research only, a recorded Claude backup run is the correct response (see the backup path in `COPILOT_HANDOFFS/COPILOT_HANDOFF_STANDARD.md`); do not paper over it.
