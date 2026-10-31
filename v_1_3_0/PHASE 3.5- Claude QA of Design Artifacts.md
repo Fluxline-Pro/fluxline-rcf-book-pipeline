@@ -10,9 +10,9 @@
 **Release v1.1.3 (2026-10-21):** new §13A, **Print build (3.5A)**. The QA reads the PHASE 3.5A build report and manifest: zero unmapped items, zero missing figures, and a template and DOCX that match the ones the import was built from. A failure that blocks layout is Critical for the print track; it doesn't block `DESIGN_READY.md`.
 
 **v3.3 changes (2026-10-02, release v1.1): the upload completes PHASE 3.5.** The QA loop below is unchanged; run it while the design and InDesign work are in progress. What *closes* PHASE 3.5 is <AUTHOR>'s upload of the final PDF:
-- **Book chapter (or front matter / back matter section):** the final eBook PDF, `<CH_ROOT>/eBook/<ChapterName>_eBook.pdf`. This locks the chapter manuscript and starts PHASE 4.
+- **Book chapter (or front matter / back matter section):** the final eBook PDF, `<CH_ROOT>/eBook/<ChapterName>_eBook.pdf`. This completes the design-production stage and starts the PHASE 4 final-wording verification chain. It does not create the manuscript lock, which PHASE 2.5 set earlier.
   - If `DESIGN_READY.md` doesn't exist yet, PHASE 4 writes it as *"PHASE 3.5 complete: attested by <AUTHOR>'s upload of <file> on <date>"*, citing the latest DesignQA report if there is one.
-- **Workbook exercise:** the final workbook PDF, which locks the workbook manuscript and starts the PHASE 3W W3 sync. It goes to `<CH_ROOT>/Workbook/` or, if the book configures one, to `<WORKBOOK_BOOK_ROOT>` (see PHASE 3W W2).
+- **Workbook exercise:** the final workbook PDF, which starts the PHASE 3W W3 sync (the workbook manuscript was gated earlier by `WORKBOOK_MANUSCRIPT_READY.md`; the PDF locks nothing). It goes to `<CH_ROOT>/Workbook/` or, if the book configures one, to `<WORKBOOK_BOOK_ROOT>` (see PHASE 3W W2).
 
 So run the QA to completion *before* exporting the final PDF. Uploading it is <AUTHOR>'s statement that design is done.
 

@@ -20,7 +20,7 @@ Find every place where the book disagrees with itself — terms, definitions, ac
 
 - **PASS 6: tightening.** Word counts come down and redundancy goes. Wording changes a lot here, so audit **after** PASS 6 is finished for every chapter, not during it.
 - **PHASE 0.9, Mode F.** The book-wide audit, run on the tightened draft.
-- **PASS 7: voice.** <AUTHOR> reads each chapter in full and edits it for voice, resolving the audit findings along the way. After PASS 7, the chapter is pseudo-locked: from then on, wording changes only through PHASE 1 Editorial Suggestions or the layout sync in PHASE 4 Part 0.
+- **PASS 7: voice.** <AUTHOR> reads each chapter in full and edits it for voice, resolving the audit findings along the way. After PASS 7, the chapter is semi-locked (editorially complete): from then on, wording changes only through PHASE 1 Editorial Suggestions or PHASE 2.5 (and, after the lock, `MANUSCRIPT_REVISED.md`; PHASE 4 Part 0 is a safety net, not an edit path).
 - **PHASES 1–2.** Production and governance work from the PASS 7 text.
 - **PHASE 2.5 (release v1.2.5).** The lock audit: this phase's Pass 1 → Pass 2 on each governed chapter, <AUTHOR>'s decisions, the fixes in the DOCX, and the lock. Design starts only from the locked text.
 - **PHASE 3.** Design works from the locked text.

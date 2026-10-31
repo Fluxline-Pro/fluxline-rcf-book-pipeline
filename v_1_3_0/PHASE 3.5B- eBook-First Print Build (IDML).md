@@ -15,7 +15,7 @@ Both are built from the finished **eBook** pages, so print copies the eBook's de
 - for a chapter whose eBook isn't built yet;
 - when <AUTHOR> wants a plain styled import to lay out from scratch.
 
-Neither phase blocks the other.
+Neither phase blocks the other. **3.5B is the default, 3.5A is the fallback, and neither is the final print authority: <AUTHOR> in InDesign is.** The generated file is a starting point that <AUTHOR> reviews, edits and passes off; the print book is required.
 
 **Reference implementations** (in `<LOCAL_TOOLS_ROOT>`; deterministic; no LLM):
 
@@ -41,7 +41,7 @@ All of these must hold. If any fails, write nothing and tell <AUTHOR> which one.
 3. **The print sources exist** in `<PRINT_DSM_ROOT>` (book) and the workbook's own `_PrintDSM/`:
    - the template IDML;
    - <AUTHOR>'s most recent finished chapter IDML, or exercise IDML, which the build starts from (§4, §5).
-4. **The eBook page is built and reviewed** (§3) before the print build starts.
+4. **The eBook page is built and reviewed** (§3) before the print build starts. "Reviewed" means <AUTHOR> has looked at the eBook review PDF and either its notes are applied (layout notes to the eBook page; wording changes through `MANUSCRIPT_REVISED.md`, DOCX first, with a new lock) or <AUTHOR> has said there are none. The print IDML is built from the eBook **after** those notes, so it replicates the final eBook. Request it as a second step: `_Pipeline/RERUN_P3.5B.md` with `idml` on the first line. **Anything other than `idml` on the first line (including an empty file) builds only the eBook page and its review PDF**; `idml` is refused until the eBook is reviewed.
 
 ## 2. Design rules (<AUTHOR>, 2026-10-22)
 

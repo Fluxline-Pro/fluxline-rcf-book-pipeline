@@ -7,7 +7,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ## [v1.3.0] — 2026-10-31
 
-**Folder:** `v_1_3_0/` · **Previous:** `v_1_2_6/` (unchanged, kept for books mid-flight) · **Tag:** `v1_3_0.ALPHA` (then BETA, RC, PROD after the author's review)
+**Folder:** `v_1_3_0/` · **Previous:** `v_1_2_6/` (unchanged, kept for books mid-flight) · **Tag:** `v1_3_0.ALPHA` (published); `v1_3_0.BETA` with the reconciliation; `v1_3_0.RC` after the sandbox chapter passes; PROD after the author's review
 
 Microsoft Copilot as a governed second opinion. Also publishes the working v1.2.7 changes (Pass 4, sidebars) that were never in a repository folder.
 
@@ -32,6 +32,22 @@ Research checks, final-artifact reads and figure generation all ran on one model
 - **HOW_TO_RUN "Copilot checkpoints"**: for each of the seven checkpoints: when, why, files to upload, prompt, output name, where to save it, pass/fail, what happens next, what needs the author, and what invalidates it.
 - **MASTER_PIPELINE_OVERVIEW**: release notes, Copilot checkpoint table, status ladder, trigger map (`RESEARCH_CLEAR.md`, Copilot report files), folder map (`Governance/Research/`, `Governance/Copilot/`), and a tool-responsibility table (builds, reviews, validates, decides).
 
+### Reconciliation (BETA): the lock process, the sequence, and version consistency
+
+Follows Copilot's whole-system review and the author's sequence notes (issue #25). Documentation only; `v_1_2_6` and older folders are untouched.
+
+- **The lock state machine (PHASE 2.5, new section 0).** One vocabulary (*semi-locked* after PASS 7 → *governed* → *research-cleared and locked* → *production source* → *final-wording synced*), a state table (gate file, hash of record, who moves it, what wakes the runner, what sends it back), the three sanctioned edit paths and **no others** (this phase's decisions; a `MANUSCRIPT_REVISED.md` section with the approval line, which also covers eBook-pass wording, reference fixes, research retrofits and author exceptions; PHASE 4 Part 0's accept path as a safety net only), one hash-of-record rule, and the source-verification chain in one picture. **Invariant:** with `copilotRequired: yes`, `MANUSCRIPT_LOCKED.md` is not written until `RESEARCH_CLEAR.md` exists; `RESEARCH_CLEAR.md` records any waiver, and a waiver line never replaces it.
+- **References are finished before the lock, for every chapter.** A new exit-gate item (no unresolved reference, every marker resolves, APA complete, section final). After the lock, references change only through `MANUSCRIPT_REVISED.md`.
+- **Chapters 1 to 5 enter the lock with `copilotRequired: no`** (protected chapters; run with Claude in chat); the research retrofit follows as a REVISED section.
+- **The author's sequence is written down.** PHASE 3: training materials, figures and the design packet, your updates, the **eBook pass and your notes**, then the **print IDML created from the eBook after those notes** (book and workbook), with **print required** and the author as the final print authority (3.5B default, 3.5A fallback). PHASE 4: your layout verification, Kindle, then the audiobook last. **PHASE 5 (RAG) comes after all of a chapter's files are finished**, then automations. `RERUN_P3.5B.md` takes `ebook` or `idml` on its first line; wording notes from the eBook pass go through `MANUSCRIPT_REVISED.md` before the print is built.
+- **Stale lock wording removed.** The final eBook PDF and workbook PDF no longer "lock" the manuscript (PHASE 3.5, the overview, HOW_TO_RUN); PHASE 1's "fully locked" and the "pseudo-locked" wording became *semi-locked*.
+- **What wakes the runner.** A table in HOW_TO_RUN of what the runner watches and which files you create by hand also need a `RERUN_P<n>.md`. `LAYOUT_VERIFIED.md`, Copilot reports and waiver lines wake nothing by themselves. `3.5` is a valid RERUN value.
+- **HOW_TO_RUN steps 2c and 2d swapped** (figures and the design packet, then the eBook pass and print), as the text always required.
+- **Versions.** A phase-file version table in the overview, checked against the titles by `release_audit.py`, replaces the hand-kept list in HOW_TO_RUN's header.
+- **`release_audit.py`** (deterministic, documentation only): version table = titles, no older version-folder paths, handoff files exist, cited sections exist, trigger names are in the overview, no raw tokens in the Copilot files, old lock wording gone.
+- **`ROLLOUT_TEST_PLAN.md`:** one sacrificial chapter in a sandbox, end to end (a deliberate HOLD, a REVISED loop, the two-stage Researcher handoff, a figure handoff, 0F, Kindle, RAG, publication QA). It earns the `RC` tag. **"No runner change is needed" is now "to be confirmed by the rollout test".**
+- `WORKBOOK_NOT_APPLICABLE.md` added to the overview's trigger map.
+
 ### Refinements before release (pre-release hardening of the Copilot handoffs)
 
 - **Two-stage research review, with an explicit STOP.** `COPILOT_PHASE2_5_RESEARCH_REVIEW` (now v1.1) is split into **STAGE 1 UPLOADS** (DOCX, reference list, glossary) and **STAGE 2 UPLOADS** (`ScienceClaims`, Deep Researcher evidence, the audit report, the claims registry). Copilot lists the files, builds its own claim inventory, returns it, says "STAGE 1 COMPLETE. Waiting for the Stage 2 files." and stops until the author writes `STAGE 2 FILES ATTACHED`. A Stage 2 file already in the conversation is not opened. One conversation. The report records `stage1Completed`; Claude marks a report `not independent` if it says otherwise. PHASE 2.5, HOW_TO_RUN, HOW_TO_USE_COPILOT and the Ch1 to Ch6 packets follow.
@@ -49,7 +65,7 @@ Research checks, final-artifact reads and figure generation all ran on one model
 ### Compatibility
 
 - A book mid-flight finishes on its starting version. Chapters whose lock has `copilotRequired: no` (or no such field) need neither `RESEARCH_CLEAR.md` nor any Copilot step; each can opt in.
-- No runner change is needed: PHASE 3 and later keep requiring `MANUSCRIPT_LOCKED.md`. Step 0F stops PHASE 4 with `MANUSCRIPT_SYNC_INCOMPLETE.md` ("Waiting: Copilot final eBook review") until the review or a recorded waiver exists; a runner that reads that file as a blocker works as is. The runner, which lives outside this repository, must be pointed at the `v_1_3_0` phase files (its `instructions/` folder) before it applies Pass 4 or the Copilot steps; the author deploys that, with a backup, after reviewing.
+- Runner changes are expected to be small (PHASE 3 and later keep requiring `MANUSCRIPT_LOCKED.md`), but this is **to be confirmed by the rollout test** (`ROLLOUT_TEST_PLAN.md`) before the runner is relied on. Step 0F stops PHASE 4 with `MANUSCRIPT_SYNC_INCOMPLETE.md` ("Waiting: Copilot final eBook review") until the review or a recorded waiver exists; a runner that reads that file as a blocker works as is. The runner, which lives outside this repository, must be pointed at the `v_1_3_0` phase files (its `instructions/` folder) before it applies Pass 4 or the Copilot steps; the author deploys that, with a backup, after reviewing.
 - Every required Copilot step can be waived with a recorded reason, in one file (`Governance/Copilot/Copilot_Waivers.md`: `research`, `final-ebook`, `publication-qa`). Waivers are copied into the reports and the PHASE 7 checklist.
 - Copilot report hashes: the research report carries the hash of the DOCX it reviewed (`reviewedSha256`, recorded when the handoff is written); a later hash difference does not invalidate it, only added or strengthened claims or changed citations do. Later reviews use the hash in `MANUSCRIPT_SYNCED.md` (or the lock before Part 0 has run).
 

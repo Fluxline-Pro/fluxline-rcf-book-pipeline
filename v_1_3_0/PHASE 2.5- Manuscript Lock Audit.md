@@ -10,7 +10,7 @@
 **What it does, in one line:** it reads the chapter in full for content problems, <AUTHOR> decides every finding, the approved fixes go into the DOCX (then the MD), and the chapter's manuscript is **locked** with its hashes recorded.
 
 **The order (<AUTHOR>, 2026-10-24):**
-1. **Before PHASE 1:** the DOCX is semi-locked (PASS 7 and the polish window), as before.
+1. **Before PHASE 1:** the DOCX is semi-locked, i.e. editorially complete (PASS 7 and the polish window), as before.
 2. **PHASE 1 and PHASE 2:** as before.
 3. **PHASE 2.5:** the lock audit. Output: a decisions log and `MANUSCRIPT_LOCKED.md`.
 4. **PHASE 3, 3.5, 3.5A, 3.5B, 3W, and 4:** each requires `MANUSCRIPT_LOCKED.md`.
@@ -35,6 +35,59 @@ PHASE 2.5 is **report-first**: it never changes the manuscript on its own. It ch
 
 ---
 
+## 0. The lock state machine (v1.3.0)
+
+This is the one place that says what "locked" means, who moves a chapter between states, and what sends it back. Every other file points here.
+
+**One vocabulary for the manuscript's lifecycle:**
+
+| Stage | Called | Set by | Evidence |
+|---|---|---|---|
+| After PASS 7 and the polish window | **Semi-locked** (editorially complete) | <AUTHOR> | The DOCX is settled; wording changes only through PHASE 1 Editorial Suggestions or this phase (after the lock: `MANUSCRIPT_REVISED.md`) |
+| After PHASE 1 and PHASE 2 | **Governed** | PHASE 2 | `GOVERNANCE_READY.md` (Design Ready) |
+| After this phase | **Research-cleared and locked** | PHASE 2.5 | `RESEARCH_CLEAR.md` (when `copilotRequired: yes`) and `MANUSCRIPT_LOCKED.md`, with the DOCX and MD hashes |
+| PHASE 3 onward | **Production source** | (nothing new) | Every build reads the locked text; references are final |
+| After PHASE 4 Part 0 | **Final-wording synced** | PHASE 4 | `MANUSCRIPT_SYNCED.md` |
+
+The final eBook PDF does **not** create the lock. It starts the PHASE 4 final-wording verification chain.
+
+**States inside this phase:**
+
+| # | State | Gate file or sign | Hash of record | Moved by | What wakes the runner | Goes back to |
+|---|---|---|---|---|---|---|
+| S0 | Governed, ready to audit | `GOVERNANCE_READY.md` | none | PHASE 2 | automatic | none |
+| S1 | Audit run done; decisions blank | `LockDecisions.md` with blank rows; `Copilot_Research_Handoff.md` | `reviewedSha256` (the DOCX before any fix) | PHASE 2.5 audit run | none | none (next: <AUTHOR> fills decisions and runs Copilot) |
+| S2 | Waiting for the Copilot research report | `RESEARCH_INCOMPLETE.md` ("Waiting: Copilot research report") | `reviewedSha256` | <AUTHOR> (two-stage Researcher run, saves the report) | **create `_Pipeline/RERUN_P2.5.md`** | stays in S2 until the report is valid |
+| S3 | Reconciled; new research rows to decide | `RESEARCH_RECONCILIATION.md`; new blank rows in the decisions log | `reviewedSha256` | Claude (reconcile run), then <AUTHOR> decides | **`RERUN_P2.5.md`** | S3 while any blocking row is open |
+| S4 | All decided; applying | Applied column filled, DOCX first, MD by `docx_md_sync.py`, delta re-check | new DOCX and MD hashes | Claude (apply run) | `RERUN_P2.5.md` | decisions pending again if the delta re-check finds a new finding (S3 for research rows); `RERUN_P2.md` first if the downstream impact list needs PHASE 2 |
+| S5 | Research-cleared | `RESEARCH_CLEAR.md` (always written for `copilotRequired: yes`; it records any waiver) | equals the lock | Claude | automatic, in the same run | S3 if a blocking research finding or a stale report remains |
+| S6 | **Locked** | `MANUSCRIPT_LOCKED.md` + `_Locked/` snapshot | `docxSha256` / `mdSha256` | Claude | PHASE 3 starts automatically | S7 |
+| S7 | Revised after the lock | `MANUSCRIPT_REVISED.md` section with `Approved: <initials> <date>` | the lock's hashes until re-locked | <AUTHOR> | create `RERUN_P1.md` for the changed sections, then `RERUN_P2.md`, then `RERUN_P2.5.md` (delta audit); saving the REVISED file wakes nothing | S6 with new hashes |
+
+**Paths through the states:** with `copilotRequired: yes`, S1 → S2 → S3 → S4 → S5 → S6. With `copilotRequired: no` (Ch1 to Ch5's first lock), S1 → S4 → S6: no research report, no `RESEARCH_CLEAR.md`, but references finished and every other exit item still apply. A downstream impact that needs PHASE 2 sends S4 through `RERUN_P2.md` (PHASE 2 re-issues `GOVERNANCE_READY.md`) and back to confirm mode.
+
+**The sanctioned edit paths. There are no others:**
+
+1. **This phase's decisions** (before the lock): a written Decision, DOCX first, MD from the DOCX.
+2. **A `MANUSCRIPT_REVISED.md` section with <AUTHOR>'s approval line** (after the lock): wording from your eBook-pass notes, reference fixes, a research retrofit, or an author exception. Always: DOCX first, MD by `docx_md_sync.py`, a delta audit of the changed sections (including the §7 step 4a research rule), then a **new lock with new hashes**. An exception such as the 2026-10-30 Ch1 to Ch6 science-wording edits is still recorded as a REVISED section, never made out of band.
+3. **PHASE 4 Part 0's accept path** (after the lock): a safety net for wording the final eBook PDF carries that the manuscript lacks. It never applies wording that adds or strengthens an empirical claim, a number, or a causal or absolute statement, or that changes a citation: those go through path 2.
+
+**The hash of record** is the DOCX and MD hash in `MANUSCRIPT_SYNCED.md` when Part 0 changed the manuscript after the lock with <AUTHOR>'s decision and nothing was edited since; otherwise it is the hash in `MANUSCRIPT_LOCKED.md`. Every gate that compares a hash uses this rule.
+
+**Verifying sources, in one chain** (each step produces evidence; none is a verdict):
+
+```text
+Claude Pass 4 (claims, risk, source exists?) ──▶ local Deep Researcher (evidence) ──▶ your claim-by-claim review
+   ──▶ Copilot Researcher, two-stage and independent ──▶ Claude reconciliation (every named source opened)
+   ──▶ your decisions ──▶ RESEARCH_CLEAR.md ──▶ MANUSCRIPT_LOCKED.md
+```
+
+A High claim never closes on an AI verdict alone. A source problem found **after** the lock is a path 2 revision, never an edit in InDesign.
+
+**Chapters with no lock yet (Ch1 to Ch5).** They are protected chapters: the runner ignores their files, and <AUTHOR> runs this phase for them with Claude in chat. Their first lock runs the same audit on today's text (Pass 1, 2 and 4, the decisions log, DOCX = MD, references finished, section 6) and records `copilotRequired: no` (author decision 2026-10-31); the research retrofit then runs as a REVISED section (path 2). Their existing `MANUSCRIPT_SYNCED.md` history carries forward.
+
+---
+
 ## 1. Entry gate
 
 All of these must hold. If any fails, write `Manuscript/Trigger/MANUSCRIPT_LOCK_INCOMPLETE.md` naming the failure, and tell <AUTHOR>.
@@ -48,7 +101,7 @@ All of these must hold. If any fails, write `Manuscript/Trigger/MANUSCRIPT_LOCK_
    - the latest book ledger: the `ledger.json` of the newest run folder in `_BookGovernance/Audit/` (Mode F, or an earlier lock audit);
    - the book glossary (`glossaryPath` in the config) and `_BookGovernance/Glossary/Glossary_Canonical.json`, if it exists.
 
-A protected chapter (see the runner's `protectedChapterFolders`) is never audited by the automation. <AUTHOR> runs PHASE 2.5 for it with Claude in chat, if at all.
+A protected chapter (see the runner's `protectedChapterFolders`) is never audited by the automation. <AUTHOR> runs PHASE 2.5 for it with Claude in chat.
 
 ---
 
@@ -269,16 +322,18 @@ governanceReady: <date of the GOVERNANCE_READY.md this lock follows>
 Otherwise write `MANUSCRIPT_LOCK_INCOMPLETE.md` listing what is open: blank decisions, unapplied fixes, a new delta finding, an open impact item, or a failed DOCX = MD check.
 
 **`copilotRequired`** decides whether the Copilot steps (research review here, the final eBook review in PHASE 4 Step 0F, the publication review in PHASE 6.5) are required for the chapter, so every gate reads this one field instead of guessing from dates:
-- the **first** lock written by v1.3.0 files sets `yes`;
+- the **first** lock written by v1.3.0 files sets `yes`, except a protected chapter's first lock (Ch1 to Ch5), which records `no` (author decision 2026-10-31);
 - a delta re-lock (§7) **carries the previous value forward**, so an ordinary revision of an older chapter does not make the steps mandatory;
 - a "Copilot research retrofit" section in `MANUSCRIPT_REVISED.md` (§7) sets `yes` on the next lock;
 - a lock written by earlier releases has no such field, and counts as `no`. An author may set `no` on a new chapter only by recording why in the decisions log.
 
-**A stale lock is never left in place.** The lock is stale when either hash no longer matches the files, or when `MANUSCRIPT_REVISED.md` has a section newer than the lock. Every downstream gate checks both.
+**A stale lock is never left in place.** The lock is stale when either hash of record (section 0) no longer matches the files, or when `MANUSCRIPT_REVISED.md` has a section newer than the lock. Every downstream gate checks both.
 
 ---
 
 ## 6. PHASE 2.5 exit gate
+
+**Invariant.** With `copilotRequired: yes`, `MANUSCRIPT_LOCKED.md` is not written until `RESEARCH_CLEAR.md` exists. `RESEARCH_CLEAR.md` is always written for such a chapter and records any waiver (`research: waived — …`); a waiver line alone never replaces it.
 
 `MANUSCRIPT_LOCKED.md` is written when:
 - [ ] the chapter has Pass 1 and Pass 2 files (and Pass 3, if enabled) in the run folder;
@@ -287,6 +342,7 @@ Otherwise write `MANUSCRIPT_LOCK_INCOMPLETE.md` listing what is open: blank deci
 - [ ] every `Canonical: …` decision is in `Audit_CanonicalTerms.json`;
 - [ ] Pass 4 ran: the chapter has a `ScienceClaims` file, every cited source resolves, and every **High** science claim is softened, cited, removed, kept by <AUTHOR> with initials and a reason, or sitting with an outside reviewer (never on an AI verdict alone). A `blocking` SCIENCE finding is closed, not deferred;
 - [ ] `RESEARCH_CLEAR.md` is written and its hashes equal the files being locked (v1.3.0; a chapter with `copilotRequired: no` needs it only when it opts in, §7);
+- [ ] **references are finished** (every chapter): `references_check.py` on the final reference list shows no unresolved item, every marker resolves to one reference, every reference resolves and is complete in APA form, and the References section is final. After the lock, references change only through `MANUSCRIPT_REVISED.md`;
 - [ ] DOCX = MD (`docx_md_sync.py`: 0 rewritten, 0 dropped);
 - [ ] the delta re-check is clean and the downstream impact list is closed;
 - [ ] the locked snapshot is saved, and the hashes are recorded.
@@ -301,12 +357,12 @@ After the lock, any change to the manuscript needs `Manuscript/Trigger/MANUSCRIP
 
 1. <AUTHOR> edits the DOCX, then brings the MD in line with `docx_md_sync.py`, and bumps the version.
 2. <AUTHOR> adds a dated section to `MANUSCRIPT_REVISED.md`: the changed sections, the reason, and an **Approved: <initials> <date>** line. A section without the approval line is not acted on.
-3. PHASE 1 re-runs for the changed sections, and PHASE 2 re-validates (PHASE 1, "Revision trigger").
+3. PHASE 1 re-runs for the changed sections, and PHASE 2 re-validates (PHASE 1, "Revision trigger"). <AUTHOR> starts each by creating `RERUN_P1.md`, then `RERUN_P2.md`, then `RERUN_P2.5.md`; saving the REVISED file wakes nothing.
 4. PHASE 2.5 runs a **delta audit** of the changed sections only (§3.1 on those sections, then §3.2–§3.6) and writes a new `MANUSCRIPT_LOCKED.md` with the new hashes. The old lock is superseded.
 4a. **Research gate (v1.3.0).** The delta audit decides whether the change touches research:
    - **Re-run Pass 4 and the Copilot Researcher review on the changed sections** when the revision adds, removes or strengthens an empirical claim, a number, a causal or absolute statement, or removes a hedge; adds, replaces or renumbers a citation; or touches any sentence listed in the chapter's `ScienceClaims` file. The old `RESEARCH_CLEAR.md` is superseded and a new one is written for the new hashes.
    - **No Copilot re-run** when the revision only softens a claim, or changes spelling, punctuation, formatting, narrative, metaphor or framework wording. Pass 4 still re-checks the changed sentences, and the new `RESEARCH_CLEAR.md` records `changesAfterReport`.
-   - The same rule applies to PHASE 4 Part 0 wording changes taken from the eBook PDF.
+   - PHASE 4 Part 0 never applies such wording; it goes through this path (section 0, path 2).
    - **Opting a `copilotRequired: no` chapter in:** a `MANUSCRIPT_REVISED.md` section titled "Copilot research retrofit" (approved as above) runs §3.2b for the whole chapter, applies any decided fixes, and writes `RESEARCH_CLEAR.md` with the new lock.
 5. Anything already built from the old text (the eBook, the print IDMLs, the workbook) carries the change by hand, as before. PHASE 4 Part 0 stops if the revision is newer than the eBook PDF.
 
