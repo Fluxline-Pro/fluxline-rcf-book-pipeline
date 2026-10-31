@@ -7,7 +7,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ## [v1.3.0] — 2026-10-31
 
-**Folder:** `v_1_3_0/` · **Previous:** `v_1_2_6/` (unchanged, kept for books mid-flight) · **Tag:** `v1_3_0.ALPHA` (published); `v1_3_0.BETA` with the reconciliation; `v1_3_0.RC` after the sandbox chapter passes; PROD after the author's review
+**Folder:** `v_1_3_0/` · **Previous:** `v_1_2_6/` (unchanged, kept for books mid-flight) · **Tag:** `v1_3_0.ALPHA` (published); `v1_3_0.BETA` with the reconciliation; `v1_3_0.RC` after the sandbox chapter passes; PROD after the author's own Copilot research test (Ch6, 2026-10-31, found and fixed the Stage 2 gap below) and his go-ahead. The steps only a human can do (InDesign layout checks, audiobook recording, the Kindle Previewer) are first proven in live use, not in the sandbox
 
 Microsoft Copilot as a governed second opinion. Also publishes the working v1.2.7 changes (Pass 4, sidebars) that were never in a repository folder.
 
