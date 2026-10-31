@@ -57,9 +57,11 @@ Chapters with `copilotRequired: no` (Ch1 to Ch6 today) need none of these; you'v
 5. Claude checks the report and every source it names, then brings you only what needs a decision.
 6. You decide. Claude applies your decisions the normal way.
 
-## Two special cases
+## Special cases
 
-**Research is two-stage, in one conversation.** Stage 1: upload the chapter, references and glossary. Copilot makes its own claim list and stops. You read it, then upload Claude's claim list and the Deep Researcher evidence and write `STAGE 2 FILES ATTACHED`. This stops Claude's findings from steering Copilot.
+**Research is two-stage, in one conversation.** Stage 1: upload the chapter, references and glossary. Copilot makes its own claim list and stops. **Save that list** (`COPILOT_RESEARCH_STAGE1.md`). You read it, then upload Claude's claim list and the Deep Researcher evidence and write `STAGE 2 FILES ATTACHED`. This stops Claude's findings from steering Copilot.
+
+**If Researcher fails, use a regular Copilot Chat.** It works the same way (tested on Ch6). If the chat breaks between the stages, start a new one, upload the saved Stage 1 file plus both upload folders, and paste the "Resume at Stage 2" block and then the whole prompt; without it Copilot never sees its own claim list and skips claims. The report must rule on every Stage 1 claim ID and show a `COVERAGE: n of n` line in its summary.
 
 **Images are one per request.** Ask for Option 1. For another composition, ask for Option 2 as a new request. Each is saved and recorded separately (`<FigureID>_copilot_<date>_opt<n>.png`, one `revisionHistory` entry each). Copilot's images are small RGB concepts: finish them in Photoshop or Illustrator. You approve them, with PHASE 3.5.
 

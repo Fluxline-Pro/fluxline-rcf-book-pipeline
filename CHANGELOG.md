@@ -62,6 +62,15 @@ Follows Copilot's whole-system review and the author's sequence notes (issue #25
 - **The Copilot agent stays optional.** "The handoff contract is authoritative. Persistent agent instructions reduce repetition but are not required for correctness." is stated in the standard, the agent file, the handoffs README, HOW_TO_RUN and HOW_TO_USE_COPILOT; Researcher is always a separately started session.
 - **Placeholders stay visible on GitHub.** The source files were intact: GitHub's Markdown view hides an unrecognised `<AUTHOR>` outside a code span as an HTML tag. The Copilot handoff files now wrap tokens in backticks (documented in PLACEHOLDERS). The README's handoff diagram is fenced as `text`.
 
+### First live research run (Ch6, 2026-10-31) and the handoff fix (#31)
+
+The Copilot research step was run on Chapter 6. The report was valid (hash matched, no fabricated sources, the approved 10-30 edits confirmed), but Researcher kept failing, so Stage 2 ran in a separate Copilot Chat without the Stage 1 inventory. Copilot then ruled on 28 rows that directly covered 58 of the 121 Stage 1 claims (13 more were the same kind of claim), leaving 50 unaddressed (25 High), and its line numbers did not match the manuscript. Changes to `COPILOT_PHASE2_5_RESEARCH_REVIEW` (now v1.2), `HOW_TO_USE_COPILOT`, `HOW_TO_RUN_THE_PIPELINE`, `COPILOT_AGENT_INSTRUCTIONS`, `COPILOT_HANDOFF_STANDARD`, `ROLLOUT_TEST_PLAN` and PHASE 2.5 §3.2b:
+- A regular Copilot Chat is the documented fallback when Researcher fails; both stages stay in one conversation.
+- The Stage 1 answer is saved as `COPILOT_RESEARCH_STAGE1` before Stage 2. If the chat is split, that file is uploaded with the Stage 2 files and used unchanged.
+- The prompt requires a ruling on every Stage 1 claim ID, a `COVERAGE: n of n` line, and quoted sentences instead of line numbers; the report front matter adds `stage1Source`, `stage1Claims` and `rowsRuled`.
+- A short "Resume at Stage 2" block in the prompt file restarts a broken chat; a per-ID waiver (`research-ids:`) and a `coverage:` line in `RESEARCH_CLEAR.md` record any claims Copilot did not rule on; existing DeepResearch folders get the v1.2 prompt by a rebuild of `PROMPT_PasteIntoCopilot.md` and `START_HERE.md`.
+- PHASE 2.5 counts the claim IDs itself; a report with missing IDs is `INCOMPLETE` and `RESEARCH_CLEAR.md` is not written until they are ruled on, backed up by Claude, or waived.
+
 ### Changed (carried over from the working v1.2.7)
 
 - **Pass 4, science and source verification** in PHASE 0.9 and PHASE 2.5 (category SCIENCE): claims are extracted and risk-rated, every source is opened and existence-checked, local models never rate a claim or source, and a High claim never closes on an AI verdict alone. Made generic (the book-specific counts are removed).

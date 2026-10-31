@@ -1,6 +1,6 @@
-# COPILOT_PHASE2_5_RESEARCH_REVIEW (prompt v1.1)
+# COPILOT_PHASE2_5_RESEARCH_REVIEW (prompt v1.2)
 
-**Step:** PHASE 2.5, Research verification · **Copilot mode:** Researcher · **Output:** `COPILOT_RESEARCH_REPORT.md` · **Consumed by:** PHASE 2.5 §3.2b (Claude's reconciliation) · **Gate:** `RESEARCH_CLEAR.md`
+**Step:** PHASE 2.5, Research verification · **Copilot mode:** Researcher, or a regular Copilot Chat if Researcher fails · **Output:** `COPILOT_RESEARCH_REPORT.md` · **Consumed by:** PHASE 2.5 §3.2b (Claude's reconciliation) · **Gate:** `RESEARCH_CLEAR.md`
 
 Follows the standard in `COPILOT_HANDOFF_STANDARD.md`. Where this file is silent, the standard applies.
 
@@ -28,7 +28,11 @@ STAGE 2  you upload Claude's ScienceClaims + Deep Researcher evidence (+ audit r
 Claude reconciles --> you decide
 ```
 
-Keep both stages in **one conversation** (Researcher mode). Do not upload any Stage 2 file before Copilot has returned its Stage 1 inventory and said it is waiting. If you do by mistake, tell Copilot to disregard them and start the conversation again.
+Keep both stages in **one conversation**. Use **Researcher** if it works. If Researcher fails or hits a limit, use a regular **Copilot Chat** instead (this worked for Ch6 on 2026-10-31; Chat may search less deeply, so expect Claude to open more of the sources itself). Do not upload any Stage 2 file before Copilot has returned its Stage 1 inventory and said it is waiting. If you do by mistake, tell Copilot to disregard them and start the conversation again.
+
+**Save the Stage 1 answer as soon as you get it** (copy the text into `COPILOT_RESEARCH_STAGE1.md`; the checker reads Markdown, so convert a Word copy first). It is the one thing that cannot be re-made, and it must exist before Stage 2 starts.
+
+**If the conversation has to be split** (the chat ends, errors out, or loses context): start a new chat, upload the saved Stage 1 file, the whole of `1_Upload_First` and the whole of `2_Upload_Second` (the chapter and glossary are needed again), paste the "Resume at Stage 2" block below, then paste the whole prompt (the block overrides the Stage 1 steps and the FILES rule). Copilot must use the saved file unchanged as its inventory. A Stage 2 that never saw the Stage 1 inventory leaves claims unreviewed; that is what happened on the first live run (50 of 121 Ch6 claims were skipped).
 
 > **Where the files are.** Claude builds these uploads as reference-only snapshots in the chapter's `<CH_ROOT>/DeepResearch/` folder (`1_Upload_First/`, `2_Upload_Second/`, `PROMPT_PasteIntoCopilot.md`, `START_HERE.md`). The tables below list the originals; use the snapshots. The reference list is the DOCX's References section, so it needs no separate file unless you keep a separate list. The audit run's findings report (Stage 2, optional) is **not** snapshotted: upload it from `Governance/` only if you want Copilot to see it.
 
@@ -51,9 +55,17 @@ Plus the handoff metadata: the `reviewedSha256` and the handoff file name come f
 | 6 | `<CH_ROOT>/Governance/<ChapterName>_LockAudit_<ts>.md` (the audit run's findings report) | Optional | What is already flagged |
 | 7 | `<CH_ROOT>/Marketing/Intake/<ChapterName>_MKT_ClaimsRegistry.md`, if the chapter has one | Optional | Marketing-facing claims |
 
+## Resume at Stage 2 (only if the chat broke between the stages)
+
+Paste this first in the new chat, then the whole prompt below. The block overrides the Stage 1 steps and the FILES rule:
+
+```
+RESUME AT STAGE 2. Stage 1 was done in an earlier conversation; its inventory is the uploaded file COPILOT_RESEARCH_STAGE1. Do not redo Stage 1. Use that inventory unchanged as your Stage 1 inventory, with the same IDs. In the report front matter write "stage1Completed: see Stage 1 file" and "stage1Source: uploaded file". The chapter, the glossary and the Stage 2 files are all expected in this conversation, so the FILES rule about Stage 2 files does not apply here. STAGE 2 FILES ATTACHED. Begin Stage 2 now and do it exactly as written.
+```
+
 Do not upload: the design packet, images, the audiobook, drafts older than the DOCX, anything with credentials. Keep each stage's upload, and the whole conversation, under 20 files.
 
-## Prompt (paste everything below this line into Copilot, with Researcher selected)
+## Prompt (paste everything below this line into Copilot, in Researcher, or in a regular Copilot Chat if Researcher fails)
 
 ```
 ROLE
@@ -81,36 +93,40 @@ WORKFLOW (two stages, one conversation)
 STAGE 1: INDEPENDENT REVIEW. Do only this, then stop.
 1. List the files you can see.
 2. Read the chapter DOCX in full.
-3. Build your own list of externally verifiable claims: empirical, historical, medical, psychological, neurobiological, physiological, technical, legal, quantitative or academic statements. Give each an ID (C-01, C-02, ...) in manuscript order, with the section heading, a short verbatim excerpt of 25 words or fewer, a category, whether it needs a citation, the citation the author gives (if any), and your initial wording-risk estimate (Low, Medium, High). Do not search for sources yet.
+3. Build your own list of externally verifiable claims: empirical, historical, medical, psychological, neurobiological, physiological, technical, legal, quantitative or academic statements. Give each an ID (C-01, C-02, ...) in manuscript order, with the section heading, a verbatim excerpt from the sentence (its first 25 words if it is longer; never a line number), a category, whether it needs a citation, the citation the author gives (if any), and your initial wording-risk estimate (Low, Medium, High). Do not search for sources yet.
 4. Classify every passage you skip as NARRATIVE, FRAMEWORK, METAPHOR, INTERPRETATION or EXERCISE (a one-line count is enough; list the ones that sit close to a claim).
 5. Return the Stage 1 inventory (the claim table plus the non-claim counts), then write exactly: "STAGE 1 COMPLETE. Waiting for the Stage 2 files."
 STOP AFTER STAGE 1. Do not evaluate any other claim inventory, Deep Researcher report or prior research finding yet, and do not search for sources yet. Wait for me to write "STAGE 2 FILES ATTACHED".
 
-STAGE 2: COMPARISON AND VERIFICATION. Begin only after I write "STAGE 2 FILES ATTACHED". Do not change your Stage 1 inventory; if you find a further claim, add it with an "S2-" ID and say so.
+STAGE 2: COMPARISON AND VERIFICATION. Begin only after I write "STAGE 2 FILES ATTACHED". Do not change your Stage 1 inventory; if you find a further claim, add it with an "S2-" ID and say so. If your Stage 1 inventory is not in this conversation, I will upload it as COPILOT_RESEARCH_STAGE1: use it unchanged as your Stage 1 inventory and say that you did.
 6. For each claim, decide whether it needs a citation and compare it with the citation the author gives.
 7. Search for authoritative or peer-reviewed support, and for evidence that contradicts or qualifies the claim. Prefer systematic reviews, meta-analyses, major textbooks, professional-body guidance, and primary studies.
 8. Judge the wording, not just the topic: flag unsupported certainty ("always", "never", "all", "only", "proves"), causality stated where the evidence is correlational, universality stated where findings are about averages or specific populations, specific numbers or mechanisms, and outcome promises. Flag clinical or safety-relevant statements (breathwork, trauma, medication, mental-health advice).
 9. For each citation in the reference list: does it exist, are the authors/year/title/venue right, and does it support the sentence it is attached to?
 10. Compare your inventory with the uploaded ScienceClaims inventory and treat the Deep Researcher material as evidence to check, not as a verdict. Add the section "Differences from the uploaded claims list": claims you found that it lacks, claims it has that you rated differently, and why. Do not change your own ratings to match it.
-11. For every claim, give the smallest proposed correction, or "none needed".
-12. Give complete source details for every source you relied on: authors, year, title, journal or publisher, volume/issue/pages, DOI or URL, and the exact passage or finding that supports (or contradicts) the claim. This will be used for later APA verification, so do not abbreviate.
-13. State plainly what you could not verify and why.
+11. For every claim, give the smallest proposed correction, or "none needed". Rule on EVERY claim ID in your Stage 1 inventory, including repeats in the chapter summary and the exercises. Do not stop at the highest-risk claims and do not skip any. A repeat may share the evidence of the claim it repeats, but it gets its own row. If you cannot verify a claim, rate it CANNOT VERIFY and say why. Before you finish, count and write "COVERAGE: <rows ruled> of <Stage 1 claims>", and list every ID you did not rule on. If the report is too long for one reply, split only the claim table: give it in parts, in ID order, ending each part with "PART n, say continue", and I will reply "continue". Put the front matter, the Summary (with the COVERAGE line) and sections 3 to 9 in the final part, which you mark "FINAL PART".
+12. Keep the Excerpt column as in Stage 1: a verbatim excerpt, never a line number (line numbers do not match the manuscript file).
+13. Give complete source details for every source you relied on: authors, year, title, journal or publisher, volume/issue/pages, DOI or URL, and the exact passage or finding that supports (or contradicts) the claim. This will be used for later APA verification, so do not abbreviate.
+14. State plainly what you could not verify and why.
 
 OUTPUT SCHEMA
 At the end of Stage 2 (not before), return one Markdown document titled COPILOT_RESEARCH_REPORT, with these parts in this order. Its claim table starts from your unchanged Stage 1 inventory:
 
 Front matter (as a code block):
- handoff: COPILOT_PHASE2_5_RESEARCH_REVIEW v1.1
+ handoff: COPILOT_PHASE2_5_RESEARCH_REVIEW v1.2
  handoffFile: <leave as: ASK-AUTHOR-TO-FILL>
  chapter: <chapter name>
  manuscriptSha256: <leave as: ASK-AUTHOR-TO-FILL>
  reviewDate: <today>
- copilotMode: Researcher
+ copilotMode: <Researcher | Chat>
  filesUploaded: <Stage 1 files; Stage 2 files>
- stage1Completed: <yes | no. Write yes only if you returned the Stage 1 inventory before any Stage 2 file was supplied>
+ stage1Completed: <yes | no | see Stage 1 file. Write yes only if you returned the Stage 1 inventory before any Stage 2 file was supplied; write "see Stage 1 file" only when the inventory was uploaded as a file>
+ stage1Source: <same conversation | uploaded file>
+ stage1Claims: <number of claims in the Stage 1 inventory>
+ rowsRuled: <number of Stage 1 claim IDs you ruled on in the Stage 2 table>
  deviations: <none or what differed>
 
-1. Summary: counts by verification result; counts blocking / non-blocking; the three most important findings.
+1. Summary: counts by verification result; counts blocking / non-blocking; the three most important findings; the line "COVERAGE: <rows ruled> of <Stage 1 claims>" and the Stage 1 IDs not ruled on.
 2. Claim table with these columns exactly:
  Claim ID | Section | Excerpt (<=25 words) | Category | Citation needed (yes/no) | Existing source | Verification result | Evidence summary | Source details | Wording risk (Low/Medium/High) | Smallest proposed correction | Confidence and limitations | Author decision required (yes/no)
  - Category: EMPIRICAL, HISTORICAL, MEDICAL, PSYCHOLOGICAL, NEUROBIOLOGICAL, PHYSIOLOGICAL, TECHNICAL, LEGAL, QUANTITATIVE, ACADEMIC.
@@ -141,9 +157,9 @@ Nothing you recommend is applied without the author's written decision.
 
 ## After Copilot answers
 
-1. **After Stage 1:** read the inventory. Only then upload the Stage 2 files and write: `STAGE 2 FILES ATTACHED`.
+1. **After Stage 1:** read the inventory and **save it** as `COPILOT_RESEARCH_STAGE1.md` in the `DeepResearch` folder. Only then upload the Stage 2 files and write: `STAGE 2 FILES ATTACHED`. If the chat fails before Stage 2 ends, follow "If the conversation has to be split" above.
 2. **After Stage 2:** read the report. Replace `ASK-AUTHOR-TO-FILL` in the front matter if any remain: `manuscriptSha256` is the `reviewedSha256` written in the handoff file you were given (`DeepResearch/Copilot_Research_Handoff.md`, or `Copilot_Research_Handoff_<n>.md` for a re-run; check with `Get-FileHash <docx>` if you changed the file), `handoffFile` is that file's name, and `filesUploaded` lists the files you really uploaded at each stage.
-3. Save it as `<CH_ROOT>/DeepResearch/COPILOT_RESEARCH_REPORT.md` (the folder Claude built). A re-run's report gets its own name, `COPILOT_RESEARCH_REPORT_<n>.md`, so it never overwrites the first. If the conversation was split, name the parts `COPILOT_RESEARCH_REPORT_part2.md` and so on. You may also save the Stage 1 inventory as `COPILOT_RESEARCH_STAGE1.md`: Claude uses it to confirm the inventory was made independently.
+3. Save it as `<CH_ROOT>/DeepResearch/COPILOT_RESEARCH_REPORT.md` (the folder Claude built). A re-run's report gets its own name, `COPILOT_RESEARCH_REPORT_<n>.md`, so it never overwrites the first. If the answer came in several parts, join them into that one file in this order: the FINAL PART's front matter and Summary first, then the claim-table parts in ID order, then sections 3 to 9. The Stage 1 inventory (`COPILOT_RESEARCH_STAGE1.md`) is required: Claude counts its claim IDs against the report and uses it to confirm the inventory was made independently.
 4. Re-run PHASE 2.5 (`_Pipeline/RERUN_P2.5.md`) when you have finished the decisions already in the log. PHASE 2.5 §3.2b reconciles the report.
 
 ## Gate effect, blocking and non-blocking
