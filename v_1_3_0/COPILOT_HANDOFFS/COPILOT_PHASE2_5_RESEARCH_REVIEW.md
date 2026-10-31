@@ -8,6 +8,8 @@ Follows the standard in `COPILOT_HANDOFF_STANDARD.md`. Where this file is silent
 
 After PHASE 2.5's first (audit) run has written the findings report and the chapter's `ScienceClaims` file (PHASE 0.9 Pass 4). You can fill in the decisions log meanwhile, but PHASE 2.5 applies no fix until this report is saved (or the step is waived). Run it once per chapter, on the chapter text as it stands before any fixes. Pass 4 is Claude's own claim extraction, with the local Deep Researcher workflow as evidence gathering. This step is the second, independent model: it is meant to catch what the first reviewer shared a blind spot on, so do not paste Claude's conclusions into the prompt as facts.
 
+**Deep Researcher and this step.** The local Deep Researcher workflow (search, junk triage, citation verification, quote-accuracy QA) plus the author's claim-by-claim review of its results is the **evidence and review record for Pass 4**. It does not replace this step: this is the second, independent model. For a chapter that already went through Deep Researcher, upload its results (manifest row 6) only after Copilot has made its own claim list. For a retrofit of a chapter whose wording was already revised after that review (the approved replacement wording), the full chapter is still reviewed; Copilot should say whether the new wording itself overstates anything.
+
 Not required for chapters with `copilotRequired: no`. They can opt in through `MANUSCRIPT_REVISED.md` (see HOW_TO_RUN).
 
 ## Files to upload (manifest)
@@ -28,6 +30,7 @@ Do not upload: the design packet, images, the audiobook, drafts older than the D
 
 ```
 ROLE
+BOOK CONTEXT (author: edit or delete this line): <BOOK_CONTEXT, e.g. "This book is the consumer form of a doctoral dissertation, so sources should meet academic standards.">
 You are an independent research verifier for a non-fiction book chapter. You are not the author and not the editor. Your job is to check the chapter's externally verifiable claims and citations against authoritative sources, and report what you find. You are a second opinion; another reviewer has already looked at this chapter.
 
 AUTHORITY
