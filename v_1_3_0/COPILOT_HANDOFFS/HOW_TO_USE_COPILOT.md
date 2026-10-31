@@ -91,7 +91,7 @@ When unsure, tell Claude; it re-runs only the changed parts.
 
 ## Ch1 to Ch6
 
-Each chapter has `Governance/Research/Copilot_Research_Handoff.md` and a Deep Researcher evidence bundle. For each, in one Researcher conversation: Stage 1 uploads → paste the prompt → read Copilot's claim list → Stage 2 uploads → write `STAGE 2 FILES ATTACHED` → save the report → tell Claude. Before any wording changes, add a "Copilot research retrofit" section (with your approval line) to the chapter's `MANUSCRIPT_REVISED.md`. No image handoffs are needed for these chapters.
+Each chapter has its own **`DeepResearch\`** folder (reference only): open `START_HERE.md`, drag `1_Upload_First`, then `2_Upload_Second`, and save the results in the same folder. In one Researcher conversation, for each chapter: Stage 1 uploads → paste the prompt → read Copilot's claim list → Stage 2 uploads → write `STAGE 2 FILES ATTACHED` → save the report → tell Claude. Before any wording changes, add a "Copilot research retrofit" section (with your approval line) to the chapter's `MANUSCRIPT_REVISED.md`. No image handoffs are needed for these chapters.
 
 ## If Copilot behaves oddly
 

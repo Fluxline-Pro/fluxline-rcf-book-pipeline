@@ -45,7 +45,7 @@ Claude consumes the saved report ◀── you save it where it says ◀── C
 
 | Kind | Location |
 |---|---|
-| Research report and reconciliation | `<CH_ROOT>/Governance/Research/` |
+| Research folder (reference only): upload snapshots, prompt, manifest, report, reconciliation, `RESEARCH_CLEAR.md` | `<CH_ROOT>/DeepResearch/` |
 | Design, final eBook, print, Kindle, publication reviews | `<CH_ROOT>/Governance/Copilot/` (book level: `<BOOK_ROOT>/_BookGovernance/Copilot/`) |
 | Copilot image handoffs, alt-text and rationale drafts | `<CH_ROOT>/Figures/Copilot/` |
 | Generated image drafts | `<CH_ROOT>/Figures/Drafts/` |

@@ -21,7 +21,7 @@ This is an independent final-reader and artifact pass. It is not a replacement f
 | 5 | `Governance/<ChapterName>_FigureRegistry` (table or JSON) | **Yes** |
 | 6 | Terminology lock / normalized glossary | **Yes** |
 | 7 | `DesignPacket/_ds/DSM_CopilotCard.md` (the condensed DSM checklist) | **Yes** |
-| 8 | `Governance/Research/RESEARCH_CLEAR.md` and `RESEARCH_RECONCILIATION.md` (the Phase 2.5 research clearance) | **Yes** |
+| 8 | `DeepResearch/RESEARCH_CLEAR.md` and `RESEARCH_RECONCILIATION.md` (the Phase 2.5 research clearance) | **Yes** |
 | 9 | The log of approved layout wording changes (`_Pipeline/P4_DECISIONS.md`, if any) | If it exists |
 
 Split a very long PDF into parts of a few chapters or about 50 pages and say which part is which.
