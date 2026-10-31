@@ -1,7 +1,9 @@
 # PHASE 5: RAG Rebuild — Local + Cloud Vectors, LLM Setup (Per Chapter) (v4.2)
 
-> **Pipeline position:** PHASE 5 of 7 (Knowledge) · **Upstream gate:** PHASE 4 checklist `gateStatus: PASS` and `Manuscript/Trigger/MANUSCRIPT_SYNCED.md` · **Downstream:** PHASE 6 Automation Activation
+> **Pipeline position:** PHASE 5 of 7 (Knowledge) · **Upstream gate:** PHASE 4 checklist `gateStatus: PASS`, `Manuscript/Trigger/MANUSCRIPT_SYNCED.md`, and, for a chapter with a lock, `LAYOUT_VERIFIED.md` current and the congruency pass 2 report PASS (the audiobook is the last step of PHASE 4) · **Downstream:** PHASE 6 Automation Activation
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
+
+**Order (v1.3.0, <AUTHOR>).** PHASE 5 comes after **all of the chapter's files are finished**: the manuscript, the eBook and the print book (chapter and workbook, verified by <AUTHOR>, `LAYOUT_VERIFIED.md`), the Kindle build, and the audiobook, which is the last step of PHASE 4. Only then is the RAG index built from the final wording; automations (PHASE 6) follow. A chapter whose files are still changing is not indexed.
 
 **v4.2 changes (2026-09-30 governed cloud track):**
 - **Track C can embed through a governance gateway** (`cloud.embeddingProvider: "governance-gateway"`, recommended). PHASE 5 then holds a gateway credential instead of model credentials, and the gateway runs its checks before calling the embedding deployment. Direct Azure OpenAI stays available for setups without a gateway.

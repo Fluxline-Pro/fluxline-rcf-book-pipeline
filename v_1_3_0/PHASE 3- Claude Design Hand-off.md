@@ -36,6 +36,15 @@
 
 ## A0. Automatic start: figure prompts, then the design packet (release v1.2.1)
 
+**The PHASE 3 build order (<AUTHOR>, 2026-10-31).** References and manuscript are finished and locked first (PHASE 2.5); nothing below starts earlier. Then, for the book **and** the workbook:
+1. training materials and the design packet, and the figures you request (A0);
+2. updates from your review of those;
+3. the **eBook pass**, which you review and write notes on (wording changes go through `MANUSCRIPT_REVISED.md`, DOCX first, before the print build);
+4. the **print IDML**, created from the eBook after your notes, so it replicates the eBook;
+5. **print is required:** you review it in InDesign, edit it, and pass it off;
+6. QA (PHASE 3.5 and PHASE 3W).
+PHASE 4 then starts: your layout verification (Step 0V), Kindle, and the audiobook last.
+
 **Trigger:** `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` is issued (PHASE 2.5 passed, Locked; v1.2.5), with `Governance/Trigger/GOVERNANCE_READY.md` in place. Before v1.2.5 the trigger was `GOVERNANCE_READY.md` alone. The runner starts PHASE 3 for the chapter. A protected chapter runs these steps with Claude in chat instead.
 
 **Condensed DSM cards (v1.3.0).** Whenever it builds or refreshes the design packet, Claude also writes one-page cards for the Copilot handoffs: `DesignPacket/_ds/DSM_CopilotCard.md` (eBook: palette hex values and roles, type scale, spacing, callouts, pull quotes, figure and caption rules, do/don't) and `DesignPacket/_ds/PRINT_DSM_CopilotCard.md` (print equivalents, copied from `<PRINT_DSM_ROOT>`; nothing is written into the print DSM folder). They are copied from the DSM, never invented, and carry the DSM version. The Copilot handoffs upload these cards, not the full design system.

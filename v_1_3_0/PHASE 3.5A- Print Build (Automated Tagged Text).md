@@ -7,6 +7,8 @@
 
 **Release v1.2:** PHASE 3.5B (`PHASE 3.5B- eBook-First Print Build (IDML).md`) is now the default print build: it generates the print IDML itself, replicating the finished eBook. 3.5A stays available for a chapter whose eBook isn't built yet, or for a plain styled import.
 
+**Role (v1.3.0).** 3.5A is the fallback print route (3.5B is the default). Neither is the final print authority: <AUTHOR> in InDesign is.
+
 **What it is not.** It doesn't lay out pages, place images, or export a PDF. It never opens InDesign, never edits the manuscript, and never changes the template. Layout stays <AUTHOR>'s manual work (§6). Generating an IDML document directly is deferred to a later release; tagged text is the only output.
 
 **Reference implementation:** `idml_build.py` in `<LOCAL_TOOLS_ROOT>` (deterministic; no LLM; `python-docx` plus the Python standard library), with unit tests in `<LOCAL_TOOLS_ROOT>/tests/test_idml_build.py`.

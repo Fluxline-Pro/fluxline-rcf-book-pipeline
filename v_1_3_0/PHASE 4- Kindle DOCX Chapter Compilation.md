@@ -27,7 +27,7 @@
 **v3.3 changes (2026-10-02, release v1.1):**
 - **The upload is the gate.** <AUTHOR>'s upload of the final eBook PDF completes PHASE 3.5 and starts PHASE 4, after 30 quiet minutes. If `DESIGN_READY.md` is missing, Part 0 writes it as attested by the upload, but only if no figure in the FigureRegistry has `aiGenerated: true` with `approval: pending` or an unrefined `RGB concept` file (PHASE 3.5 §15); otherwise Part 0 stops with `MANUSCRIPT_SYNC_INCOMPLETE.md` naming the figures, and <AUTHOR> approves or replaces them first (v1.3.0).
   - The PDF may be named `<ChapterName>_eBook.pdf` (preferred) or `<ChapterName>_eBookPDF.pdf`.
-- **New step 0R, references re-check (report-only):** after the sync, the chapter's citations and references are checked again. The manuscript is now locked to the eBook, so nothing is auto-fixed. Findings go to <AUTHOR>; a fix goes into the eBook InDesign book, then re-export, then Part 0 re-runs.
+- **New step 0R, references re-check (report-only):** after the sync, the chapter's citations and references are checked again. The manuscript is already locked (PHASE 2.5), so nothing is auto-fixed. Findings go to <AUTHOR>; a fix is a `MANUSCRIPT_REVISED.md` change (DOCX first, delta audit, new lock), then the layouts carry it and the eBook PDF is re-exported.
 - **New step 0G, glossary lock:** the locked manuscript is the moment the chapter's glossary is finalised.
   - The chapter's `GlossaryNormalized.json` is refreshed from the synced text, applying the defining-chapter rules in `_BookGovernance/Glossary/Glossary_Canonical.json`.
   - The book-level master glossary and drift report are rebuilt. Only **locked** chapters enter the official master.
@@ -152,7 +152,7 @@ The final eBook PDF is about to become the wording source for the manuscript (0.
 
 1. 🤖 After 0.1 passes, write `Governance/Copilot/Final_eBook_Handoff.md`: the upload manifest from `COPILOT_HANDOFFS/COPILOT_PHASE4_FINAL_EBOOK_REVIEW.md` with the real paths (the eBook PDF, the manuscript MD/DOCX, the reference list, the figure registry, the terminology lock, the condensed DSM checklist, `RESEARCH_CLEAR.md` and `RESEARCH_RECONCILIATION.md`, and `_Pipeline/P4_DECISIONS.md` if it exists), then stop with `Manuscript/Trigger/MANUSCRIPT_SYNC_INCOMPLETE.md` stating `Waiting: Copilot final eBook review (or a recorded waiver)`.
 2. 🧑 <AUTHOR> runs the prompt in Copilot and saves `Governance/Copilot/COPILOT_FINAL_EBOOK_REVIEW_<YYYYMMDD>.md` (or adds a `final-ebook: waived — <reason> (<initials> <date>)` line to `Governance/Copilot/Copilot_Waivers.md`), then creates `_Pipeline/RERUN_P4.md` (saving the report does not start the runner).
-3. 🤖 Claude validates the report (front matter: the file list names the current PDF, and `manuscriptSha256` equals the lock's DOCX hash; otherwise it is stale). It verifies every finding against the PDF and the manuscript (a finding it can't reproduce is marked `not reproduced`), and writes `Governance/Copilot/Final_eBook_Gate_<YYYYMMDD>.md` with: outcome (`PASS`, `CONDITIONAL PASS`, `FAIL` or `AUTHOR DECISION REQUIRED`), the confirmed findings (blocking or not), and each one's status.
+3. 🤖 Claude validates the report (front matter: the file list names the current PDF, and `manuscriptSha256` equals the DOCX hash of record (PHASE 2.5 section 0); otherwise it is stale). It verifies every finding against the PDF and the manuscript (a finding it can't reproduce is marked `not reproduced`), and writes `Governance/Copilot/Final_eBook_Gate_<YYYYMMDD>.md` with: outcome (`PASS`, `CONDITIONAL PASS`, `FAIL` or `AUTHOR DECISION REQUIRED`), the confirmed findings (blocking or not), and each one's status.
    - Differences between the PDF and the manuscript go on the Part 0 differences list (0.3), where <AUTHOR> decides S1/S2 as before.
    - A finding marked "may invalidate research clearance" is checked against `RESEARCH_CLEAR.md`: if the PDF wording adds or strengthens an empirical claim, a number, a causal or absolute statement, or changes a citation, it is **not** applied by Part 0. It goes through `MANUSCRIPT_REVISED.md` and a PHASE 2.5 delta audit (which re-runs the research review on those sections); the PDF is not accepted as final for those pages until then.
 4. **Gate:** 0.2 starts only when the outcome is `PASS`, or `CONDITIONAL PASS` with each non-blocking finding accepted in writing in `_Pipeline/P4_DECISIONS.md`, or a `final-ebook` waiver. `FAIL` and `AUTHOR DECISION REQUIRED` stop the chapter: <AUTHOR> fixes the eBook (and re-uploads the PDF, which makes the review stale for the changed pages) or accepts the findings in writing. Until it opens, the eBook PDF does not become the manuscript's wording source, and the chapter's manuscript is unchanged.
@@ -231,7 +231,7 @@ For each item <AUTHOR> chooses:
 
 Run this before writing the sync report. If Part 0 changed any wording, run PHASE 0.9 Pass 1 → Pass 2 on the synced manuscript against the book ledger and `Audit_CanonicalTerms.json`, update the ledger with this chapter's entries, and add the result to the sync report (counts by severity, run ID). If nothing changed, record "spot check not needed".
 
-A **blocking** finding is handled like an S3 item: <AUTHOR> decides, the fix goes into the eBook (and print) InDesign book, the PDF is re-exported, and Part 0 re-runs. Major and minor findings are carried into the Mode D final delta.
+A **blocking** finding is handled like an S3 item: <AUTHOR> decides; a wording fix is a `MANUSCRIPT_REVISED.md` change (PHASE 2.5 section 0, path 2); then the layouts carry it, the PDF is re-exported, and Part 0 re-runs. Major and minor findings are carried into the Mode D final delta.
 
 ## 0.8 Sync report and trigger
 
@@ -258,7 +258,7 @@ Then write the trigger (renaming any older one to `*_superseded_<timestamp>.md`)
 Right after `MANUSCRIPT_SYNCED.md` is written, re-run the references check (PHASE 1 Step 10b) **without fixes**.
 - **Output:** `_BookGovernance/References/<ChapterName>_ReferencesCheck.md`.
 - **Findings:** each critical or major finding goes to <AUTHOR>.
-  - The fix is made in the eBook (and print) InDesign book, the PDF is re-exported, and Part 0 re-runs.
+  - A fix is a `MANUSCRIPT_REVISED.md` change (DOCX first, delta audit, new lock; PHASE 2.5 section 0, path 2). The layouts then carry it, the PDF is re-exported, and Part 0 re-runs.
   - Findings don't block Part A. They are carried to PHASE 6.5 and PHASE 7.
   - Record the counts in the sync report.
 
