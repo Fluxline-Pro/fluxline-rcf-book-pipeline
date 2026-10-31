@@ -16,7 +16,7 @@
 - **Uncertain sync items** go to `<CH_ROOT>/_Pipeline/P3W_DECISIONS.md`, a table with a blank **Decision** column. W3 applies the decisions on its next run, the same way PHASE 4 Part 0 handles S3 items.
 - **W0 includes only the exercises <AUTHOR> selected** (PHASE 1 Step 2 / PHASE 2 workbook selection).
 
-> **Pipeline position:** a side track that runs from the end of **PHASE 2** through **PHASE 3 / 3.5** for each chapter, then once per book after PHASE 4 Part B step B0 · **Upstream gate:** `Governance/Trigger/GOVERNANCE_READY.md` (per chapter) for W0; **a current `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` (PHASE 2.5, v1.2.5) for W1 onward** · **Downstream:** PHASE 6.5 (workbook sub-certification), PHASE 7
+> **Pipeline position:** a side track that runs from the end of **PHASE 2** through **PHASE 3 / 3.5** for each chapter, then once per book after PHASE 4 Part B step B0 · **Upstream gate:** `Governance/Trigger/GOVERNANCE_READY.md` (per chapter) for W0; **a current `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` (PHASE 2.5, v1.2.5) for W1 onward** · **Downstream:** PHASE 4 Step 0V (for a chapter with a lock, v1.3.0), PHASE 6.5 (workbook sub-certification), PHASE 7
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
 **Release v1.2.5 (2026-10-24): the workbook is designed from the locked chapter.** W0 still runs at the end of PHASE 2. Everything from W1 on (the workbook design, W1b, W1c, and the W3 sync) also needs the chapter's `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` to be current: it exists, its DOCX and MD hashes match the chapter manuscript, and no `MANUSCRIPT_REVISED.md` section is newer. The workbook quotes and points into the chapter, so it is built only from the chapter's locked wording. If a PHASE 2.5 fix touches the workbook manuscript, W0 is re-run before the lock is written.
@@ -226,7 +226,7 @@ Run when W2's files appear or change. Write `<CH_ROOT>/Governance/<ChapterName>_
 
 **Readiness is bound to the files.** Every consumer of `WORKBOOK_READY.md` (W4, PHASE 6.5, PHASE 7) recomputes the hashes of the uploaded PDFs (in `Workbook/` or `<WORKBOOK_BOOK_ROOT>`) and treats the trigger as stale if any hash differs from the recorded one.
 
-`WORKBOOK_READY.md` does **not** block `DESIGN_READY.md` or anything in PHASES 4–6; the workbook is not a Kindle, audiobook, or RAG input. It is required for PHASE 6.5's workbook sub-certification and for PHASE 7.
+`WORKBOOK_READY.md` does **not** block `DESIGN_READY.md`, and the workbook is not a Kindle, audiobook, or RAG input. From v1.3.0, for a chapter with a lock, a current `WORKBOOK_READY.md` (or `WORKBOOK_NOT_APPLICABLE.md`) is required before PHASE 4 Step 0V and Part A, because the author wants the workbook solid before Kindle and the audiobook. It is also required for PHASE 6.5's workbook sub-certification and for PHASE 7.
 
 ---
 

@@ -4,7 +4,7 @@
 
 **New in v1.2.5: the manuscript is locked before design.** After governance (PHASE 2), PHASE 2.5 reads the chapter for content problems and gives you a decisions log. You decide every finding, the fixes go into the DOCX (then the MD), and the chapter is locked. Design, print, the workbook, Kindle, and the audiobook all start from the locked text (Step 2a).
 
-**New in v1.2.6: one congruency check across formats.** Before the Kindle build, `congruency_check.py` compares the manuscript, the eBook PDF, the print PDF, the narration script and the workbook's exercise numbers and titles, and checks that every file is current against the lock. You get one report and a PASS or HOLD (Step 5c). A second pass after the audiobook adds the Kindle file and the audio check.
+**New in v1.2.6: one congruency check across formats.** Before the Kindle build, `congruency_check.py` compares the manuscript, the eBook PDF, the print PDF and the workbook's exercise numbers and titles, and checks that every file is current against the lock. You get one report and a PASS or HOLD (Step 5c). A second pass after the audiobook adds the narration script, the Kindle file and the audio check.
 
 **New in v1.3.0: Microsoft Copilot as a governed second opinion.** At seven points the pipeline hands you a list of files and a prompt (in `COPILOT_HANDOFFS/`); you open Microsoft Copilot yourself, upload the named files, paste the prompt, and save the answer where it says. Claude then checks the answer and the gate moves on only with your decision. Copilot checks research (before the lock), generates concept images, and gives independent reads of the design, the final eBook PDF, the print PDF, the Kindle files, and the whole publication. **Nothing in this pipeline calls or has access to your Copilot.** See "Copilot checkpoints" at the end of this guide. The same release also adds Pass 4 (science and source verification) and makes sidebars an optional per-book setting.
 
@@ -203,7 +203,7 @@ The design rules are in PHASE 3.5B §2: one column only; black, white, and gold;
 2. **Part 0, manuscript sync:** **first, Step 0F (when `copilotRequired: yes`)** pauses and gives you the handoff for Copilot checkpoint 4 (see below); the sync starts when you have saved the review or a `final-ebook` waiver and its findings are resolved. Then it checks the manuscript is still locked, then compares it with your eBook PDF. It expects no differences; any it finds is listed in `_Pipeline/P4_DECISIONS.md` for your decision, since it would change the locked text (v1.2.5). Writes `MANUSCRIPT_SYNCED.md`.
 3. **0R, references re-check:** report-only, since the manuscript is now locked.
 4. **0G, glossary lock:** refreshes the chapter glossary from the locked text and rebuilds the **official master glossary** and the drift report.
-5. **Part A, Kindle:** DOCX, HTML, metadata, and figures.
+5. **Part A, Kindle:** DOCX, HTML, metadata, and figures. **From v1.3.0 it waits for Step 5v** (your InDesign verification of the eBook and print books, chapter and workbook); nothing is built for Kindle until you confirm the layouts are final.
 
 📧 **Email:** only if it needs you, for example wording changes it couldn't decide. Fill in the **Decision** column in `_Pipeline/P4_DECISIONS.md` (*Accept PDF*, *Keep manuscript*, or *Defer* with initials), then create `_Pipeline/RERUN_P4.md`.
 
@@ -251,11 +251,25 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 3. **Layout errors:** fix them in the print InDesign book. **Warnings:** fix each one, or accept it.
 4. Re-export the PDF. The report refreshes on its own.
 
-✅ The report shows 0 text differences to check and 0 layout errors, and you've fixed or accepted every warning. It doesn't block Kindle, but PHASE 6.5 and PHASE 7 need it closed.
+✅ The report shows 0 text differences to check and 0 layout errors, and you've fixed or accepted every warning. For a chapter with a lock it must be closed before Kindle (Step 5v); PHASE 6.5 and PHASE 7 need it closed for every section.
+
+### Step 5v — Verify the layouts in InDesign, then confirm → PHASE 4 Step 0V (v1.3.0)
+
+**The order is: manuscript (DOCX and MD) → eBook and print book (chapter and workbook) → Kindle → audiobook (always last) → PHASE 5.** Kindle and the audiobook are made from the same words, so they wait until the layouts are final.
+
+🧑 **You** (as the graphic designer):
+1. Check the chapter's eBook and print books, and the workbook's eBook and print, in InDesign for final anomalies. Fix them there (wording that should reach the manuscript goes through the DOCX and `MANUSCRIPT_REVISED.md`, or Part 0's decision list).
+2. Re-export the PDFs: the eBook PDF to `eBook/`, the print PDF to `InDesign/<ChapterName>_Print7x10.pdf`, the workbook PDFs as Step 5 says. Part 0 (Step 4) and 0P (Step 5b) re-run by themselves; for `copilotRequired: yes`, a new eBook PDF first re-opens Step 0F (a new Copilot review or a `final-ebook` waiver) for the changed pages. If you ran the optional Copilot print review, use its confirmed findings as a checklist.
+3. Wait until the Part 0 and 0P results are closed (nothing left to check; warnings fixed or accepted).
+4. **Create `Manuscript/Trigger/LAYOUT_VERIFIED.md` yourself** (the template is in PHASE 4, Step 0V). Claude never writes it.
+
+🤖 **Automatic:** checks the file is newer than every PDF and the manuscript, Part 0 is synced, DOCX = MD, 0P is closed, and the workbook is ready (`WORKBOOK_READY.md`, and its print QA closed). If not, `LAYOUT_VERIFY_INCOMPLETE.md` lists what is open and Kindle does not start. A later export makes the confirmation stale; confirm again.
+
+✅ `LAYOUT_VERIFIED.md` is accepted; the congruency check (5c, pass 1) runs and the Kindle build starts. A section without a lock (the first book's Ch1 to Ch5) is not held.
 
 ### Step 5c — Congruency check → PHASE 4 Step 0C (report-only; v1.2.6)
 
-🤖 **Automatic:** when a section has all of its inputs (manuscript DOCX and MD, final eBook PDF, print PDF, narration script) and none has changed for 5 minutes, the local watcher runs the check and writes `_BookGovernance/CongruencyQA/<ChapterName>_Congruency.md`. It emails you only when the verdict is **HOLD**, and again only if the open differences change.
+🤖 **Automatic:** when a section has all of its pass 1 inputs (manuscript DOCX and MD, final eBook PDF, print PDF; the narration script joins in pass 2) and none has changed for 5 minutes, the local watcher runs the check and writes `_BookGovernance/CongruencyQA/<ChapterName>_Congruency.md`. It emails you only when the verdict is **HOLD**, and again only if the open differences change.
 
 🧑 **You** (also to run it on demand): create an empty `Manuscript/Trigger/RUN_CONGRUENCY.md` (Parts and Lessons: `Trigger/RUN_CONGRUENCY.md` in their folder), or ask Claude. Put `pass 2` on the first line for the second pass. The watcher runs it and renames the file `RUN_CONGRUENCY_done_<timestamp>.md`.
 
@@ -269,7 +283,7 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 
 **Pass 2.** After Step 6 (the recording) and its audio check, the same check adds the Kindle DOCX and the audiobook QA. PHASE 5 and PHASE 6.5 start only when pass 2 is PASS.
 
-### Step 6 — Record the audiobook → PHASE 4 Part C (manual, with an automatic check)
+### Step 6 — Record the audiobook → PHASE 4 Part C (manual, with an automatic check; the last step before PHASE 5)
 
 🧑 **You:** record the chapter in Adobe Audition from the narration script built from the Kindle output, and export `Audiobook/<NN>_<ChapterName>.mp3`. Record only after the lock (`MANUSCRIPT_LOCKED.md`) and the Kindle build: the content audit is already done, so you shouldn't have to re-record (v1.2.5).
 

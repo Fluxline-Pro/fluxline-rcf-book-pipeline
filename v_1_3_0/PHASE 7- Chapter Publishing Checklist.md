@@ -193,6 +193,12 @@
 - [ ] ActivationReport: Tests 1–5 passed (including the approval rule)
 - [ ] CMS / LMS imports staged as drafts (if in scope)
 
+## PHASE 4 — Layout verification before Kindle (v1.3.0)
+
+- [ ] `Manuscript/Trigger/LAYOUT_VERIFIED.md` created by <AUTHOR> and newer than the eBook, print and workbook PDFs (chapters with a lock)
+- [ ] eBook and print books (chapter and workbook) checked in InDesign; 0P closed; workbook ready and its print QA closed
+- [ ] Kindle built after the layouts were verified, and the audiobook recorded last (from the Kindle output)
+
 ## PHASE 4 — Copilot reviews (v1.3.0)
 
 - [ ] Copilot-required chapters (`copilotRequired: yes`): `Governance/Copilot/Final_eBook_Gate_<date>.md` present with outcome PASS, or CONDITIONAL PASS with each finding accepted in writing, or a `final-ebook` waiver (N/A if `copilotRequired: no`)
