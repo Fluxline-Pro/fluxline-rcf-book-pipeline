@@ -315,7 +315,8 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
     │   ├── Audiobook/            script, markers [P1]; script from Kindle, Drafts/ (XTTS), final MP3 [P4 Part C]
     │   ├── RAG/                  PHASE 1 packet; Ingestion, Chunks/, Index/, Trigger/ [P1, P5]
     │   ├── Marketing/            Intake/, Seeds/, Trigger/ [P1]; Generated/        [P6]
-    │   ├── Governance/           reports, Trigger/, _Backups/, QA reports; Research/ (Copilot report, reconciliation, RESEARCH_CLEAR) [P2.5]; Copilot/ (design, final eBook, print, Kindle, publication reviews) [P3.5, P4, P6.5]
+    │   ├── Governance/           reports, Trigger/, _Backups/, QA reports; Copilot/ (design, final eBook, print, Kindle, publication reviews) [P3.5, P4, P6.5]
+    │   ├── DeepResearch/         reference-only research folder: upload snapshots (1_Upload_First, 2_Upload_Second), the prompt, the manifest, and the results (Copilot report, reconciliation, RESEARCH_CLEAR) [P2.5]
     │   ├── DesignPacket/         _ds/ (DSM), packet/, figures_export/, templates/, uploads/, Trigger/ [P2 staging, P3]
     │   └── <ChapterName>_*Checklist / _Report files
     └── Published/                approved release copies                           [P7]
@@ -334,8 +335,9 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 | `AUDIT_CLEAR.md` / `AUDIT_INCOMPLETE.md` | `_BookGovernance/Audit/Trigger/` | P0.9 Mode F | P1 entry; P3.5A entry (the DOCX must be newer) |
 | `RUN_CONGRUENCY.md` (v1.2.6): optional first line `pass 2`; renamed `RUN_CONGRUENCY_done_<timestamp>.md` after the run | `Manuscript/Trigger/` (Parts: `Trigger/`) | <AUTHOR> | The watcher runs the congruency check now |
 | `MANUSCRIPT_LOCKED.md` / `MANUSCRIPT_LOCK_INCOMPLETE.md` (v1.2.5): run ID, chapter version, DOCX and MD SHA-256 hashes, finding and decision counts, decisions log, snapshot | `Manuscript/Trigger/` | P2.5 (once every finding is decided and applied, DOCX = MD) | Entry gates of P3 (A0 starts from it), P3.5, P3.5A, P3.5B, P3W, P4 Part 0/A/C; P4 B0 (since-lock delta). **Stale** when a hash no longer matches the files or `MANUSCRIPT_REVISED.md` is newer |
-| `RESEARCH_CLEAR.md` / `RESEARCH_INCOMPLETE.md` (v1.3.0): hashes equal to the lock, Pass 4 and Copilot report refs, reconciliation counts, `changesAfterReport`, author approval | `Governance/Research/` | P2.5 (just before the lock) | P2.5 exit gate / lock; P4 Step 0F; P6.5 §9b; P7 |
-| `COPILOT_RESEARCH_REPORT.md` (saved by <AUTHOR>), `RESEARCH_RECONCILIATION.md` (Claude) (v1.3.0) | `Governance/Research/` | <AUTHOR> (from Copilot) · P2.5 §3.2b | P2.5 decisions log; `RESEARCH_CLEAR.md` |
+| `RESEARCH_CLEAR.md` / `RESEARCH_INCOMPLETE.md` (v1.3.0): hashes equal to the lock, Pass 4 and Copilot report refs, reconciliation counts, `changesAfterReport`, author approval | `DeepResearch/` | P2.5 (just before the lock) | P2.5 exit gate / lock; P4 Step 0F; P6.5 §9b; P7 |
+| `COPILOT_RESEARCH_REPORT.md` (saved by <AUTHOR>), `RESEARCH_RECONCILIATION.md` (Claude) (v1.3.0) | `DeepResearch/` | <AUTHOR> (from Copilot) · P2.5 §3.2b | P2.5 decisions log; `RESEARCH_CLEAR.md` |
+| `START_HERE.md`, `PROMPT_PasteIntoCopilot.md`, `Copilot_Research_Handoff.md` (manifest), `1_Upload_First/`, `2_Upload_Second/` (v1.3.0): the reference-only snapshots and instructions for the Copilot research review | `DeepResearch/` | P2.5 audit run (rebuilt when the manuscript changes) | <AUTHOR> (drags the folders into Copilot) |
 | `Final_eBook_Handoff.md`, `COPILOT_FINAL_EBOOK_REVIEW_<date>.md` (<AUTHOR>), `Final_eBook_Gate_<date>.md` (Claude) (v1.3.0) | `Governance/Copilot/` | P4 Step 0F · <AUTHOR> | P4 Part 0 (0.2 starts only on an open gate); P6.5 §9b |
 | `COPILOT_DESIGN_REVIEW_`, `COPILOT_PRINT_PDF_REVIEW_`, `COPILOT_KINDLE_REVIEW_`, `COPILOT_PUBLICATION_QA_<date>.md` (v1.3.0, optional except the last) | `Governance/Copilot/` (book level: `_BookGovernance/Copilot/`) | <AUTHOR> (from Copilot) | P3.5 §15; P4 0P; P4 B6; P6.5 §9b |
 | `<ChapterName>_LockDecisions.md` (v1.2.5): one row per finding, blank **Decision** column | `Manuscript/` | P2.5 (rows) → <AUTHOR> (decisions), then `_Pipeline/RERUN_P2.5.md` | P2.5 apply run |

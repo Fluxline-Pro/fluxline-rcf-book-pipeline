@@ -30,6 +30,8 @@ Claude reconciles --> you decide
 
 Keep both stages in **one conversation** (Researcher mode). Do not upload any Stage 2 file before Copilot has returned its Stage 1 inventory and said it is waiting. If you do by mistake, tell Copilot to disregard them and start the conversation again.
 
+> **Where the files are.** Claude builds these uploads as reference-only snapshots in the chapter's `<CH_ROOT>/DeepResearch/` folder (`1_Upload_First/`, `2_Upload_Second/`, `PROMPT_PasteIntoCopilot.md`, `START_HERE.md`). The tables below list the originals; use the snapshots. The reference list is the DOCX's References section, so it needs no separate file unless you keep a separate list. The audit run's findings report (Stage 2, optional) is **not** snapshotted: upload it from `Governance/` only if you want Copilot to see it.
+
 ## STAGE 1 UPLOADS (independent review)
 
 | # | File | Required | Why |
@@ -38,7 +40,7 @@ Keep both stages in **one conversation** (Researcher mode). Do not upload any St
 | 2 | The chapter's reference list (the References section of the DOCX; if you keep a separate list, upload that too) | **Yes** | Citations to check |
 | 3 | `<BOOK_ROOT>/_BookGovernance/Glossary/Glossary_Canonical.json` (or the normalized glossary / terminology lock) | **Yes** | Framework terms are not empirical claims |
 
-Plus the handoff metadata: the `reviewedSha256` and the handoff file name come from the handoff file (`Copilot_Research_Handoff.md`); the prepared Ch1 to Ch6 packets pre-fill them in the prompt, otherwise you fill them into the report afterwards (see After Copilot answers). Nothing else is uploaded.
+Plus the handoff metadata: the `reviewedSha256` and the handoff file name come from the manifest (`DeepResearch/Copilot_Research_Handoff.md`, or `Copilot_Research_Handoff_<n>.md` for a re-run); the prepared Ch1 to Ch6 `DeepResearch/` folders pre-fill them in the prompt, otherwise you fill them into the report afterwards (see After Copilot answers). Nothing else is uploaded.
 
 ## STAGE 2 UPLOADS (comparison and verification; only after Stage 1 is returned)
 
@@ -140,8 +142,8 @@ Nothing you recommend is applied without the author's written decision.
 ## After Copilot answers
 
 1. **After Stage 1:** read the inventory. Only then upload the Stage 2 files and write: `STAGE 2 FILES ATTACHED`.
-2. **After Stage 2:** read the report. Replace `ASK-AUTHOR-TO-FILL` in the front matter if any remain: `manuscriptSha256` is the `reviewedSha256` written in the handoff file you were given (`Governance/Research/Copilot_Research_Handoff.md`, or `Copilot_Research_Handoff_<n>.md` for a re-run; check with `Get-FileHash <docx>` if you changed the file), `handoffFile` is that file's name, and `filesUploaded` lists the files you really uploaded at each stage.
-3. Save it as `<CH_ROOT>/Governance/Research/COPILOT_RESEARCH_REPORT.md` (create the folder). If the conversation was split, name the parts `COPILOT_RESEARCH_REPORT_part2.md` and so on. You may also save the Stage 1 inventory as `COPILOT_RESEARCH_STAGE1.md`: Claude uses it to confirm the inventory was made independently.
+2. **After Stage 2:** read the report. Replace `ASK-AUTHOR-TO-FILL` in the front matter if any remain: `manuscriptSha256` is the `reviewedSha256` written in the handoff file you were given (`DeepResearch/Copilot_Research_Handoff.md`, or `Copilot_Research_Handoff_<n>.md` for a re-run; check with `Get-FileHash <docx>` if you changed the file), `handoffFile` is that file's name, and `filesUploaded` lists the files you really uploaded at each stage.
+3. Save it as `<CH_ROOT>/DeepResearch/COPILOT_RESEARCH_REPORT.md` (the folder Claude built). A re-run's report gets its own name, `COPILOT_RESEARCH_REPORT_<n>.md`, so it never overwrites the first. If the conversation was split, name the parts `COPILOT_RESEARCH_REPORT_part2.md` and so on. You may also save the Stage 1 inventory as `COPILOT_RESEARCH_STAGE1.md`: Claude uses it to confirm the inventory was made independently.
 4. Re-run PHASE 2.5 (`_Pipeline/RERUN_P2.5.md`) when you have finished the decisions already in the log. PHASE 2.5 §3.2b reconciles the report.
 
 ## Gate effect, blocking and non-blocking

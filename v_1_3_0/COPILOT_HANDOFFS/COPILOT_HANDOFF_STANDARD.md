@@ -93,7 +93,7 @@ Claude checks this block before using a report. A report that lists files other 
 
 | Step | `manuscriptSha256` is | Where to read it |
 |---|---|---|
-| Research review (PHASE 2.5) | The DOCX uploaded (before any fixes), `reviewedSha256` | `Governance/Research/Copilot_Research_Handoff.md` |
+| Research review (PHASE 2.5) | The DOCX uploaded (before any fixes), `reviewedSha256` | `DeepResearch/Copilot_Research_Handoff.md` |
 | Design, final eBook, print, Kindle, publication reviews | The DOCX hash in `MANUSCRIPT_SYNCED.md` if it exists (PHASE 4 Part 0 has run), otherwise in `MANUSCRIPT_LOCKED.md` | `Manuscript/Trigger/` |
 | Book-level review (`chapter: book`) | One line per chapter: `<ChapterName>: <hash>` | each chapter's trigger file |
 | Image generation | `n/a` | |

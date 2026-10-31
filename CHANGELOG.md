@@ -30,7 +30,14 @@ Research checks, final-artifact reads and figure generation all ran on one model
 - **PHASE 6.5 §9b**: a Copilot cross-format review is one input to Publishing Ready, which also needs the deterministic checks, the human checks, resolved findings and the author's sign-off.
 - **PHASE 7**: checklist items for the research clearance, Copilot reviews, and AI-generated figure disclosure.
 - **HOW_TO_RUN "Copilot checkpoints"**: for each of the seven checkpoints: when, why, files to upload, prompt, output name, where to save it, pass/fail, what happens next, what needs the author, and what invalidates it.
-- **MASTER_PIPELINE_OVERVIEW**: release notes, Copilot checkpoint table, status ladder, trigger map (`RESEARCH_CLEAR.md`, Copilot report files), folder map (`Governance/Research/`, `Governance/Copilot/`), and a tool-responsibility table (builds, reviews, validates, decides).
+- **MASTER_PIPELINE_OVERVIEW**: release notes, Copilot checkpoint table, status ladder, trigger map (`RESEARCH_CLEAR.md`, Copilot report files), folder map (`DeepResearch/`, `Governance/Copilot/`), and a tool-responsibility table (builds, reviews, validates, decides).
+
+### DeepResearch folder (one reference-only home for the research chain) (#28)
+
+Author request after the BETA. Each chapter gets `<CH_ROOT>/DeepResearch/`, replacing `Governance/Research/` everywhere in `v_1_3_0`:
+- `START_HERE.md` (the steps in plain words), `PROMPT_PasteIntoCopilot.md` (filled in for the chapter), `Copilot_Research_Handoff.md` (the manifest: hashes and where each snapshot came from), `1_Upload_First/` (the DOCX and glossary) and `2_Upload_Second/` (Claude's claim list, the Deep Researcher evidence bundle, the claims registry).
+- The snapshots are copies and are never edited. The results are saved in the same folder: `COPILOT_RESEARCH_STAGE1.md` and `COPILOT_RESEARCH_REPORT.md` (the author), `RESEARCH_RECONCILIATION.md` and `RESEARCH_CLEAR.md` (Claude), so later phases read the findings from one place.
+- Built for Ch1 to Ch6 (Ch6 at its re-locked v1.3.5 hash).
 
 ### Reconciliation (BETA): the lock process, the sequence, and version consistency
 

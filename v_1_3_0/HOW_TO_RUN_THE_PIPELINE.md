@@ -109,7 +109,7 @@ If PHASE 2 needs you, resolve the listed items (Needs Author Review, Tier C prop
 
 📧 **Email:** "PHASE 2.5: N findings to decide", with the decisions log path. (No findings: the chapter is locked straight away.)
 
-🧑 **You, in parallel (Copilot checkpoint 1, when `copilotRequired: yes`):** run the Researcher review in Microsoft Copilot and save its report as `Governance/Research/COPILOT_RESEARCH_REPORT.md` (details in "Copilot checkpoints" below). On the next run Claude reconciles it with its own findings (`RESEARCH_RECONCILIATION.md`) and may add research rows to the decisions log for you to decide. `RESEARCH_CLEAR.md` is written just before the lock.
+🧑 **You, in parallel (Copilot checkpoint 1, when `copilotRequired: yes`):** run the Researcher review in Microsoft Copilot and save its report as `DeepResearch/COPILOT_RESEARCH_REPORT.md` (details in "Copilot checkpoints" below). On the next run Claude reconciles it with its own findings (`RESEARCH_RECONCILIATION.md`) and may add research rows to the decisions log for you to decide. `RESEARCH_CLEAR.md` is written just before the lock.
 
 🧑 **You:**
 1. Open the decisions log and fill in **every** Decision:
@@ -422,9 +422,9 @@ A dedicated Copilot agent (`COPILOT_AGENT_INSTRUCTIONS.md`) is optional: the han
 |---|---|
 | **When** | After the PHASE 2.5 audit run, while you fill in the decisions log |
 | **Why** | A second, independent model checks externally verifiable claims and citations that Claude's Pass 4 also checked |
-| **Upload** | **Stage 1 (first):** the chapter DOCX, reference list, glossary. Copilot returns its own claim inventory and stops. **Stage 2 (after you write `STAGE 2 FILES ATTACHED`):** the `ScienceClaims` file, Deep Researcher reports or evidence bundle, optionally the audit findings report and the claims registry. One conversation |
+| **Upload** | Open the chapter's `DeepResearch\START_HERE.md`. **Stage 1:** drag `1_Upload_First` (the DOCX and glossary) into Copilot with the prompt from `PROMPT_PasteIntoCopilot.md`; Copilot returns its own claim list and stops. **Stage 2 (after you write `STAGE 2 FILES ATTACHED`):** drag `2_Upload_Second` (Claude's claim list, the Deep Researcher evidence, the claims registry). The reference list is inside the DOCX; the audit report is optional and not in the folder. One conversation |
 | **Mode / prompt** | Researcher · `COPILOT_HANDOFFS/COPILOT_PHASE2_5_RESEARCH_REVIEW.md` |
-| **Output / save to** | `COPILOT_RESEARCH_REPORT.md` → `<CH_ROOT>/Governance/Research/` |
+| **Output / save to** | `COPILOT_RESEARCH_REPORT.md` → `<CH_ROOT>/DeepResearch/` |
 | **Pass / fail** | Blocking findings (High claims unsupported/overstated, bad or fabricated citations, contradictions, undecided author-decision items) stop `RESEARCH_CLEAR.md`; non-blocking ones don't |
 | **Next** | Re-run PHASE 2.5 (`RERUN_P2.5.md`): Claude writes `RESEARCH_RECONCILIATION.md`, adds rows to the decisions log, you decide, then `RESEARCH_CLEAR.md` and the lock |
 | **You approve** | Every correction, and every High claim closed |
