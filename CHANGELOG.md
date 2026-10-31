@@ -5,6 +5,64 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [v1.3.0] — 2026-10-31
+
+**Folder:** `v_1_3_0/` · **Previous:** `v_1_2_6/` (unchanged, kept for books mid-flight) · **Tag:** `v1_3_0.ALPHA` (then BETA, RC, PROD after the author's review)
+
+Microsoft Copilot as a governed second opinion. Also publishes the working v1.2.7 changes (Pass 4, sidebars) that were never in a repository folder.
+
+### Why
+
+Research checks, final-artifact reads and figure generation all ran on one model family. A second, independent model catches different mistakes, and the author's Microsoft 365 Premium account can carry some of that work. The pipeline stays the authority: Copilot output is evidence and drafts, every Copilot step is started by the author, and nothing calls Copilot automatically.
+
+### Added
+
+- **`COPILOT_HANDOFFS/`**: the standard (`COPILOT_HANDOFF_STANDARD.md`: role, authority, prohibitions, source-of-truth order, upload manifest, task, output schema, gate effect, limitations, return path, privacy check, human approval; status labels; platform limits), a README, and seven prompts with upload lists and return formats: Phase 2.5 research review, Phase 3 image generation, Phase 3.5 design review, Phase 4 final eBook review, print PDF review, Kindle review, Phase 6.5 publication QA.
+- **PHASE 2.5 §3.2b, research verification and reconciliation**: after Pass 4 (Claude), a Researcher review in Copilot; Claude validates the report (hash, file list), verifies every source Copilot names, writes `RESEARCH_RECONCILIATION.md` (claim, Pass 4 conclusion, Copilot conclusion, source disagreement, resolution, author decision) and adds SCIENCE rows to the decisions log. Blocking vs non-blocking findings are defined.
+- **`copilotRequired: yes|no` and `pipelineRelease` in `MANUSCRIPT_LOCKED.md`**: one field that every Copilot gate reads. The first lock under v1.3.0 sets `yes`; a delta re-lock carries the old value forward (an ordinary revision of an older chapter does not make the steps mandatory); a research retrofit sets `yes`; locks from earlier releases count as `no`.
+- **`RESEARCH_CLEAR.md`**, written just before `MANUSCRIPT_LOCKED.md` with the same hashes; the lock records it. The gate is inside PHASE 2.5 (not a new phase between 2 and 3) because 2.5 edits the DOCX and records the lock hashes, and PHASE 3 already requires the lock, so the runner needs no change. §7 defines what invalidates it (adding or strengthening a claim, a number, a causal or absolute statement, or changing a citation) and what doesn't (softening, spelling, narrative or framework wording). Chapters locked earlier can opt in through a `MANUSCRIPT_REVISED.md` "Copilot research retrofit".
+- **`COPILOT_AGENT_INSTRUCTIONS.md` and `HOW_TO_USE_COPILOT.md`**: a standing role prompt for a dedicated Copilot agent (research, reviews, image generation, governance limits, labels; about 5,200 characters against Agent Builder's documented 8,000-character limit; Microsoft 365 Premium eligibility for Agent Builder and a Researcher toggle are not documented, so the file gives a paste-as-first-message fallback and says to run research in Researcher mode directly), and an author's guide to where Copilot is used in each PHASE.
+- **Deep Researcher counts as Pass 4 evidence.** The local Deep Researcher workflow plus the author's claim-by-claim review of its results is the evidence and review record for Pass 4 (for example the first six chapters' 37 High claims); it does not replace the Copilot step, which is the independent second model. A retrofit of such a chapter reviews the whole chapter, including whether the approved replacement wording overstates anything. The research prompt carries an optional `BOOK_CONTEXT` line for the author (for example, a book that is the consumer form of a dissertation).
+- **PHASE 4 Step 0V, author layout verification.** The order is now explicit: manuscript (DOCX and MD) → eBook and print book (chapter **and workbook**) verified by the author in InDesign → Kindle → audiobook (always last) → PHASE 5. The author creates `Manuscript/Trigger/LAYOUT_VERIFIED.md` after checking the layouts; Part A (Kindle) and everything after it wait for it, and for Part 0 synced, DOCX = MD, 0P closed, and the workbook ready (`WORKBOOK_READY.md`, workbook print QA closed). A later export makes it stale. Sections without a lock (the first book's Ch1 to Ch5) are not held. This also resolves an earlier inconsistency in which 0P was non-blocking while Step 0C required the print PDF. To make that order possible, the manuscript-to-narration-script comparison and the script's freshness check moved from congruency pass 1 to pass 2: the script is rebuilt from the Kindle output in Part C, so it cannot be current before Part A. `WORKBOOK_READY.md` must be current (hashes match) at Step 0V, and PHASE 3W's "does not block PHASES 4-6" now excepts it.
+- **PHASE 3 A0**: Copilot Create as an optional figure generator (`Figures/Copilot/<FigureID>_CopilotHandoff.md`). The figure registry gains provenance fields (`generator`, `promptVersion`, `dsmVersion`, `aiGenerated`, `approval`, `colorMode`, `resolutionStatus`, `rights`, `revisionHistory`, …). Generated images are RGB concepts (Copilot offers three fixed sizes up to 1536 px) and never canonical.
+- **PHASE 3.5 §15**: checks generated figures (complete provenance, `approval`, no invented text, not concept-only) and folds in an optional Copilot design review.
+- **PHASE 4 Step 0F**: a Copilot review of the final eBook PDF before it becomes the manuscript's wording source (required for chapters locked under v1.3.0). Wording differences that change an empirical claim or citation go through `MANUSCRIPT_REVISED.md` and a PHASE 2.5 delta audit, not Part 0. Optional print-PDF review (0P) and Kindle review (Part B).
+- **PHASE 6.5 §9b**: a Copilot cross-format review is one input to Publishing Ready, which also needs the deterministic checks, the human checks, resolved findings and the author's sign-off.
+- **PHASE 7**: checklist items for the research clearance, Copilot reviews, and AI-generated figure disclosure.
+- **HOW_TO_RUN "Copilot checkpoints"**: for each of the seven checkpoints: when, why, files to upload, prompt, output name, where to save it, pass/fail, what happens next, what needs the author, and what invalidates it.
+- **MASTER_PIPELINE_OVERVIEW**: release notes, Copilot checkpoint table, status ladder, trigger map (`RESEARCH_CLEAR.md`, Copilot report files), folder map (`Governance/Research/`, `Governance/Copilot/`), and a tool-responsibility table (builds, reviews, validates, decides).
+
+### Refinements before release (pre-release hardening of the Copilot handoffs)
+
+- **Two-stage research review, with an explicit STOP.** `COPILOT_PHASE2_5_RESEARCH_REVIEW` (now v1.1) is split into **STAGE 1 UPLOADS** (DOCX, reference list, glossary) and **STAGE 2 UPLOADS** (`ScienceClaims`, Deep Researcher evidence, the audit report, the claims registry). Copilot lists the files, builds its own claim inventory, returns it, says "STAGE 1 COMPLETE. Waiting for the Stage 2 files." and stops until the author writes `STAGE 2 FILES ATTACHED`. A Stage 2 file already in the conversation is not opened. One conversation. The report records `stage1Completed`; Claude marks a report `not independent` if it says otherwise. PHASE 2.5, HOW_TO_RUN, HOW_TO_USE_COPILOT and the Ch1 to Ch6 packets follow.
+- **One governed candidate per image generation.** The image prompt (now v1.1, so batch and single-candidate runs can be told apart in `promptVersion`) asks for Option 1 only; another composition is Option 2 as a separate request. Files are `<FigureID>_copilot_<date>_opt<n>.png`, each with its own text file and one `revisionHistory` entry (date, option, file, prompt version, DSM version, generator, outcome, reason).
+- **The Copilot agent stays optional.** "The handoff contract is authoritative. Persistent agent instructions reduce repetition but are not required for correctness." is stated in the standard, the agent file, the handoffs README, HOW_TO_RUN and HOW_TO_USE_COPILOT; Researcher is always a separately started session.
+- **Placeholders stay visible on GitHub.** The source files were intact: GitHub's Markdown view hides an unrecognised `<AUTHOR>` outside a code span as an HTML tag. The Copilot handoff files now wrap tokens in backticks (documented in PLACEHOLDERS). The README's handoff diagram is fenced as `text`.
+
+### Changed (carried over from the working v1.2.7)
+
+- **Pass 4, science and source verification** in PHASE 0.9 and PHASE 2.5 (category SCIENCE): claims are extracted and risk-rated, every source is opened and existence-checked, local models never rate a claim or source, and a High claim never closes on an AI verdict alone. Made generic (the book-specific counts are removed).
+- **Sidebars are an optional per-book setting** (`sidebars: on`; default off) in PHASE 1, 2, 3.5, 4 and 7 and PLACEHOLDERS. The working files had hard-coded "no sidebars", which was one author's decision.
+- **PHASE 2 FIGURE REGISTRY schema** now lists the fields later phases already read (`number`, `caption`, `spec`, `accents`, `status`, `imagePath`, `printImagePath`, `toolUsed`, `altText`).
+- PLACEHOLDERS: the token-replacement scripts also cover `COPILOT_HANDOFFS/`.
+
+### Compatibility
+
+- A book mid-flight finishes on its starting version. Chapters whose lock has `copilotRequired: no` (or no such field) need neither `RESEARCH_CLEAR.md` nor any Copilot step; each can opt in.
+- No runner change is needed: PHASE 3 and later keep requiring `MANUSCRIPT_LOCKED.md`. Step 0F stops PHASE 4 with `MANUSCRIPT_SYNC_INCOMPLETE.md` ("Waiting: Copilot final eBook review") until the review or a recorded waiver exists; a runner that reads that file as a blocker works as is. The runner, which lives outside this repository, must be pointed at the `v_1_3_0` phase files (its `instructions/` folder) before it applies Pass 4 or the Copilot steps; the author deploys that, with a backup, after reviewing.
+- Every required Copilot step can be waived with a recorded reason, in one file (`Governance/Copilot/Copilot_Waivers.md`: `research`, `final-ebook`, `publication-qa`). Waivers are copied into the reports and the PHASE 7 checklist.
+- Copilot report hashes: the research report carries the hash of the DOCX it reviewed (`reviewedSha256`, recorded when the handoff is written); a later hash difference does not invalidate it, only added or strengthened claims or changed citations do. Later reviews use the hash in `MANUSCRIPT_SYNCED.md` (or the lock before Part 0 has run).
+
+### Known limitations
+
+- **Copilot's behavior is the author's to confirm on first use.** Microsoft documents the Researcher agent for Microsoft 365 Premium and uploads of PDF, DOCX, XLSX, PPTX and MD (20 files, 50 MB each), but not EPUB or IDML, not whether Researcher reads uploaded files on a personal plan, not a PDF page limit, and not image resolution beyond three fixed sizes. The handoffs say so and give fallbacks (PDF/DOCX forms, splitting long PDFs, pasting the claim list). The consumer "Deep Research" mode was retired on 2026-08-18; the prompts use Researcher. Microsoft publishes no fixed Researcher query count for Premium ("extensive usage"; limits vary by feature and conditions; Copilot notifies when a limit is approached or reached), so batching a chapter into one run is a design preference, not a quota response. If Researcher is unavailable or limited, the waiver route stays, and Claude can run the research verification as a recorded, less independent backup.
+- **Copilot reads PDFs semantically.** It cannot check preflight, fonts, colour spaces, bleed, trim, metadata, tags or EPUB validity, and the prompts forbid it to claim so.
+- Pre-existing PHASE 4 inconsistencies not changed in this release (the print-PDF one is resolved by Step 0V): the Part A exit gate requires the pass 2 congruency result, which only exists after Part C; PHASE 5 and 6.5 do not check the pass 2 result that PHASE 4 says gates them; HOW_TO_RUN lists the layout builds (2c) before the figures (2d).
+- Two phase files (3.5B, 3W) changed line endings only (CRLF to LF) when copied from the working files, as in v1.2.6.
+- The v1.2.7 label in the working files was never a repository release; v1.3.0 is the first published version with Pass 4.
+
+---
+
 ## [v1.2.6] — 2026-10-26
 
 **Folder:** `v_1_2_6/` · **Previous:** `v_1_2_5/` (unchanged, kept for books mid-flight) · **Tag:** `v1_2_6_PROD` (after the author's review)
