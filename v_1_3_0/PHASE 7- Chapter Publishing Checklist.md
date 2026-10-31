@@ -120,7 +120,7 @@
 ## PHASE 2.5 — Lock and research clearance (v1.3.0)
 
 - [ ] `MANUSCRIPT_LOCKED.md` present; hashes match the DOCX and MD
-- [ ] `Governance/Research/RESEARCH_CLEAR.md` present and its hashes equal the lock (or: `copilotRequired: no`, no research retrofit)
+- [ ] `DeepResearch/RESEARCH_CLEAR.md` present and its hashes equal the lock (or: `copilotRequired: no`, no research retrofit)
 - [ ] Copilot research report reconciled, or a `research` waiver in `Governance/Copilot/Copilot_Waivers.md` (new chapters)
 - [ ] No blocking research finding open; High science claims closed by <AUTHOR>, never on an AI verdict alone
 
