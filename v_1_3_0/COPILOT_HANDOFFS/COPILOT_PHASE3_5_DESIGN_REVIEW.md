@@ -13,7 +13,7 @@ After the chapter's eBook (or design packet) PDF has been exported and PHASE 3.5
 | # | File | Required |
 |---|---|---|
 | 1 | The exported chapter PDF: the design packet PDF, or a review copy of the eBook saved **outside `eBook/`** (for example `Governance/Copilot/review_copy/`). Saving a PDF as `eBook/<ChapterName>_eBook.pdf` starts PHASE 4 and closes PHASE 3.5 | **Yes** |
-| 2 | Condensed Visual DSM checklist (palette, type scale, spacing, callout rules, figure rules) | **Yes** |
+| 2 | `DesignPacket/_ds/DSM_CopilotCard.md` (palette, type scale, spacing, callout rules, figure rules) | **Yes** |
 | 3 | `<CH_ROOT>/Manuscript/<ChapterName>_Manuscript.docx` (or PDF), the locked text | **Yes** |
 | 4 | `Governance/<ChapterName>_FigureRegistry` (table or JSON) incl. the approved image list | **Yes** |
 | 5 | The PHASE 3.5 accessibility checklist (§ Accessibility in `PHASE 3.5`) | Optional |
@@ -37,6 +37,9 @@ PROHIBITIONS
 
 SOURCE-OF-TRUTH ORDER
 Manuscript text, then DSM checklist, then figure registry, then the PDF (which is the thing under review).
+
+FILES
+The uploaded chapter PDF, DSM card, manuscript, figure registry and, if supplied, the accessibility checklist and typography requirements. List the files you can see before you start.
 
 TASK
 1. List the files you can see.

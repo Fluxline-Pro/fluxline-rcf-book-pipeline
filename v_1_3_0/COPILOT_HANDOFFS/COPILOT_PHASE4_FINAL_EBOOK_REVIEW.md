@@ -6,7 +6,7 @@ Follows `COPILOT_HANDOFF_STANDARD.md`.
 
 ## When to run it
 
-When <AUTHOR> has uploaded the final eBook PDF (`eBook/<ChapterName>_eBook.pdf`) and PHASE 4 Part 0 step 0.1 (the lock and freshness check) has passed, **before** Steps 0.2 to 0.4 apply any layout wording to the manuscript. Requires `MANUSCRIPT_LOCKED.md` and, for chapters locked under v1.3.0, `RESEARCH_CLEAR.md`.
+When <AUTHOR> has uploaded the final eBook PDF (`eBook/<ChapterName>_eBook.pdf`) and PHASE 4 Part 0 step 0.1 (the lock and freshness check) has passed, **before** Steps 0.2 to 0.4 apply any layout wording to the manuscript. Requires `MANUSCRIPT_LOCKED.md` and, for chapters with `copilotRequired: yes` in their lock, `RESEARCH_CLEAR.md`.
 
 This is an independent final-reader and artifact pass. It is not a replacement for PHASE 4's own Part 0 text comparison (Claude reads the PDF and syncs the MD/DOCX), for 0P, or for 0C.
 
@@ -20,7 +20,7 @@ This is an independent final-reader and artifact pass. It is not a replacement f
 | 4 | The approved reference list | **Yes** |
 | 5 | `Governance/<ChapterName>_FigureRegistry` (table or JSON) | **Yes** |
 | 6 | Terminology lock / normalized glossary | **Yes** |
-| 7 | Condensed DSM validation checklist | **Yes** |
+| 7 | `DesignPacket/_ds/DSM_CopilotCard.md` (the condensed DSM checklist) | **Yes** |
 | 8 | `Governance/Research/RESEARCH_CLEAR.md` and `RESEARCH_RECONCILIATION.md` (the Phase 2.5 research clearance) | **Yes** |
 | 9 | The log of approved layout wording changes (`_Pipeline/P4_DECISIONS.md`, if any) | If it exists |
 
@@ -43,6 +43,9 @@ PROHIBITIONS
 
 SOURCE-OF-TRUTH ORDER
 1. Manuscript (MD / DOCX). 2. Terminology lock and reference list. 3. Figure registry. 4. The research clearance files. 5. The PDF (under review).
+
+FILES
+The uploaded final eBook PDF, manuscript (MD and DOCX), reference list, figure registry, terminology lock, DSM card, the research clearance files, and the layout-wording log if any. List the files you can see before you start.
 
 TASK
 First list the files you can see and say which pages of the PDF you could read.

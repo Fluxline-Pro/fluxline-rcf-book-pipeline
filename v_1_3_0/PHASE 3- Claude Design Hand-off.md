@@ -38,7 +38,7 @@
 
 **Trigger:** `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` is issued (PHASE 2.5 passed, Locked; v1.2.5), with `Governance/Trigger/GOVERNANCE_READY.md` in place. Before v1.2.5 the trigger was `GOVERNANCE_READY.md` alone. The runner starts PHASE 3 for the chapter. A protected chapter runs these steps with Claude in chat instead.
 
-**Condensed DSM cards (v1.3.0).** Whenever it builds or refreshes the design packet, Claude also writes one-page cards for the Copilot handoffs: `DesignPacket/_ds/DSM_CopilotCard.md` (eBook: palette hex values and roles, type scale, spacing, callouts, pull quotes, figure and caption rules, do/don't) and `<PRINT_DSM_ROOT>/PRINT_DSM_CopilotCard.md` (print equivalents). They are copied from the DSM, never invented, and carry the DSM version. The Copilot handoffs upload these cards, not the full design system.
+**Condensed DSM cards (v1.3.0).** Whenever it builds or refreshes the design packet, Claude also writes one-page cards for the Copilot handoffs: `DesignPacket/_ds/DSM_CopilotCard.md` (eBook: palette hex values and roles, type scale, spacing, callouts, pull quotes, figure and caption rules, do/don't) and `DesignPacket/_ds/PRINT_DSM_CopilotCard.md` (print equivalents, copied from `<PRINT_DSM_ROOT>`; nothing is written into the print DSM folder). They are copied from the DSM, never invented, and carry the DSM version. The Copilot handoffs upload these cards, not the full design system.
 
 **Step 1: figure prompts and checklist (automatic).**
 - Write `<CH_ROOT>/Figures/<ChapterName>_FigurePrompts.md` and create `Figures/RGB/`, `Figures/CMYK/`, and `Figures/Drafts/` if missing. An existing prompts file is backed up and updated, never overwritten blindly: keep <AUTHOR>'s notes and any revised prompts.

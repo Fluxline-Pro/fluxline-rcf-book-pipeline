@@ -109,7 +109,7 @@ If PHASE 2 needs you, resolve the listed items (Needs Author Review, Tier C prop
 
 📧 **Email:** "PHASE 2.5: N findings to decide", with the decisions log path. (No findings: the chapter is locked straight away.)
 
-🧑 **You, in parallel (Copilot checkpoint 1, new chapters):** run the Researcher review in Microsoft Copilot and save its report as `Governance/Research/COPILOT_RESEARCH_REPORT.md` (details in "Copilot checkpoints" below). On the next run Claude reconciles it with its own findings (`RESEARCH_RECONCILIATION.md`) and may add research rows to the decisions log for you to decide. `RESEARCH_CLEAR.md` is written just before the lock.
+🧑 **You, in parallel (Copilot checkpoint 1, when `copilotRequired: yes`):** run the Researcher review in Microsoft Copilot and save its report as `Governance/Research/COPILOT_RESEARCH_REPORT.md` (details in "Copilot checkpoints" below). On the next run Claude reconciles it with its own findings (`RESEARCH_RECONCILIATION.md`) and may add research rows to the decisions log for you to decide. `RESEARCH_CLEAR.md` is written just before the lock.
 
 🧑 **You:**
 1. Open the decisions log and fill in **every** Decision:
@@ -200,7 +200,7 @@ The design rules are in PHASE 3.5B §2: one column only; black, white, and gold;
 
 🤖 **Automatic**, after 30 minutes with no further changes in `eBook/`:
 1. **3.5 closed:** writes `DESIGN_READY.md` as attested by your upload, if PHASE 3.5 hadn't already.
-2. **Part 0, manuscript sync:** **first, Step 0F (new chapters)** pauses and gives you the handoff for Copilot checkpoint 4 (see below); the sync starts when you have saved the review or a `final-ebook` waiver and its findings are resolved. Then it checks the manuscript is still locked, then compares it with your eBook PDF. It expects no differences; any it finds is listed in `_Pipeline/P4_DECISIONS.md` for your decision, since it would change the locked text (v1.2.5). Writes `MANUSCRIPT_SYNCED.md`.
+2. **Part 0, manuscript sync:** **first, Step 0F (when `copilotRequired: yes`)** pauses and gives you the handoff for Copilot checkpoint 4 (see below); the sync starts when you have saved the review or a `final-ebook` waiver and its findings are resolved. Then it checks the manuscript is still locked, then compares it with your eBook PDF. It expects no differences; any it finds is listed in `_Pipeline/P4_DECISIONS.md` for your decision, since it would change the locked text (v1.2.5). Writes `MANUSCRIPT_SYNCED.md`.
 3. **0R, references re-check:** report-only, since the manuscript is now locked.
 4. **0G, glossary lock:** refreshes the chapter glossary from the locked text and rebuilds the **official master glossary** and the drift report.
 5. **Part A, Kindle:** DOCX, HTML, metadata, and figures.
@@ -384,7 +384,7 @@ All of these are **you** using Microsoft Copilot (the Microsoft 365 Premium acco
 
 Before you start, read `COPILOT_HANDOFFS/COPILOT_HANDOFF_STANDARD.md` once (status labels, upload limits, privacy check). Don't upload secrets or unrelated files. A report with the wrong manuscript hash, or listing other files, is rejected as stale. A Copilot `PASS` never certifies anything.
 
-### 1. Research verification (PHASE 2.5; required for new chapters)
+### 1. Research verification (PHASE 2.5; required when `copilotRequired: yes`)
 
 | | |
 |---|---|
@@ -398,7 +398,7 @@ Before you start, read `COPILOT_HANDOFFS/COPILOT_HANDOFF_STANDARD.md` once (stat
 | **You approve** | Every correction, and every High claim closed |
 | **Invalidated by** | A later change that adds or strengthens an empirical claim, number, causal/absolute statement, or changes a citation (re-run for those sections). Softening, spelling and narrative edits don't |
 
-*Chapters locked before v1.3.0:* optional, through a `MANUSCRIPT_REVISED.md` section "Copilot research retrofit".
+*Chapters with `copilotRequired: no`:* optional, through a `MANUSCRIPT_REVISED.md` section "Copilot research retrofit".
 
 ### 2. Image generation (PHASE 3 A0; optional generator)
 
@@ -428,7 +428,7 @@ Before you start, read `COPILOT_HANDOFFS/COPILOT_HANDOFF_STANDARD.md` once (stat
 | **You approve** | Production Ready / `DESIGN_READY.md` (always yours) |
 | **Invalidated by** | A new export, a manuscript or registry change |
 
-### 4. Final eBook review (PHASE 4 Step 0F; required for new chapters)
+### 4. Final eBook review (PHASE 4 Step 0F; required when `copilotRequired: yes`)
 
 | | |
 |---|---|
@@ -438,9 +438,9 @@ Before you start, read `COPILOT_HANDOFFS/COPILOT_HANDOFF_STANDARD.md` once (stat
 | **Mode / prompt** | Chat · `COPILOT_HANDOFFS/COPILOT_PHASE4_FINAL_EBOOK_REVIEW.md` |
 | **Output / save to** | `COPILOT_FINAL_EBOOK_REVIEW.md` → `<CH_ROOT>/Governance/Copilot/COPILOT_FINAL_EBOOK_REVIEW_<date>.md` (or add a `final-ebook: waived — <reason> (<initials> <date>)` line to `Governance/Copilot/Copilot_Waivers.md`) |
 | **Pass / fail** | `PASS` or accepted `CONDITIONAL PASS` lets Part 0 continue. `FAIL` / `AUTHOR DECISION REQUIRED` stop the chapter until you fix the eBook and re-upload, or accept the findings in writing |
-| **Next** | Claude verifies the findings, writes `Final_eBook_Gate_<date>.md`, and Part 0 runs (0.2 onward) |
+| **Next** | Create `_Pipeline/RERUN_P4.md` (saving the report does not start anything): Claude verifies the findings, writes `Final_eBook_Gate_<date>.md`, and Part 0 runs (0.2 onward) |
 | **You approve** | Each non-blocking finding you accept; any wording change that touches research (goes through `MANUSCRIPT_REVISED.md` and a re-lock) |
-| **Invalidated by** | A new eBook PDF (the changed pages), or any manuscript change |
+| **Invalidated by** | A new eBook PDF (the changed pages), or a manuscript change other than the Part 0 changes taken from the PDF that was reviewed |
 
 ### 5. Print PDF review (PHASE 4 0P; optional)
 
@@ -452,7 +452,7 @@ Before you start, read `COPILOT_HANDOFFS/COPILOT_HANDOFF_STANDARD.md` once (stat
 | **Mode / prompt** | Chat · `COPILOT_HANDOFFS/COPILOT_PRINT_PDF_REVIEW.md` |
 | **Output / save to** | `COPILOT_PRINT_PDF_REVIEW.md` → `<CH_ROOT>/Governance/Copilot/` |
 | **Pass / fail** | Informational for the build; confirmed blocking findings must be fixed in InDesign or accepted |
-| **Next** | Claude adds confirmed findings to the 0P drift list; feeds PHASE 6.5 |
+| **Next** | Create `_Pipeline/RERUN_P4.md`: Claude adds confirmed findings to the 0P drift list; feeds PHASE 6.5 |
 | **You approve** | Fixes or acceptance |
 | **Invalidated by** | A new print or eBook export |
 | **Still required** | InDesign preflight, the printer's specification check, bleed/trim/fonts/colour inspection, and a proof copy |
@@ -467,12 +467,12 @@ Before you start, read `COPILOT_HANDOFFS/COPILOT_HANDOFF_STANDARD.md` once (stat
 | **Mode / prompt** | Chat · `COPILOT_HANDOFFS/COPILOT_KINDLE_REVIEW.md` |
 | **Output / save to** | `COPILOT_KINDLE_REVIEW.md` → `<BOOK_ROOT>/_BookGovernance/Copilot/` (book level only) |
 | **Pass / fail** | Confirmed blocking findings fixed or accepted before Part B passes |
-| **Next** | Rebuild if needed; feeds PHASE 6.5 |
+| **Next** | Create `_Pipeline/RERUN_P4.md` (or ask Claude); rebuild if needed; feeds PHASE 6.5 |
 | **You approve** | Fixes or acceptance |
 | **Invalidated by** | A rebuilt Kindle file or manuscript change |
 | **Still required** | EPUB validation (EPUBCheck), Kindle Previewer, and review on representative devices |
 
-### 7. Publication QA (PHASE 6.5; required for new chapters)
+### 7. Publication QA (PHASE 6.5; required when `copilotRequired: yes`)
 
 | | |
 |---|---|
@@ -482,7 +482,7 @@ Before you start, read `COPILOT_HANDOFFS/COPILOT_HANDOFF_STANDARD.md` once (stat
 | **Mode / prompt** | Chat · `COPILOT_HANDOFFS/COPILOT_PHASE6_5_PUBLICATION_QA.md` (split by chapter if the files are large) |
 | **Output / save to** | `COPILOT_PUBLICATION_QA.md` → `<CH_ROOT>/Governance/Copilot/` (book: `_BookGovernance/Copilot/`) |
 | **Pass / fail** | One input to Publishing Ready. It can never produce Publishing Ready alone |
-| **Next** | Claude merges confirmed findings into the PublicationQA report; PHASE 7 starts from Publishing Ready |
+| **Next** | Create `_Pipeline/RERUN_P6.5.md`: Claude merges confirmed findings into the PublicationQA report; PHASE 7 starts from Publishing Ready |
 | **You approve** | Resolution or written acceptance of each finding; the PHASE 7 sign-off |
 | **Invalidated by** | Any rebuilt format file or manuscript change |
 

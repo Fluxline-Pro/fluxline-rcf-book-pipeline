@@ -104,9 +104,9 @@ A required Copilot step may be waived by the author, with a reason. One file hol
 
 | Step key | Phase | Required for |
 |---|---|---|
-| `research` | PHASE 2.5 | chapters locked under v1.3.0 |
-| `final-ebook` | PHASE 4 Step 0F | chapters locked under v1.3.0 |
-| `publication-qa` | PHASE 6.5 §9b | chapters locked under v1.3.0 |
+| `research` | PHASE 2.5 | chapters with `copilotRequired: yes` in their lock |
+| `final-ebook` | PHASE 4 Step 0F | chapters with `copilotRequired: yes` in their lock |
+| `publication-qa` | PHASE 6.5 §9b | chapters with `copilotRequired: yes` in their lock |
 
 The optional steps (design, print, Kindle, image generation) need no waiver. Claude copies each waiver into the report that would have used the Copilot output and into the PHASE 7 checklist. A waiver written by anyone but the author, or without a reason, is ignored.
 

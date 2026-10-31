@@ -148,11 +148,11 @@ Check chunk-friendly structure, heading quality, semantic clarity, retrieval-fri
 
 An independent comparative read, run by <AUTHOR> in Microsoft Copilot (`COPILOT_HANDOFFS/COPILOT_PHASE6_5_PUBLICATION_QA.md`) and saved as `Governance/Copilot/COPILOT_PUBLICATION_QA_<date>.md` (book mode: `_BookGovernance/Copilot/`). Nothing here invokes Copilot.
 
-- Check its front matter: formats listed, manuscript hash equal to the lock's, no format file newer than the review. A stale report is only noted.
+- Check its front matter: formats listed, manuscript hash equal to the one the standard's table expects (`MANUSCRIPT_SYNCED.md` if present, else the lock), no format file newer than the review. A stale report is only noted.
 - Verify each blocking finding yourself against the files (a finding you can't reproduce is `not reproduced`) and carry the confirmed ones into the report's findings at the severity they merit.
 - Read its earlier-findings table against the real state of Phase 2.5 (`RESEARCH_CLEAR.md`), 3.5 (`DesignQA`, any `COPILOT_DESIGN_REVIEW`), and 4 (`Final_eBook_Gate`, print and Kindle reviews, the congruency pass 2). Any finding still open and not accepted by <AUTHOR> in writing is a **Major** issue.
 - It is one input. A Copilot `PASS` never produces Publishing Ready, and it does not replace the deterministic checks in sections 3, 4, 5, 8 and 9.
-- Required for chapters locked under v1.3.0, unless `Governance/Copilot/Copilot_Waivers.md` has a `publication-qa: waived — <reason> (<initials> <date>)` line (copy it into this report). Not applicable to a chapter locked before v1.3.0.
+- Required for chapters with `copilotRequired: yes` in their lock, unless `Governance/Copilot/Copilot_Waivers.md` has a `publication-qa: waived — <reason> (<initials> <date>)` line (copy it into this report). Not applicable to a chapter with `copilotRequired: no`.
 
 ## 10. Brand consistency
 Check terminology (TerminologyLock), voice (VoiceKit), component consistency, DSM alignment.
@@ -213,11 +213,11 @@ Check terminology (TerminologyLock), voice (VoiceKit), component consistency, DS
 
 Overall (pipeline ladder; PHASE 6.5 may award up to Publishing Ready):
 - Review Required (stays Production Ready)
-- **Publishing Ready** (no Critical or Major issues open). v1.3.0: also requires the deterministic checks to pass, the required human checks to be done (device previews, proofs), for chapters locked under v1.3.0, a current Copilot review or a recorded waiver (section 9b; not applicable to a chapter locked earlier), and every Copilot or earlier-phase finding resolved or accepted by <AUTHOR> in writing. <AUTHOR>'s sign-off is PHASE 7.
+- **Publishing Ready** (no Critical or Major issues open). v1.3.0: also requires the deterministic checks to pass, the required human checks to be done (device previews, proofs), for chapters with `copilotRequired: yes` in their lock, a current Copilot review or a recorded waiver (section 9b; not applicable when the lock has `copilotRequired: no`), and every Copilot or earlier-phase finding resolved or accepted by <AUTHOR> in writing. <AUTHOR>'s sign-off is PHASE 7.
 
 Per-format sub-certification (each Ready / Not Ready): EPUB · Kindle · Print · Audiobook · Workbook (eBook + Print) · RAG (Local) · RAG (Cloud, or N/A if disabled)
 
-Provide rationale. State the Copilot review (`copilotReview: <file and outcome> | waived | N/A (locked before v1.3.0)`) and any waiver copied from `Copilot_Waivers.md` (v1.3.0).
+Provide rationale. State the Copilot review (`copilotReview: <file and outcome> | waived | N/A (`copilotRequired: no`)`) and any waiver copied from `Copilot_Waivers.md` (v1.3.0).
 
 ---
 

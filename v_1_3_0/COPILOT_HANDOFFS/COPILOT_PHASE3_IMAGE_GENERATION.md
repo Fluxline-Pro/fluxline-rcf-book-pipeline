@@ -13,7 +13,7 @@ PHASE 3 A0 writes `Figures/<ChapterName>_FigurePrompts.md` (the Gemini prompt, t
 | # | Item | Required | Why |
 |---|---|---|---|
 | 1 | The manuscript passage the figure illustrates (paste the text, or upload the section as DOCX/PDF) | **Yes** | The meaning to preserve |
-| 2 | Condensed Visual DSM for the book (palette hex values, line weight, style, do/don't). Use the condensed card `DesignPacket/_ds/DSM_CopilotCard.md` (written by PHASE 3), not the full system | **Yes** | The look |
+| 2 | `DesignPacket/_ds/DSM_CopilotCard.md`, the condensed Visual DSM for the book (palette hex values, line weight, style, do/don't). Use the condensed card `DesignPacket/_ds/DSM_CopilotCard.md` (written by PHASE 3), not the full system | **Yes** | The look |
 | 3 | The figure's registry row (ID, number, title, caption, spec, accents) | **Yes** | What it must be |
 | 4 | Terminology lock: terms that may appear, if the image has any text | Yes | No invented terms |
 | 5 | One or two approved images from earlier chapters (PNG/JPEG) | Optional | Visual consistency |

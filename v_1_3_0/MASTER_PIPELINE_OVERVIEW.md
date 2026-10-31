@@ -6,11 +6,11 @@
 - **Human-in-the-loop handoffs** (`COPILOT_HANDOFFS/`): at seven points the pipeline writes a file list and a prompt; <AUTHOR> runs Microsoft Copilot (the personal Microsoft 365 Premium account) and saves the answer; Claude validates and reconciles it. **Nothing automated (Claude, the runner, n8n, Graph) calls or can reach <AUTHOR>'s personal Copilot.** Copilot's output is evidence or a draft, never the source of truth.
 - **PHASE 2.5, §3.2b:** independent Researcher verification after Pass 4 → `RESEARCH_RECONCILIATION.md` (Claude) → <AUTHOR>'s decisions → **`RESEARCH_CLEAR.md`** just before `MANUSCRIPT_LOCKED.md`, bound to the same hashes. PHASE 3 needs no new gate (it already requires the lock). Later wording changes that add or strengthen a claim or change a citation invalidate it for those sections.
 - **PHASE 3 A0:** Copilot Create as an optional figure generator; the figure registry gains provenance fields (`aiGenerated`, `approval`, `resolutionStatus`, …). PHASE 3.5 §15 checks generated figures and folds in an optional Copilot design review.
-- **PHASE 4 Step 0F:** Copilot reviews the final eBook PDF before it becomes the manuscript's wording source (required for new chapters). Optional print-PDF (0P) and Kindle (Part B) reviews.
+- **PHASE 4 Step 0F:** Copilot reviews the final eBook PDF before it becomes the manuscript's wording source (required when `copilotRequired: yes`). Optional print-PDF (0P) and Kindle (Part B) reviews.
 - **PHASE 6.5 §9b:** a Copilot cross-format review is one input to Publishing Ready, never the whole gate. Deterministic checks, human checks and <AUTHOR>'s sign-off remain.
 - **Pass 4 (v1.2.7 content, first published here):** science and source verification in PHASE 0.9 and 2.5 (category SCIENCE); local models never rate a claim or source.
 - **Sidebars are optional per book** (`sidebars: on`; default off).
-- Chapters locked before v1.3.0 finish on their existing process; the Copilot steps are opt-in for them (a `MANUSCRIPT_REVISED.md` "Copilot research retrofit").
+- Chapters with `copilotRequired: no` finish on their existing process; the Copilot steps are opt-in for them (a `MANUSCRIPT_REVISED.md` "Copilot research retrofit").
 **Release v1.2.6 (2026-10-26): congruency check (PHASE 4 Step 0C).**
 - **New Step 0C, pass 1**, after Part 0 / 0R / 0G / 0P and before Part A: `congruency_check.py <ChapterName> --pass 1` (deterministic, report-only). It puts the manuscript DOCX and MD, the eBook PDF, the print PDF, the narration script, the workbook's exercise numbers and titles, and every file's freshness against `MANUSCRIPT_LOCKED.md` into one report with a **PASS / HOLD** verdict. Part A starts only on PASS.
 - **Pass 2**, after Part C, adds the Kindle DOCX and the audiobook QA, and gates PHASE 5 and 6.5.
@@ -139,13 +139,13 @@ Each eBook page links its system's tokens and components through `dsm_css.py` (P
 
 | # | Where | Mode | Output | Effect on the gate |
 |---|---|---|---|---|
-| 1 | PHASE 2.5 §3.2b | Researcher | `COPILOT_RESEARCH_REPORT.md` | Reconciled into the decisions log; `RESEARCH_CLEAR.md` before the lock (required for new chapters) |
+| 1 | PHASE 2.5 §3.2b | Researcher | `COPILOT_RESEARCH_REPORT.md` | Reconciled into the decisions log; `RESEARCH_CLEAR.md` before the lock (required when `copilotRequired: yes`) |
 | 2 | PHASE 3 A0 | Create | images + alt-text/rationale drafts | Figure registry (`approval: pending`) → PHASE 3.5 §15 |
 | 3 | PHASE 3.5 | Chat | `COPILOT_DESIGN_REVIEW.md` | Optional; folded into the DesignQA report |
-| 4 | PHASE 4 Step 0F | Chat | `COPILOT_FINAL_EBOOK_REVIEW.md` | Gate before the eBook PDF becomes the wording source (required for new chapters) |
+| 4 | PHASE 4 Step 0F | Chat | `COPILOT_FINAL_EBOOK_REVIEW.md` | Gate before the eBook PDF becomes the wording source (required when `copilotRequired: yes`) |
 | 5 | PHASE 4 0P | Chat | `COPILOT_PRINT_PDF_REVIEW.md` | Optional; print drift list |
 | 6 | PHASE 4 Part B | Chat | `COPILOT_KINDLE_REVIEW.md` | Optional; assembly report |
-| 7 | PHASE 6.5 §9b | Chat | `COPILOT_PUBLICATION_QA.md` | One input to Publishing Ready (required for new chapters) |
+| 7 | PHASE 6.5 §9b | Chat | `COPILOT_PUBLICATION_QA.md` | One input to Publishing Ready (required when `copilotRequired: yes`) |
 
 ```
 PASS 6 (tighten) ─▶ 0.9 audit ─▶ PASS 7 (voice; pseudo-locked) ─▶ polish window (DOCX, then MD from it)
@@ -179,9 +179,9 @@ One ladder is used by every phase:
 | Draft | PHASE 1 | Artifacts exist |
 | Review Ready | PHASE 2 | Governance ran; blockers listed |
 | **Design Ready** | PHASE 2 | ChapterCertification + `GOVERNANCE_READY.md` |
-| **Locked** (v1.2.5) | PHASE 2.5 | Decisions log fully decided and applied + (v1.3.0, new chapters) `RESEARCH_CLEAR.md` + `MANUSCRIPT_LOCKED.md` (DOCX/MD hashes). Design and production start only from here |
+| **Locked** (v1.2.5) | PHASE 2.5 | Decisions log fully decided and applied + (v1.3.0, when `copilotRequired: yes`) `RESEARCH_CLEAR.md` + `MANUSCRIPT_LOCKED.md` (DOCX/MD hashes). Design and production start only from here |
 | **Production Ready** | PHASE 3.5 | DesignQA report + `DESIGN_READY.md` |
-| **Publishing Ready** | PHASE 6.5 | PublicationQA report (+ per-format sub-certs); v1.3.0: deterministic checks + human checks + findings resolved or accepted; for chapters locked under v1.3.0 also a current Copilot review (or waiver). A Copilot report alone never awards it |
+| **Publishing Ready** | PHASE 6.5 | PublicationQA report (+ per-format sub-certs); v1.3.0: deterministic checks + human checks + findings resolved or accepted; for chapters with `copilotRequired: yes` in their lock also a current Copilot review (or waiver). A Copilot report alone never awards it |
 | **Published** | PHASE 7, **<AUTHOR> only** | Signed release checklist |
 
 PHASES 4, 5, and 6 don't change the status; they gate by checklist (`gateStatus`) and trigger.

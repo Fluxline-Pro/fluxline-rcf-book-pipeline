@@ -120,7 +120,7 @@
 ## PHASE 2.5 — Lock and research clearance (v1.3.0)
 
 - [ ] `MANUSCRIPT_LOCKED.md` present; hashes match the DOCX and MD
-- [ ] `Governance/Research/RESEARCH_CLEAR.md` present and its hashes equal the lock (or: locked before v1.3.0, no research retrofit)
+- [ ] `Governance/Research/RESEARCH_CLEAR.md` present and its hashes equal the lock (or: `copilotRequired: no`, no research retrofit)
 - [ ] Copilot research report reconciled, or a `research` waiver in `Governance/Copilot/Copilot_Waivers.md` (new chapters)
 - [ ] No blocking research finding open; High science claims closed by <AUTHOR>, never on an AI verdict alone
 
@@ -195,14 +195,14 @@
 
 ## PHASE 4 — Copilot reviews (v1.3.0)
 
-- [ ] New chapters (locked under v1.3.0): `Governance/Copilot/Final_eBook_Gate_<date>.md` present with outcome PASS, or CONDITIONAL PASS with each finding accepted in writing, or a `final-ebook` waiver (N/A if locked before v1.3.0)
+- [ ] Copilot-required chapters (`copilotRequired: yes`): `Governance/Copilot/Final_eBook_Gate_<date>.md` present with outcome PASS, or CONDITIONAL PASS with each finding accepted in writing, or a `final-ebook` waiver (N/A if `copilotRequired: no`)
 - [ ] Print PDF and Kindle Copilot reviews: confirmed blocking findings fixed or accepted in writing (optional steps)
 - [ ] EPUB validation, Kindle Previewer, InDesign preflight and proofs done separately (a Copilot review replaces none of them)
 
 ## PHASE 6.5 — Publication QA
 
 - [ ] Latest `PublicationQA_<timestamp>.md` certifies **Publishing Ready**
-- [ ] New chapters (locked under v1.3.0): Copilot cross-format review current, or a `publication-qa` waiver; its blocking findings resolved or accepted; it did not decide the result alone (N/A if locked before v1.3.0)
+- [ ] Copilot-required chapters (`copilotRequired: yes`): Copilot cross-format review current, or a `publication-qa` waiver; its blocking findings resolved or accepted; it did not decide the result alone (N/A if `copilotRequired: no`)
 - [ ] Sub-certifications: EPUB · Kindle · Print · Audiobook · Workbook · RAG (Local) · RAG (Cloud / N/A)
 - [ ] Kindle package confirmed ready for KDP upload (`_BookPublication/<BOOK>_KINDLE_EBOOK/<BOOK>_Kindle.docx`)
 

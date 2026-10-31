@@ -8,7 +8,7 @@ Follows the standard in `COPILOT_HANDOFF_STANDARD.md`. Where this file is silent
 
 After PHASE 2.5's first (audit) run has written the findings report and the chapter's `ScienceClaims` file (PHASE 0.9 Pass 4). You can fill in the decisions log meanwhile, but PHASE 2.5 applies no fix until this report is saved (or the step is waived). Run it once per chapter, on the chapter text as it stands before any fixes. Pass 4 is Claude's own claim extraction, with the local Deep Researcher workflow as evidence gathering. This step is the second, independent model: it is meant to catch what the first reviewer shared a blind spot on, so do not paste Claude's conclusions into the prompt as facts.
 
-Not required for chapters locked before v1.3.0. They can opt in through `MANUSCRIPT_REVISED.md` (see HOW_TO_RUN).
+Not required for chapters with `copilotRequired: no`. They can opt in through `MANUSCRIPT_REVISED.md` (see HOW_TO_RUN).
 
 ## Files to upload (manifest)
 
@@ -63,6 +63,7 @@ Return one Markdown document titled COPILOT_RESEARCH_REPORT, with these parts in
 
 Front matter (as a code block):
  handoff: COPILOT_PHASE2_5_RESEARCH_REVIEW v1.0
+ handoffFile: <leave as: ASK-AUTHOR-TO-FILL>
  chapter: <chapter name>
  manuscriptSha256: <leave as: ASK-AUTHOR-TO-FILL>
  reviewDate: <today>
@@ -101,7 +102,7 @@ Nothing you recommend is applied without the author's written decision.
 
 ## After Copilot answers
 
-1. Read the report. Replace `ASK-AUTHOR-TO-FILL` with the `reviewedSha256` written in `Governance/Research/Copilot_Research_Handoff.md` (the hash of the DOCX you uploaded; check with `Get-FileHash <docx>` if you changed anything), and add the real list of files you uploaded.
+1. Read the report. Replace `ASK-AUTHOR-TO-FILL` with the `reviewedSha256` written in the handoff file you were given (`Governance/Research/Copilot_Research_Handoff.md`, or `Copilot_Research_Handoff_<n>.md` for a re-run), and put that file's name in the `handoffFile:` line (the hash of the DOCX you uploaded; check with `Get-FileHash <docx>` if you changed anything), and add the real list of files you uploaded.
 2. Save it as `<CH_ROOT>/Governance/Research/COPILOT_RESEARCH_REPORT.md` (create the folder). If you ran several Copilot runs, name them `COPILOT_RESEARCH_REPORT_part2.md` and so on.
 3. Re-run PHASE 2.5 (`_Pipeline/RERUN_P2.5.md`) when you have finished the decisions already in the log. PHASE 2.5 §3.2b reconciles the report.
 

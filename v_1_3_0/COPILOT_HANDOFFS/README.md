@@ -58,7 +58,7 @@ Claude consumes the saved report ◀── you save it where it says ◀── C
 
 ## Optional or required?
 
-| Step | New chapter (locked under v1.3.0) | Chapter locked before v1.3.0 |
+| Step | Copilot-required chapters (`copilotRequired: yes`) | Chapter with `copilotRequired: no` |
 |---|---|---|
 | Research review (PHASE 2.5) | **Required**, or a `research` waiver | Opt-in, through `MANUSCRIPT_REVISED.md` and a re-lock |
 | Image generation | Optional generator | Optional |

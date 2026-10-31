@@ -15,7 +15,7 @@ When the print PDF (`InDesign/<ChapterName>_Print7x10.pdf`, or the book-level pr
 | 1 | The final print PDF (chapter, or the book) | **Yes** |
 | 2 | The final approved eBook PDF | **Yes** |
 | 3 | `<ChapterName>_Manuscript.md` (or the final wording source) | **Yes** |
-| 4 | Condensed print DSM checklist (trim, margins, running heads, folios, callouts, figures) | **Yes** |
+| 4 | `DesignPacket/_ds/PRINT_DSM_CopilotCard.md`, the condensed print DSM checklist (trim, margins, running heads, folios, callouts, figures) | **Yes** |
 | 5 | Figure registry (table or JSON) | **Yes** |
 | 6 | The print QA checklist (`PHASE 4`, 0P) and the 0P/congruency drift report, if any | Optional |
 

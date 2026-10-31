@@ -145,12 +145,12 @@ Also stop, and ask, if:
 
 Record in the sync report: the PDF path, file size, modified date, page count, and <AUTHOR>'s confirmation that it is the final eBook export.
 
-## 0F Copilot final eBook review (v1.3.0; required for chapters locked under v1.3.0, optional for earlier ones)
+## 0F Copilot final eBook review (v1.3.0; required for chapters with `copilotRequired: yes` in their lock, optional for `copilotRequired: no`)
 
 The final eBook PDF is about to become the wording source for the manuscript (0.2 to 0.4). Before that, <AUTHOR> gets an independent read of it from Microsoft Copilot. Nothing here invokes Copilot.
 
 1. 🤖 After 0.1 passes, write `Governance/Copilot/Final_eBook_Handoff.md`: the upload manifest from `COPILOT_HANDOFFS/COPILOT_PHASE4_FINAL_EBOOK_REVIEW.md` with the real paths (the eBook PDF, the manuscript MD/DOCX, the reference list, the figure registry, the terminology lock, the condensed DSM checklist, `RESEARCH_CLEAR.md` and `RESEARCH_RECONCILIATION.md`, and `_Pipeline/P4_DECISIONS.md` if it exists), then stop with `Manuscript/Trigger/MANUSCRIPT_SYNC_INCOMPLETE.md` stating `Waiting: Copilot final eBook review (or a recorded waiver)`.
-2. 🧑 <AUTHOR> runs the prompt in Copilot and saves `Governance/Copilot/COPILOT_FINAL_EBOOK_REVIEW_<YYYYMMDD>.md` (or adds a `final-ebook: waived — <reason> (<initials> <date>)` line to `Governance/Copilot/Copilot_Waivers.md`), then re-runs PHASE 4.
+2. 🧑 <AUTHOR> runs the prompt in Copilot and saves `Governance/Copilot/COPILOT_FINAL_EBOOK_REVIEW_<YYYYMMDD>.md` (or adds a `final-ebook: waived — <reason> (<initials> <date>)` line to `Governance/Copilot/Copilot_Waivers.md`), then creates `_Pipeline/RERUN_P4.md` (saving the report does not start the runner).
 3. 🤖 Claude validates the report (front matter: the file list names the current PDF, and `manuscriptSha256` equals the lock's DOCX hash; otherwise it is stale). It verifies every finding against the PDF and the manuscript (a finding it can't reproduce is marked `not reproduced`), and writes `Governance/Copilot/Final_eBook_Gate_<YYYYMMDD>.md` with: outcome (`PASS`, `CONDITIONAL PASS`, `FAIL` or `AUTHOR DECISION REQUIRED`), the confirmed findings (blocking or not), and each one's status.
    - Differences between the PDF and the manuscript go on the Part 0 differences list (0.3), where <AUTHOR> decides S1/S2 as before.
    - A finding marked "may invalidate research clearance" is checked against `RESEARCH_CLEAR.md`: if the PDF wording adds or strengthens an empirical claim, a number, a causal or absolute statement, or changes a citation, it is **not** applied by Part 0. It goes through `MANUSCRIPT_REVISED.md` and a PHASE 2.5 delta audit (which re-runs the research review on those sections); the PDF is not accepted as final for those pages until then.
