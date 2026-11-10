@@ -9,6 +9,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 Edited in place in `v_1_3_0/`, by the author's choice. From 2026-11-10 every bullet in a "Chapter N Summary" is one sentence (two at most), about 25 words at most, and a semicolon counts as a break; Chapter 5 is the model, and the rule applies from Chapter 6 on.
 
+Update (#36): from Chapter 7 on the summary has no "Closing Frame" and no personal anecdotes (practical applications are fine); Chapters 1-6 keep theirs. `check_summary_format.py` prints a non-failing note for a Closing Frame in a Chapter 7+ summary; PHASE 2.5 and PHASE 7 state the rule.
+
 ### Added
 
 - **PHASE 2.5 `SUMMARY_FORMAT`** (minor, structural) finding category and a note in the "Not findings" paragraph that it is a length check, not a style judgment.

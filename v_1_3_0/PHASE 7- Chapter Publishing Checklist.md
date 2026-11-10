@@ -64,7 +64,7 @@
 
 ### Review Packet
 - [ ] Chapter Summary · Key Takeaways · Glossary Terms · Definitions · Frameworks · Metadata JSON
-- [ ] Manuscript Chapter Summary follows the bullet rule (one sentence per bullet, two at most, about 25 words at most; a semicolon counts as a break): `python v_1_3_0/check_summary_format.py <manuscript.md>` reports 0 over the rule (Chapter 6 on; Chapters 1-5 are not retrofitted)
+- [ ] Manuscript Chapter Summary follows the bullet rule (one sentence per bullet, two at most, about 25 words at most; a semicolon counts as a break): `python v_1_3_0/check_summary_format.py <manuscript.md>` reports 0 over the rule (Chapter 6 on; Chapters 1-5 are not retrofitted). From Chapter 7 on: no Closing Frame and no personal anecdotes in the summary; practical applications are fine (Chapters 1-6 keep theirs)
 
 ### Workbook Packet
 - [ ] Primary Exercise · Additional Exercises · Reflection Questions · Application Questions · Workbook DOCX (canonical) + Markdown replica
