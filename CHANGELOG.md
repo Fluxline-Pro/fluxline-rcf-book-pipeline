@@ -5,6 +5,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [Unreleased] — Chapter Summary bullet rule (#34)
+
+Edited in place in `v_1_3_0/`, by the author's choice. From 2026-11-10 every bullet in a "Chapter N Summary" is one sentence (two at most), about 25 words at most, and a semicolon counts as a break; Chapter 5 is the model, and the rule applies from Chapter 6 on.
+
+### Added
+
+- **PHASE 2.5 `SUMMARY_FORMAT`** (minor, structural) finding category and a note in the "Not findings" paragraph that it is a length check, not a style judgment.
+- **`check_summary_format.py`** (stdlib, with tests in `tests/`) lists the offending bullets of a manuscript MD. Chapters 6 and 7 pass (0 of 79 and 0 of 39 over the rule).
+- **PHASE 7** checklist line for the rule.
+
+---
+
 ## [v1.3.0] — 2026-10-31
 
 **Folder:** `v_1_3_0/` · **Previous:** `v_1_2_6/` (unchanged, kept for books mid-flight) · **Tag:** `v1_3_0.ALPHA` (published); `v1_3_0.BETA` with the reconciliation; `v1_3_0.RC` after the sandbox chapter passes; PROD after the author's own Copilot research test (Ch6, 2026-10-31, found and fixed the Stage 2 gap below) and his go-ahead. The steps only a human can do (InDesign layout checks, audiobook recording, the Kindle Previewer) are first proven in live use, not in the sandbox
