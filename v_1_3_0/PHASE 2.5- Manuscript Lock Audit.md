@@ -28,7 +28,7 @@ PHASE 2.5 is **report-first**: it never changes the manuscript on its own. It ch
 
 | PHASE 2.5 is | PHASE 2.5 is not |
 |---|---|
-| A full read-through of one chapter for content: definitions, cross-references, terms, list counts, glossary, acronyms, headings, figures | A voice, style, or line edit. <AUTHOR>'s voice is settled in PASS 7 |
+| A full read-through of one chapter for content: definitions, cross-references, terms, list counts, glossary, acronyms, headings, figures, Chapter Summary bullet length | A voice, style, or line edit. <AUTHOR>'s voice is settled in PASS 7 |
 | PHASE 0.9's Pass 1 and Pass 2, run on the governed chapter against the book ledger (Mode P, extended to the full category set) | A re-run of PHASE 2. Governance checks the derived artifacts against the manuscript; this checks the manuscript against itself and the rest of the book |
 | The author's decision loop, then a DOCX-first apply | An auto-fixer. Nothing is applied without a written decision |
 | The lock: the DOCX and MD hashes, recorded once | A lock on the derived artifacts. Those stay governed by PHASE 2 |
@@ -236,7 +236,7 @@ Then it writes the lock (§5).
 
 ## 4. Finding categories
 
-PHASE 0.9's Pass 2 categories, all of them, with the eight lock-audit categories first. Severity follows PHASE 0.9 (`blocking`, `major`, `minor`).
+PHASE 0.9's Pass 2 categories, all of them, with the lock-audit categories (the bold rows) first. Severity follows PHASE 0.9 (`blocking`, `major`, `minor`).
 
 | Category | What it catches | Example |
 |---|---|---|
@@ -248,12 +248,13 @@ PHASE 0.9's Pass 2 categories, all of them, with the eight lock-audit categories
 | **ACRONYM** | Used before it's expanded, expanded two ways, or never expanded | An abbreviation in the opening section, expanded only at the end |
 | **HEADING_ANCHOR** | Duplicate headings, skipped levels, or headings too vague to serve as a citation anchor in RAG and the eBook navigation | "Overview" under three different H2s |
 | **FIGURE** | A figure referenced but missing, present but never referenced, numbered out of order, or a caption that contradicts the text or the FigureRegistry | "(see Figure 3)" in a chapter with two figures |
+| **SUMMARY_FORMAT** (v1.3.0, minor) | A bullet in the chapter's "Chapter N Summary" that breaks the summary rule: more than two sentences (a semicolon counts as a break), or more than about 25 words; one sentence is preferred. Run `python v_1_3_0/check_summary_format.py <manuscript.md>`; it lists the lines | A 39-word bullet, or three ideas joined by semicolons |
 | EQUATION | The same formula written differently, renamed variables, an undefined variable | |
 | THRESHOLD | Score bands or cut-offs that disagree across chapters | |
 | KNOWN_CORRECTION | An instance of a term on the known-corrections list | |
 | **SCIENCE** (v1.3.0) | A scientific, neurobiological, physiological or psychological claim, or a cited source, that Pass 4 rated Medium or High: an absolute or overstated causal claim, a specific number or mechanism, a source that doesn't say what the sentence says, a citation that doesn't resolve, a safety-relevant claim. Severity: a contradicted or safety-relevant High is `blocking`, other High is `major`, Medium is `minor` | "Negative thoughts all start in the body" (no source; absolute) |
 
-**Not findings:** voice, style, metaphor, sentence rhythm, and capitalized framework terms that match canonical. The shared system prompt's voice note applies. When unsure, mark `confidence: low` and `needs_author_review: true` rather than guessing.
+**Not findings:** voice, style, metaphor, sentence rhythm, and capitalized framework terms that match canonical. (SUMMARY_FORMAT is a structural length check on the Chapter Summary only, not a style judgment: the rule is one sentence per bullet, two at most, about 25 words at most, set by <AUTHOR> on 2026-11-10 with Chapter 5 as the model and applied from Chapter 6 on. Suggest the fix in one line; <AUTHOR> words it.) The shared system prompt's voice note applies. When unsure, mark `confidence: low` and `needs_author_review: true` rather than guessing.
 
 ---
 
