@@ -8,7 +8,8 @@ about 25 words at most, and a semicolon counts as a sentence break. Dashes, arro
 A bullet fails when it has more than two sentences or more than the word limit; a two-sentence bullet
 passes but is counted, because one sentence is preferred. Exit codes: 0 pass, 1 bullets over the rule,
 2 bad arguments, unreadable file, or no "Chapter N Summary" section found (a check that read nothing
-must not pass). A format check only: voice and wording stay the author's call (PHASE 2.5 SUMMARY_FORMAT).
+must not pass). A "Closing Frame" in a Chapter 7+ summary prints a note but does not fail the check; Chapters 1-6 keep theirs
+(from Chapter 7 on it is not allowed, nor are personal anecdotes, which a script cannot detect). A format check only: voice and wording stay the author's call (PHASE 2.5 SUMMARY_FORMAT).
 """
 import argparse
 import re
@@ -21,20 +22,37 @@ _ANY_HEADING = re.compile(r"^(#{1,6})\s")
 _BULLET = re.compile(r"^\s*[-*]\s+(.*\S)\s*$")
 
 
-def summary_bullets(lines):
-    """Yield (line_number, text) for each bullet in the Chapter Summary section.
+def summary_section(lines):
+    """Yield (chapter_number, line_number, line) for each line inside the Chapter Summary section.
 
     The section ends at the next heading of the same or a higher level than its own heading."""
-    level = None
+    level = chapter = None
     for n, line in enumerate(lines, 1):
         if level is None:
             if m := _HEADING.match(line):
-                level = len(m.group(1))
+                level, chapter = len(m.group(1)), int(re.search(r"\d+", line).group())
             continue
         if (m := _ANY_HEADING.match(line)) and len(m.group(1)) <= level:
             break
+        yield chapter, n, line
+
+
+def summary_bullets(lines):
+    """Yield (line_number, text) for each bullet in the Chapter Summary section."""
+    for _, n, line in summary_section(lines):
         if m := _BULLET.match(line):
             yield n, m.group(1)
+
+
+_CLOSING = re.compile(r"^\s*(#{1,6}\s+|\*\*)\s*Closing Frame(?![A-Za-z])", re.I)
+CLOSING_FRAME_FROM_CHAPTER = 7
+
+
+def closing_frames(lines):
+    """Yield line numbers of a "Closing Frame" label or heading in a Chapter 7+ summary (Chapters 1-6 keep theirs)."""
+    for chapter, n, line in summary_section(lines):
+        if chapter >= CLOSING_FRAME_FROM_CHAPTER and _CLOSING.match(line):
+            yield n
 
 
 def word_count(text):
@@ -82,6 +100,8 @@ def main(argv=None):
     problems = check(lines, args.max_words)
     for n, why, text in problems:
         print(f"line {n}: {why}\n    {text[:140]}")
+    for n in closing_frames(lines):
+        print(f"note line {n}: Closing Frame in the summary (not allowed from Chapter 7 on)")
     two = sum(1 for _, t in bullets if sentence_count(t) == 2)
     print(f"{len(bullets)} bullets checked, {len(problems)} over the rule, {two} with two sentences (one is preferred)")
     return 1 if problems else 0

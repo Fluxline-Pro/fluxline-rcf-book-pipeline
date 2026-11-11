@@ -61,6 +61,24 @@ class SummaryFormat(unittest.TestCase):
     def test_heading_with_extra_words_is_not_the_summary(self):
         self.assertEqual(list(c.summary_bullets(["## Chapter 6 Summary Exercises", "- x."])), [])
 
+    def test_closing_frame_noted_from_chapter_7_not_failed(self):
+        d = [x.replace("Chapter 9", "Chapter 7") for x in doc("Fine.")]
+        d.insert(4, "**Closing Frame: Values**")
+        self.assertEqual(list(c.closing_frames(d)), [5])
+        code, out, _ = run_main(d)
+        self.assertEqual(code, 0)
+        self.assertIn("Closing Frame", out)
+        self.assertEqual(list(c.closing_frames(doc("Fine."))), [])
+
+    def test_closing_frame_heading_form_and_section_boundary(self):
+        d = ["## Chapter 8 Summary", "### Closing Frame: X", "- ok.", "## Workbook Exercise 8.1", "**Closing Frame: Y**"]
+        self.assertEqual(list(c.closing_frames(d)), [2])
+
+    def test_closing_frame_allowed_before_chapter_7(self):
+        d = [x.replace("Chapter 9", "Chapter 6") for x in doc("Fine.")]
+        d.insert(4, "**Closing Frame: Values**")
+        self.assertEqual(list(c.closing_frames(d)), [])
+
     def test_main_exit_codes(self):
         self.assertEqual(run_main(doc("Fine."))[0], 0)
         self.assertEqual(run_main(doc("One. Two. Three."))[0], 1)
