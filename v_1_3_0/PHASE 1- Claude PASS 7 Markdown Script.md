@@ -154,7 +154,7 @@ Copy each workbook draft, under its own name, into `<CH_ROOT>/Workbook/` as the 
    - 2-3 suggested Figures for infographic designs to include in the chapter
    - **Callout recommendations (v1.1.3).** Callouts aren't part of the manuscript; they come from this list. Save it as `<CH_ROOT>/InDesign/<ChapterName>_CalloutRecommendations.md`, one row per callout:
      - the type, from the print DSM's callout set: Did You Know?, Insight, Framework Highlight / Coherence, Core Value / Expansion, Pull Quote;
-     - the text: verbatim from the manuscript, or for Did You Know? and Insight, a short derived line that adds no new claim, marked *derived*;
+     - the text: verbatim from the manuscript, or for Did You Know? and Insight, a short derived line that adds no new claim, marked *derived*. **Callout quote marks:** no quotation marks around the book's own words in a callout or pull quote (eBook, print and Kindle); quote marks go only around an outside source or another person, never the author. Speech the book gives to the reader or a client counts as another person and keeps its marks (from Chapter 7 on (rule dated 2026-11-10); earlier chapters are not retrofitted unless the author asks). A pull quote from an outside source keeps its marks and names the source;
      - the source passage (heading and quoted first words);
      - the placement (after which paragraph);
      - one line on why.
