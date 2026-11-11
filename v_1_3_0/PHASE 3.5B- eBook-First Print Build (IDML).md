@@ -64,7 +64,7 @@ These rules apply to every print build from this release on.
 
 **Motifs and color:**
 - Leave out the eBook's motifs, diamonds, ornaments, and extra colors.
-- **Quote callouts** (pull quotes) are the exception: they are kept, in the print template's pull-quote style.
+- **Quote callouts** (pull quotes) are the exception: they are kept, in the print template's pull-quote style. Quote marks follow the rule in the Callouts check (no marks around the book's own words).
 - **Multi-color callouts** are also kept, using the **print template's** versions (for example Green Insight, Blue Coherence, Violet Expansion). The eBook versions are never used.
 
 **Margins and spacing:**
@@ -121,7 +121,7 @@ It reports figure/callout pairs that land close together. <AUTHOR> settles facin
 **Goal:** the chapter's eBook page file, `<EBOOK_DSM_ROOT>/Chapter<N>_eBook.dc.html` (one `<doc-page>` per page), and the exercise's page file in the workbook's `_eBookDSM/`. Both follow the eBook DSM and use the RGB figures.
 
 1. **Content.** Start from the manuscript DOCX. If PHASE 3 produced a Claude Design draft, start from it, but update its wording from the DOCX. Keep the callouts and pull quotes <AUTHOR> approved (PHASE 1 recommendations, validated in PHASE 2).
-   - Check every pull quote word for word against the DOCX.
+   - Check every pull quote word for word against the DOCX, and set callouts and pull quotes without quotation marks around the book's own words (marks stay on an outside source or another person; from Chapter 7 on (rule dated 2026-11-10); earlier chapters are not retrofitted unless the author asks).
    - Back up the draft to `<EBOOK_DSM_ROOT>/_Backups/` before replacing it.
 2. **Paginate** with `ebook_paginate.py`. The rules:
    - pages fill from top to bottom, using the page end to end;
@@ -281,7 +281,7 @@ A structural proof can be rendered through Adobe's InDesign rendering service. T
 | One column | No 2-column master, frame, or spread is used |
 | Text complete | Every eBook block (book) or DOCX paragraph (workbook) is in the IDML, word for word. Pull quotes match the DOCX |
 | Figures | Every figure links a CMYK TIFF in `Figures/CMYK/`; no RGB file is linked; effective ppi ≥ 300 or flagged |
-| Callouts | Each callout uses the print template's style for its kind; no eBook color or motif is used |
+| Callouts | Each callout uses the print template's style for its kind; no eBook color or motif is used; no quotation marks around the book's own words (outside sources and other people keep theirs) |
 | Footnotes and references | Every footnote is in the text; the reference list ends with the manuscript's last reference |
 | Opener | The chapter or exercise title and epigraph are correct; the master's text is overridden, not showing through |
 | Pagination (print) | No heading ends a page; no single-line widow or orphan; no callout split across pages (checked in the proof; fixed in the finish) |

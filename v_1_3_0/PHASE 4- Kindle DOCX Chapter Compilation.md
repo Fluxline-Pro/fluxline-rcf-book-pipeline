@@ -492,7 +492,7 @@ Preserve semantic hierarchy, inline emphasis, paragraph spacing, indentation, li
 - Chapter title and number
 - Part / Lesson / Core Value
 - Short chapter summary (ReviewPacket)
-- Optional: 1–2 pull quotes (InDesign prep; verbatim)
+- Optional: 1–2 pull quotes (InDesign prep; verbatim, with no quotation marks around the book's own words; the Quote and Callout styles must not add marks)
 
 ## 4. Insert main manuscript body
 

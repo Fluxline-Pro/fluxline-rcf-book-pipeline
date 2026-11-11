@@ -5,6 +5,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [Unreleased] — Callout quote marks (#38)
+
+From Chapter 7 on (rule dated 2026-11-10), callouts and pull quotes that use the book's own words carry no quotation marks in the eBook, print and Kindle; quote marks are only for an outside source or another person, never the author. Speech the book gives to the reader or a client counts as another person and keeps its marks. Stated in PHASE 1 (callout recommendations), PHASE 2 (governance check), PHASE 3.5 and 3.5B (checks) and PHASE 4 (Kindle). Earlier chapters are not retrofitted unless the author asks. Also from 2026-11-10: Core Value callouts are titled `RCF Core Value N • <Core Value>` in RCF Purple and Meta-Value callouts `RCF Meta-Value N • <Meta Value>` in RCF Blue, in every format.
+
+---
+
 ## [Unreleased] — Chapter Summary bullet rule (#34)
 
 Edited in place in `v_1_3_0/`, by the author's choice. From 2026-11-10 every bullet in a "Chapter N Summary" is one sentence (two at most), about 25 words at most, and a semicolon counts as a break; Chapter 5 is the model, and the rule applies from Chapter 6 on.

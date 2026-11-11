@@ -432,7 +432,7 @@ Read the latest PHASE 3.5B build report (the builders' JSON reports and any `_Pr
 - [ ] **Figures:**
   - every figure links a CMYK TIFF from `Figures/CMYK/` and no RGB file;
   - effective ppi is ≥ 300, or the figure is flagged.
-- [ ] **Callouts** use the print template's styles; no eBook color, motif, or diamond is carried over.
+- [ ] **Callouts** use the print template's styles; no eBook color, motif, or diamond is carried over. Callout and pull-quote text follows the quote-mark rule: no quotation marks around the book's own words in a callout or pull quote (eBook, print and Kindle); quote marks go only around an outside source or another person, never the author. Speech the book gives to the reader or a client counts as another person and keeps its marks (from Chapter 7 on (rule dated 2026-11-10); earlier chapters are not retrofitted unless the author asks). The eBook callouts and the Kindle Quote and Callout styles must not add quote marks themselves. Core Value callouts are titled `RCF Core Value N • <Core Value>` in RCF Purple and Meta-Value callouts `RCF Meta-Value N • <Meta Value>` in RCF Blue, with the same title styling in every format.
 - [ ] **Footnotes and references** are complete; the reference list ends with the manuscript's last reference.
 - [ ] **Opener:** the title and epigraph are correct, and none of the master's text shows through.
 
