@@ -39,13 +39,14 @@ Tick each line. A line is a pass only if it happened with no hand-edited trigger
 - [ ] Re-export the eBook PDF after a fix: Step 0F re-opens for the changed pages.
 - [ ] 0P closes. Create `LAYOUT_VERIFIED.md` and `RERUN_P4.md`. Test the negative cases: an older `LAYOUT_VERIFIED.md` than the PDF is stale; a superseded `WORKBOOK_READY.md` blocks; the email names each.
 - [ ] Congruency pass 1 passes; Kindle builds only after that. Optional Copilot print and Kindle reviews are run once each.
-- [ ] Narration script is rebuilt from the Kindle output; congruency pass 2 passes after the recording (a stand-in recording is fine for the test). **The audiobook is the last step** before PHASE 5.
+- [ ] Congruency pass 2 passes after the Kindle build, with no recording yet (2026-11-16: the audiobook is PHASE 6.9, below).
 
 ### D. Knowledge, automation, release (PHASE 5 to 7)
 
 - [ ] PHASE 5 starts only after all the files above are finished; the RAG chunks match the final wording (no earlier version).
 - [ ] PHASE 6 produces drafts only; nothing touches the manuscript or the finished files.
 - [ ] PHASE 6.5: deterministic checks, Claude's QA, then the Copilot cross-format review; the Copilot `PASS` alone does not produce Publishing Ready.
+- [ ] PHASE 6.9 (2026-11-16): it waits for `AUDIT_FINAL_CLEAR.md`; after 6.5 passes and B0 has run, the narration script is rebuilt from the Kindle output; a stand-in recording of the whole chapter gets its audiobook QA and the congruency PHASE 6.9 pass; `AUDIOBOOK_READY.md` is written, and PHASE 7 waits for it.
 - [ ] PHASE 7: the release check pre-fills; you sign; the chapter is Published.
 
 ## Record the result

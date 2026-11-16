@@ -169,7 +169,7 @@ Copy each workbook draft, under its own name, into `<CH_ROOT>/Workbook/` as the 
    - Segment markers
    - Pacing notes
    - Full transcript of the chapter in MD format
-   - (These are prep files. The narration script is rebuilt from the Kindle output in PHASE 4 Part C, where XTTS makes a draft and <AUTHOR> records the final narration in Adobe Audition.)
+   - (These are prep files. The narration script is rebuilt from the Kindle output in PHASE 6.9, where XTTS makes a draft and <AUTHOR> records the final narration in Adobe Audition.)
 
 10. Create “RAG/ChromaDB Ingestion Packet” including:
     - Chunked text blocks

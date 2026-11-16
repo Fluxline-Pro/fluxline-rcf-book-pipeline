@@ -13,9 +13,9 @@
 1. **Before PHASE 1:** the DOCX is semi-locked, i.e. editorially complete (PASS 7 and the polish window), as before.
 2. **PHASE 1 and PHASE 2:** as before.
 3. **PHASE 2.5:** the lock audit. Output: a decisions log and `MANUSCRIPT_LOCKED.md`.
-4. **PHASE 3, 3.5, 3.5A, 3.5B, 3W, and 4:** each requires `MANUSCRIPT_LOCKED.md`.
+4. **PHASE 3, 3.5, 3.5A, 3.5B, 3W, 4, and 6.9 (2026-11-16):** each requires `MANUSCRIPT_LOCKED.md`.
 5. **PHASE 4 Part B, B0:** a cross-chapter consistency check and a check of what changed since each chapter's lock. It is no longer a full content audit.
-6. **PHASE 4 Part C:** the audiobook is recorded only after the lock, so a re-recording should never be needed.
+6. **The audiobook** is recorded only after the lock. (2026-11-16: it moved from PHASE 4 Part C to PHASE 6.9, after PHASE 6.5, because later checks still changed the text and the recordings needed pickups. Each chapter is recorded in full there.)
 
 ---
 
