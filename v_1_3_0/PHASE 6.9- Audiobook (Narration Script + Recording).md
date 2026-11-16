@@ -105,7 +105,7 @@ A line the QA flags is fixed in the Audition session and the chapter master is e
 
 After the QA, run the congruency check's PHASE 6.9 pass: `congruency_check.py <ChapterName> --pass 3`. The local watcher also runs it by itself once every MP3 was written after the 6.9 build time and has a newer audiobook QA report. It repeats pass 2 and adds the two checks that left pass 2:
 - the manuscript against the narration script (differences with the segment id; narration-only descriptions are accepted once);
-- the audiobook QA result (text match, the lines the transcript flagged, ACX failures, an MP3 older than the script).
+- the audiobook QA result (text match, the lines the transcript flagged, ACX failures, an MP3 recorded before the 6.9 build time, the phase69Build line).
 
 Report: `_BookGovernance/CongruencyQA/<ChapterName>_Congruency_Pass3.md` + `.json`, with a PASS or HOLD verdict. <AUTHOR> decides a HOLD as in PHASE 4 Step 0C.
 
