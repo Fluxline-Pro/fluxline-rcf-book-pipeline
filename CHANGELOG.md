@@ -33,33 +33,39 @@ Edited in place in `v_1_3_0/`, like #34 and #38. This is the author's decision (
 - **Pointer updates:** PHASE 0.9, 1, 2.5, 3, 3.5 and 3W, `ROLLOUT_TEST_PLAN.md`, `COPILOT_HANDOFFS/HOW_TO_USE_COPILOT.md`. The publication-QA handoff no longer uploads the narration script; it is rebuilt after that review.
 - Historical release notes are left as they were, with a dated pointer where they state a rule that changed.
 
-### Local tools
+### Update: Terence's answers (2026-11-16)
 
-- **Changed:** `release_check.py` lists the audiobook under a new "PHASE 6.9 — Audiobook" section, after PHASE 6.5. It now also checks:
+- **No pickups:** a full re-record is needed only when narrated text changes after `AUDIOBOOK_READY.md`. Fixes made inside 6.9 are fine.
+- **6.9 waits for the whole book.** A chapter's 6.9 starts only after its own PHASE 6.5 Publishing Ready **and** the book-wide final audit: PHASE 0.9 Mode D, run at PHASE 4 Part B step B0, trigger `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md`, which must be newer than the chapter's `MANUSCRIPT_SYNCED.md`. B0 runs only once every chapter is locked and synced, so recording starts after the last chapter's PHASE 4.
+- **Tools updated the same day** (below). Ch1 to Ch7 all have `MANUSCRIPT_LOCKED.md`; Ch1 to Ch5 are protected (the runner never processes them), so they run 6.9 with Claude in chat, under the same gate.
+
+### Local tools (each backed up as `<name>.backup_20261116.<ext>` next to the file)
+
+- `H:\Automation\LocalAI\release_check.py` has a new "PHASE 6.9 — Audiobook" section, after PHASE 6.5. It checks:
   - that the final MP3 is newer than the narration script;
   - the 6.9 checklist;
-  - that `AUDIOBOOK_READY.md` is current, meaning newer than the MP3, the script and the manuscript. Backup: `release_check.backup_20261116.py`. Test: `tests/test_release_check_phase69.py`.
-- **Pending: the new order does not run until these change.** Until then, congruency pass 2 still needs the audio, so the runner holds PHASE 5 and 6.5 for a chapter that isn't recorded.
-  - `congruency_check.py` (`_BookAutomation/phase4_tools`):
-    - drop the `md-script` and `audio` legs from pass 2;
-    - add pass 3 (the PHASE 6.9 pass, report `_Congruency_Pass3`) with those legs;
-    - widen `--pass` to `1|2|3`.
-  - `congruency_watch.py`:
-    - pass 2 waits for the Kindle DOCX, not the MP3s and audio QA; pass 3 waits for those;
-    - neither pass needs the narration script before 6.9;
-    - `RUN_CONGRUENCY.md` takes `pass 3` on its first line.
-    - Change it together with `congruency_check.py`, or every unrecorded section gets a HOLD email.
-  - `run-pipeline.ps1`:
-    - the PHASE 4 gate no longer waits for `*_NarrationScript.md`;
-    - a new `6.9` gate (Publishing Ready, plus pass 2 PASS) and job text;
-    - the job text leaves the narration script alone when a final MP3 newer than it exists, so `RERUN_P6.9.md` after the recording doesn't make the recording look stale;
-    - the PHASE 4 job text no longer says pass 2 runs after the audiobook.
-  - `decide.js`:
-    - 6.5 queues 6.9, and 6.9 queues 7;
-    - a NAMES entry for 6.9;
-    - the PHASE 2.5 email no longer says to record audio once the manuscript is locked.
-  - `pipeline-config.json`: a `phases."6.9"` entry.
-  - The deployed `instructions/` copy, refreshed from `v_1_3_0` with a backup.
+  - that `AUDIOBOOK_READY.md` is current, meaning newer than the MP3, the script and the manuscript.
+- `_BookAutomation\phase4_tools\congruency_check.py`:
+  - pass 2 is pass 1 plus the Kindle DOCX (no script, no audio);
+  - new pass 3 (PHASE 6.9, report `_Congruency_Pass3`) adds the narration script and the audiobook QA legs;
+  - `--pass 1|2|3`.
+- `H:\Automation\LocalAI\congruency_watch.py`:
+  - pass 1 and 2 no longer wait for the narration script or the MP3s;
+  - pass 3 runs only for MP3s recorded after the chapter's latest PublicationQA report and checked by the audiobook QA, so unrecorded chapters, and older PHASE 4 recordings, never run it;
+  - `RUN_CONGRUENCY.md` accepts `pass 3`.
+- `_BookAutomation\pipeline\run-pipeline.ps1`:
+  - the PHASE 4 gate no longer waits for `*_NarrationScript.md`;
+  - the PHASE 4 job runs pass 2 after Part A;
+  - a new `6.9` gate (Publishing Ready, `AUDIT_FINAL_CLEAR.md` newer than `MANUSCRIPT_SYNCED.md`, pass 2 PASS), job text (it leaves the script alone when a newer final MP3 exists) and exit check (`AUDIOBOOK_READY.md`).
+- `_BookAutomation\pipeline\decide.js`:
+  - 6.5 PASS queues 6.9, and 6.9 PASS queues 7 (6.5 not passing still queues 7, to list the gaps);
+  - a 6.9 name and email;
+  - `RERUN_P6.9.md` is recognised;
+  - the PHASE 2.5 email no longer says to record audio once the manuscript is locked.
+  - The n8n export (`_BookAutomation\n8n\RCF_ChapterPipeline.json` and `_UI-import.json`) was rebuilt with `build-n8n-workflow.py`, but **not imported**. Live n8n keeps the old routing until Terence re-imports it.
+- `pipeline-config.json`: a `phases."6.9"` entry. `build-n8n-workflow.py`: the notes list 6.9.
+- The deployed `pipeline\instructions\` copy was refreshed from this branch; the previous copy is in `instructions\_Backups\pre_audiobook_6_9_20261116\`.
+- Tests: `LocalAI\tests\test_release_check_phase69.py` and `test_congruency_passes.py`.
 
 ---
 

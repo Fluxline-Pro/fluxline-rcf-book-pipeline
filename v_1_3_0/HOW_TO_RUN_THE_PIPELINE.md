@@ -273,7 +273,7 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 
 🤖 **Automatic:** when a section has all of its pass 1 inputs (manuscript DOCX and MD, final eBook PDF, print PDF) and none has changed for 5 minutes, the local watcher runs the check and writes `_BookGovernance/CongruencyQA/<ChapterName>_Congruency.md`. It emails you only when the verdict is **HOLD**, and again only if the open differences change.
 
-🧑 **You** (also to run it on demand): create an empty `Manuscript/Trigger/RUN_CONGRUENCY.md` (Parts and Lessons: `Trigger/RUN_CONGRUENCY.md` in their folder), or ask Claude. Put `pass 2` on the first line for the second pass. The watcher runs it and renames the file `RUN_CONGRUENCY_done_<timestamp>.md`.
+🧑 **You** (also to run it on demand): create an empty `Manuscript/Trigger/RUN_CONGRUENCY.md` (Parts and Lessons: `Trigger/RUN_CONGRUENCY.md` in their folder), or ask Claude. Put `pass 2` on the first line for the second pass, or `pass 3` for the PHASE 6.9 pass. The watcher runs it and renames the file `RUN_CONGRUENCY_done_<timestamp>.md`.
 
 🧑 **Then:**
 1. Open the report. The first table shows each format's status; each difference has its page or segment.
@@ -283,7 +283,7 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 
 ✅ **Done when:** the verdict is **PASS**. Part A (Kindle) starts only on PASS. For a chapter without a lock (the first book's Ch1 to Ch5) the report is for information and never holds anything.
 
-**Pass 2.** After the Kindle build, the same check adds the Kindle DOCX. PHASE 5 and PHASE 6.5 start only when pass 2 is PASS. The narration script and the audio are checked later, in PHASE 6.9 (Step 7). Until `congruency_check.py` is updated, pass 2 still includes them, so it can't PASS before a recording exists. Until then a chapter with a lock waits at PHASE 5; what to do meanwhile is your call (see the CHANGELOG).
+**Pass 2.** After the Kindle build, the same check adds the Kindle DOCX. PHASE 5 and PHASE 6.5 start only when pass 2 is PASS. The narration script and the audio are checked later, in PHASE 6.9 (Step 7).
 
 ### Step 6 — RAG, automation, publication QA → PHASES 5, 6, 6.5 (automatic)
 
@@ -293,11 +293,11 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 
 📧 **Email:** only if a phase needs you. Fix the item, then create `RERUN_P5.md`, `RERUN_P6.md`, or `RERUN_P6.5.md`.
 
-✅ PHASE 6.5 certifies the chapter Publishing Ready, and PHASE 6.9 starts.
+✅ PHASE 6.5 certifies the chapter Publishing Ready, and PHASE 6.9 is queued. It starts once the whole book has passed the book-wide final audit (B0, `AUDIT_FINAL_CLEAR.md`), so recording begins after the last chapter's PHASE 4.
 
 ### Step 7 — Record the audiobook → PHASE 6.9 (manual, with an automatic check; the last step before PHASE 7)
 
-🤖 **Automatic:** once PHASE 6.5 certifies Publishing Ready, Claude rebuilds the narration script from the Kindle output (and, if you want one, an XTTS draft for pacing) and emails you that it is ready to record. Until the runner has a PHASE 6.9 job, ask Claude to run it.
+🤖 **Automatic:** once PHASE 6.5 certifies Publishing Ready and the book-wide final audit has passed, Claude rebuilds the narration script from the Kindle output (and, if you want one, an XTTS draft for pacing) and emails you that it is ready to record. (Ch1 to Ch5 are protected: ask Claude in chat.)
 
 🧑 **You:** record the **whole chapter** in Adobe Audition from that script, and export `Audiobook/<NN>_<ChapterName>.mp3`. There are no pickups: a chapter recorded earlier (for example in PHASE 4) is recorded again in full.
 
@@ -305,7 +305,7 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 
 📧 **Email:** the QA summary. The full report lands in the audiobook QA folder.
 
-🧑 **Then:** create `_Pipeline/RERUN_P6.9.md`. Claude runs the congruency check's PHASE 6.9 pass (script and audio), writes the PHASE 6.9 checklist, and writes `Audiobook/Trigger/AUDIOBOOK_READY.md` when everything passes.
+🧑 **Then:** create `_Pipeline/RERUN_P6.9.md`. Claude runs the congruency check's pass 3 (script and audio), writes the PHASE 6.9 checklist, and writes `Audiobook/Trigger/AUDIOBOOK_READY.md` when everything passes.
 
 ✅ `AUDIOBOOK_READY.md` exists, and PHASE 7 starts.
 
@@ -382,7 +382,7 @@ These run on their own whenever their inputs change, and email you when somethin
 | `<ChapterName>_eBook.pdf` | `eBook/` | Completes 3.5 and starts PHASE 4 (does not create the manuscript lock: PHASE 2.5 did) |
 | `<NN>_Ex_<L>_<N>_Chapter<C>.pdf` | `<WORKBOOK_BOOK_ROOT>/…` | Completes 3.5 for the workbook and starts the 3W sync |
 | `<ChapterName>_Print7x10.pdf` | `InDesign/` (workbook: `<WORKBOOK_BOOK_ROOT>/InDesign/`, or `Workbook/<ChapterName>_Workbook_Print*.pdf` in the `chapter` layout) | Starts the print QA (PHASE 4 Part 0P; workbook: PHASE 3W W2b) |
-| `RUN_CONGRUENCY.md` (v1.2.6) | `Manuscript/Trigger/` (Parts: `Trigger/`) | Runs the congruency check now (`pass 2` on the first line for pass 2) |
+| `RUN_CONGRUENCY.md` (v1.2.6) | `Manuscript/Trigger/` (Parts: `Trigger/`) | Runs the congruency check now (`pass 2` or `pass 3` on the first line for that pass) |
 | `<ChapterName>_PrintOnlyDifferences.md` | `<CH_ROOT>` | Print-only wording the print QA should skip |
 | `<NN>_<ChapterName>.mp3` | `Audiobook/` | Starts audiobook QA (PHASE 6.9) |
 | Decision column | `_Pipeline/P4_DECISIONS.md`, `P3W_DECISIONS.md` | Your call on uncertain wording; then create the matching RERUN file |

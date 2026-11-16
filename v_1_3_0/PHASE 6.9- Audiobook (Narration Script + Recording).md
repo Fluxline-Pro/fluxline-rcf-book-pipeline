@@ -1,16 +1,16 @@
 # PHASE 6.9: Audiobook — Narration Script, Recording, Audiobook QA (v1.0)
 
-> **Pipeline position:** PHASE 6.9 of 7 (the audiobook, the last step before release) · **Upstream gate:** the chapter's latest PHASE 6.5 PublicationQA report certifies **Publishing Ready**, and the manuscript still matches its lock or `MANUSCRIPT_SYNCED.md` · **Downstream:** PHASE 7 Final Checklist & Sign-off
+> **Pipeline position:** PHASE 6.9 of 7 (the audiobook, the last step before release) · **Upstream gate:** the chapter's latest PHASE 6.5 PublicationQA report certifies **Publishing Ready**, the book-wide final audit (PHASE 0.9 Mode D, run at PHASE 4 Part B step B0: `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md`) has passed, and the manuscript still matches its lock or `MANUSCRIPT_SYNCED.md` · **Downstream:** PHASE 7 Final Checklist & Sign-off
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
-**New (2026-11-16, <AUTHOR>'s decision; unreleased).** The audiobook used to be PHASE 4 Part C, recorded from the Kindle output before PHASE 5. The PHASE 6 and 6.5 work could still change the manuscript after that, so recordings needed pickups, and about 150 edits across Ch1 to Ch5 left the audio choppy and unlike <AUTHOR>'s voice in the edited places. All of Part C now runs here, once the chapter's own checks are done:
+**New (2026-11-16, <AUTHOR>'s decision; unreleased).** The audiobook used to be PHASE 4 Part C, recorded from the Kindle output before PHASE 5. The PHASE 6 and 6.5 work could still change the manuscript after that, so recordings needed pickups, and about 150 edits across Ch1 to Ch5 left the audio choppy and unlike <AUTHOR>'s voice in the edited places. All of Part C now runs here, once the chapter's own checks and the book-wide final audit are done:
 - the narration script, the XTTS draft, <AUTHOR>'s recording and the audiobook QA;
 - each chapter is **recorded in full** at this phase. There are no pickup re-records after it;
 - the book-level `<BOOK>_AUDIOBOOK` set (formerly PHASE 4 Part B, B4b) is assembled here in book mode, after every chapter's 6.9.
 
 No earlier phase waits on audio any more. Congruency pass 2 (PHASE 4) no longer includes the narration script or the audio, and PHASE 6.5 no longer certifies the audiobook.
 
-**Until the tools change (see the CHANGELOG), this phase can't run for a chapter with a lock.** Today's `congruency_check.py` pass 2 still includes the narration script and the audio, so it can't PASS before a recording exists, and PHASE 5 and 6.5 wait for that PASS. Until then such a chapter waits at PHASE 5; what to do meanwhile is <AUTHOR>'s call. (Recording it early would not help: PHASE 7 needs `AUDIOBOOK_READY.md`, which only this phase writes.) Chapters without a lock (Ch1 to Ch5) are never held by the congruency check, so they can use this phase now, with Claude in chat.
+**It waits for the whole book (<AUTHOR>'s decision, 2026-11-16).** A chapter's 6.9 starts only when its own PHASE 6.5 report says Publishing Ready **and** the book-wide final audit has passed. That audit is B0, and it runs only once every chapter is locked and synced, so the recordings come after the last chapter's PHASE 4. A cross-chapter fix found there then reaches the text before anything is recorded.
 
 ---
 
@@ -19,9 +19,9 @@ No earlier phase waits on audio any more. Congruency pass 2 (PHASE 4) no longer 
 - **Chapter mode:** one chapter (or a narrated front matter, Part opener or back matter section) under `<CH_ROOT>` = `<BOOK_ROOT>/Chapters/<ChapterName>/Final/`.
 - **Book mode:** the `<BOOK>_AUDIOBOOK` set in `<BOOK_ROOT>/_BookPublication/`. Run once every narrated section has passed chapter mode.
 
-**Chapters without a lock (the first book's Ch1 to Ch5)** follow the same steps with Claude in chat (the runner ignores protected chapters). Their full re-recording here replaces the pickups made so far. The gate checks that need a lock (hashes, congruency) are reported for them, never held.
+**Protected chapters (Ch1 to Ch5)** follow the same steps with Claude in chat, because the runner never processes them. They are locked like every other chapter, so every gate check applies to them. Their full re-recording here replaces the pickups made so far.
 
-**Trigger.** When PHASE 6.5 certifies the chapter Publishing Ready, PHASE 6.9 starts: steps 1 and 2 build the script and tell <AUTHOR> it is ready to record. A new MP3 in `Audiobook/` starts the audiobook QA on its own (the local watcher), but it doesn't wake the runner: once the QA email arrives, <AUTHOR> creates `_Pipeline/RERUN_P6.9.md`, and the phase runs again from the entry check. Step 1 leaves the script alone on that run (see step 1), so steps 5 and 6 can pass. Until the runner has a PHASE 6.9 job (see the CHANGELOG), ask Claude to run it.
+**Trigger.** When PHASE 6.5 certifies the chapter Publishing Ready, PHASE 6.9 is queued. The runner holds it until the book-wide final audit has passed, then steps 1 and 2 build the script and tell <AUTHOR> it is ready to record. A new MP3 in `Audiobook/` starts the audiobook QA on its own (the local watcher), but it doesn't wake the runner: once the QA email arrives, <AUTHOR> creates `_Pipeline/RERUN_P6.9.md`, and the phase runs again from the entry check. Step 1 leaves the script alone on that run (see step 1), so steps 5 and 6 can pass.
 
 ---
 
@@ -34,8 +34,9 @@ No earlier phase waits on audio any more. Congruency pass 2 (PHASE 4) no longer 
 | Kindle DOCX: the reading order and the text the script is built from | `<CH_ROOT>/Kindle/<ChapterName>_Kindle.docx` (PHASE 4 Part A) |
 | Narration prep: pronunciation guide, segment markers, pacing notes | `<CH_ROOT>/Audiobook/<ChapterName>_NarrationScript.md` (first made in PHASE 1 Step 9) |
 | Congruency report, pass 2 (PASS) | `<BOOK_ROOT>/_BookGovernance/CongruencyQA/<ChapterName>_Congruency_Pass2.md` + `.json` |
+| The book-wide final audit (PHASE 0.9 Mode D at PHASE 4 Part B, B0) | `<BOOK_ROOT>/_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md` |
 
-**The chapter's own checks are done here.** The script is built from the Kindle DOCX, which PHASE 4 Part A builds from the synced manuscript. If PHASE 6.5's fixes changed the manuscript (through `MANUSCRIPT_REVISED.md`, a new lock and a Part 0 re-sync), Part A rebuilt the Kindle DOCX, so it carries those fixes. A later approved revision (for example a B0 cross-chapter fix) makes `AUDIOBOOK_READY.md` stale (section 6).
+**The chapter's own checks and the book-wide final audit are done here.** The script is built from the Kindle DOCX, which PHASE 4 Part A builds from the synced manuscript. If PHASE 6.5's fixes changed the manuscript (through `MANUSCRIPT_REVISED.md`, a new lock and a Part 0 re-sync), Part A rebuilt the Kindle DOCX, so it carries those fixes. A later approved revision makes `AUDIOBOOK_READY.md` stale (section 6).
 
 ---
 
@@ -60,7 +61,8 @@ Stop, write `Audiobook/Trigger/AUDIOBOOK_INCOMPLETE.md` naming what failed, and 
 - The latest `Governance/<ChapterName>_PublicationQA_*.md` (front matter, Part openers and back matter: the latest book-mode report) certifies **Publishing Ready** and is newer than `MANUSCRIPT_SYNCED.md` and the Kindle DOCX, so it certifies the current text.
 - The manuscript DOCX and MD hashes match `MANUSCRIPT_LOCKED.md` or the newer `MANUSCRIPT_SYNCED.md`, and no `MANUSCRIPT_REVISED.md` section is newer than the lock.
 - `Kindle/<ChapterName>_Kindle.docx` exists and is newer than the manuscript.
-- The congruency pass 2 report is PASS and newer than every one of its inputs (chapters with a lock).
+- `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md` exists and is newer than this chapter's `MANUSCRIPT_SYNCED.md`, so this chapter's final wording was part of that run.
+- The congruency pass 2 report is PASS and newer than every one of its inputs.
 
 ---
 
@@ -97,13 +99,11 @@ A line the QA flags is fixed in the Audition session and the chapter master is e
 
 # 5. Congruency check, PHASE 6.9 pass
 
-After the QA, run the congruency check's PHASE 6.9 pass. It repeats pass 2 and adds the two checks that left pass 2:
+After the QA, run the congruency check's PHASE 6.9 pass: `congruency_check.py <ChapterName> --pass 3`. The local watcher also runs it once the QA report is newer than an MP3 recorded after the chapter's Publication QA report. It repeats pass 2 and adds the two checks that left pass 2:
 - the manuscript against the narration script (differences with the segment id; narration-only descriptions are accepted once);
 - the audiobook QA result (text match, the lines the transcript flagged, ACX failures, an MP3 older than the script).
 
 Report: `_BookGovernance/CongruencyQA/<ChapterName>_Congruency_Pass3.md` + `.json`, with a PASS or HOLD verdict. <AUTHOR> decides a HOLD as in PHASE 4 Step 0C.
-
-**Pending tool change:** `congruency_check.py` accepts only `--pass 1|2`, and its pass 2 still includes these two checks. Until it has the PHASE 6.9 pass, a chapter that reaches this phase (today only Ch1 to Ch5, see the note at the top) runs `congruency_check.py <ChapterName> --pass 2` here, after the recording, and reads its script and audio rows as this check.
 
 # 6. Checklist and gate
 

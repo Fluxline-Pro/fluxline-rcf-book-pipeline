@@ -397,7 +397,7 @@ statement: I checked the eBook and print layouts (chapter and workbook) in InDes
 | Manuscript DOCX ↔ MD | the canonical DOCX with its replica | differences with the text on each side, and changed numbers |
 | Manuscript ↔ eBook PDF | the same wording as Part 0, normalised | differences with the page |
 | eBook PDF ↔ print PDF | the latest 0P result (0P is re-run if it is older than either PDF) | differences with both page numbers, and the layout error count |
-| Manuscript ↔ narration script (**PHASE 6.9 pass only**, 2026-11-16; pass 2 in v1.3.0) | what the narrator is told to read | differences with the segment id; narration-only descriptions (figures, the spoken pointer in place of references) show up here and are accepted once |
+| Manuscript ↔ narration script (**pass 3 only**, PHASE 6.9, 2026-11-16; pass 2 in v1.3.0) | what the narrator is told to read | differences with the segment id; narration-only descriptions (figures, the spoken pointer in place of references) show up here and are accepted once |
 | Manuscript ↔ workbook | exercise number and title in the manuscript heading, the exercise registry, the workbook DOCX/MD and the print IDML | any number or title that disagrees |
 | Freshness | every file against `MANUSCRIPT_LOCKED.md` (both hashes and the revision date), or against `MANUSCRIPT_SYNCED.md` when Part 0 changed the manuscript after the lock with <AUTHOR>'s decision and nothing was edited since; a derived file older than the manuscript is listed (passes 1 and 2 do not list the narration script; the PHASE 6.9 pass does) | the stale-file list |
 
@@ -413,7 +413,7 @@ Folios, footnote numbers, figure labels, pull quotes that repeat body text, and 
 
 **Gate:** Part A starts only when the latest pass 1 report for the chapter is PASS and is newer than every input. A chapter without a lock (the first book's Ch1 to Ch5) is checked and reported, and is never held by it.
 
-**Pass 2** (after Part A, step 9b) is the same check plus the Kindle DOCX against the manuscript. PHASE 5 and PHASE 6.5 start only on a pass 2 PASS. From 2026-11-16 it no longer includes the narration script or the audiobook QA result; PHASE 6.9's pass checks those. **Pending tool change:** `congruency_check.py` pass 2 still includes both. Until it changes, pass 2 can't PASS for a chapter that isn't recorded, so a chapter with a lock waits at PHASE 5; what to do meanwhile is <AUTHOR>'s call (see the CHANGELOG).
+**Pass 2** (after Part A, step 9b) is the same check plus the Kindle DOCX against the manuscript. PHASE 5 and PHASE 6.5 start only on a pass 2 PASS. From 2026-11-16 it no longer includes the narration script or the audiobook QA result; PHASE 6.9's pass checks those.
 
 ---
 
