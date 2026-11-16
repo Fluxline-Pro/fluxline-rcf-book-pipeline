@@ -10,7 +10,7 @@
 
 No earlier phase waits on audio any more. Congruency pass 2 (PHASE 4) no longer includes the narration script or the audio, and PHASE 6.5 no longer certifies the audiobook.
 
-**It waits for the whole book (<AUTHOR>'s decision, 2026-11-16).** A chapter's 6.9 starts only when its own PHASE 6.5 report says Publishing Ready **and** the book-wide final audit has passed. That audit is B0, and it runs only once every chapter is locked and synced, so the recordings come after the last chapter's PHASE 4. A cross-chapter fix found there then reaches the text before anything is recorded.
+**It waits for the whole book (<AUTHOR>'s decision, 2026-11-16).** A chapter's 6.9 starts only when its own PHASE 6.5 report says Publishing Ready **and** the book-wide final audit has passed. That audit is B0. It must cover the whole book: `AUDIT_FINAL_CLEAR.md` has to be newer than every chapter's `MANUSCRIPT_SYNCED.md`, so the recordings come after the last chapter's PHASE 4. A cross-chapter fix found there then reaches the text before anything is recorded.
 
 ---
 
@@ -61,7 +61,7 @@ Stop, write `Audiobook/Trigger/AUDIOBOOK_INCOMPLETE.md` naming what failed, and 
 - The latest `Governance/<ChapterName>_PublicationQA_*.md` (front matter, Part openers and back matter: the latest book-mode report) certifies **Publishing Ready** and is newer than `MANUSCRIPT_SYNCED.md` and the Kindle DOCX, so it certifies the current text.
 - The manuscript DOCX and MD hashes match `MANUSCRIPT_LOCKED.md` or the newer `MANUSCRIPT_SYNCED.md`, and no `MANUSCRIPT_REVISED.md` section is newer than the lock.
 - `Kindle/<ChapterName>_Kindle.docx` exists and is newer than the manuscript.
-- `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md` exists and is newer than this chapter's `MANUSCRIPT_SYNCED.md`, so this chapter's final wording was part of that run.
+- This chapter's `MANUSCRIPT_SYNCED.md` exists, and `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md` exists and is newer than **every** chapter's `MANUSCRIPT_SYNCED.md`, so the audit covered the whole book in its final wording (the PHASE 4 B1 rule).
 - The congruency pass 2 report is PASS and newer than every one of its inputs.
 
 ---
@@ -70,7 +70,10 @@ Stop, write `Audiobook/Trigger/AUDIOBOOK_INCOMPLETE.md` naming what failed, and 
 
 Update `Audiobook/<ChapterName>_NarrationScript.md` from `Kindle/<ChapterName>_Kindle.docx`: same reading order, headings, and text as the Kindle build.
 
-**Leave the script alone** when a final MP3 newer than it exists: that recording was made from it, and rewriting the script would make the recording look stale. Rebuild it only when the Kindle DOCX is newer than the script, or when <AUTHOR> asks.
+**The 6.9 script.** A script rebuilt here starts with the line `<!-- phase69Build: <date> · kindleDocxSha256: <hash> -->` (an HTML comment, so it is never read as narration).
+- **Rebuild** the script when it has no such line (it predates 6.9, for example from PHASE 4 Part C), when the Kindle DOCX hash differs from the one it records, or when <AUTHOR> asks.
+- If the rebuilt narrated text is word for word the same, keep the old file untouched, so a recording made from it still counts.
+- Otherwise **leave it alone**. A recording counts in this phase only if it is newer than a 6.9 script; an older recording, even one newer than an older script, does not.
 - Keep the pronunciation guide and segment markers, and move any marker whose text moved.
 - Narration-only adaptations are marked notes, never silent text changes: figure and table references, URLs, and visual-only callouts get a spoken alternative or a skip note.
 - This clears the "narration" items in the PHASE 4 Part 0 downstream impact list.
@@ -89,7 +92,7 @@ Then tell <AUTHOR> the script is ready to record.
 
 The local watcher runs the audiobook QA on the new MP3 by itself and emails the summary. It transcribes the MP3 with Whisper and compares it with the script. Record the result in the checklist:
 
-- It is <AUTHOR>'s recording (not a file from `Drafts/`) and newer than the narration script.
+- It is <AUTHOR>'s recording (not a file from `Drafts/`), and every final MP3 is newer than the 6.9 narration script (step 1).
 - **Coverage:** every narration segment is present and in order. The transcript is diffed against the script to list skipped or changed lines, retake leftovers, and framework terms heard differently. List them; never judge delivery or voice.
 - **Technical spec** from the distributor. ACX, for example, asks for RMS between −23 and −18 dB, peaks no higher than −3 dB, a noise floor below −60 dB, 44.1 kHz constant-bit-rate MP3 at 192 kbps or higher, and room tone at the head and tail. Check the distributor's current requirements, and record the measured values.
 - Framework terms are pronounced as the pronunciation guide says (<AUTHOR> confirms).
@@ -99,7 +102,7 @@ A line the QA flags is fixed in the Audition session and the chapter master is e
 
 # 5. Congruency check, PHASE 6.9 pass
 
-After the QA, run the congruency check's PHASE 6.9 pass: `congruency_check.py <ChapterName> --pass 3`. The local watcher also runs it once the QA report is newer than an MP3 recorded after the chapter's Publication QA report. It repeats pass 2 and adds the two checks that left pass 2:
+After the QA, run the congruency check's PHASE 6.9 pass: `congruency_check.py <ChapterName> --pass 3`. The local watcher also runs it by itself once every MP3 is newer than the 6.9 script and has a newer audiobook QA report. It repeats pass 2 and adds the two checks that left pass 2:
 - the manuscript against the narration script (differences with the segment id; narration-only descriptions are accepted once);
 - the audiobook QA result (text match, the lines the transcript flagged, ACX failures, an MP3 older than the script).
 
@@ -118,9 +121,20 @@ Save `<CH_ROOT>/<ChapterName>_PHASE6_9_AudiobookChecklist.md`:
 - `audiobookStatus`;
 - `gateStatus: PASS | FAIL`.
 
-Write `Audiobook/Trigger/AUDIOBOOK_READY.md` (renaming any older one to `*_superseded_<timestamp>.md`) when `gateStatus` is PASS: `audiobookStatus: RECORDED` (or `N/A` for a section that isn't narrated), the QA has no open item, and the congruency verdict is PASS. It records the manuscript DOCX and MD hashes, the narration script and MP3 SHA-256 hashes, the QA report, and the congruency report. Otherwise write `AUDIOBOOK_INCOMPLETE.md` listing what is open.
+Write `Audiobook/Trigger/AUDIOBOOK_READY.md` (renaming any older one to `*_superseded_<timestamp>.md`) when `gateStatus` is PASS: `audiobookStatus: RECORDED` (or `N/A` for a section that isn't narrated), the QA has no open item, and the congruency verdict is PASS. Otherwise write `AUDIOBOOK_INCOMPLETE.md` listing what is open. The format (the PHASE 7 release check reads the hash lines):
 
-**Stale rule (no pickups).** `AUDIOBOOK_READY.md` is stale when a hash it records no longer matches. If narrated text changes after this phase (only through an approved `MANUSCRIPT_REVISED.md` revision), the chapter goes through its usual re-run (new lock, PHASE 4 Part 0 and Part A, PHASE 5, 6, 6.5) and is then recorded again **in full** here.
+```
+# AUDIOBOOK_READY — <ChapterName>
+writtenOn: <date>
+manuscriptDocxSha256: <hash>
+manuscriptMdSha256: <hash>
+narrationScriptSha256: <hash>
+mp3: Audiobook/<NN>_<ChapterName>.mp3 | sha256: <hash>      (one line per final MP3)
+audiobookQA: <report file>
+congruencyPass3: _BookGovernance/CongruencyQA/<ChapterName>_Congruency_Pass3.md
+```
+
+**Stale rule (no pickups).** `AUDIOBOOK_READY.md` is stale when a hash it records no longer matches. Re-run this phase (`_Pipeline/RERUN_P6.9.md`): if the narrated text is unchanged, the script stays as it is (step 1), the recording still counts, and a new `AUDIOBOOK_READY.md` is written. If narrated text changed (only through an approved `MANUSCRIPT_REVISED.md` revision), the chapter goes through its usual re-run (new lock, PHASE 4 Part 0 and Part A, PHASE 5, 6, 6.5) and is then recorded again **in full** here. Fixes made inside this phase, before `AUDIOBOOK_READY.md` is written, are fine.
 
 Front matter, Part openers, and back matter sections that are narrated follow the same steps in their `Audiobook/` folders.
 

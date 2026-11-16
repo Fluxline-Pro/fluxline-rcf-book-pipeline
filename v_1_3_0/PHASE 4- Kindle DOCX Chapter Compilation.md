@@ -382,7 +382,7 @@ statement: I checked the eBook and print layouts (chapter and workbook) in InDes
 - **The workbook is solid:** `Workbook/Trigger/WORKBOOK_READY.md` is current (not superseded, and the PDF hashes it records match the uploaded workbook PDFs, per PHASE 3W) or `WORKBOOK_NOT_APPLICABLE.md` exists, and the workbook's print QA (PHASE 3W W2b) is closed when the workbook ships print.
 - Any Copilot final eBook review is resolved or waived (Step 0F).
 
-**Then, in order:** Step 0C congruency pass 1 → Part A (Kindle) → congruency pass 2 → PHASE 5. The audiobook comes last of all, in PHASE 6.9, after PHASE 6.5. A section without a lock (the first book's Ch1 to Ch5) is not held by this step.
+**Then, in order:** Step 0C congruency pass 1 → Part A (Kindle) → congruency pass 2 → PHASE 5. The audiobook comes last of all, in PHASE 6.9, after PHASE 6.5. Protected sections (Ch1 to Ch5) are run with Claude in chat; the runner never processes them.
 
 ---
 

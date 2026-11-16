@@ -36,27 +36,36 @@ Edited in place in `v_1_3_0/`, like #34 and #38. This is the author's decision (
 ### Update: Terence's answers (2026-11-16)
 
 - **No pickups:** a full re-record is needed only when narrated text changes after `AUDIOBOOK_READY.md`. Fixes made inside 6.9 are fine.
-- **6.9 waits for the whole book.** A chapter's 6.9 starts only after its own PHASE 6.5 Publishing Ready **and** the book-wide final audit: PHASE 0.9 Mode D, run at PHASE 4 Part B step B0, trigger `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md`, which must be newer than the chapter's `MANUSCRIPT_SYNCED.md`. B0 runs only once every chapter is locked and synced, so recording starts after the last chapter's PHASE 4.
+- **6.9 waits for the whole book.** A chapter's 6.9 starts only after its own PHASE 6.5 Publishing Ready **and** the book-wide final audit: PHASE 0.9 Mode D, run at PHASE 4 Part B step B0, trigger `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md`, which must be newer than **every** chapter's `MANUSCRIPT_SYNCED.md` (the whole book, the PHASE 4 B1 rule). Recording therefore starts after the last chapter's PHASE 4.
+- **A 6.9 recording** is one newer than a narration script rebuilt in 6.9. That script carries a `<!-- phase69Build: <date> · kindleDocxSha256: <hash> -->` line. An older PHASE 4 recording never counts, even when it is newer than an older script.
+- **`AUDIOBOOK_READY.md` has a fixed format** with SHA-256 lines, and it goes stale only when a recorded hash changes. A re-run with unchanged narrated text keeps the recording.
 - **Tools updated the same day** (below). Ch1 to Ch7 all have `MANUSCRIPT_LOCKED.md`; Ch1 to Ch5 are protected (the runner never processes them), so they run 6.9 with Claude in chat, under the same gate.
 
 ### Local tools (each backed up as `<name>.backup_20261116.<ext>` next to the file)
 
 - `H:\Automation\LocalAI\release_check.py` has a new "PHASE 6.9 — Audiobook" section, after PHASE 6.5. It checks:
-  - that the final MP3 is newer than the narration script;
+  - that every final MP3 is newer than a 6.9 narration script (the `phase69Build` line);
   - the 6.9 checklist;
-  - that `AUDIOBOOK_READY.md` is current, meaning newer than the MP3, the script and the manuscript.
+  - that `AUDIOBOOK_READY.md`'s recorded hashes (manuscript DOCX and MD, script, each MP3) still match;
+  - the Publishing Ready row now matches only an "Overall: Publishing Ready" verdict.
 - `_BookAutomation\phase4_tools\congruency_check.py`:
   - pass 2 is pass 1 plus the Kindle DOCX (no script, no audio);
   - new pass 3 (PHASE 6.9, report `_Congruency_Pass3`) adds the narration script and the audiobook QA legs;
   - `--pass 1|2|3`.
 - `H:\Automation\LocalAI\congruency_watch.py`:
   - pass 1 and 2 no longer wait for the narration script or the MP3s;
-  - pass 3 runs only for MP3s recorded after the chapter's latest PublicationQA report and checked by the audiobook QA, so unrecorded chapters, and older PHASE 4 recordings, never run it;
+  - pass 3 runs only when the script carries the `phase69Build` line, every MP3 is newer than it, and each MP3 has a newer audiobook QA report, so unrecorded chapters, and older PHASE 4 recordings, never run it;
+  - **one-off emails:** when the watcher first picked up this change (2026-11-16 14:46), it re-sent 12 congruency HOLD emails (pass 2 for Ch1–6, Part I, Lesson 1 and 2; pass 1 for Ch4, Part I, Lesson 1). Dropping the script and audio legs changed each report's fingerprint; the differences themselves are not new. The new signatures are saved, so they don't repeat;
   - `RUN_CONGRUENCY.md` accepts `pass 3`.
 - `_BookAutomation\pipeline\run-pipeline.ps1`:
   - the PHASE 4 gate no longer waits for `*_NarrationScript.md`;
   - the PHASE 4 job runs pass 2 after Part A;
-  - a new `6.9` gate (Publishing Ready, `AUDIT_FINAL_CLEAR.md` newer than `MANUSCRIPT_SYNCED.md`, pass 2 PASS), job text (it leaves the script alone when a newer final MP3 exists) and exit check (`AUDIOBOOK_READY.md`).
+  - a new `6.9` gate:
+    - an "Overall: Publishing Ready" verdict;
+    - the chapter's `MANUSCRIPT_SYNCED.md` present;
+    - `AUDIT_FINAL_CLEAR.md` newer than every chapter's `MANUSCRIPT_SYNCED.md`;
+    - pass 2 PASS;
+  - job text with the 6.9 script rule and the `AUDIOBOOK_READY.md` format, and an exit check (`AUDIOBOOK_READY.md`).
 - `_BookAutomation\pipeline\decide.js`:
   - 6.5 PASS queues 6.9, and 6.9 PASS queues 7 (6.5 not passing still queues 7, to list the gaps);
   - a 6.9 name and email;
