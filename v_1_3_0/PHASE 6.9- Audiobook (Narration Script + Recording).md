@@ -10,7 +10,7 @@
 
 No earlier phase waits on audio any more. Congruency pass 2 (PHASE 4) no longer includes the narration script or the audio, and PHASE 6.5 no longer certifies the audiobook.
 
-**Until the tools change (see the CHANGELOG), this phase can't run for a chapter with a lock.** Today's `congruency_check.py` pass 2 still includes the narration script and the audio, so it can't PASS before a recording exists, and PHASE 5 and 6.5 wait for that PASS. Until then such a chapter stays on the old order: the audiobook is recorded before PHASE 5, as before this change. Chapters without a lock (Ch1 to Ch5) are never held by the congruency check, so they can use this phase now, with Claude in chat.
+**Until the tools change (see the CHANGELOG), this phase can't run for a chapter with a lock.** Today's `congruency_check.py` pass 2 still includes the narration script and the audio, so it can't PASS before a recording exists, and PHASE 5 and 6.5 wait for that PASS. Until then such a chapter waits at PHASE 5; what to do meanwhile is <AUTHOR>'s call. (Recording it early would not help: PHASE 7 needs `AUDIOBOOK_READY.md`, which only this phase writes.) Chapters without a lock (Ch1 to Ch5) are never held by the congruency check, so they can use this phase now, with Claude in chat.
 
 ---
 

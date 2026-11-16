@@ -283,7 +283,7 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 
 ✅ **Done when:** the verdict is **PASS**. Part A (Kindle) starts only on PASS. For a chapter without a lock (the first book's Ch1 to Ch5) the report is for information and never holds anything.
 
-**Pass 2.** After the Kindle build, the same check adds the Kindle DOCX. PHASE 5 and PHASE 6.5 start only when pass 2 is PASS. The narration script and the audio are checked later, in PHASE 6.9 (Step 7). Until `congruency_check.py` is updated, pass 2 still includes them, so it can't PASS before a recording exists. A chapter with a lock then stays on the old order (see the CHANGELOG).
+**Pass 2.** After the Kindle build, the same check adds the Kindle DOCX. PHASE 5 and PHASE 6.5 start only when pass 2 is PASS. The narration script and the audio are checked later, in PHASE 6.9 (Step 7). Until `congruency_check.py` is updated, pass 2 still includes them, so it can't PASS before a recording exists. Until then a chapter with a lock waits at PHASE 5; what to do meanwhile is your call (see the CHANGELOG).
 
 ### Step 6 — RAG, automation, publication QA → PHASES 5, 6, 6.5 (automatic)
 

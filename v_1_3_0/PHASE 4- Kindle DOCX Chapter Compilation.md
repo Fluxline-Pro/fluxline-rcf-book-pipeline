@@ -413,7 +413,7 @@ Folios, footnote numbers, figure labels, pull quotes that repeat body text, and 
 
 **Gate:** Part A starts only when the latest pass 1 report for the chapter is PASS and is newer than every input. A chapter without a lock (the first book's Ch1 to Ch5) is checked and reported, and is never held by it.
 
-**Pass 2** (after Part A, step 9b) is the same check plus the Kindle DOCX against the manuscript. PHASE 5 and PHASE 6.5 start only on a pass 2 PASS. From 2026-11-16 it no longer includes the narration script or the audiobook QA result; PHASE 6.9's pass checks those. **Pending tool change:** `congruency_check.py` pass 2 still includes both. Until it changes, pass 2 can't PASS for a chapter that isn't recorded, so a chapter with a lock stays on the old order (see the CHANGELOG).
+**Pass 2** (after Part A, step 9b) is the same check plus the Kindle DOCX against the manuscript. PHASE 5 and PHASE 6.5 start only on a pass 2 PASS. From 2026-11-16 it no longer includes the narration script or the audiobook QA result; PHASE 6.9's pass checks those. **Pending tool change:** `congruency_check.py` pass 2 still includes both. Until it changes, pass 2 can't PASS for a chapter that isn't recorded, so a chapter with a lock waits at PHASE 5; what to do meanwhile is <AUTHOR>'s call (see the CHANGELOG).
 
 ---
 
