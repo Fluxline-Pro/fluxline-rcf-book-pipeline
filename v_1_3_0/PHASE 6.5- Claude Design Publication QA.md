@@ -211,7 +211,7 @@ Check terminology (TerminologyLock), voice (VoiceKit), component consistency, DS
 
 ## Final Certification
 
-Overall (pipeline ladder; PHASE 6.5 may award up to Publishing Ready):
+Overall (pipeline ladder; PHASE 6.5 may award up to Publishing Ready). State it on its own line, exactly `**Overall: Publishing Ready**` or `**Overall: Review Required**`; the PHASE 6.9 gate and the PHASE 7 release check read that line (2026-11-16):
 - Review Required (stays Production Ready)
 - **Publishing Ready** (no Critical or Major issues open). v1.3.0: also requires the deterministic checks to pass, the required human checks to be done (device previews, proofs), for chapters with `copilotRequired: yes` in their lock, a current Copilot review or a recorded waiver (section 9b; not applicable when the lock has `copilotRequired: no`), and every Copilot or earlier-phase finding resolved or accepted by <AUTHOR> in writing. <AUTHOR>'s sign-off is PHASE 7.
 
