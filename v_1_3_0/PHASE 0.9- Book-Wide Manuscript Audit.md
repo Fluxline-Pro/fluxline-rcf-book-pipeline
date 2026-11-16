@@ -25,7 +25,7 @@ Find every place where the book disagrees with itself — terms, definitions, ac
 - **PHASE 2.5 (release v1.2.5).** The lock audit: this phase's Pass 1 → Pass 2 on each governed chapter, <AUTHOR>'s decisions, the fixes in the DOCX, and the lock. Design starts only from the locked text.
 - **PHASE 3.** Design works from the locked text.
 - **eBook and print InDesign books.** Built before PHASE 4. <AUTHOR> may refine wording in either one. **The finished eBook is the trigger:** PHASE 4 Part 0 copies its final wording back into the manuscript. Mode P checks each chapter at that point, and Mode D checks the whole book before the book-level builds.
-- **Kindle, then audiobook.** Kindle is built from the synced text, the audiobook is recorded from the Kindle output (an XTTS draft as a guide, <AUTHOR>'s Adobe Audition recording as the final), and the remaining phases follow.
+- **Kindle, then audiobook.** Kindle is built from the synced text, and the audiobook is recorded from the Kindle output (an XTTS draft as a guide, <AUTHOR>'s Adobe Audition recording as the final). From 2026-11-16 the audiobook is recorded last, in PHASE 6.9, after PHASE 5, 6 and 6.5.
 
 ## When it runs
 
@@ -293,7 +293,7 @@ Save as `<BOOK>_AuditReport.md`, and copy the *Canonical decisions needed* secti
 2. **Fix the manuscript.**
    - Mode F / P: <AUTHOR> edits the draft (this is what PASS 7 is for).
    - Mode L (PHASE 2.5): <AUTHOR> decides each finding in the decisions log; the approved fixes go into the DOCX, then the MD through `docx_md_sync.py`. See PHASE 2.5.
-   - Mode P (b): a blocking wording fix goes into the eBook InDesign book (and the print book, if it carries the same text) → re-export the eBook PDF → PHASE 4 Part 0 re-sync → Part A / Part C → PHASE 5 re-run for that chapter (the existing re-sync rule). Never patch the synced manuscript by hand.
+   - Mode P (b): a blocking wording fix goes into the eBook InDesign book (and the print book, if it carries the same text) → re-export the eBook PDF → PHASE 4 Part 0 re-sync → Part A → PHASE 5 re-run for that chapter, and PHASE 6.9 later records it in full (the existing re-sync rule). Never patch the synced manuscript by hand.
    - Mode D: only a genuine cross-chapter conflict reopens a manuscript, and only with <AUTHOR>'s approval: `MANUSCRIPT_REVISED.md` (with the approval line) → PHASE 2.5 delta re-lock → the eBook fix and Part 0 as above (PHASE 4 B0).
 3. **Update the glossary** from the glossary delta.
 4. **Re-run Pass 2 on the changed chapters only**, then Consolidation, until the gate passes.

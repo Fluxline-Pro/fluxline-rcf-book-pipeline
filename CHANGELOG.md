@@ -5,6 +5,64 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [Unreleased] — The audiobook moves to PHASE 6.9 (#40)
+
+Edited in place in `v_1_3_0/`, like #34 and #38. This is the author's decision (2026-11-16). The audiobook used to be PHASE 4 Part C, recorded from the Kindle output before PHASE 5. PHASE 6 and 6.5 could still change the manuscript after that, so recordings needed pickups, and about 150 edits across Ch1 to Ch5 left the audio choppy and unlike the author's voice in the edited places.
+
+### Added
+
+- **`PHASE 6.9- Audiobook (Narration Script + Recording).md`** (v1.0), between PHASE 6.5 and PHASE 7. It holds all of the old Part C:
+  - the narration script, built from the Kindle DOCX after 6.5 has certified Publishing Ready;
+  - the optional XTTS draft;
+  - the author's recording of the **whole chapter** (no pickups after 6.9);
+  - the audiobook QA, and a congruency "PHASE 6.9 pass" (manuscript against the script, plus the audio QA result).
+- PHASE 6.9 also has a book mode, which assembles the `<BOOK>_AUDIOBOOK` set (formerly PHASE 4 Part B, B4b).
+- New files: the checklist `<ChapterName>_PHASE6_9_AudiobookChecklist.md`, the trigger `Audiobook/Trigger/AUDIOBOOK_READY.md` or `AUDIOBOOK_INCOMPLETE.md`, and `_Pipeline/RERUN_P6.9.md`.
+- `AUDIOBOOK_READY.md` goes stale when a hash it records changes, and the chapter is then recorded again in full.
+
+### Changed
+
+- **PHASE 4:** Part C and B4b are now pointers to PHASE 6.9. Congruency pass 2 runs after Part A (new step 9b) and adds only the Kindle DOCX. "Audiobook (always last)" and "recorded only after the lock" now point to 6.9. The checklist and the Part B gate have no audio items.
+- **PHASE 5:** its gate no longer waits for the audiobook.
+- **PHASE 6.5:** the audiobook is no longer certified here. There is no Audiobook sub-certification, input row or book-mode check, so a missing recording is not an issue.
+- **PHASE 7:** the entry needs a current `AUDIOBOOK_READY.md` as well as Publishing Ready. A new PHASE 6.9 section holds the audio items. The completion rule lists 6.9, and `<BOOK>_AUDIOBOOK` points to 6.9 book mode.
+- **MASTER_PIPELINE_OVERVIEW** and **HOW_TO_RUN:**
+  - the order of work, the phase table, the versions table and the flow diagram;
+  - deliverables, triggers, the LLM and publishing maps, the automation table and the manual steps;
+  - in HOW_TO_RUN, Step 6 is now RAG, automation and publication QA, and Step 7 is the recording.
+- **Pointer updates:** PHASE 0.9, 1, 2.5, 3, 3.5 and 3W, `ROLLOUT_TEST_PLAN.md`, `COPILOT_HANDOFFS/HOW_TO_USE_COPILOT.md`. The publication-QA handoff no longer uploads the narration script; it is rebuilt after that review.
+- Historical release notes are left as they were, with a dated pointer where they state a rule that changed.
+
+### Local tools
+
+- **Changed:** `release_check.py` lists the audiobook under a new "PHASE 6.9 — Audiobook" section, after PHASE 6.5. It now also checks:
+  - that the final MP3 is newer than the narration script;
+  - the 6.9 checklist;
+  - that `AUDIOBOOK_READY.md` is current, meaning newer than the MP3, the script and the manuscript. Backup: `release_check.backup_20261116.py`. Test: `tests/test_release_check_phase69.py`.
+- **Pending: the new order does not run until these change.** Until then, congruency pass 2 still needs the audio, so the runner holds PHASE 5 and 6.5 for a chapter that isn't recorded.
+  - `congruency_check.py` (`_BookAutomation/phase4_tools`):
+    - drop the `md-script` and `audio` legs from pass 2;
+    - add pass 3 (the PHASE 6.9 pass, report `_Congruency_Pass3`) with those legs;
+    - widen `--pass` to `1|2|3`.
+  - `congruency_watch.py`:
+    - pass 2 waits for the Kindle DOCX, not the MP3s and audio QA; pass 3 waits for those;
+    - neither pass needs the narration script before 6.9;
+    - `RUN_CONGRUENCY.md` takes `pass 3` on its first line.
+    - Change it together with `congruency_check.py`, or every unrecorded section gets a HOLD email.
+  - `run-pipeline.ps1`:
+    - the PHASE 4 gate no longer waits for `*_NarrationScript.md`;
+    - a new `6.9` gate (Publishing Ready, plus pass 2 PASS) and job text;
+    - the job text leaves the narration script alone when a final MP3 newer than it exists, so `RERUN_P6.9.md` after the recording doesn't make the recording look stale;
+    - the PHASE 4 job text no longer says pass 2 runs after the audiobook.
+  - `decide.js`:
+    - 6.5 queues 6.9, and 6.9 queues 7;
+    - a NAMES entry for 6.9;
+    - the PHASE 2.5 email no longer says to record audio once the manuscript is locked.
+  - `pipeline-config.json`: a `phases."6.9"` entry.
+  - The deployed `instructions/` copy, refreshed from `v_1_3_0` with a backup.
+
+---
+
 ## [Unreleased] — Callout quote marks (#38)
 
 From Chapter 7 on (rule dated 2026-11-10), callouts and pull quotes that use the book's own words carry no quotation marks in the eBook, print and Kindle; quote marks are only for an outside source or another person, never the author. Speech the book gives to the reader or a client counts as another person and keeps its marks. Stated in PHASE 1 (callout recommendations), PHASE 2 (governance check), PHASE 3.5 and 3.5B (checks) and PHASE 4 (Kindle). Earlier chapters are not retrofitted unless the author asks. Also from 2026-11-10: Core Value callouts are titled `RCF Core Value N • <Core Value>` in RCF Purple and Meta-Value callouts `RCF Meta-Value N • <Meta Value>` in RCF Blue, in every format.

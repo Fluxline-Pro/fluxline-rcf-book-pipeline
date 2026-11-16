@@ -1,8 +1,10 @@
 # PHASE 6.5: Claude Design Publication QA (v3.4)
-### EPUB • Kindle • HTML Master • Workbook (eBook + Print) • Print • Audiobook • RAG
+### EPUB • Kindle • HTML Master • Workbook (eBook + Print) • Print • RAG
 
-> **Pipeline position:** PHASE 6.5 of 7 (Publication QA gate) · **Upstream gate:** PHASE 6 checklist `gateStatus: PASS` · **Downstream:** PHASE 7 Final Checklist & Sign-off
+> **Pipeline position:** PHASE 6.5 of 7 (Publication QA gate) · **Upstream gate:** PHASE 6 checklist `gateStatus: PASS` · **Downstream:** PHASE 6.9 Audiobook, then PHASE 7 Final Checklist & Sign-off
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
+
+**2026-11-16 (<AUTHOR>'s decision; unreleased): the audiobook is no longer checked here.** It is recorded after this phase, in PHASE 6.9 (`PHASE 6.9- Audiobook (Narration Script + Recording).md`), which also checks it and assembles the book's audiobook set. This phase has no Audiobook sub-certification, and a missing recording is not an issue here.
 
 **v3.4 changes (2026-10-03, release v1.1.2):** print is validated from the **print QA reports** in `_BookGovernance/PrintQA/` (PHASE 4 Part 0P for the book, PHASE 3W W2b for the print workbook). This phase reads them rather than repeating their text and layout checks. An open text difference to check, or a layout error, there is a Major issue here, and the Print sub-certification can't be Ready while one is open.
 
@@ -35,7 +37,7 @@ Evaluate all publication outputs for:
 - Metadata correctness
 - TOC correctness
 - Figure registry alignment
-- Print and audiobook package completeness
+- Print package completeness
 - RAG readiness
 
 **You do not modify files.** You produce the QA Markdown. Fixes are applied by Claude Design (HTML/DSM) and Claude Cowork (scripts, metadata, packaging) only after <AUTHOR> approves the remediation list. For any question, ask <AUTHOR> before recommending a change that alters content or meaning.
@@ -60,7 +62,6 @@ Evaluate all publication outputs for:
 | Design layouts (eBook, Print 7×10, Workbook) | `<CH_ROOT>/DesignPacket/` |
 | Workbook manuscript (DOCX + MD), `WORKBOOK_READY.md` (or `WORKBOOK_NOT_APPLICABLE.md`), latest WorkbookQA report | `<CH_ROOT>/Workbook/`, `<CH_ROOT>/Governance/<ChapterName>_WorkbookQA_*.md` |
 | Workbook PDFs: the formats the book's workbook profile lists (PHASE 3W W2) | `location: chapter`: `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf` + `<CH_ROOT>/Workbook/<ChapterName>_Workbook_Print*.pdf`; `location: book-root`: `<WORKBOOK_BOOK_ROOT>/<section>/<NN>_Ex_<L>_<N>_Chapter<C>.pdf` + `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf`, with the chapter matched by `Chapter<C>` and the exercises by the registry |
-| Audiobook final MP3 + narration script (drafts in `Audiobook/Drafts/` are out of scope) | `<CH_ROOT>/Audiobook/` |
 | InDesign print files, incl. the print PDF `<ChapterName>_Print7x10.pdf` (v3.4) | `<CH_ROOT>/InDesign/` |
 | Print QA report (PHASE 4 Part 0P; workbook: PHASE 3W W2b) | `<BOOK_ROOT>/_BookGovernance/PrintQA/<ChapterName>_PrintQA.md` (+ the W2b report if the workbook ships print: `<ChapterName>_Workbook_PrintQA.md` for `location: chapter`, `Workbook_<eBook stem>_PrintQA.md` per exercise for `location: book-root`) |
 | RAG ingestion, index manifests (Local, Cloud), validation report | `<CH_ROOT>/RAG/` |
@@ -77,7 +78,6 @@ Evaluate all publication outputs for:
 | `<BOOK>_Workbook_eBook.pdf` + `<BOOK>_Workbook_AssemblyReport.md` (PHASE 3W W5) | `_BookPublication/<BOOK>_WORKBOOK_EBOOK/` |
 | `<BOOK>_Kindle.docx`, `.epub`, `.azw3` proof, metadata, cover, assembly report | `_BookPublication/<BOOK>_KINDLE_EBOOK/` (PHASE 4 Part B) |
 | Print book + workbook print PDFs | `_BookPublication/<BOOK>_PRINT_BOOK/`, `<BOOK>_WORKBOOK_PRINT_BOOK/` |
-| Audiobook set + track list | `_BookPublication/<BOOK>_AUDIOBOOK/` |
 | `RAG_Manuscript.html` (if built) | `_BookPublication/_Masters/` |
 | OPF, NCX, TOC metadata | inside the EPUB packages |
 | DSM, all chapter Figure Registries | chapter `DesignPacket/_ds/` and `Governance/` folders |
@@ -119,7 +119,7 @@ Check figure numbering, references, placeholders (none may remain in a Publishin
 ## 7. Metadata review
 Check OPF completeness, NCX correctness, TOC anchors, publication metadata, language tags, creator tags, version numbers against VersionMetadata.
 
-## 8. Print and audiobook package
+## 8. Print package
 Print (v3.4): don't repeat the print QA; cite it. The chapter's latest Part 0P report (`_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`) must:
 - exist, and be newer than both the print PDF and the eBook PDF;
 - show 0 text differences to check and 0 layout errors (it already covers 7×10 trim, bleed, fonts, image resolution, and text drift);
@@ -139,7 +139,7 @@ Workbook:
   - **Deliverables:** the workbook deliverables for the profile's `formats` are present: the eBook at 8.5×11 in, and the print interior at 7×10 in only when `print` is listed. Otherwise record print as **n/a** (copy that evidence from the W5 assembly report).
   - **Assembly report:** the PHASE 3W report lists no blocking items. It checks the book PDFs against the chapter workbook manuscripts, the exercise registry against the synced manuscripts, eBook bookmarks and links, and full-color print preflight (only when print is shipped).
 - The workbook has no EPUB, Kindle, audiobook, or RAG checks.
-Audiobook: every section has <AUTHOR>'s final recording (no XTTS file from `Audiobook/Drafts/` anywhere in the set), running order matches the TOC and the Kindle reading order, file naming `<NN>_<Section>.mp3`, track list present, PHASE 4 Part C coverage and technical-spec results recorded, and no stale passages (recorded before the latest Kindle build of changed text).
+Audiobook: not checked here. It is recorded after this phase and checked in PHASE 6.9, chapter and book mode (2026-11-16).
 
 ## 9. RAG readiness
 Check chunk-friendly structure, heading quality, semantic clarity, retrieval-friendly segmentation, metadata blocks, and that the PHASE 5 validation report passed **for every enabled track**. Confirm both index manifests carry the current chunk-set hash and chapter version (no stale index after a manuscript re-sync), the cloud vector file (the one `current.json` points to) holds only cloud-eligible chunks and matches the current chunk-set hash, and no Azure key or SAS token appears in any report or exported workflow. **Book mode:** `AUDIT_FINAL_CLEAR.md` exists, no blocking audit finding is open, and the cloud `manifest.json` `auditFinalClear` flag matches that run.
@@ -182,7 +182,7 @@ Check terminology (TerminologyLock), voice (VoiceKit), component consistency, DS
 | Accessibility | |
 | Metadata | |
 | Figure Registry | |
-| Print & Audiobook Package | |
+| Print Package | |
 | Workbook (eBook + Print) | |
 | RAG Readiness | |
 | Brand Consistency | |
@@ -199,7 +199,7 @@ Check terminology (TerminologyLock), voice (VoiceKit), component consistency, DS
 ## Accessibility Findings
 ## Metadata Findings
 ## Figure Registry Findings
-## Print & Audiobook Findings
+## Print Findings
 ## Workbook Findings
 ## RAG Findings
 ## Brand Consistency Findings
@@ -215,7 +215,7 @@ Overall (pipeline ladder; PHASE 6.5 may award up to Publishing Ready):
 - Review Required (stays Production Ready)
 - **Publishing Ready** (no Critical or Major issues open). v1.3.0: also requires the deterministic checks to pass, the required human checks to be done (device previews, proofs), for chapters with `copilotRequired: yes` in their lock, a current Copilot review or a recorded waiver (section 9b; not applicable when the lock has `copilotRequired: no`), and every Copilot or earlier-phase finding resolved or accepted by <AUTHOR> in writing. <AUTHOR>'s sign-off is PHASE 7.
 
-Per-format sub-certification (each Ready / Not Ready): EPUB · Kindle · Print · Audiobook · Workbook (eBook + Print) · RAG (Local) · RAG (Cloud, or N/A if disabled)
+Per-format sub-certification (each Ready / Not Ready): EPUB · Kindle · Print · Workbook (eBook + Print) · RAG (Local) · RAG (Cloud, or N/A if disabled). The audiobook is certified in PHASE 6.9.
 
 Provide rationale. State the Copilot review (`copilotReview: <file and outcome> | waived | N/A (`copilotRequired: no`)`) and any waiver copied from `Copilot_Waivers.md` (v1.3.0).
 
@@ -223,4 +223,4 @@ Provide rationale. State the Copilot review (`copilotReview: <file and outcome> 
 
 # FINAL RULE
 
-You do not modify files. You produce the QA Markdown. Claude Design and Claude Cowork apply fixes after <AUTHOR> approves them, then this QA is re-run until it certifies Publishing Ready. PHASE 7 starts only from a Publishing Ready report.
+You do not modify files. You produce the QA Markdown. Claude Design and Claude Cowork apply fixes after <AUTHOR> approves them, then this QA is re-run until it certifies Publishing Ready. PHASE 6.9 (the audiobook) starts only from a Publishing Ready report, and PHASE 7 after it.

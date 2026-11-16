@@ -226,7 +226,7 @@ Run when W2's files appear or change. Write `<CH_ROOT>/Governance/<ChapterName>_
 
 **Readiness is bound to the files.** Every consumer of `WORKBOOK_READY.md` (W4, PHASE 6.5, PHASE 7) recomputes the hashes of the uploaded PDFs (in `Workbook/` or `<WORKBOOK_BOOK_ROOT>`) and treats the trigger as stale if any hash differs from the recorded one.
 
-`WORKBOOK_READY.md` does **not** block `DESIGN_READY.md`, and the workbook is not a Kindle, audiobook, or RAG input. From v1.3.0, for a chapter with a lock, a current `WORKBOOK_READY.md` (or `WORKBOOK_NOT_APPLICABLE.md`) is required before PHASE 4 Step 0V and Part A, because the author wants the workbook solid before Kindle and the audiobook. It is also required for PHASE 6.5's workbook sub-certification and for PHASE 7.
+`WORKBOOK_READY.md` does **not** block `DESIGN_READY.md`, and the workbook is not a Kindle, audiobook, or RAG input. From v1.3.0, for a chapter with a lock, a current `WORKBOOK_READY.md` (or `WORKBOOK_NOT_APPLICABLE.md`) is required before PHASE 4 Step 0V and Part A, because the author wants the workbook solid before Kindle (and the audiobook, PHASE 6.9). It is also required for PHASE 6.5's workbook sub-certification and for PHASE 7.
 
 ---
 

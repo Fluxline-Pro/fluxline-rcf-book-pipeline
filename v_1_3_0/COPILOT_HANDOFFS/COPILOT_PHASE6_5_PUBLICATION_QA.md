@@ -19,7 +19,7 @@ Up to 20 files; choose the formats that exist. Give PDF or DOCX forms of anythin
 | 3 | Final print PDF (reduced reading copy is fine) | If it exists |
 | 4 | Kindle DOCX (and a PDF export of the Kindle Previewer's view) | If it exists |
 | 5 | Workbook files (PDF or DOCX) | If they exist |
-| 6 | Audiobook narration script (MD) | If it exists |
+| 6 | Audiobook narration script (MD) | No: from 2026-11-16 it is rebuilt in PHASE 6.9, after this review |
 | 7 | Metadata file(s); the reference list | **Yes** |
 | 8 | Figure registry; accessibility artifacts (alt-text list, accessibility report) | **Yes** |
 | 9 | Prior reports: `RESEARCH_CLEAR.md` + `RESEARCH_RECONCILIATION.md` (Phase 2.5), `COPILOT_DESIGN_REVIEW*` (3.5), `COPILOT_FINAL_EBOOK_REVIEW*` (4), `COPILOT_PRINT_PDF_REVIEW*`, `COPILOT_KINDLE_REVIEW*`, the latest `*_Congruency.md` | **Yes** |

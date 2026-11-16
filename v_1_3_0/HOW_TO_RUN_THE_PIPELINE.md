@@ -4,7 +4,9 @@
 
 **New in v1.2.5: the manuscript is locked before design.** After governance (PHASE 2), PHASE 2.5 reads the chapter for content problems and gives you a decisions log. You decide every finding, the fixes go into the DOCX (then the MD), and the chapter is locked. Design, print, the workbook, Kindle, and the audiobook all start from the locked text (Step 2a).
 
-**New in v1.2.6: one congruency check across formats.** Before the Kindle build, `congruency_check.py` compares the manuscript, the eBook PDF, the print PDF and the workbook's exercise numbers and titles, and checks that every file is current against the lock. You get one report and a PASS or HOLD (Step 5c). A second pass after the audiobook adds the narration script, the Kindle file and the audio check.
+**New in v1.2.6: one congruency check across formats.** Before the Kindle build, `congruency_check.py` compares the manuscript, the eBook PDF, the print PDF and the workbook's exercise numbers and titles, and checks that every file is current against the lock. You get one report and a PASS or HOLD (Step 5c). A second pass after the Kindle build adds the Kindle file. (Before 2026-11-16 it ran after the audiobook and also checked the narration script and the audio.)
+
+**New (2026-11-16, unreleased): the audiobook is last.** It moved from PHASE 4 to a new **PHASE 6.9**, after publication QA (Step 7). You record each chapter in full there, from the final text, and there are no pickups afterwards. Nothing before it waits on audio.
 
 **New in v1.3.0: Microsoft Copilot as a governed second opinion.** At seven points the pipeline hands you a list of files and a prompt (in `COPILOT_HANDOFFS/`); you open Microsoft Copilot yourself, upload the named files, paste the prompt, and save the answer where it says. Claude then checks the answer and the gate moves on only with your decision. Copilot checks research (before the lock), generates concept images, and gives independent reads of the design, the final eBook PDF, the print PDF, the Kindle files, and the whole publication. **Nothing in this pipeline calls or has access to your Copilot.** See "Copilot checkpoints" at the end of this guide. The same release also adds Pass 4 (science and source verification) and makes sidebars an optional per-book setting.
 
@@ -19,7 +21,7 @@ This is the operating guide: what to do, in what order, one step at a time. The 
 1. **The lock comes first, then your uploads are the switches.** PHASE 2.5 locks a chapter's manuscript before design (`MANUSCRIPT_LOCKED.md`, v1.2.5). After that, the final **eBook PDF** starts PHASE 4 (it does not create the lock), and the final **workbook PDF** starts the workbook sync. Upload only final exports.
 2. **Email is your inbox for the pipeline.** You're only emailed when you're needed, or when something is ready for you. No email means it's still running, or nothing needs you.
 3. **Nothing publishes itself.** Every generated item is a draft, and only you approve, sign off, and mark a chapter Published. A Copilot report is evidence, never a verdict or a gate on its own.
-4. **To redo a step,** create `<CH_ROOT>/_Pipeline/RERUN_P<n>.md`, where `<n>` is 1, 2, 2.5, 3W, 3.5, 3.5A, 3.5B, 4, 5, 6, 6.5, or 7. Anything you write inside is passed to Claude.
+4. **To redo a step,** create `<CH_ROOT>/_Pipeline/RERUN_P<n>.md`, where `<n>` is 1, 2, 2.5, 3W, 3.5, 3.5A, 3.5B, 4, 5, 6, 6.5, 6.9, or 7. Anything you write inside is passed to Claude.
 5. **Where to look:** `<CH_ROOT>/_Pipeline/STATUS.md` shows a chapter's phase history.
 
 ---
@@ -255,7 +257,7 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 
 ### Step 5v — Verify the layouts in InDesign, then confirm → PHASE 4 Step 0V (v1.3.0)
 
-**The order is: manuscript (DOCX and MD) → eBook and print book (chapter and workbook) → Kindle → audiobook (always last) → PHASE 5.** Kindle and the audiobook are made from the same words, so they wait until the layouts are final.
+**The order is: manuscript (DOCX and MD) → eBook and print book (chapter and workbook) → Kindle → PHASE 5, 6, 6.5 → audiobook (PHASE 6.9, last) → PHASE 7.** Kindle and the audiobook are made from the same words, so they wait until the layouts are final.
 
 🧑 **You** (as the graphic designer):
 1. Check the chapter's eBook and print books, and the workbook's eBook and print, in InDesign for final anomalies. Fix them there (wording that should reach the manuscript goes through the DOCX and `MANUSCRIPT_REVISED.md`, or Part 0's decision list).
@@ -269,7 +271,7 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 
 ### Step 5c — Congruency check → PHASE 4 Step 0C (report-only; v1.2.6)
 
-🤖 **Automatic:** when a section has all of its pass 1 inputs (manuscript DOCX and MD, final eBook PDF, print PDF; the narration script joins in pass 2) and none has changed for 5 minutes, the local watcher runs the check and writes `_BookGovernance/CongruencyQA/<ChapterName>_Congruency.md`. It emails you only when the verdict is **HOLD**, and again only if the open differences change.
+🤖 **Automatic:** when a section has all of its pass 1 inputs (manuscript DOCX and MD, final eBook PDF, print PDF) and none has changed for 5 minutes, the local watcher runs the check and writes `_BookGovernance/CongruencyQA/<ChapterName>_Congruency.md`. It emails you only when the verdict is **HOLD**, and again only if the open differences change.
 
 🧑 **You** (also to run it on demand): create an empty `Manuscript/Trigger/RUN_CONGRUENCY.md` (Parts and Lessons: `Trigger/RUN_CONGRUENCY.md` in their folder), or ask Claude. Put `pass 2` on the first line for the second pass. The watcher runs it and renames the file `RUN_CONGRUENCY_done_<timestamp>.md`.
 
@@ -281,27 +283,31 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 
 ✅ **Done when:** the verdict is **PASS**. Part A (Kindle) starts only on PASS. For a chapter without a lock (the first book's Ch1 to Ch5) the report is for information and never holds anything.
 
-**Pass 2.** After Step 6 (the recording) and its audio check, the same check adds the Kindle DOCX and the audiobook QA. PHASE 5 and PHASE 6.5 start only when pass 2 is PASS.
+**Pass 2.** After the Kindle build, the same check adds the Kindle DOCX. PHASE 5 and PHASE 6.5 start only when pass 2 is PASS. The narration script and the audio are checked later, in PHASE 6.9 (Step 7). Until `congruency_check.py` is updated, pass 2 still includes them, so it can't PASS before a recording exists. A chapter with a lock then stays on the old order (see the CHANGELOG).
 
-### Step 6 — Record the audiobook → PHASE 4 Part C (manual, with an automatic check; the last step before PHASE 5)
+### Step 6 — RAG, automation, publication QA → PHASES 5, 6, 6.5 (automatic)
 
-🧑 **You:** record the chapter in Adobe Audition from the narration script built from the Kindle output, and export `Audiobook/<NN>_<ChapterName>.mp3`. Record only after the lock (`MANUSCRIPT_LOCKED.md`) and the Kindle build: the content audit is already done, so you shouldn't have to re-record (v1.2.5).
-
-🤖 **Automatic:** Audiobook QA transcribes the MP3 with Whisper and compares it with the text. It reports skipped lines, changed wording, retake leftovers, and framework terms heard differently, plus the ACX specs (RMS, peak, noise floor, room tone, 44.1 kHz/192 kbps).
-
-📧 **Email:** the QA summary. The full report lands in the audiobook QA folder.
-
-✅ The QA report has nothing open, or only items you accept.
-
-### Step 7 — RAG, automation, publication QA → PHASES 5, 6, 6.5 (automatic)
-
-**This comes last, after all of the chapter's files are finished:** the manuscript, the eBook and print books (chapter and workbook, verified by you), Kindle, and the audiobook. The RAG index is built from the final wording; automations follow.
+**This comes after the chapter's files are finished:** the manuscript, the eBook and print books (chapter and workbook, verified by you), and Kindle. The RAG index is built from the final wording; automations follow. The audiobook comes after this (Step 7).
 
 🤖 **Automatic chain:** PHASE 5 builds the chapter's RAG index (local, and cloud if enabled) → PHASE 6 runs the automation and marketing activation tests → PHASE 6.5 runs publication QA.
 
 📧 **Email:** only if a phase needs you. Fix the item, then create `RERUN_P5.md`, `RERUN_P6.md`, or `RERUN_P6.5.md`.
 
-✅ PHASE 6.5 finishes, and PHASE 7 starts on its own.
+✅ PHASE 6.5 certifies the chapter Publishing Ready, and PHASE 6.9 starts.
+
+### Step 7 — Record the audiobook → PHASE 6.9 (manual, with an automatic check; the last step before PHASE 7)
+
+🤖 **Automatic:** once PHASE 6.5 certifies Publishing Ready, Claude rebuilds the narration script from the Kindle output (and, if you want one, an XTTS draft for pacing) and emails you that it is ready to record. Until the runner has a PHASE 6.9 job, ask Claude to run it.
+
+🧑 **You:** record the **whole chapter** in Adobe Audition from that script, and export `Audiobook/<NN>_<ChapterName>.mp3`. There are no pickups: a chapter recorded earlier (for example in PHASE 4) is recorded again in full.
+
+🤖 **Automatic:** Audiobook QA transcribes the MP3 with Whisper and compares it with the script. It reports skipped lines, changed wording, retake leftovers, and framework terms heard differently, plus the ACX specs (RMS, peak, noise floor, room tone, 44.1 kHz/192 kbps).
+
+📧 **Email:** the QA summary. The full report lands in the audiobook QA folder.
+
+🧑 **Then:** create `_Pipeline/RERUN_P6.9.md`. Claude runs the congruency check's PHASE 6.9 pass (script and audio), writes the PHASE 6.9 checklist, and writes `Audiobook/Trigger/AUDIOBOOK_READY.md` when everything passes.
+
+✅ `AUDIOBOOK_READY.md` exists, and PHASE 7 starts.
 
 ### Step 8 — Final checklist and your sign-off → PHASE 7
 
@@ -323,12 +329,13 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 
 ## 3. Book level, at the end
 
-Once every chapter has passed PHASE 4 Part A and Part C:
+Once every chapter has passed PHASE 4 Part A (for the audiobook set, PHASE 6.9):
 
 | Step | Who | What |
 |---|---|---|
 | B0 consistency + delta check | 🧑 Claude (PHASE 0.9 Mode D, reduced in v1.2.5) | Checks the book for conflicts **between** chapters, and checks what changed in each chapter since its lock (each change must be approved) → `AUDIT_FINAL_CLEAR.md`. Not a full content audit: it reopens a manuscript only for a genuine cross-chapter conflict, with your approval |
-| Kindle + audiobook sets | 🧑 Claude (PHASE 4 Part B) | `<BOOK>_KINDLE_EBOOK` (KDP package) and `<BOOK>_AUDIOBOOK` |
+| Kindle set | 🧑 Claude (PHASE 4 Part B) | `<BOOK>_KINDLE_EBOOK` (KDP package) |
+| Audiobook set | 🧑 Claude (PHASE 6.9 book mode) | `<BOOK>_AUDIOBOOK`, once every narrated section has passed PHASE 6.9 |
 | eBook + print books | 🧑 You (InDesign) + Claude (PHASE 3 book mode) | `<BOOK>_EBOOK`, `<BOOK>_PRINT_BOOK` |
 | Workbook books | 🧑 You (InDesign) + Claude (PHASE 3W W4–W5) | `<BOOK>_WORKBOOK_EBOOK` (and print, if shipped), after B0 |
 | Back-matter glossary | 🧑 You | Update the back-matter glossary from `_BookGovernance/Glossary/Glossary_DriftReport.md`, using the "Add to GLOSSARY" and "differs" sections |
@@ -377,12 +384,12 @@ These run on their own whenever their inputs change, and email you when somethin
 | `<ChapterName>_Print7x10.pdf` | `InDesign/` (workbook: `<WORKBOOK_BOOK_ROOT>/InDesign/`, or `Workbook/<ChapterName>_Workbook_Print*.pdf` in the `chapter` layout) | Starts the print QA (PHASE 4 Part 0P; workbook: PHASE 3W W2b) |
 | `RUN_CONGRUENCY.md` (v1.2.6) | `Manuscript/Trigger/` (Parts: `Trigger/`) | Runs the congruency check now (`pass 2` on the first line for pass 2) |
 | `<ChapterName>_PrintOnlyDifferences.md` | `<CH_ROOT>` | Print-only wording the print QA should skip |
-| `<NN>_<ChapterName>.mp3` | `Audiobook/` | Starts audiobook QA |
+| `<NN>_<ChapterName>.mp3` | `Audiobook/` | Starts audiobook QA (PHASE 6.9) |
 | Decision column | `_Pipeline/P4_DECISIONS.md`, `P3W_DECISIONS.md` | Your call on uncertain wording; then create the matching RERUN file |
 | `RERUN_P<n>.md` | `_Pipeline/` | Re-runs a phase (`<n>` includes `3.5`, v1.3.0) |
 | `Glossary_Canonical.json` entries | `_BookGovernance/Glossary/` | Glossary defining-chapter decisions |
 
-**Emails you'll get:** PHASE 1 done (review) · PHASE 2 needs you · PHASE 2.5 findings to decide · manuscript locked (start design) · PHASE 4/3W/5/6/6.5 needs you · workbook locked · PHASE 7 checklist · references, glossary, or print QA findings changed · audiobook QA · error alerts (any n8n workflow failing).
+**Emails you'll get:** PHASE 1 done (review) · PHASE 2 needs you · PHASE 2.5 findings to decide · manuscript locked (start design) · PHASE 4/3W/5/6/6.5/6.9 needs you · audiobook script ready to record · workbook locked · PHASE 7 checklist · references, glossary, or print QA findings changed · audiobook QA · error alerts (any n8n workflow failing).
 
 **Protected chapters:** chapters that existed before the automation (see the runner's `protectedChapterFolders`) are never *edited* by automation. Report-only checks still cover them, and you run their phases with Claude in chat.
 
@@ -406,6 +413,7 @@ The phase runner watches only the events in the table below; anything else you c
 | Save a Copilot report (research, final eBook, design, print, Kindle, publication) | **No** | create the `RERUN_P<n>.md` the handoff names (`2.5`, `4`, `3.5`, `6.5`) |
 | Add a line to `Copilot_Waivers.md` | **No** | create the matching `RERUN_P<n>.md` |
 | Create `LAYOUT_VERIFIED.md` | **No** | create `_Pipeline/RERUN_P4.md` |
+| Export the final narration MP3 (PHASE 6.9) | **No** (a local watcher runs the audiobook QA) | once the QA email arrives, create `_Pipeline/RERUN_P6.9.md` |
 | Create `MANUSCRIPT_REVISED.md` sections | **No** | create `RERUN_P1.md`, then `RERUN_P2.md`, then `RERUN_P2.5.md`, in that order |
 
 ## Copilot checkpoints (v1.3.0)
@@ -510,7 +518,7 @@ A dedicated Copilot agent (`COPILOT_AGENT_INSTRUCTIONS.md`) is optional: the han
 |---|---|
 | **When** | After the deterministic checks in PHASE 6.5 have run |
 | **Why** | A cross-format read: drift, missing sections, terminology, figure numbers, metadata, and earlier findings still open |
-| **Upload** | The manuscript, eBook PDF, print PDF, Kindle DOCX, workbook files, narration script, metadata, reference list, registry, accessibility artifacts, the earlier Copilot and research reports, the latest congruency report |
+| **Upload** | The manuscript, eBook PDF, print PDF, Kindle DOCX, workbook files, metadata, reference list, registry, accessibility artifacts, the earlier Copilot and research reports, the latest congruency report |
 | **Mode / prompt** | Chat · `COPILOT_HANDOFFS/COPILOT_PHASE6_5_PUBLICATION_QA.md` (split by chapter if the files are large) |
 | **Output / save to** | `COPILOT_PUBLICATION_QA.md` → `<CH_ROOT>/Governance/Copilot/` (book: `_BookGovernance/Copilot/`) |
 | **Pass / fail** | One input to Publishing Ready. It can never produce Publishing Ready alone |

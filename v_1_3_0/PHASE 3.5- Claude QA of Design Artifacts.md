@@ -98,7 +98,7 @@ Review the following artifacts:
 - PPTX/PDF slide exports, eBook PDF/EPUB
 - Workbook eBook and print PDFs: not checked here. PHASE 3W (W3) checks them when <AUTHOR> uploads them.
 - InDesign print files (check presence and figure coverage only; layout is <AUTHOR>'s manual work)
-- Audiobook: not checked here. It is recorded after the PHASE 4 Kindle build and checked in PHASE 4 Part C and PHASE 6.5.
+- Audiobook: not checked here. It is recorded and checked in PHASE 6.9, after PHASE 6.5 (2026-11-16).
 
 All inputs live under `<CH_ROOT>` = `<BOOK_ROOT>/Chapters/<ChapterName>/Final/` (see PHASE 3, Part A).
 

@@ -26,13 +26,13 @@
 | **4** 0P | Compares print with eBook | 🤖 report | Fix in InDesign | Optional: print review |
 | **4** Step 0V | **You verify the eBook and print books, chapter and workbook, in InDesign** | 🤖 checks it | ✋ **Create `LAYOUT_VERIFIED.md` yourself** | Use Copilot's findings as a checklist, if you ran it |
 | **4** Part A | Kindle build | 🤖 / 🧠 (starts after Step 0V) | Check in Kindle Previewer | No |
-| **4** Part C | Audiobook (**always last**, before PHASE 5) | 🧠 script; 🤖 audio check | ✋ Record and master it | No |
-| **4** Part B | Book-level Kindle eBook and audiobook set (after every chapter passes Part A and Part C) | 🤖 / 🧠 | Fix confirmed findings | Optional: Kindle review |
+| **4** Part B | Book-level Kindle eBook (after every chapter passes Part A) | 🤖 / 🧠 | Fix confirmed findings | Optional: Kindle review |
 | **5, 6** | RAG index and automations | 🤖 | Fix only if emailed | No |
-| **6.5** Publication QA | Checks every format | 🤖 / 🧠 | Fix findings | **Yes: cross-format review** |
+| **6.5** Publication QA | Checks every format except the audiobook | 🤖 / 🧠 | Fix findings | **Yes: cross-format review** |
+| **6.9** Audiobook (2026-11-16) | Narration script, recording, audio check (**always last**, before PHASE 7); book mode: the audiobook set | 🧠 script; 🤖 audio check | ✋ Record the whole chapter and master it | No |
 | **7** Release | Final checklist | 🤖 pre-fills | ✋ **Sign it** | No |
 
-**Order of work:** manuscript (DOCX and MD) → eBook and print book, chapter and workbook, verified by you → Kindle → audiobook → PHASE 5.
+**Order of work:** manuscript (DOCX and MD) → eBook and print book, chapter and workbook, verified by you → Kindle → PHASE 5, 6, 6.5 → audiobook (PHASE 6.9) → PHASE 7.
 
 ## When you use Copilot (a quick list)
 
