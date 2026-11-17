@@ -1,9 +1,9 @@
 # PHASE 5: RAG Rebuild — Local + Cloud Vectors, LLM Setup (Per Chapter) (v4.2)
 
-> **Pipeline position:** PHASE 5 of 7 (Knowledge) · **Upstream gate:** PHASE 4 checklist `gateStatus: PASS`, `Manuscript/Trigger/MANUSCRIPT_SYNCED.md`, and, for a chapter with a lock, `LAYOUT_VERIFIED.md` current and the congruency pass 2 report PASS (the audiobook is the last step of PHASE 4) · **Downstream:** PHASE 6 Automation Activation
+> **Pipeline position:** PHASE 5 of 7 (Knowledge) · **Upstream gate:** PHASE 4 checklist `gateStatus: PASS`, `Manuscript/Trigger/MANUSCRIPT_SYNCED.md`, and, for a chapter with a lock, `LAYOUT_VERIFIED.md` current and the congruency pass 2 report PASS (the audiobook no longer gates PHASE 5; it is PHASE 6.9 from 2026-11-16) · **Downstream:** PHASE 6 Automation Activation
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
-**Order (v1.3.0, <AUTHOR>).** PHASE 5 comes after **all of the chapter's files are finished**: the manuscript, the eBook and the print book (chapter and workbook, verified by <AUTHOR>, `LAYOUT_VERIFIED.md`), the Kindle build, and the audiobook, which is the last step of PHASE 4. Only then is the RAG index built from the final wording; automations (PHASE 6) follow. A chapter whose files are still changing is not indexed.
+**Order (v1.3.0, <AUTHOR>).** PHASE 5 comes after **all of the chapter's files are finished**: the manuscript, the eBook and the print book (chapter and workbook, verified by <AUTHOR>, `LAYOUT_VERIFIED.md`), and the Kindle build. (From 2026-11-16 the audiobook is recorded later, in PHASE 6.9.) Only then is the RAG index built from the final wording; automations (PHASE 6) follow. A chapter whose files are still changing is not indexed.
 
 **v4.2 changes (2026-09-30 governed cloud track):**
 - **Track C can embed through a governance gateway** (`cloud.embeddingProvider: "governance-gateway"`, recommended). PHASE 5 then holds a gateway credential instead of model credentials, and the gateway runs its checks before calling the embedding deployment. Direct Azure OpenAI stays available for setups without a gateway.
@@ -298,6 +298,8 @@ Triggers (rename any older one to `*_superseded_<timestamp>.md`):
 - `RAG/Trigger/RAG_CLOUD_READY.md` when Track C passes: container, `current.json` path, model, dims, counts, timestamp.
 - `RAG/Trigger/RAG_READY.md` when the overall gate passes: paths of the deliverables, each track's status, timestamp.
 - Otherwise `RAG/Trigger/RAG_INCOMPLETE.md` listing the blockers per track.
+
+**Freeze chapters (#42):** the manuscript is read-only after its final lock (PHASE 2.5 §9). This phase reads it and never proposes a change to it; a content issue found while chunking or testing retrieval goes to the next-edition log, and a major error to the errata step.
 
 Re-run rule: when PHASE 4 Part 0 re-syncs the manuscript (eBook re-export), PHASE 5 re-runs for that chapter, and **both** enabled tracks are rebuilt from the new chunk set. An index built from an older chunk set is stale. PHASE 6 §3G runs this re-run nightly for any chapter whose inputs changed, then notifies `cloud.consumers`.
 

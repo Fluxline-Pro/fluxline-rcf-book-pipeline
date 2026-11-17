@@ -45,7 +45,7 @@ Parts A to D, F to I, K and L are written inside the prompt block that the autho
 
 **K. Privacy / source check.** Before uploading, confirm the files contain no secrets, credentials, API keys, private keys, signing files, tokens, bank or tax data, customer lists, or unrelated personal or business data. Upload only the files in the manifest. Manuscripts you have not published are your own unreleased work: uploading them to your own Copilot account is your decision, and you should know that your Microsoft account's data and privacy settings apply.
 
-**L. Human approval.** Every finding is a recommendation. `<AUTHOR>` accepts, changes, or rejects each one. A finding that changes the manuscript goes through PHASE 2.5 (before the lock) or `MANUSCRIPT_REVISED.md` (after it).
+**L. Human approval.** Every finding is a recommendation. `<AUTHOR>` accepts, changes, or rejects each one. A finding that changes the manuscript goes through PHASE 2.5 (before the lock) or `MANUSCRIPT_REVISED.md` (after it). After a freeze chapter's final lock (PHASE 4 Part 0, #42), a content finding goes to the next-edition log instead, and only a major error goes through the errata step (PHASE 2.5 §9).
 
 ## Status labels
 

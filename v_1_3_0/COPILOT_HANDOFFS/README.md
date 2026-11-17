@@ -55,7 +55,7 @@ Claude consumes the saved report ◀── you save it where it says ◀── C
 1. Every Copilot step is started by `<AUTHOR>`.
 2. Copilot's output is evidence or a draft. The source-of-truth order stays: canonical manuscript → glossary/terminology lock → approved metadata and registries → derived artifacts → publication builds.
 3. A Copilot `PASS` is not a certification and cannot open a gate by itself.
-4. Wording changes go through the decisions log (PHASE 2.5) or `MANUSCRIPT_REVISED.md`. Never straight from Copilot into a file.
+4. Wording changes go through the decisions log (PHASE 2.5) or `MANUSCRIPT_REVISED.md`. Never straight from Copilot into a file. After a freeze chapter's final lock (#42), only an errata section changes the manuscript; other findings go to the next-edition log (PHASE 2.5 §9).
 5. Copilot never replaces a deterministic validator or a human check the workflow already has.
 6. A report whose manuscript hash or file list does not match is stale and rejected.
 7. Do not upload secrets or unrelated data (see the standard, part K).

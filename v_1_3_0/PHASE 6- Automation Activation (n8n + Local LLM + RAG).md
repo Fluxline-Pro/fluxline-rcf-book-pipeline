@@ -3,6 +3,8 @@
 > **Pipeline position:** PHASE 6 of 7 (Automation) · **Upstream gate:** `RAG/Trigger/RAG_READY.md` exists · **Downstream:** PHASE 6.5 Publication QA
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
+**2026-11-16 (#42; unreleased):** for a freeze chapter the manuscript is read-only after its final lock (PHASE 2.5 §9). Workflows and their tests read it and never propose a change to it; a content issue they surface goes to the next-edition log, `_BookGovernance/NextEdition/NEXT_EDITION_LOG.md`.
+
 **v4.1 changes (2026-09-30 governed cloud track):**
 - New **§3G nightly RAG refresh** (book-level): at `<RAG_REFRESH_TIME>`, re-runs PHASE 5 for chapters whose inputs changed, keeps ChromaDB and the cloud store in sync, then notifies cloud consumers. It is the only workflow allowed to write to the vector stores (Test 5).
 - **§4B through the gateway:** when PHASE 5 uses `governance-gateway`, cloud query embeddings and cloud chat also go through the gateway. No workflow calls a model endpoint directly.

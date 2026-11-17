@@ -23,7 +23,7 @@ All five must hold. If any fails, write nothing and tell <AUTHOR> which one.
 2. **It is newer than `_BookGovernance/Audit/Trigger/AUDIT_CLEAR.md`.** A DOCX older than the book audit hasn't been through PASS 7 and the polish window (PHASE 1, "Polish window").
 3. **The figures are finished.** Every figure in the FigureRegistry is final and saved in the chapter's `Figures/` folder **before** the eBook and print builds: the RGB master in `Figures/RGB/` (PNG for illustrations, JPG for photos) and the CMYK print TIFF in `Figures/CMYK/`. A missing print TIFF doesn't stop the build, but it fails the figure check.
 4. **The print template exists:** `<PRINT_TEMPLATE_BOOK>` in `<PRINT_DSM_ROOT>`. The IDML in that folder is always taken as current: there is no version to choose and nothing to back up.
-5. **The manuscript is locked (release v1.2.5).** `<CH_ROOT>/Manuscript/Trigger/MANUSCRIPT_LOCKED.md` exists (PHASE 2.5), its DOCX hash matches the DOCX, and no `MANUSCRIPT_REVISED.md` section is newer than it.
+5. **The manuscript is locked (release v1.2.5).** `<CH_ROOT>/Manuscript/Trigger/MANUSCRIPT_LOCKED.md` exists (PHASE 2.5), its DOCX hash matches the DOCX (or the hash of a newer `MANUSCRIPT_SYNCED.md`; PHASE 2.5 section 0). A `MANUSCRIPT_REVISED.md` newer than the lock is informational on its own; the hashes decide (#48).
 
 `DESIGN_READY.md` is **not** required. The print build reads the manuscript, not the Claude Design packet, so it can start as soon as the DOCX is final.
 

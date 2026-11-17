@@ -23,6 +23,7 @@ Tick each line. A line is a pass only if it happened with no hand-edited trigger
 - [ ] Waiver path: repeat the stage with a `research` waiver and a Claude backup run; `RESEARCH_CLEAR.md` records the waiver and the backup, not a Copilot review.
 - [ ] **`MANUSCRIPT_REVISED` loop:** change one sentence (a claim-strengthening one) with an approval line. Expected, with each step started by its file (`RERUN_P1.md`, then `RERUN_P2.md`, then `RERUN_P2.5.md`, in that order, since saving the REVISED file wakes nothing): PHASE 1 for the changed section, PHASE 2, a delta audit, a Copilot re-run for that section (`Copilot_Research_Handoff_<n>.md`), a new lock with new hashes, the old lock renamed `_superseded_`. Then change one spelling: no Copilot re-run.
 - [ ] Reference fix after the lock goes through `MANUSCRIPT_REVISED`, not InDesign.
+- [ ] **Freeze chapter, pre-lock checks (#42):** a second sandbox lock with a `freezePilot:` line. PHASE 2.5 §3.1b runs every content check; each item reaches you with the heading, the sentence and the suggestion, plus a review-copy DOCX; one "apply for me" item is applied by Claude, one voice item you edit in Word; the MD follows with `docx_md_sync.py`; the decisions log is the only report. Rewrite a cited sentence after that: only it goes to a scoped Copilot re-review.
 - [ ] **The Ch1 to Ch5 path:** a second sandbox chapter marked protected; PHASE 2.5 run with Claude in chat produces a first lock with `copilotRequired: no` (audit, decisions, references finished, DOCX = MD; no `RESEARCH_CLEAR.md`); then a "Copilot research retrofit" `MANUSCRIPT_REVISED` section runs the two-stage research and writes a new lock.
 
 ### B. Figures, eBook, print (PHASE 3, 3.5, 3W)
@@ -39,13 +40,18 @@ Tick each line. A line is a pass only if it happened with no hand-edited trigger
 - [ ] Re-export the eBook PDF after a fix: Step 0F re-opens for the changed pages.
 - [ ] 0P closes. Create `LAYOUT_VERIFIED.md` and `RERUN_P4.md`. Test the negative cases: an older `LAYOUT_VERIFIED.md` than the PDF is stale; a superseded `WORKBOOK_READY.md` blocks; the email names each.
 - [ ] Congruency pass 1 passes; Kindle builds only after that. Optional Copilot print and Kindle reviews are run once each.
-- [ ] Narration script is rebuilt from the Kindle output; congruency pass 2 passes after the recording (a stand-in recording is fine for the test). **The audiobook is the last step** before PHASE 5.
+- [ ] Congruency pass 2 passes after the Kindle build, with no recording yet (2026-11-16: the audiobook is PHASE 6.9, below).
+- [ ] **Final lock (#42, freeze chapter):** make one small edit in the print IDML and the eBook before the export; Part 0 syncs it and writes `MANUSCRIPT_SYNCED.md` with `finalLock: yes`. After the Kindle build, re-export the eBook PDF with a deliberate wording change: Part 0 must not accept it (`Keep manuscript` or errata only).
 
 ### D. Knowledge, automation, release (PHASE 5 to 7)
 
 - [ ] PHASE 5 starts only after all the files above are finished; the RAG chunks match the final wording (no earlier version).
 - [ ] PHASE 6 produces drafts only; nothing touches the manuscript or the finished files.
 - [ ] PHASE 6.5: deterministic checks, Claude's QA, then the Copilot cross-format review; the Copilot `PASS` alone does not produce Publishing Ready.
+- [ ] PHASE 6.9 (2026-11-16): it starts per chapter (#43): after 6.5 passes and congruency pass 2 is PASS, even with other chapters unsynced, the narration script is rebuilt from the Kindle output; a stand-in recording of the whole chapter gets its audiobook QA and the congruency PHASE 6.9 pass; `AUDIOBOOK_READY.md` is written, and PHASE 7 waits for it.
+- [ ] **Read-only after the final lock (#42):** in `RERUN_P6.5.md`, point 6.5 at one sentence as a content issue (a casing slip): 6.5 adds a row to `_BookGovernance/NextEdition/NEXT_EDITION_LOG.md`, lists it under "Next-edition items", proposes no manuscript edit, and still certifies Publishing Ready.
+- [ ] **Errata loop (#42):** mark one log row `Major?: yes: claim/citation` and approve an `Errata — claim/citation: NE-<nnn>` section. Expected: DOCX edit, MD sync, delta re-lock (`freezePilot:` carried forward), eBook re-export, a new final lock naming the errata ID, Part A, 5, 6 and 6.5 again; `AUDIOBOOK_READY.md` is reported stale by the release check, and 6.9 asks for a full re-record. A REVISED section without the `Errata` title is not acted on: Claude asks for it to be archived and its item logged, and the gates report the lock stale until it is.
+- [ ] **House rules of 2026-11-16/17 (#47):** (a) relink a recorded chapter's Kindle DOCX (links only). Expected: congruency pass 2 still PASS, the 6.5 Kindle re-check finds the links both ways, 6.9 keeps the build time, updates only `kindleDocxSha256`, and writes a new `AUDIOBOOK_READY.md` with no re-record. (b) A workbook print PDF with PART thumb tabs: their safe-zone warnings are recorded as expected and don't hold 6.5 or PHASE 7. (c) Archive an older report: it lands in `Chapters/<ChapterName>/ARCHIVE/<YYYYMMDD>/<subfolder>/` with a manifest line, and no watcher fires on it.
 - [ ] PHASE 7: the release check pre-fills; you sign; the chapter is Published.
 
 ## Record the result

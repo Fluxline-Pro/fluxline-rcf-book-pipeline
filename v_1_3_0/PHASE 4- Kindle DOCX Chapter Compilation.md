@@ -1,20 +1,24 @@
-# PHASE 4: Final-Wording Builds — Manuscript Sync, Print QA, Kindle DOCX, Audiobook (v3.4)
+# PHASE 4: Final-Wording Builds — Manuscript Sync, Print QA, Kindle DOCX (v3.4)
 
 > **Pipeline position:** PHASE 4 of 7 (Kindle) · **Upstream gate:** a current `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` (PHASE 2.5, release v1.2.5) **and** the final eBook PDF is uploaded, which completes PHASE 3.5 (v3.3); `DESIGN_READY.md` is written by PHASE 3.5 or, if absent, attested by the upload · **Downstream:** PHASE 5 RAG Rebuild
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
+**2026-11-16 (<AUTHOR>'s decision; unreleased): the audiobook leaves PHASE 4.** Part C (narration script, XTTS draft, recording, audiobook QA) and the book-level audiobook set (B4b) moved to **PHASE 6.9** (`PHASE 6.9- Audiobook (Narration Script + Recording).md`), after PHASE 6.5, so the audio is recorded once, in full, from text that no later check changes. Congruency pass 2 now runs after Part A and no longer includes the narration script or the audio. The release notes below are kept as history.
+
+**2026-11-16 (<AUTHOR>'s decision, #42; unreleased): for a freeze chapter, Part 0 is the final lock.** A freeze chapter is one whose `MANUSCRIPT_LOCKED.md` carries a `freezePilot:` line (PHASE 2.5 §5). Its content checks all ran before the lock (PHASE 2.5 §3.1b). Part 0 syncs <AUTHOR>'s small PHASE 3 / 3.5 layout edits back to the manuscript **once**, and writes `MANUSCRIPT_SYNCED.md` with `finalLock: yes` (0.8). Kindle builds from that text. From then on the manuscript is read-only: a Part 0 re-run only confirms (0.8), 0R and B0 findings go to the next-edition log, and only a major error reopens the chapter, through the errata step (PHASE 2.5 §9). Chapters without the line keep the rules below unchanged.
+
 **Release v1.2.6 (2026-10-26): Step 0C, the congruency check.**
 - **New Step 0C** (section 0C below), after Part 0, 0R, 0G and 0P and before Part A. One deterministic report says whether the manuscript, the eBook PDF, the print PDF, the narration script and the workbook say the same thing, and whether every file is current against `MANUSCRIPT_LOCKED.md`. Verdict **PASS** or **HOLD**. Part A starts only on PASS (pass 1).
-- **Pass 2** runs after Part C. It adds the Kindle DOCX and the audiobook QA, and gates PHASE 5 and 6.5.
+- **Pass 2** runs after Part C. It adds the Kindle DOCX and the audiobook QA, and gates PHASE 5 and 6.5. (From 2026-11-16 it runs after Part A and adds the Kindle DOCX only; the script and audio checks moved to PHASE 6.9.)
 - **Why:** each pair of formats was already checked on its own (Part 0: eBook against manuscript; 0P: print against eBook; Part C: audio against script). Nothing put them in one result, and three things were not checked at all: the narration script against the locked manuscript, the freshness of every file against the lock, and the book's exercise numbers and titles against the workbook.
-- Chapters that predate the lock (Ch1 to Ch5 of the first book) get the report only; it never gates them.
+- Chapters that predate the lock (Ch1 to Ch5 of the first book) get the report only; it never gates them. (2026-11-16: Ch1 to Ch5 now have locks, so the check covers them in full. They are still protected, so the runner never processes them, and <AUTHOR> acts on a HOLD with Claude in chat.)
 
 **Release v1.2.5 (2026-10-24): the manuscript is locked before design (PHASE 2.5), and B0 is reduced.**
-- **Order of work (v1.3.0, author decision).** Everything is made solid first, then the derived formats: (1) the manuscript DOCX and MD in sync and locked; (2) the **eBook** and the **print book**, for the chapter **and its workbook**, verified by <AUTHOR> in InDesign (Step 0V); (3) only then **Kindle** (Part A); (4) the **audiobook** (Part C) last, from the Kindle output; (5) PHASE 5. Kindle and the audiobook never start on a layout that is still changing.
-- **The lock gates Part 0, Part A, and Part C.** Each needs `Manuscript/Trigger/MANUSCRIPT_LOCKED.md`. Part 0 checks it is current (0.1); Step 0 and Part C check the hashes again.
+- **Order of work (v1.3.0, author decision).** Everything is made solid first, then the derived formats: (1) the manuscript DOCX and MD in sync and locked; (2) the **eBook** and the **print book**, for the chapter **and its workbook**, verified by <AUTHOR> in InDesign (Step 0V); (3) only then **Kindle** (Part A); (4) PHASE 5, 6 and 6.5; (5) the **audiobook** last of all, in PHASE 6.9 (2026-11-16), from the Kindle output. Kindle and the audiobook never start on a layout that is still changing.
+- **The lock gates Part 0 and Part A** (and, from 2026-11-16, PHASE 6.9). Each needs `Manuscript/Trigger/MANUSCRIPT_LOCKED.md`. Part 0 checks it is current (0.1); Step 0 and PHASE 6.9 check the hashes again.
 - **Part 0 expects no differences.** Any difference between the final eBook PDF and the locked manuscript is a post-lock change, so S1 and S2 differences now need <AUTHOR>'s decision too, in `_Pipeline/P4_DECISIONS.md` (0.3–0.5).
 - **B0 (PHASE 0.9 Mode D) is a consistency and delta check,** not a full content audit: a cross-chapter consistency pass over the whole book, plus a check of what changed in each chapter since its lock. It doesn't reopen a manuscript except for a genuine cross-chapter conflict, and then only with <AUTHOR>'s approval.
-- **Part C is recorded only after the lock,** so the audiobook is never recorded from text that the content audit could still change.
+- **The audiobook is recorded last:** after the lock and, from 2026-11-16, after PHASE 6.5 too (PHASE 6.9), so it is never recorded from text that a later check could still change.
 
 **Release v1.1.3 (2026-10-21):** Part 0 has a new stop in 0.1. If `Manuscript/Trigger/MANUSCRIPT_REVISED.md` is newer than the eBook PDF, Part 0 asks for a re-export instead of syncing, which would undo the revision. There is also a note on the PHASE 3.5A print build.
 
@@ -79,7 +83,7 @@ Transform the governed, design-validated PHASE 1–3.5 chapter outputs into a **
 | Deliverable | Path |
 |---|---|
 | Congruency report, pass 1 (before Part A) | `<BOOK_ROOT>/_BookGovernance/CongruencyQA/<ChapterName>_Congruency.md` + `.json` |
-| Congruency report, pass 2 (after Part C) | `<BOOK_ROOT>/_BookGovernance/CongruencyQA/<ChapterName>_Congruency_Pass2.md` + `.json` |
+| Congruency report, pass 2 (after Part A) | `<BOOK_ROOT>/_BookGovernance/CongruencyQA/<ChapterName>_Congruency_Pass2.md` + `.json` |
 | Differences <AUTHOR> has reviewed | `<BOOK_ROOT>/_BookGovernance/CongruencyQA/<ChapterName>_Accepted.json` |
 | Manual trigger (optional) | `<CH_ROOT>/Manuscript/Trigger/RUN_CONGRUENCY.md` (Parts and Lessons: `<PART_DIR>/Trigger/RUN_CONGRUENCY.md`) |
 
@@ -93,22 +97,16 @@ Transform the governed, design-validated PHASE 1–3.5 chapter outputs into a **
 | Kindle figure images (Kindle-sized copies) | `<CH_ROOT>/Kindle/figures/<ChapterName>_Fig<#>_<Name>.jpg` |
 | PHASE 4 checklist | `<CH_ROOT>/<ChapterName>_PHASE4_KindleChecklist.md` |
 
-### Part C — per chapter, after Part A (the audiobook is recorded from the Kindle output)
+### Part C — moved to PHASE 6.9 (2026-11-16)
 
-| Deliverable | Path |
-|---|---|
-| Narration script built from the Kindle output | `<CH_ROOT>/Audiobook/<ChapterName>_NarrationScript.md` (pronunciation guide and segment markers kept) |
-| XTTS draft (optional pacing guide; never published) | `<CH_ROOT>/Audiobook/Drafts/<NN>_<ChapterName>_XTTS_Draft.mp3` |
-| **Final narration** (<AUTHOR>, Adobe Audition, manual) | `<CH_ROOT>/Audiobook/<NN>_<ChapterName>.mp3` (NN = book running order, matching FrontMatter numbering) |
-| Audiobook check (in the PHASE 4 checklist) | `<CH_ROOT>/<ChapterName>_PHASE4_KindleChecklist.md` → `audiobookStatus` |
+The narration script, XTTS draft, final narration and audiobook check are PHASE 6.9 deliverables.
 
-### Part B — book level (once every chapter has passed Part A and Part C)
+### Part B — book level (once every chapter has passed Part A)
 
 | Deliverable | Path |
 |---|---|
 | Cross-chapter consistency + since-lock delta check (PHASE 0.9 Mode D, reduced in v1.2.5) | `<BOOK_ROOT>/_BookGovernance/Audit/<RUN_ID>/` + `Audit/Trigger/AUDIT_FINAL_CLEAR.md` |
 | **<BOOK>_KINDLE_EBOOK** | `<BOOK_ROOT>/_BookPublication/<BOOK>_KINDLE_EBOOK/` |
-| **<BOOK>_AUDIOBOOK** (ordered MP3 set + track list) | `<BOOK_ROOT>/_BookPublication/<BOOK>_AUDIOBOOK/` |
 
 ---
 
@@ -120,7 +118,9 @@ Transform the governed, design-validated PHASE 1–3.5 chapter outputs into a **
 
 **This is the one sanctioned manuscript edit after the lock (PHASE 2.5), besides an approved `MANUSCRIPT_REVISED.md` revision.** It records <AUTHOR>'s own layout-stage wording back into the manuscript. It never introduces new wording, and it follows the same paper trail as a governance fix: back up, log, version, and escalate anything uncertain.
 
-**The manuscript is final before PHASE 1 (release v1.1.3).** <AUTHOR> settles the wording in the DOCX before PHASE 1, and the eBook (Claude Design) and print (InDesign, from the PHASE 3.5A import) are built from it. Part 0 therefore expects **no differences**. It still runs as the safety check, and any difference it finds is reported and classified as before, so a layout-time edit can't slip past unrecorded.
+**For a freeze chapter (#42), this sync is the final lock.** It is the one time <AUTHOR>'s small PHASE 3 / 3.5 edits reach the manuscript. Print edits reach it through the eBook: <AUTHOR> carries an edit made in the print IDML into the eBook before the final eBook export, and 0P's drift report checks that the two say the same. A print-only layout difference ("on the next page", a moved marker) stays in `<ChapterName>_PrintOnlyDifferences.md`. The chapter's workbook manuscript freezes too (2026-11-17), but its sync stays in PHASE 3W W3, whose `WORKBOOK_READY.md` carries the workbook's own `finalLock:` line; Step 0V needs it current before Part A, so both final locks stand before Kindle.
+
+**The manuscript is final before PHASE 1 (release v1.1.3).** (For a freeze chapter, #42, Part 0 is instead the routine way <AUTHOR>'s small layout edits reach the manuscript, as above, so it may find differences.) <AUTHOR> settles the wording in the DOCX before PHASE 1, and the eBook (Claude Design) and print (InDesign, from the PHASE 3.5A import) are built from it. Part 0 therefore expects **no differences**. It still runs as the safety check, and any difference it finds is reported and classified as before, so a layout-time edit can't slip past unrecorded.
 
 **Revisions and the print build (release v1.1.3).** Before the eBook lock, <AUTHOR> may revise the DOCX through `Manuscript/Trigger/MANUSCRIPT_REVISED.md` (PHASE 1, "Revision trigger"). The eBook PDF must already carry such a revision, so check it first (0.1). Part 0 still syncs the MD and the DOCX to the eBook PDF; that sync is the only time the pipeline writes to the manuscript, and the print build (PHASE 3.5A) never does. If Part 0 changes the DOCX after a 3.5A build, the build's manifest no longer matches: re-run 3.5A if print layout hasn't started, otherwise carry the change into the print document (Part 0P catches anything missed).
 
@@ -137,7 +137,7 @@ If the file is **missing**, empty, cannot be opened, or has no extractable text 
 
 PHASE 5, 6, 6.5, and 7 cannot start for a chapter without a PHASE 4 `PASS`, so a missing PDF halts the chapter from PHASE 4 onward. Part B cannot start while any chapter is blocked here.
 
-**Also a hard stop: the manuscript must be locked (release v1.2.5).** `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` must exist, the DOCX and MD SHA-256 hashes it records must match the files, and no `MANUSCRIPT_REVISED.md` section may be newer than it. If any of these fails, write `MANUSCRIPT_SYNC_INCOMPLETE.md` stating `Blocked: manuscript not locked (PHASE 2.5)` or `Blocked: manuscript changed after its lock`, with the hashes found, set `gateStatus: FAIL`, and stop. The fix is PHASE 2.5 (or its delta audit after an approved revision), never a hand edit here.
+**Also a hard stop: the manuscript must be locked (release v1.2.5).** `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` must exist, the DOCX and MD SHA-256 hashes of record (PHASE 2.5 section 0: the lock's, or those of a `MANUSCRIPT_SYNCED.md` newer than the lock that an earlier Part 0 run wrote with <AUTHOR>'s decisions) must match the files. A `MANUSCRIPT_REVISED.md` newer than the lock is informational on its own; only the hashes make the lock stale (#48), so an identical-content restore or a status-word tidy of that file does not make the lock stale. (The separate stop below, a revision newer than the eBook PDF, still goes by the file's time.) If any of these fails, write `MANUSCRIPT_SYNC_INCOMPLETE.md` stating `Blocked: manuscript not locked (PHASE 2.5)` or `Blocked: manuscript changed after its lock`, with the hashes found, set `gateStatus: FAIL`, and stop. The fix is PHASE 2.5 (or its delta audit after an approved revision), never a hand edit here.
 
 Also stop, and ask, if:
 - **`Manuscript/Trigger/MANUSCRIPT_REVISED.md` is newer than the eBook PDF** (v1.1.3). The manuscript was revised after this eBook was exported, so the PDF doesn't carry the revision, and syncing to it would undo the revision. Write `MANUSCRIPT_SYNC_INCOMPLETE.md` with `Blocked: manuscript revised after the eBook export (<revision date>) — re-export the eBook PDF`, list the revised sections from the trigger file, and ask <AUTHOR> to bring them into the eBook InDesign book and re-export. Part 0 runs again when the new PDF lands.
@@ -224,14 +224,14 @@ For each item <AUTHOR> chooses:
 
 - Increment `chapterVersion` in `Governance/<ChapterName>_VersionMetadata.json` (patch level: e.g. `1.0` → `1.0.1`), set `revisionDate`, and add a `majorChanges` entry: `"Manuscript synced to final eBook PDF: <n> wording changes, <n> structural"`. If nothing changed, leave the version alone and record `no differences`.
 - Update the manuscript entries in `Governance/<ChapterName>_ArtifactManifest.json`.
-- **Downstream impact list.** Search the chapter's derived artifacts for the old wording of every applied change and list each hit in the sync report: ReviewPacket, ReferenceGuides, Workbook (the exercise DOCX, and every exercise ID the manuscript mentions against `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json`; see PHASE 3W §3. If the registry, or this chapter's entries, don't exist yet, record **"exercise-ID check pending (no registry)"** in the sync report. That is non-blocking here, because PHASE 3W W3 must create the entries and run the check before `WORKBOOK_READY.md` is written), Training, Slides, InDesign prep (pull quotes, sidebars), Audiobook narration script and recorded MP3 (and any re-record passages), eBook HTML blocks, Marketing Intake (claims registry, terminology lock, voice samples), and the PHASE 1 RAG packet. Do **not** edit them here. PHASE 4 Part A reads the updated manuscript, and PHASE 5 rebuilds RAG from it; the others go to <AUTHOR> as proposed follow-ups. Mark verbatim quotations (pull quotes, voice samples, claims) and narration as **must fix before release**; they are checked again in PHASE 6.5 and PHASE 7.
+- **Downstream impact list.** Search the chapter's derived artifacts for the old wording of every applied change and list each hit in the sync report: ReviewPacket, ReferenceGuides, Workbook (the exercise DOCX, and every exercise ID the manuscript mentions against `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json`; see PHASE 3W §3. If the registry, or this chapter's entries, don't exist yet, record **"exercise-ID check pending (no registry)"** in the sync report. That is non-blocking here, because PHASE 3W W3 must create the entries and run the check before `WORKBOOK_READY.md` is written), Training, Slides, InDesign prep (pull quotes, sidebars), Audiobook narration script, eBook HTML blocks, Marketing Intake (claims registry, terminology lock, voice samples), and the PHASE 1 RAG packet. Do **not** edit them here. PHASE 4 Part A reads the updated manuscript, and PHASE 5 rebuilds RAG from it; the others go to <AUTHOR> as proposed follow-ups. Mark verbatim quotations (pull quotes, voice samples, claims) as **must fix before release**; they are checked again in PHASE 6.5 and PHASE 7. Narration items are cleared when PHASE 6.9 rebuilds the script from the Kindle output. **Freeze chapters (#42): one refresh, after the final lock.** Files that quote the manuscript word for word (training materials, reference guides, marketing intake, callouts and pull quotes, the design packet's copies) are brought in line once, from the final lock Part A builds from (0.8), before PHASE 5. That is their last wording update, so they are not refreshed after each small layout edit between the lock and Part 0.
 - **Print cross-check (<AUTHOR>, evidenced by Part 0P; v3.4).** Cite the latest `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`. Its text drift section shows whether the print PDF carries the same wording as the eBook PDF. <AUTHOR> confirms each remaining difference as print-only, and logs it in `<CH_ROOT>/<ChapterName>_PrintOnlyDifferences.md`, or has it fixed in the print InDesign book. If no print PDF is uploaded yet, record "print cross-check pending (no print PDF)". Part 0 does not block on print; Part A does, for a chapter with a lock (Step 0V). The answer is recorded.
 
 ## 0.7 Chapter audit spot check (PHASE 0.9, Mode P)
 
 Run this before writing the sync report. If Part 0 changed any wording, run PHASE 0.9 Pass 1 → Pass 2 on the synced manuscript against the book ledger and `Audit_CanonicalTerms.json`, update the ledger with this chapter's entries, and add the result to the sync report (counts by severity, run ID). If nothing changed, record "spot check not needed".
 
-A **blocking** finding is handled like an S3 item: <AUTHOR> decides; a wording fix is a `MANUSCRIPT_REVISED.md` change (PHASE 2.5 section 0, path 2); then the layouts carry it, the PDF is re-exported, and Part 0 re-runs. Major and minor findings are carried into the Mode D final delta.
+A **blocking** finding is handled like an S3 item: <AUTHOR> decides; a wording fix is a `MANUSCRIPT_REVISED.md` change (PHASE 2.5 section 0, path 2); then the layouts carry it, the PDF is re-exported, and Part 0 re-runs. Major and minor findings are carried into the Mode D final delta. For a freeze chapter (#42) this check runs before the final lock is written, so <AUTHOR> decides major and minor findings here too; anything left over goes to the next-edition log (PHASE 2.5 §9), not to Mode D.
 
 ## 0.8 Sync report and trigger
 
@@ -248,10 +248,20 @@ Save `<CH_ROOT>/Manuscript/<ChapterName>_ManuscriptSync_<YYYYMMDD_HHMM>.md`:
 - `syncStatus: SYNCED | NO_DIFFERENCES | BLOCKED`
 
 Then write the trigger (renaming any older one to `*_superseded_<timestamp>.md`):
-- `Manuscript/Trigger/MANUSCRIPT_SYNCED.md` when `syncStatus` is `SYNCED` or `NO_DIFFERENCES`: no S3 item is pending, no blocking step-0.7 audit finding is open, MD and DOCX match the PDF and each other, and the version is recorded. From release v1.2.5 it also records the DOCX and MD SHA-256 hashes after the sync, the `MANUSCRIPT_LOCKED.md` it started from, and the post-lock changes <AUTHOR> accepted (count and decision file). With `NO_DIFFERENCES`, the hashes equal the lock's. Step 0 and Part C accept hashes that match either the lock or this file.
+- `Manuscript/Trigger/MANUSCRIPT_SYNCED.md` when `syncStatus` is `SYNCED` or `NO_DIFFERENCES`: no S3 item is pending, no blocking step-0.7 audit finding is open, MD and DOCX match the PDF and each other, and the version is recorded. From release v1.2.5 it also records the DOCX and MD SHA-256 hashes after the sync, the `MANUSCRIPT_LOCKED.md` it started from, and the post-lock changes <AUTHOR> accepted (count and decision file). With `NO_DIFFERENCES`, the hashes equal the lock's. Step 0 and PHASE 6.9 accept hashes that match either the lock or this file.
 - `Manuscript/Trigger/MANUSCRIPT_SYNC_INCOMPLETE.md` otherwise, listing what is blocking.
 
-**Re-run rule:** if <AUTHOR> re-exports the eBook PDF after further edits, at any point up to PHASE 7, Part 0 runs again for that chapter, PHASE 4 Part A is rebuilt from the updated manuscript, and the Part C re-record rule applies.
+**The final-lock line (freeze chapters, 2026-11-16, #42).** Tools read `MANUSCRIPT_SYNCED.md` line by line, so `docxSha256:`, `mdSha256:` and `hashesEqualLock:` each stay on a line of their own. When the chapter's lock carries `freezePilot:`, the first `MANUSCRIPT_SYNCED.md` Part 0 writes for it also carries:
+
+```
+finalLock: yes — <ISO date-time>, PHASE 4 Part 0 (#42); read-only from here, errata only (PHASE 2.5 §9)
+```
+
+That line is the final lock; there is no separate file. **"Once" means once before Kindle** (confirmed by <AUTHOR>, 2026-11-17). "Part A has built Kindle from it" means `Kindle/<ChapterName>_Kindle.docx` exists and is newer than the standing `MANUSCRIPT_SYNCED.md`. Until then: Step 0V is <AUTHOR>'s last look at the layouts, so a re-export made during 0V, before Part A has run, is still part of this Part 0. It may carry small edits, and Part 0 then writes a new final-lock file that supersedes the first. The final lock Part A builds Kindle from is the one that stands. After that, a confirm-only re-run keeps its date and adds `(confirmed <date>)`. An errata re-sync writes a new date and `errata NE-<nnn>`. A chapter without `freezePilot:` writes no `finalLock:` line.
+
+**Re-run rule:** if <AUTHOR> re-exports the eBook PDF after further edits, at any point up to PHASE 7, Part 0 runs again for that chapter, PHASE 4 Part A is rebuilt from the updated manuscript, and PHASE 6.9's stale rule applies (a chapter already recorded is recorded again in full there).
+
+**After Part A has built Kindle from the final lock (#42), a re-run only confirms.** A re-exported eBook PDF (a layout fix, a repaired figure) re-runs Part 0, which must find `NO_DIFFERENCES`. It accepts no wording: a difference is either a layout error (`Keep manuscript`: fix the layout and re-export) or, for a major error, the errata step (PHASE 2.5 §9). `Accept PDF` is not offered.
 
 ## 0R. References re-check (report-only, v3.3)
 
@@ -259,6 +269,7 @@ Right after `MANUSCRIPT_SYNCED.md` is written, re-run the references check (PHAS
 - **Output:** `_BookGovernance/References/<ChapterName>_ReferencesCheck.md`.
 - **Findings:** each critical or major finding goes to <AUTHOR>.
   - A fix is a `MANUSCRIPT_REVISED.md` change (DOCX first, delta audit, new lock; PHASE 2.5 section 0, path 2). The layouts then carry it, the PDF is re-exported, and Part 0 re-runs.
+  - **Freeze chapters (#42):** 0R runs after the final lock is written, and the references were finished before the lock, so a finding goes to the next-edition log. A citation that doesn't exist, doesn't resolve or doesn't support its sentence is a major error: errata step (PHASE 2.5 §9).
   - Findings don't block Part A. They are carried to PHASE 6.5 and PHASE 7.
   - Record the counts in the sync report.
 
@@ -327,9 +338,11 @@ Keep one print PDF per folder. Rename an older export to `*_superseded_<timestam
 
 The layout checks are heuristics: they point at places to look, not at certain faults.
 
+**Expected flags (workbook print, 2026-11-16/17, #47; MASTER section 10).** This applies to the workbook print PDF only, not the chapter print book. The workbook's PART thumb tabs bleed by design, so safe-zone warnings on them are expected and count as accepted by house rule, with no per-item note; so are runts in prompt lines and the colour step-number buttons. The check still flags them; they are recorded as expected, not open (PHASE 3W W2b). A layout error (for example text across the trim) is never covered, and any other layout problem is still raised.
+
 **What to do with findings:**
 - **Text difference, print is wrong:** fix the print InDesign book and re-export the print PDF.
-- **Text difference, print is right** (the wording should reach the manuscript): fix the eBook InDesign book and re-export the eBook PDF. Part 0 re-syncs the manuscript (0.5's "Accept the PDF wording" path), and 0P re-runs.
+- **Text difference, print is right** (the wording should reach the manuscript): fix the eBook InDesign book and re-export the eBook PDF. Part 0 re-syncs the manuscript (0.5's "Accept the PDF wording" path), and 0P re-runs. For a freeze chapter (#42) this works only before Kindle (0.8); after Part A has built from the final lock, the manuscript is the reference, so the print is the one fixed, unless the difference shows a major error (errata, PHASE 2.5 §9).
 - **Text difference that belongs only in print** (e.g. a page reference): <AUTHOR> logs it in `<ChapterName>_PrintOnlyDifferences.md`, and the next run skips it.
 - **Layout error or warning:** fix it in the print InDesign book and re-export, or, for a warning, <AUTHOR> accepts it in writing (in the PHASE 7 checklist, beside the item).
 
@@ -346,7 +359,7 @@ Reports: `_BookGovernance/PrintQA/Workbook_<eBook stem>_PrintQA.md` or `Workbook
 **Gate:** 0P is non-blocking for Part 0. From v1.3.0 it must be **closed before Part A** for a chapter that has a lock (Step 0V below), and, for every section, before PHASE 6.5 and PHASE 7 (a later print re-export re-opens it):
 - the latest report is newer than both PDFs;
 - it shows **0** text differences to check and **0** layout errors;
-- every minor text difference and every warning is fixed, logged as print-only, or accepted by <AUTHOR>.
+- every minor text difference and every warning is fixed, logged as print-only, or accepted by <AUTHOR> (the thumb-tab, prompt-line runt and step-button warnings W2b records as expected count as accepted, 2026-11-16/17, #47).
 
 Record the latest 0P counts in the PHASE 4 checklist.
 
@@ -358,7 +371,7 @@ Part 0 itself needs only the final eBook PDF and the manuscript (MD and DOCX); i
 
 ## 0V. Author layout verification (v1.3.0; chapters with a lock)
 
-**Why:** <AUTHOR> is the graphic designer and checks the eBook and the print book (chapter and workbook) in InDesign for final anomalies before anything is derived from them. The Kindle build and the audiobook come from the same words, so they wait until the manuscript (DOCX and MD), the eBook and the print book (and the workbook's) agree and are final. Nothing in this step edits a layout or a manuscript; <AUTHOR> makes any change in InDesign (or in the DOCX, through `MANUSCRIPT_REVISED.md`) and re-exports.
+**Why:** <AUTHOR> is the graphic designer and checks the eBook and the print book (chapter and workbook) in InDesign for final anomalies before anything is derived from them. The Kindle build (and, in PHASE 6.9, the audiobook) comes from the same words, so it waits until the manuscript (DOCX and MD), the eBook and the print book (and the workbook's) agree and are final. Nothing in this step edits a layout or a manuscript; <AUTHOR> makes any change in InDesign (or in the DOCX, through `MANUSCRIPT_REVISED.md`) and re-exports. For a freeze chapter (#42), a small wording edit is made in the layouts only, and the re-export's Part 0 run syncs it (this is still before Kindle, 0.8); a claim, number or citation problem found now goes through errata if it meets the major-error criteria (PHASE 2.5 §9), and to the next-edition log otherwise.
 
 **What <AUTHOR> does:**
 1. Check the chapter's eBook and print layouts, and the workbook's eBook and print layouts if the chapter has a workbook, and fix what needs fixing. If a Copilot print or final-eBook review was run (optional print review; required final eBook review for `copilotRequired: yes`), use its confirmed findings as a checklist; it is not a substitute for your eye.
@@ -378,7 +391,7 @@ acceptedWarnings: <listed in the PHASE 7 checklist> | none
 statement: I checked the eBook and print layouts (chapter and workbook) in InDesign. The wording is final, and the DOCX, MD, eBook and print agree.
 ```
 
-**What the pipeline checks before Part A starts** (any failure writes `Manuscript/Trigger/LAYOUT_VERIFY_INCOMPLETE.md` naming it, and Part A, Part C and PHASE 5 do not start):
+**What the pipeline checks before Part A starts** (any failure writes `Manuscript/Trigger/LAYOUT_VERIFY_INCOMPLETE.md` naming it, and Part A and PHASE 5 do not start):
 - `LAYOUT_VERIFIED.md` exists and is **newer than** the eBook PDF, the print PDF, the workbook PDFs and `MANUSCRIPT_SYNCED.md`; a later export or manuscript change makes it stale (rename it `LAYOUT_VERIFIED_superseded_<timestamp>.md`; <AUTHOR> confirms again).
 - Part 0's `syncStatus` is `SYNCED` or `NO_DIFFERENCES`, with no S3 item pending.
 - DOCX = MD (`docx_md_sync.py` dry run: 0 rewritten, 0 dropped).
@@ -386,13 +399,13 @@ statement: I checked the eBook and print layouts (chapter and workbook) in InDes
 - **The workbook is solid:** `Workbook/Trigger/WORKBOOK_READY.md` is current (not superseded, and the PDF hashes it records match the uploaded workbook PDFs, per PHASE 3W) or `WORKBOOK_NOT_APPLICABLE.md` exists, and the workbook's print QA (PHASE 3W W2b) is closed when the workbook ships print.
 - Any Copilot final eBook review is resolved or waived (Step 0F).
 
-**Then, in order:** Step 0C congruency pass 1 → Part A (Kindle) → Part C (audiobook, **always last**) → congruency pass 2 → PHASE 5. A section without a lock (the first book's Ch1 to Ch5) is not held by this step.
+**Then, in order:** Step 0C congruency pass 1 → Part A (Kindle) → congruency pass 2 → PHASE 5. The audiobook comes last of all, in PHASE 6.9, after PHASE 6.5. Protected sections (Ch1 to Ch5) are run with Claude in chat; the runner never processes them.
 
 ---
 
 ## 0C. Congruency check (Step 0C, pass 1; report-only; v1.2.6)
 
-**When:** after Part 0 (with 0R, 0G and 0P) and Step 0V have finished and before Part A. It needs the sections' inputs to exist: the manuscript (DOCX and MD), the final eBook PDF, and the print PDF. Pass 1 leaves out the narration script: it is rebuilt from the Kindle output in Part C, so it cannot exist in a current form before Part A. Pass 2 checks it.
+**When:** after Part 0 (with 0R, 0G and 0P) and Step 0V have finished and before Part A. It needs the sections' inputs to exist: the manuscript (DOCX and MD), the final eBook PDF, and the print PDF. Passes 1 and 2 leave out the narration script: it is rebuilt from the Kindle output in PHASE 6.9, so it is not current before then. PHASE 6.9's pass checks it.
 
 **What it does** (deterministic, no LLM; `<LOCAL_TOOLS_ROOT>/congruency_check.py <ChapterName> --pass 1`). It reuses the Part 0 text comparison, the 0P print QA result, and the audiobook QA text rules:
 
@@ -401,9 +414,9 @@ statement: I checked the eBook and print layouts (chapter and workbook) in InDes
 | Manuscript DOCX ↔ MD | the canonical DOCX with its replica | differences with the text on each side, and changed numbers |
 | Manuscript ↔ eBook PDF | the same wording as Part 0, normalised | differences with the page |
 | eBook PDF ↔ print PDF | the latest 0P result (0P is re-run if it is older than either PDF) | differences with both page numbers, and the layout error count |
-| Manuscript ↔ narration script (**pass 2 only**, v1.3.0) | what the narrator is told to read | differences with the segment id; narration-only descriptions (figures, the spoken pointer in place of references) show up here and are accepted once |
+| Manuscript ↔ narration script (**pass 3 only**, PHASE 6.9, 2026-11-16; pass 2 in v1.3.0) | what the narrator is told to read | differences with the segment id; narration-only descriptions (figures, the spoken pointer in place of references) show up here and are accepted once |
 | Manuscript ↔ workbook | exercise number and title in the manuscript heading, the exercise registry, the workbook DOCX/MD and the print IDML | any number or title that disagrees |
-| Freshness | every file against `MANUSCRIPT_LOCKED.md` (both hashes and the revision date), or against `MANUSCRIPT_SYNCED.md` when Part 0 changed the manuscript after the lock with <AUTHOR>'s decision and nothing was edited since; a derived file older than the manuscript is listed (pass 1 does not list the narration script; pass 2 does) | the stale-file list |
+| Freshness | every file against `MANUSCRIPT_LOCKED.md` (both hashes; a newer `MANUSCRIPT_REVISED.md` is an informational row, #48), or against a newer `MANUSCRIPT_SYNCED.md` when Part 0 changed the manuscript after the lock with <AUTHOR>'s decision and the manuscript still matches its hashes (the file dates only for a sync with no hash lines); a derived file older than the manuscript is listed, as information when the lock has hashes (the text legs decide) and as a hold only when it has none (passes 1 and 2 do not list the narration script; the PHASE 6.9 pass does) | the stale-file list |
 
 Folios, footnote numbers, figure labels, pull quotes that repeat body text, and text that only moved are not differences.
 
@@ -411,13 +424,13 @@ Folios, footnote numbers, figure labels, pull quotes that repeat body text, and 
 - **PASS:** no stale file, no missing input, and every difference is either gone or accepted.
 - **HOLD:** anything else. The report says why.
 
-**Deciding a HOLD.** <AUTHOR> reads the report and, for each difference, either fixes the file that is wrong (the manuscript through `MANUSCRIPT_REVISED.md`; a layout in InDesign; the script in the Audiobook folder) and re-exports, or accepts it as intended. Accepting is `congruency_check.py <ChapterName> --accept "<reason>"`, which records the currently reported differences in `CongruencyQA/<ChapterName>_Accepted.json`; it applies only to the differences shown in the report, never with `--all`. To accept only some, add `--keys K1,K2` (the Key column of the report). Read each difference first: a wording difference between formats is a real error until you have decided otherwise.
+**Deciding a HOLD.** <AUTHOR> reads the report and, for each difference, either fixes the file that is wrong (the manuscript through `MANUSCRIPT_REVISED.md`; a layout in InDesign; the script in the Audiobook folder) and re-exports, or accepts it as intended. For a freeze chapter (#42) the final-locked manuscript is the reference, so the file that is wrong is the format, unless the difference shows a major error (errata, PHASE 2.5 §9). Accepting is `congruency_check.py <ChapterName> --accept "<reason>"`, which records the currently reported differences in `CongruencyQA/<ChapterName>_Accepted.json`; it applies only to the differences shown in the report, never with `--all`. To accept only some, add `--keys K1,K2` (the Key column of the report). Read each difference first: a wording difference between formats is a real error until you have decided otherwise.
 
 **Numbers.** Each text check also compares numbers by value ("three", "3" and "3rd" agree; "three" and "4" do not). A number that differs while the words around it match is reported as "number differs", with the words before and after. Numbers in the reference list are left to the references check, and in the narration script numbers above 100 (years, page ranges) are skipped, because they are read aloud differently. The check re-runs on its own when an input changes (HOW_TO_RUN, Step 5c).
 
-**Gate:** Part A starts only when the latest pass 1 report for the chapter is PASS and is newer than every input. A chapter without a lock (the first book's Ch1 to Ch5) is checked and reported, and is never held by it.
+**Gate:** Part A starts only when the latest pass 1 report for the chapter is PASS and is newer than every input. A section without a lock is checked and reported, and is never held by it. Ch1 to Ch5 of the first book are locked now (2026-11-16), so the gate applies to them; they are protected, so the runner never processes them, and <AUTHOR> runs Part A for them with Claude in chat.
 
-**Pass 2** (after Part C, Part C step 6) is the same check plus the Kindle DOCX against the manuscript and the audiobook QA result (text match, the lines the transcript flagged, ACX failures, an MP3 older than the script). PHASE 5 and PHASE 6.5 start only on a pass 2 PASS.
+**Pass 2** (after Part A, step 9b) is the same check plus the Kindle DOCX against the manuscript. PHASE 5 and PHASE 6.5 start only on a pass 2 PASS. From 2026-11-16 it no longer includes the narration script or the audiobook QA result; PHASE 6.9's pass checks those.
 
 ---
 
@@ -428,7 +441,7 @@ PHASE 4 depends on finished design work, because Kindle content is built from th
 | Dependency | Source | Produced by |
 |---|---|---|
 | **`MANUSCRIPT_LOCKED.md` exists, and the DOCX and MD hashes match it or the newer `MANUSCRIPT_SYNCED.md`** (release v1.2.5) | `Manuscript/Trigger/` | PHASE 2.5 / PHASE 4 Part 0 |
-| **Step 0C (congruency check, pass 1) is PASS and newer than every input** (v1.2.6; not required for chapters without a lock) | `_BookGovernance/CongruencyQA/` | PHASE 4 Step 0C |
+| **Step 0C (congruency check, pass 1) is PASS and newer than every input** (v1.2.6; not required for a section without a lock) | `_BookGovernance/CongruencyQA/` | PHASE 4 Step 0C |
 | **`MANUSCRIPT_SYNCED.md` exists and is newer than the eBook PDF** | `Manuscript/Trigger/` | PHASE 4 Part 0 |
 | `DESIGN_READY.md` exists: written by PHASE 3.5 with its Kindle Readiness section checked, or attested by the final eBook upload (v3.3), in which case confirm the §13 items here and that every `aiGenerated: true` figure is `approved` and finished (v1.3.0) | `DesignPacket/Trigger/` | PHASE 3.5 §13 / upload |
 | Final manuscript text and version (synced to the eBook PDF) | `Manuscript/`, `Governance/<ChapterName>_VersionMetadata.json` | PHASE 1 / 2, updated in Part 0 |
@@ -492,13 +505,18 @@ Preserve semantic hierarchy, inline emphasis, paragraph spacing, indentation, li
 - Chapter title and number
 - Part / Lesson / Core Value
 - Short chapter summary (ReviewPacket)
-- Optional: 1–2 pull quotes (InDesign prep; verbatim)
+- Optional: 1–2 pull quotes (InDesign prep; verbatim, with no quotation marks around the book's own words; the Quote and Callout styles must not add marks)
 
 ## 4. Insert main manuscript body
 
 - The manuscript text is authoritative (after Part 0, it matches the final eBook PDF); the eBook HTML supplies structure only. If they differ, the manuscript wins, and the difference is logged in the checklist for PHASE 2's owner.
 - Insert figure placeholders or images wherever the FigureRegistry places a figure.
 - Captions come from the Governance FigureRegistry (titles, descriptions).
+- **Linked footnotes (<AUTHOR>, 2026-11-16/17, #47; MASTER section 10).** Every citation marker links to its entry in the chapter's References and the entry links back; every lettered note pointer ("(see Footnote A)") links to its note and back.
+  - Build them as DOCX bookmarks plus internal hyperlinks, never as Word footnote objects.
+  - Ids are chapter-prefixed (for example `ch7-ref-12`, `ch7-ref-12-back`, `ch7-note-a`), so the book package (B2) has no collisions.
+  - A link wraps the existing marker or label and adds no visible text, so the congruency check and the narrated text are unchanged. A rebuild that only adds links changes only `kindleDocxSha256` in the PHASE 6.9 script line, never its build time (PHASE 6.9 step 1).
+  - Until the Kindle builder supports this natively (#46, #49), the links are added after the build, before step 9b (congruency pass 2), and the checklist says so.
 
 ## 5. Insert supporting materials (per build profile)
 
@@ -524,12 +542,16 @@ Title · Heading 1 · Heading 2 · Heading 3 · Body · Quote · Caption · Call
 
 ## 8. Generate the Kindle HTML and metadata files
 
-- `<ChapterName>_Kindle.html`: clean Kindle-safe HTML of the compiled chapter (same content and order as the DOCX)
-- `<ChapterName>_KindleMetadata.json`: chapterNumber, chapterTitle, part, lesson, coreValue, TOC entries, section anchors, figure anchors, alt text, language, version (from VersionMetadata), buildProfile
+- `<ChapterName>_Kindle.html`: clean Kindle-safe HTML of the compiled chapter (same content and order as the DOCX), with the linked footnotes as `#` anchors using the same chapter-prefixed ids (2026-11-16/17, step 4)
+- `<ChapterName>_KindleMetadata.json`: chapterNumber, chapterTitle, part, lesson, coreValue, TOC entries, section anchors, figure anchors, footnote and note anchors (2026-11-16/17), alt text, language, version (from VersionMetadata), buildProfile
 
 ## 9. Save outputs
 
 Save all three deliverables to `<CH_ROOT>/Kindle/`. If a file of the same name exists, back it up to `<CH_ROOT>/Governance/_Backups/<YYYYMMDD_HHMM>/Kindle/` first, and increment the version in `Governance/<ChapterName>_ArtifactManifest.json`.
+
+## 9b. Congruency check, pass 2 (after Part A)
+
+Once the Kindle files are saved, run `congruency_check.py <ChapterName> --pass 2` (the local watcher also runs it by itself once its inputs exist). It repeats the pass 1 checks and adds the Kindle DOCX against the manuscript. PHASE 5 and PHASE 6.5 start only on PASS. Record the verdict in the checklist.
 
 ## 10. Produce PHASE 4 checklist
 
@@ -545,6 +567,7 @@ Save as `<CH_ROOT>/<ChapterName>_PHASE4_KindleChecklist.md`. Include:
 - All sections included
 - Step 0 dependency check result (list anything missing)
 - Figures inserted, with the source image for each (list any approved placeholder)
+- Linked footnotes (2026-11-16/17): citations ↔ References and lettered notes ↔ notes, counts linked both ways, any unlinked marker, and whether the links were added natively or after the build (#46, #49)
 - Styles applied
 - TOC generated
 - Metadata added
@@ -552,33 +575,14 @@ Save as `<CH_ROOT>/<ChapterName>_PHASE4_KindleChecklist.md`. Include:
 - Any missing elements
 - Recommendations for PHASE 5 (RAG rebuild)
 - Part 0 step 0.7 audit spot check result
-- Part C: `audiobookStatus: RECORDED | DRAFT_ONLY | PENDING | N/A`, narration-script date (from the Kindle build), final recording file and date, coverage result, measured technical-spec values, pronunciation review by <AUTHOR>, passages to re-record (if any)
+- Step 9b: congruency pass 2 verdict and report date
 - `gateStatus: PASS | FAIL`
 
 ---
 
-# PART C — AUDIOBOOK (per chapter, after Part A; the last step before PHASE 5)
+# PART C — AUDIOBOOK: moved to PHASE 6.9 (2026-11-16)
 
-**The chain:** the final eBook PDF is the trigger, the Kindle build is made from it, and the audiobook is recorded from the Kindle output. Part C therefore waits for Part A `PASS`, which in turn waits for `MANUSCRIPT_SYNCED.md` and the step 0.7 spot check.
-
-**Recorded only after the lock (release v1.2.5).** Part C needs a current `Manuscript/Trigger/MANUSCRIPT_LOCKED.md`, with the manuscript hashes matching it or the newer `MANUSCRIPT_SYNCED.md`. The content audit now runs before design (PHASE 2.5), and B0 no longer audits content, so a recording made from the locked text should never need re-recording. Re-recording (step 5) is left for an approved post-lock revision or an accepted Part 0 change.
-
-**XTTS is a draft only:** a pacing and timing guide. The published audiobook is <AUTHOR>'s own narration, recorded and edited manually in Adobe Audition.
-
-1. **Build the narration script from the Kindle output.** Update `Audiobook/<ChapterName>_NarrationScript.md` (first created in PHASE 1 Step 9) from `Kindle/<ChapterName>_Kindle.docx`: same reading order, headings, and text as the Kindle build. Keep the pronunciation guide and segment markers, and move any marker whose text moved. Narration-only adaptations are marked notes, never silent text changes: figure and table references, URLs, and visual-only callouts get a spoken alternative or a skip note. This clears the "narration" items in the Part 0 downstream impact list.
-2. **XTTS draft (optional).** Render the script with local XTTS to `Audiobook/Drafts/<NN>_<ChapterName>_XTTS_Draft.mp3` as a timing and pacing reference. Drafts are never published and never go into the book set.
-3. **<AUTHOR> records the final narration** in Adobe Audition from the narration script (a manual track; the Audition session may live outside `<BOOK_ROOT>`, like the print InDesign book) and exports the chapter master to `Audiobook/<NN>_<ChapterName>.mp3`.
-4. **Check the final recording** and record the result in the PHASE 4 checklist:
-   - It is <AUTHOR>'s recording (not a file from `Drafts/`) and newer than the chapter's Kindle build.
-   - **Coverage:** every narration segment is present and in order. Optionally, transcribe the MP3 and diff it against the script to list skipped or changed lines. List them; never judge delivery or voice.
-   - **Technical spec** from the distributor. ACX, for example, asks for RMS between −23 and −18 dB, peaks no higher than −3 dB, a noise floor below −60 dB, 44.1 kHz constant-bit-rate MP3 at 192 kbps or higher, and room tone at the head and tail. Check the distributor's current requirements, and record the measured values.
-   - Framework terms are pronounced as the pronunciation guide says (<AUTHOR> confirms).
-   - `audiobookStatus: RECORDED | DRAFT_ONLY | PENDING | N/A`
-5. **Re-record rule:** if Part 0 re-runs and changes narrated text, Part A rebuilds the Kindle output and step 1 refreshes the script. List the changed passages (from the sync change log) with their segment markers, so <AUTHOR> can re-record only those passages. For those passages, a recording older than the chapter's Kindle build is stale.
-
-6. **Congruency check, pass 2 (v1.2.6).** After the recording passes its checks, run `congruency_check.py <ChapterName> --pass 2`. It repeats the pass 1 checks and adds the Kindle DOCX against the manuscript and the audiobook QA result. PHASE 5 and PHASE 6.5 start only on PASS. Record the verdict in the checklist.
-
-Front matter, Part openers, and back matter sections that are narrated follow the same steps in their `Audiobook/` folders.
+The narration script, XTTS draft, <AUTHOR>'s recording, the audiobook QA and the congruency check that covers them now run in **PHASE 6.9** (`PHASE 6.9- Audiobook (Narration Script + Recording).md`), after PHASE 6.5. Each chapter is recorded in full there; there are no pickup re-records.
 
 ## Front matter, Parts, and back matter
 
@@ -591,11 +595,11 @@ They must exist before Part B, since the book Kindle file needs front matter, Pa
 
 ## PHASE 4 Part A exit gate
 
-PHASE 5 may start for the chapter when `Manuscript/Trigger/MANUSCRIPT_SYNCED.md` exists, the pass 2 congruency report is PASS (v1.2.6; not required without a lock), `Manuscript/Trigger/LAYOUT_VERIFIED.md` is current (v1.3.0; chapters with a lock), the PHASE 4 checklist shows `gateStatus: PASS`, and the chapter's Kindle deliverables exist.
+PHASE 5 may start for the chapter when `Manuscript/Trigger/MANUSCRIPT_SYNCED.md` exists, the pass 2 congruency report is PASS (v1.2.6; not required for a section without a lock), `Manuscript/Trigger/LAYOUT_VERIFIED.md` is current (v1.3.0; chapters with a lock), the PHASE 4 checklist shows `gateStatus: PASS`, and the chapter's Kindle deliverables exist.
 
 ---
 
-# PART B — BOOK-LEVEL ASSEMBLY (<BOOK>_KINDLE_EBOOK + <BOOK>_AUDIOBOOK)
+# PART B — BOOK-LEVEL ASSEMBLY (<BOOK>_KINDLE_EBOOK)
 
 Run once, when every chapter, front matter section, Part opener, and back matter section has a PHASE 4 Part A `PASS`. Output folder: `<BOOK_ROOT>/_BookPublication/<BOOK>_KINDLE_EBOOK/`.
 
@@ -606,13 +610,15 @@ Run once, when every chapter, front matter section, Part opener, and back matter
 1. **Cross-chapter consistency.** Once every chapter has `MANUSCRIPT_LOCKED.md` and `MANUSCRIPT_SYNCED.md`, run PHASE 0.9's Consolidation over the whole book, using the latest ledger (the newest lock-audit run folder) and `Audit_CanonicalTerms.json`. It looks only for conflicts **between** chapters that were locked at different times: a definition, term form, list, threshold, equation, or figure number that two chapters now state differently, and cross-references between chapters that no longer resolve. Findings `Defer`red in a lock audit are closed here.
 2. **What changed since each chapter's lock.** Compare each chapter's current DOCX and MD with its lock snapshot (`Manuscript/_Locked/`, hashes in `MANUSCRIPT_LOCKED.md`). For a chapter with no change, record "unchanged since lock". For a chapter that changed (an accepted Part 0 change, or an approved `MANUSCRIPT_REVISED.md` revision with its delta lock), run Pass 1 → Pass 2 on the changed paragraphs only, and confirm each change has its approval (the `P4_DECISIONS` row or the revision's approval line). An unapproved change is a blocking finding.
 
+**Freeze chapters (#42): B0 never reopens them.** A final-locked chapter is read-only. A cross-chapter conflict that involves one goes to the next-edition log; the other chapter, if it is not final-locked yet, conforms to it through its own lock audit or REVISED section. Only a major error (PHASE 2.5 §9) reopens a final-locked chapter, through the errata step. The paragraph below applies to chapters without `freezePilot:`.
+
 **B0 doesn't reopen the manuscript.** It is not a content audit, so a single-chapter finding (a style point, a minor term variant inside one chapter) is recorded, not fixed. A manuscript change is allowed only for a **genuine cross-chapter conflict**, and only with <AUTHOR>'s approval: <AUTHOR> chooses the version, the chapter that changes gets a `MANUSCRIPT_REVISED.md` section with the approval line, PHASE 2.5 re-locks it (delta audit), and the change goes through the eBook (re-export → Part 0 → Part A → PHASE 5 for that chapter). Then re-run B0. Never patch a synced manuscript by hand.
 
 - Continue to B1 only when `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md` exists and is newer than every chapter's `MANUSCRIPT_SYNCED.md`. It records the run ID, the chapters checked for consistency, and, per chapter, "unchanged since lock" or the approved changes checked.
 
 ## B1. Confirm the assembly inputs
 
-- [ ] Every chapter has `Manuscript/Trigger/MANUSCRIPT_SYNCED.md`, still newer than its eBook PDF (re-run Part 0 and Part A for any chapter whose PDF was re-exported)
+- [ ] Every chapter has `Manuscript/Trigger/MANUSCRIPT_SYNCED.md`, still newer than its eBook PDF (re-run Part 0 and Part A for any chapter whose PDF was re-exported; for a freeze chapter that re-run only confirms, 0.8)
 - [ ] Every chapter has `Kindle/<ChapterName>_Kindle.docx`, `_Kindle.html`, `_KindleMetadata.json`, and `Kindle/figures/`
 - [ ] FrontMatter, Parts, and BackMatter Kindle DOCX files exist
 - [ ] Reading order confirmed against the book TOC (front matter → Part I → its chapters → Part II → … → back matter)
@@ -625,7 +631,7 @@ Run once, when every chapter, front matter section, Part opener, and back matter
 1. Concatenate in reading order into `<BOOK>_Kindle.docx`, keeping one consistent style set (Title, Heading 1–3, Body, Quote, Caption, Callout).
 2. Rebuild a single book-level TOC from the chapter TOC entries; heading levels drive the Kindle navigation.
 3. Renumber nothing: chapter and figure numbers stay as governed. Flag any collision instead of fixing it silently.
-4. Resolve cross-chapter links to the book-level anchors.
+4. Resolve cross-chapter links to the book-level anchors. The footnote and note links keep their chapter-prefixed ids (step 4, 2026-11-17), so every link still resolves inside its own chapter; flag any id collision.
 
 ## B3. Build the book metadata
 
@@ -640,9 +646,9 @@ Run once, when every chapter, front matter section, Part opener, and back matter
 - `cover/<BOOK>_Kindle_Cover.jpg` (1600 × 2560 recommended)
 - `<BOOK>_Kindle_AssemblyReport.md` — source files used, per-chapter versions, TOC depth, figure count, warnings
 
-## B4b. Audiobook set (<BOOK>_AUDIOBOOK)
+## B4b. Audiobook set: moved to PHASE 6.9 (2026-11-16)
 
-Once every narrated section has `audiobookStatus: RECORDED` with no stale passages (no final recording older than its Kindle build for changed text), assemble `_BookPublication/<BOOK>_AUDIOBOOK/` from the **final recordings only** (never `Drafts/`): the ordered MP3 set (running order matches the book TOC and the Kindle reading order) and `<BOOK>_Audiobook_TrackList.md` (track number, section, file, duration). This set was assembled in PHASE 3 before v1.0.2.
+`<BOOK>_AUDIOBOOK` is assembled in PHASE 6.9 book mode, once every narrated section has passed PHASE 6.9.
 
 ## B5. Workbook (not built here)
 
@@ -660,4 +666,3 @@ PHASE 6.5 validates this package (EPUB, Kindle, metadata, figures, accessibility
 - [ ] Kindle Previewer opens the proof with a working TOC and correct reflow
 - [ ] Assembly report lists no unresolved warnings
 - [ ] Assembly report records the final audit run ID
-- [ ] `<BOOK>_AUDIOBOOK` set and track list exist, built only from <AUTHOR>'s final recordings, with no stale passages

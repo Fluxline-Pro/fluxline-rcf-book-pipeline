@@ -3,7 +3,7 @@
 > **Pipeline position:** PHASE 3.5 of 7 (Design QA gate) · **Upstream gate:** PHASE 3 exit gate **and** a current `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` (PHASE 2.5, v1.2.5) · **Downstream:** PHASE 4 Kindle DOCX
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
-**Release v1.2.5 (2026-10-24): the QA checks the design against the locked manuscript.** Before the review, confirm `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` is current: it exists, its DOCX and MD hashes match the files, and no `MANUSCRIPT_REVISED.md` section is newer. If not, stop and report it; the design may have been built from text that is no longer the manuscript. Wherever this prompt says "PASS 7 Manuscript", read the locked manuscript. A content problem found here (a term, a definition, a cross-reference) is a post-lock change: it goes to <AUTHOR> through `MANUSCRIPT_REVISED.md` and its approval line, never into a layout on its own.
+**Release v1.2.5 (2026-10-24): the QA checks the design against the locked manuscript.** Before the review, confirm `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` is current: it exists, its DOCX and MD hashes match the files (or those of a newer `MANUSCRIPT_SYNCED.md`; PHASE 2.5 section 0). A newer `MANUSCRIPT_REVISED.md` is informational on its own; the hashes decide (#48). If not, stop and report it; the design may have been built from text that is no longer the manuscript. Wherever this prompt says "PASS 7 Manuscript", read the locked manuscript. A content problem found here (a term, a definition, a cross-reference) is a post-lock change: it goes to <AUTHOR> through `MANUSCRIPT_REVISED.md` and its approval line, never into a layout on its own. For a freeze chapter (#42) the content checks ran before the lock (PHASE 2.5 §3.1b), so this QA doesn't repeat them. A small wording fix <AUTHOR> approves goes into the eBook and print layouts, and PHASE 4 Part 0 syncs it back; a claim, number or citation change still goes through `MANUSCRIPT_REVISED.md`.
 
 **Release v1.2 (2026-10-22):** new §13B, **Print IDML (3.5B)**. The QA reads the PHASE 3.5B build report and runs the §8 checks. A failure is Critical for the print track and doesn't block `DESIGN_READY.md`.
 
@@ -98,7 +98,7 @@ Review the following artifacts:
 - PPTX/PDF slide exports, eBook PDF/EPUB
 - Workbook eBook and print PDFs: not checked here. PHASE 3W (W3) checks them when <AUTHOR> uploads them.
 - InDesign print files (check presence and figure coverage only; layout is <AUTHOR>'s manual work)
-- Audiobook: not checked here. It is recorded after the PHASE 4 Kindle build and checked in PHASE 4 Part C and PHASE 6.5.
+- Audiobook: not checked here. It is recorded and checked in PHASE 6.9, after PHASE 6.5 (2026-11-16).
 
 All inputs live under `<CH_ROOT>` = `<BOOK_ROOT>/Chapters/<ChapterName>/Final/` (see PHASE 3, Part A).
 
@@ -320,6 +320,8 @@ Validate:
 
 Flag missing figure implementations.
 
+In the figure images, check labels against the manuscript, a title set in the image, watermarks and garbled text. Background colour is not a check item: it may vary across the chapter and the book (2026-11-16/17, #47; MASTER section 10).
+
 ---
 
 # 10. BRAND CONSISTENCY REVIEW
@@ -432,7 +434,7 @@ Read the latest PHASE 3.5B build report (the builders' JSON reports and any `_Pr
 - [ ] **Figures:**
   - every figure links a CMYK TIFF from `Figures/CMYK/` and no RGB file;
   - effective ppi is ≥ 300, or the figure is flagged.
-- [ ] **Callouts** use the print template's styles; no eBook color, motif, or diamond is carried over.
+- [ ] **Callouts** use the print template's styles; no eBook color, motif, or diamond is carried over. Callout and pull-quote text follows the quote-mark rule: no quotation marks around the book's own words in a callout or pull quote (eBook, print and Kindle); quote marks go only around an outside source or another person, never the author. Speech the book gives to the reader or a client counts as another person and keeps its marks (from Chapter 7 on (rule dated 2026-11-10); earlier chapters are not retrofitted unless the author asks). The eBook callouts and the Kindle Quote and Callout styles must not add quote marks themselves. Core Value callouts are titled `RCF Core Value N • <Core Value>` in RCF Purple and Meta-Value callouts `RCF Meta-Value N • <Meta Value>` in RCF Blue, with the same title styling in every format.
 - [ ] **Footnotes and references** are complete; the reference list ends with the manuscript's last reference.
 - [ ] **Opener:** the title and epigraph are correct, and none of the master's text shows through.
 
@@ -644,7 +646,7 @@ Also state (v1.3.0): `copilotReview: <file and outcome> | none | stale` and `gen
 
 **Generated figures.** For every figure whose registry row has `aiGenerated: true` (Copilot Create, Gemini, Firefly or other):
 - the row is complete: `generator`, `promptVersion`, `dsmVersion`, `generatedOn`, `approval`, `colorMode`, `resolutionStatus`, `rights`, `altText`;
-- the final file matches the DSM (palette, line, level of abstraction) and the neighbouring chapters' figures; it carries no text, label, term or number the manuscript does not contain; it reads in greyscale;
+- the final file matches the DSM (palette, line, level of abstraction) and the neighbouring chapters' figures, except the background colour, which may vary (2026-11-16/17, #47); it carries no text, label, term or number the manuscript does not contain; it reads in greyscale;
 - the image is not an unrefined `RGB concept` (see `resolutionStatus`): a concept-only image is a **Major** issue for print and eBook;
 - `approval` is `approved <initials> <date>`; `pending` is a **Major** issue and the chapter cannot be certified Production Ready.
 It is <AUTHOR>'s decision, not this QA's, to approve a generated image.

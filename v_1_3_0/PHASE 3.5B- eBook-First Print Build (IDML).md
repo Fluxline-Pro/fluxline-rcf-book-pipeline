@@ -34,14 +34,14 @@ The IDML tools need the Python standard library, plus Pillow and the fonts' TTF 
 
 All of these must hold. If any fails, write nothing and tell <AUTHOR> which one.
 
-1. **The manuscript is final and locked.** The chapter DOCX is in `<CH_ROOT>/Manuscript/` and the MD isn't newer than it (as in 3.5A §1). From release v1.2.5, `<CH_ROOT>/Manuscript/Trigger/MANUSCRIPT_LOCKED.md` (PHASE 2.5) must be current: it exists, the DOCX and MD hashes it records match the files, and no `MANUSCRIPT_REVISED.md` section is newer. The eBook page and both IDMLs are built from the locked text only. For the workbook, the exercise DOCX is in `<CH_ROOT>/Workbook/`, `WORKBOOK_MANUSCRIPT_READY.md` exists, and the chapter's lock is current.
+1. **The manuscript is final and locked.** The chapter DOCX is in `<CH_ROOT>/Manuscript/` and the MD isn't newer than it (as in 3.5A §1). From release v1.2.5, `<CH_ROOT>/Manuscript/Trigger/MANUSCRIPT_LOCKED.md` (PHASE 2.5) must be current: it exists, and the DOCX and MD hashes of record (the lock's, or a newer `MANUSCRIPT_SYNCED.md`'s) match the files. A newer `MANUSCRIPT_REVISED.md` is informational on its own; the hashes decide (#48). The eBook page and both IDMLs are built from the locked text only. For the workbook, the exercise DOCX is in `<CH_ROOT>/Workbook/`, `WORKBOOK_MANUSCRIPT_READY.md` exists, and the chapter's lock is current.
 2. **The figures are finished:**
    - the RGB masters (PNG or JPG) are in `Figures/RGB/`, for the eBook only;
    - the CMYK TIFFs are in `Figures/CMYK/`, for print only.
 3. **The print sources exist** in `<PRINT_DSM_ROOT>` (book) and the workbook's own `_PrintDSM/`:
    - the template IDML;
    - <AUTHOR>'s most recent finished chapter IDML, or exercise IDML, which the build starts from (§4, §5).
-4. **The eBook page is built and reviewed** (§3) before the print build starts. "Reviewed" means <AUTHOR> has looked at the eBook review PDF and either its notes are applied (layout notes to the eBook page; wording changes through `MANUSCRIPT_REVISED.md`, DOCX first, with a new lock) or <AUTHOR> has said there are none. The print IDML is built from the eBook **after** those notes, so it replicates the final eBook. Request it as a second step: `_Pipeline/RERUN_P3.5B.md` with `idml` on the first line. **Anything other than `idml` on the first line (including an empty file) builds only the eBook page and its review PDF**; `idml` is refused until the eBook is reviewed.
+4. **The eBook page is built and reviewed** (§3) before the print build starts. "Reviewed" means <AUTHOR> has looked at the eBook review PDF and either its notes are applied (layout notes to the eBook page; wording changes through `MANUSCRIPT_REVISED.md`, DOCX first, with a new lock) or <AUTHOR> has said there are none. For a freeze chapter (#42), a small wording note is applied to the eBook page like a layout note, and PHASE 4 Part 0 syncs it back to the manuscript once; only a change to a claim, a number or a citation still goes through `MANUSCRIPT_REVISED.md` and a new lock. The print IDML is built from the eBook **after** those notes, so it replicates the final eBook. Request it as a second step: `_Pipeline/RERUN_P3.5B.md` with `idml` on the first line. **Anything other than `idml` on the first line (including an empty file) builds only the eBook page and its review PDF**; `idml` is refused until the eBook is reviewed.
 
 ## 2. Design rules (<AUTHOR>, 2026-10-22)
 
@@ -64,7 +64,7 @@ These rules apply to every print build from this release on.
 
 **Motifs and color:**
 - Leave out the eBook's motifs, diamonds, ornaments, and extra colors.
-- **Quote callouts** (pull quotes) are the exception: they are kept, in the print template's pull-quote style.
+- **Quote callouts** (pull quotes) are the exception: they are kept, in the print template's pull-quote style. Quote marks follow the rule in the Callouts check (no marks around the book's own words).
 - **Multi-color callouts** are also kept, using the **print template's** versions (for example Green Insight, Blue Coherence, Violet Expansion). The eBook versions are never used.
 
 **Margins and spacing:**
@@ -121,7 +121,7 @@ It reports figure/callout pairs that land close together. <AUTHOR> settles facin
 **Goal:** the chapter's eBook page file, `<EBOOK_DSM_ROOT>/Chapter<N>_eBook.dc.html` (one `<doc-page>` per page), and the exercise's page file in the workbook's `_eBookDSM/`. Both follow the eBook DSM and use the RGB figures.
 
 1. **Content.** Start from the manuscript DOCX. If PHASE 3 produced a Claude Design draft, start from it, but update its wording from the DOCX. Keep the callouts and pull quotes <AUTHOR> approved (PHASE 1 recommendations, validated in PHASE 2).
-   - Check every pull quote word for word against the DOCX.
+   - Check every pull quote word for word against the DOCX, and set callouts and pull quotes without quotation marks around the book's own words (marks stay on an outside source or another person; from Chapter 7 on (rule dated 2026-11-10); earlier chapters are not retrofitted unless the author asks).
    - Back up the draft to `<EBOOK_DSM_ROOT>/_Backups/` before replacing it.
 2. **Paginate** with `ebook_paginate.py`. The rules:
    - pages fill from top to bottom, using the page end to end;
@@ -281,7 +281,7 @@ A structural proof can be rendered through Adobe's InDesign rendering service. T
 | One column | No 2-column master, frame, or spread is used |
 | Text complete | Every eBook block (book) or DOCX paragraph (workbook) is in the IDML, word for word. Pull quotes match the DOCX |
 | Figures | Every figure links a CMYK TIFF in `Figures/CMYK/`; no RGB file is linked; effective ppi ≥ 300 or flagged |
-| Callouts | Each callout uses the print template's style for its kind; no eBook color or motif is used |
+| Callouts | Each callout uses the print template's style for its kind; no eBook color or motif is used; no quotation marks around the book's own words (outside sources and other people keep theirs) |
 | Footnotes and references | Every footnote is in the text; the reference list ends with the manuscript's last reference |
 | Opener | The chapter or exercise title and epigraph are correct; the master's text is overridden, not showing through |
 | Pagination (print) | No heading ends a page; no single-line widow or orphan; no callout split across pages (checked in the proof; fixed in the finish) |

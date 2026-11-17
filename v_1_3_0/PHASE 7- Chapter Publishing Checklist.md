@@ -2,8 +2,10 @@
 
 ## Final Validation, LLM Recommendations, and Human Sign-off
 
-> **Pipeline position:** PHASE 7 of 7 (Release) · **Upstream gate:** latest PHASE 6.5 report certifies **Publishing Ready** · **Downstream:** none (chapter becomes **Published**)
+> **Pipeline position:** PHASE 7 of 7 (Release) · **Upstream gate:** latest PHASE 6.5 report certifies **Publishing Ready**, and a current PHASE 6.9 `Audiobook/Trigger/AUDIOBOOK_READY.md` (2026-11-16) · **Downstream:** none (chapter becomes **Published**)
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
+
+**2026-11-16 (<AUTHOR>'s decision; unreleased): the audiobook is PHASE 6.9.** It is recorded after PHASE 6.5 (`PHASE 6.9- Audiobook (Narration Script + Recording).md`), so this checklist runs after PHASE 6.9 and checks the audiobook in its own section. PHASE 6.5 no longer certifies it.
 
 **v3.4 changes (2026-10-03, release v1.1.2): print QA.** Also: a PHASE 3W **workbook final check** (eBook and print side by side) and separate Part C sign-offs for the workbook eBook and the workbook print. New Part A items for PHASE 4 Part 0P: the print PDF is uploaded, and the latest `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md` shows no open text difference to check and no layout error, with every warning fixed or accepted by <AUTHOR>. They replace the self-reported print cross-check. Part C gains **Print Approved**, and the completion rule requires a closed 0P report. The PHASE 3W section gains the same item for the print workbook (N/A when the workbook ships eBook only).
 
@@ -36,7 +38,7 @@
 
 1. The local release check (v3.3) writes this checklist to `<CH_ROOT>/<ChapterName>_PHASE7_ReleaseChecklist.md`.
    - It pre-fills Part A (evidence: file paths, report names, gate statuses) and Part B (local-LLM recommendations from the gaps).
-   - It runs automatically after PHASE 6.5, and again whenever <AUTHOR> asks for a re-run.
+   - It runs automatically after PHASE 6.9, and again whenever <AUTHOR> asks for a re-run.
    - Claude may still be used instead, following the same rules.
 2. <AUTHOR> reviews, ticks, and signs Part C. Only <AUTHOR> can mark a chapter **Published**.
 3. After sign-off, a copy is placed in `<BOOK_ROOT>/_FinalizedReleases/<ChapterName>_PHASE7_ReleaseChecklist_v<chapterVersion>.md`, where `<chapterVersion>` is the `chapterVersion` value from `Governance/<ChapterName>_VersionMetadata.json` (e.g. `..._ReleaseChecklist_v1.0.md`). Re-releasing a chapter writes a new file at its new version rather than replacing the signed one.
@@ -64,6 +66,7 @@
 
 ### Review Packet
 - [ ] Chapter Summary · Key Takeaways · Glossary Terms · Definitions · Frameworks · Metadata JSON
+- [ ] Manuscript Chapter Summary follows the bullet rule (one sentence per bullet, two at most, about 25 words at most; a semicolon counts as a break): `python v_1_3_0/check_summary_format.py <manuscript.md>` reports 0 over the rule (Chapter 6 on; Chapters 1-5 are not retrofitted). From Chapter 7 on: no Closing Frame and no personal anecdotes in the summary; practical applications are fine (Chapters 1-6 keep theirs)
 
 ### Workbook Packet
 - [ ] Primary Exercise · Additional Exercises · Reflection Questions · Application Questions · Workbook DOCX (canonical) + Markdown replica
@@ -141,7 +144,7 @@
 - [ ] Final workbook PDF(s) uploaded by <AUTHOR>, to `Workbook/<ChapterName>_Workbook_eBook.pdf` (8.5×11) [+ `_Workbook_Print.pdf` (7×10) if the book ships print] or to `<WORKBOOK_BOOK_ROOT>/…/<NN>_Ex_<L>_<N>_Chapter<C>.pdf` [+ `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf` if the book ships print] (InDesign files stay in `<WORKBOOK_INDESIGN_ROOT>`)
 - [ ] Only <AUTHOR>-selected sub-exercises are in the workbook (`_Pipeline/WORKBOOK_SELECTION.md`; registry `subExercises` / `notSelected`)
 - [ ] Workbook PDF = DOCX = MD (latest WorkbookQA report, after the W3 sync)
-- [ ] Workbook print QA (v3.4; only if the profile ships print, otherwise N/A): latest W2b report, `_BookGovernance/PrintQA/<ChapterName>_Workbook_PrintQA.md` (`location: chapter`) or `Workbook_<eBook stem>_PrintQA.md` (or `Workbook_PrintQA.md`) for each of this chapter's exercises (`location: book-root`), is newer than both PDFs, shows **0** text differences to check and **0** layout errors, and every warning is fixed, logged as print-only, or accepted by <AUTHOR>
+- [ ] Workbook print QA (v3.4; only if the profile ships print, otherwise N/A): latest W2b report, `_BookGovernance/PrintQA/<ChapterName>_Workbook_PrintQA.md` (`location: chapter`) or `Workbook_<eBook stem>_PrintQA.md` (or `Workbook_PrintQA.md`) for each of this chapter's exercises (`location: book-root`), is newer than both PDFs, shows **0** text differences to check and **0** layout errors, and every warning is fixed, logged as print-only, or accepted by <AUTHOR> (the thumb-tab, prompt-line runt and step-button warnings recorded as expected count as accepted, 2026-11-16/17, #47)
 - [ ] Latest `Governance/<ChapterName>_WorkbookQA_<timestamp>.md` has no open blocking items
 - [ ] `Workbook/Trigger/WORKBOOK_READY.md` present, and newer than any PHASE 4 Part 0 sync that flagged the workbook
 - [ ] This chapter's exercises are in `_BookGovernance/Workbook/Workbook_ExerciseRegistry.json`, and every manuscript mention matches
@@ -163,7 +166,7 @@
 - [ ] PHASE 3.5 completed: final eBook PDF uploaded; `DESIGN_READY.md` present (from PHASE 3.5, or attested by the upload)
 - [ ] Part 0: manuscript MD and DOCX synced to the final eBook PDF (`Manuscript/Trigger/MANUSCRIPT_SYNCED.md` newer than the PDF); sync report reviewed
 - [ ] Part 0G: glossary locked; the chapter is in the official `_BookGovernance/Glossary/Master_Glossary`; no open drift for it in `Glossary_DriftReport.md`
-- [ ] Part 0 follow-ups closed: every "must fix before release" item in the downstream impact list (pull quotes, voice samples, claims, narration) is fixed; deferred items listed here
+- [ ] Part 0 follow-ups closed: every "must fix before release" item in the downstream impact list (pull quotes, voice samples, claims) is fixed; deferred items listed here (narration items are cleared in PHASE 6.9)
 - [ ] Part 0 print cross-check recorded, citing the 0P report (print-only differences confirmed by <AUTHOR> and logged in `<ChapterName>_PrintOnlyDifferences.md`)
 - [ ] Part 0P: print PDF uploaded to `InDesign/<ChapterName>_Print7x10.pdf` (7×10, bleed, no printer's marks)
 - [ ] Part 0P: latest `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md` is newer than both the print and eBook PDFs, and shows **0** text differences to check and **0** layout errors
@@ -173,7 +176,6 @@
 - [ ] Every figure is a real image (no placeholders, or an approval is recorded)
 - [ ] Build profile recorded; no draft marketing seeds included
 - [ ] Part 0 step 0.7 audit spot check recorded; no blocking finding open
-- [ ] Part C: narration script built from the Kindle output; final narration recorded by <AUTHOR> (Adobe Audition), not an XTTS draft; coverage and technical-spec checks recorded; pronunciation reviewed; no stale passages
 - [ ] PHASE 4 Part A checklist `gateStatus: PASS`
 - [ ] Part B book assembly: this chapter appears in `<BOOK>_Kindle.docx` at the correct version and reading position
 
@@ -197,7 +199,7 @@
 
 - [ ] `Manuscript/Trigger/LAYOUT_VERIFIED.md` created by <AUTHOR> and newer than the eBook, print and workbook PDFs (chapters with a lock)
 - [ ] eBook and print books (chapter and workbook) checked in InDesign; 0P closed; workbook ready and its print QA closed
-- [ ] Kindle built after the layouts were verified, and the audiobook recorded last (from the Kindle output)
+- [ ] Kindle built after the layouts were verified (the audiobook is recorded last, in PHASE 6.9)
 
 ## PHASE 4 — Copilot reviews (v1.3.0)
 
@@ -209,8 +211,17 @@
 
 - [ ] Latest `PublicationQA_<timestamp>.md` certifies **Publishing Ready**
 - [ ] Copilot-required chapters (`copilotRequired: yes`): Copilot cross-format review current, or a `publication-qa` waiver; its blocking findings resolved or accepted; it did not decide the result alone (N/A if `copilotRequired: no`)
-- [ ] Sub-certifications: EPUB · Kindle · Print · Audiobook · Workbook · RAG (Local) · RAG (Cloud / N/A)
+- [ ] Sub-certifications: EPUB · Kindle · Print · Workbook · RAG (Local) · RAG (Cloud / N/A) (the audiobook is checked in PHASE 6.9)
 - [ ] Kindle package confirmed ready for KDP upload (`_BookPublication/<BOOK>_KINDLE_EBOOK/<BOOK>_Kindle.docx`)
+
+## PHASE 6.9 — Audiobook (2026-11-16)
+
+- [ ] PHASE 6.9 started only after PHASE 6.5 certified Publishing Ready and congruency pass 2 was PASS, and `AUDIOBOOK_READY.md` is not stale (no recorded hash has changed since)
+- [ ] Narration script rebuilt from the Kindle output in PHASE 6.9
+- [ ] Final narration recorded in full by <AUTHOR> (Adobe Audition) in PHASE 6.9: not an XTTS draft, and not an earlier recording patched with pickups
+- [ ] Audiobook QA: coverage and technical-spec results recorded, no open item; pronunciation reviewed
+- [ ] Congruency check, pass 3 (PHASE 6.9): PASS
+- [ ] `Audiobook/Trigger/AUDIOBOOK_READY.md` current; PHASE 6.9 checklist `gateStatus: PASS`
 
 ## Book-level deliverables (tick when this chapter is included in the assembled build)
 
@@ -218,10 +229,11 @@
 - [ ] <BOOK>_WORKBOOK_EBOOK (PDF; PHASE 3W W4)
 - [ ] <BOOK>_PRINT_BOOK (manual InDesign)
 - [ ] <BOOK>_WORKBOOK_PRINT_BOOK (full-color print PDF; manual InDesign, PHASE 3W W4)
-- [ ] <BOOK>_AUDIOBOOK (PHASE 4 Part B)
+- [ ] <BOOK>_AUDIOBOOK (PHASE 6.9 book mode)
 - [ ] <BOOK>_KINDLE_EBOOK (PHASE 4 Part B)
 - [ ] Book-wide audit: `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md` present, and this chapter's final wording was part of that run (PHASE 0.9 Mode D: cross-chapter consistency + since-lock delta, v1.2.5)
 - [ ] Manuscript lock (v1.2.5): `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` present (PHASE 2.5), its decisions log fully decided, and every change since the lock approved (an accepted `P4_DECISIONS` row, or a `MANUSCRIPT_REVISED.md` section with its approval line and a delta re-lock)
+- [ ] Freeze chapters (lock has `freezePilot:`, #42): `MANUSCRIPT_SYNCED.md` carries `finalLock: yes`; the manuscript hashes still equal it; every change after it is an approved `Errata` section with a new final lock; this chapter's next-edition log rows have a Status (`open` rows are fine and don't block release; a `Major?: yes` row is closed through errata or downgraded by <AUTHOR>)
 
 ---
 
@@ -248,9 +260,9 @@
 Copies of the approved release versions only:
 - [ ] Final Manuscript · Workbook (manuscript DOCX + MD, eBook + print PDFs) · Training Guide · Slides (PPTX/PDF) · Reference Guides · eBook (PDF/EPUB) · Kindle DOCX · Audio · Metadata · Manifest
 
-## Archive (`<BOOK_ROOT>/_Archive/<ChapterName>/`)
+## Archive (`<BOOK_ROOT>/Chapters/<ChapterName>/ARCHIVE/<YYYYMMDD>/`)
 
-Move (never delete) working material:
+The chapter's one archive (2026-11-17, #47; MASTER section 10): beside `Final/`, never `Final/ARCHIVE`, and archived files go in descriptive subfolders, never working folder names such as `Audiobook/` or `eBook/`; the book-level `_Archive/` folder is retired. Log each move in `ARCHIVE/<YYYYMMDD>/ARCHIVE_MANIFEST.md`. Move (never delete) working material:
 - [ ] PASS 7 drafts · HTML drafts · superseded QA reports · `Marketing/Generated/` drafts not approved · working notes
 
 ## Master asset updates
@@ -309,7 +321,7 @@ Also state:
 
 The chapter is **Published** only when:
 
-✅ PHASES 1, 2, 3, 3.5, 4, 5, 6, and 6.5 have passed their exit gates
+✅ PHASES 1, 2, 3, 3.5, 4, 5, 6, 6.5, and 6.9 have passed their exit gates
 ✅ The workbook is settled per the book's workbook profile (PHASE 3W W2): a current `WORKBOOK_READY.md` whose recorded hashes match the uploaded PDFs (in `Workbook/` or `<WORKBOOK_BOOK_ROOT>`, only the profile's formats), **or** `WORKBOOK_NOT_APPLICABLE.md` for a book without a workbook
 ✅ References: no open critical or major finding in `_BookGovernance/References/<ChapterName>_ReferencesCheck.md` (PHASE 4 0R lets Kindle proceed with open findings; publication does not)
 ✅ Print QA: the latest PHASE 4 Part 0P report is newer than both PDFs, with no text difference to check and no layout error open, and every warning fixed or accepted by <AUTHOR>

@@ -5,6 +5,219 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [v1.4.0] — 2026-11-17 (release candidate)
+
+**Folder:** `v_1_3_0/` (these changes were edited in place, so no new version folder) · **Tag:** `v1_4_0.RC`; PROD after the Ch7 freeze pilot finishes PHASE 4 and the author gives the go-ahead.
+
+This release includes the entries below that were marked [Unreleased], #34 through #48:
+- the Chapter Summary bullet rule (#34);
+- callout quote marks (#38);
+- the audiobook moving to PHASE 6.9, run per chapter (#40, #43);
+- the manuscript freeze (#42);
+- the 2026-11-17 house rules, the author TODO file and the archive convention (#47);
+- hash-based gates (#48).
+
+The deployed `instructions/` copy matches this release.
+
+## [v1.4.0] — Gates compare content hashes, not file dates (#48)
+
+False alarms on 2026-11-16/17 all came from file dates: an identical-content restore of Ch1–3 made the manuscript look newer than the Kindle build (PHASE 6.9 entry); a status-word tidy of Ch2's `MANUSCRIPT_REVISED.md` read as a stale lock (a congruency HOLD); a Kindle title-only fix made the 6.5 report look stale. Edited in place in `v_1_3_0/`, like #42.
+
+### Changed
+- **The stale-lock rule is hash-only.** The lock is stale only when the manuscript DOCX/MD hashes match neither `MANUSCRIPT_LOCKED.md` nor a newer `MANUSCRIPT_SYNCED.md`. A newer `MANUSCRIPT_REVISED.md` is informational on its own; a revision that changes the text shows in the DOCX hash once the DOCX is edited (between the approval and that edit the lock reads as current; 6.9 §0 asks for a check that no approved section is waiting). Before a lock exists (the 2.5 entry check against `GOVERNANCE_READY.md`) there is no hash of record, and the date stays. PHASE 2.5 §5 and §9, MASTER, HOW_TO_RUN, PHASE 3, 3.5, 3.5A, 3.5B, 3W, PHASE 4 Part 0.
+- **PHASE 6.9 §0.** The Kindle counts as current when the manuscript hashes match the record and `KINDLE_BUILT.md`'s Kindle DOCX SHA-256 and chapter version match the current Kindle and the record. The 6.5 report must certify the current Kindle DOCX by its `kindleDocxSha256:` line. File dates are the fallback only where no hash is recorded (a `KINDLE_BUILT.md` with no Kindle hash, such as Ch6's; a 6.5 report written before #48, whose hashes are shortened). A Kindle change after the 6.5 report, even a title-only fix, still needs a new report; a confirm-only 6.5 run is #52.
+- **PHASE 6.5** chapter reports record `kindleDocxSha256: <64-hex>` (doc and runner prompt).
+- **Kept on file dates, on purpose:** trigger order (a `MANUSCRIPT_SYNCED.md` newer than the lock), eBook/print/workbook re-exports, `LAYOUT_VERIFIED.md`, 0P, the congruency report against its inputs (no input hashes recorded), recordings against the 6.9 build time, and PHASE 4 Part 0's stop when `MANUSCRIPT_REVISED.md` is newer than the eBook PDF.
+- HOW_TO_RUN Step 5: a file listed as older than the manuscript is information when the lock has hashes.
+
+### Local tools (backed up as `<name>.backup_20261117b` next to the file)
+- `run-pipeline.ps1`: `Get-LockProblem` no longer returns "MANUSCRIPT_REVISED.md is newer than the lock"; the 6.5 prompt asks for the `kindleDocxSha256:` line; the 6.9 prompt says section 0 goes by hash.
+- `congruency_check.py` (`leg_files`): a newer `MANUSCRIPT_SYNCED.md` supersedes the lock when the manuscript matches its hashes (was: when the manuscript's date was older); a newer REVISED file is an informational row, not a hold; "older than the manuscript" holds only when the lock has no hash lines.
+- `release_check.py` (`synced_newer`): "edited after the sync" compares the sync's hash lines (the date is the fallback for a sync without them).
+- New `tests/test_hash_not_date.py` (14 tests): identical restore passes, real text change holds, newer REVISED with equal hashes passes, the Part 0 sync basis, and the date fallbacks.
+
+## [v1.4.0] — 2026-11-17 house rules, the author TODO file, the archive convention (#47)
+
+<AUTHOR>'s decisions of 2026-11-16/17 (TW, chat), which the runner couldn't see yet. Edited in place in `v_1_3_0/`, like #42 and #43.
+
+### Added
+- **MASTER section 10:** seven dated rows (narration, Kindle linked footnotes, the epigraph, workbook thumb tabs, figure backgrounds, the author TODO file, the archive), each with its source and where it starts; a note that process and build rules apply to every run from their date, whatever the lock state; two new subsections, "The author TODO file" and "Archive".
+- **PHASE 6.9 step 1: narration follows the Kindle text,** which matches the manuscript (Whispersync). Print-only boxes and quotes are never read, short spoken figure descriptions stay, running Part labels are not read, callouts are read where the Kindle places them, and footnote labels are read as the Kindle has them. This replaces the 2026-11-12 practice of narrating from the print/eBook layout. A script with a build line dated before 2026-11-17 is rebuilt. A link-only Kindle rebuild changes only `kindleDocxSha256`; it stales `AUDIOBOOK_READY.md` (a re-run, no re-record), in the order relink, congruency pass 2, 6.5 Kindle re-check, 6.9.
+- **PHASE 4 Part A: linked footnotes.** Citations link to the References and back, and lettered notes to their notes and back. They are built as DOCX bookmarks plus internal hyperlinks (not Word footnote objects), use `#` anchors in the Kindle HTML and chapter-prefixed ids (B2), and add a metadata and checklist line. Native builder support is tracked in #46 and #49.
+- **PHASE 6.5 §4:** the links resolve both ways in Kindle Previewer; a broken link is Major.
+- **PHASE 2.5 §3.1b:** an epigraph row. Every chapter opens with an attributed epigraph after the Lesson and Core Value labels, verified as a source line. This applies going forward only; Ch1, Ch4 and Ch6 are not retrofitted unless <AUTHOR> names them.
+- **PHASE 3W W2b and PHASE 4 0P:** the workbook PART thumb tabs bleed by design. Their safe-zone warnings, prompt-line runts and the colour step-number buttons are expected and count as accepted (PHASE 6.5 §8 and PHASE 7 say so); a layout error still blocks, and real layout problems are still raised.
+- **ROLLOUT_TEST_PLAN:** one row for the link-only relink, the expected thumb-tab warnings and an archive move.
+- **HOW_TO_RUN golden rules 6 and 7:** the author TODO file (`<AUTHOR>_TODO.md`, in the folder that holds `<BOOK_ROOT>`) and the archive convention.
+
+### Changed
+- **Figure backgrounds may vary** (PHASE 3 A0 check and figure export spec, PHASE 3.5 §9 and §15). The export spec's "transparent or white background" is dropped. Labels, titles, watermarks and garbled text are still checked.
+- **One archive per chapter**, `Chapters/<ChapterName>/ARCHIVE/<YYYYMMDD>/` with its `ARCHIVE_MANIFEST.md`, never `Final/ARCHIVE`. The book-level `_Archive/<ChapterName>/` release folder is retired (MASTER folder map, HOW_TO_RUN Step 8, PHASE 7 Archive, PLACEHOLDERS). Archived files go into descriptive subfolders, never a working folder name such as `Audiobook/` or `InDesign/`, which the local watchers search; front matter, Parts and back matter have their own `ARCHIVE/`. The PHASE 2.5 review-copy and errata lines point to it. `Governance/_Backups/` and the `*_superseded_*` trigger renames are unchanged.
+
+---
+
+## [v1.4.0] — Manuscript freeze after PHASE 4 Part 0; every check before the 2.5 lock (#42)
+
+<AUTHOR>'s decision (2026-11-16): after the PHASE 2.5 lock the manuscript kept being reopened, by late content audits (PHASE 6.5, the close-out audits), by house rules adopted mid-book and retrofitted, and by post-lock research. Every reopening redid the eBook, print, Kindle, RAG and audio. Edited in place in `v_1_3_0/`, like #40 and #43. The pilot is Ch7; Ch1 to Ch6 stay on the existing process.
+
+### Author decisions (Terence, 2026-11-17, chat: "go with your picks")
+- "Final lock once" means once before the Kindle build; Step 0V re-exports still count as Part 0 (confirmed).
+- Between the lock and Part 0, `MANUSCRIPT_REVISED.md` stays for claim, number or citation changes a layout edit can't carry (confirmed).
+- MASTER section 10: the "From" column awaits his review; not a merge blocker.
+- **The workbook manuscript freezes too.** Its checks run before the 2.5 lock (which records its hashes); small layout edits only after it; PHASE 3W W3 syncs them back once and writes `WORKBOOK_READY.md` with a `finalLock: yes` line, before the chapter's Kindle build; read-only after that except errata. The sync stays in W3 (least change: Step 0V already requires a current `WORKBOOK_READY.md` before Part A). PHASE 3W, PHASE 2.5 (§3.1b, §5, §9), PHASE 4 Part 0, MASTER, HOW_TO_RUN Step 5.
+- **`freezePilot:` stays opt-in until Ch7 has completed PHASE 4** (Part 0 final lock and Part A); after that every chapter's first lock writes it, and a re-lock carries it only if the previous lock had it (PHASE 2.5 §5, MASTER).
+- Keep the live `Get-LockProblem` runner change (below).
+- The runner and deployment follow-ups move to their own issue, #46.
+- Also from the delta review: the workbook's hash of record (the synced hashes in `WORKBOOK_READY.md`, else the lock's `workbook:` line; checked at Step 0V and PHASE 7, never staling the chapter lock), one `workbook:` line format, and a shorter chain for a workbook-only errata.
+
+### Added
+- **Freeze chapters.** A lock with a `freezePilot:` line is on the new process; the line is carried forward on every re-lock (PHASE 2.5 §5). Ch7's lock of 2026-11-16 already has it.
+- **PHASE 2.5 §3.1b, content checks before the lock:** research, hedges, citations and footnote form, glossary casing and term forms, house form, callouts, figures, the workbook exercise, typos, and the house rules in force on the lock date. They are moved here: PHASE 6.5 and the close-out audits no longer check a freeze chapter's text. (No phase file listed hedges, footnote form or casing as 6.5 checks; they ran in chat. The list follows the categories of Ch7's pre-build check.)
+- **The author edits in Word.** Claude puts each item to <AUTHOR> (the heading, the exact sentence, the suggested wording), gives a highlighted, commented review copy (`Manuscript/<ChapterName>_Manuscript_REVIEW_<YYYYMMDD>.docx`), applies mechanical items only on "apply for me", then syncs the MD, verifies it and keeps the one decisions log (`<ChapterName>_LockDecisions.md`, short form allowed; no separate audit report).
+- **An author rewrite** before the lock gets the checks again on the rewritten paragraphs, and only the rewritten source sentences go to a **scoped Copilot re-review**. This is the Ch7 pattern: 11 restated source-attribution sentences, 8 verified and 3 partially supported (narrowed along Copilot's suggestions), recorded in `RESEARCH_CLEAR.md` with the earlier clearance carried forward for the unchanged text.
+- **The final lock:** PHASE 4 Part 0's `MANUSCRIPT_SYNCED.md` with a `finalLock: yes` line (PHASE 4, 0.8). There is no new trigger file. A re-export during Step 0V, before Part A, is still part of Part 0; after Part A has built Kindle from the final lock, a Part 0 re-run only confirms (NO_DIFFERENCES) and accepts no wording.
+- **PHASE 2.5 §9:** the manuscript is read-only after the final lock; the next-edition log; the major-error criteria (factual, safety, legal, a broken claim or citation); the errata step (an `Errata — <criterion>: NE-<nnn>` section in `MANUSCRIPT_REVISED.md` with the approval line; DOCX in Word, MD sync, PHASE 1 and 2 for the changed sections, a delta re-lock, the layouts and a new final lock, Part A, 5, 6 and 6.5 again; `AUDIOBOOK_READY.md` goes stale through its hashes, and 6.9 records the chapter again in full).
+- **Next-edition log:** `_BookGovernance/NextEdition/NEXT_EDITION_LOG.md`, one append-only table for the book (`ID | Date | Chapter | Found by | Location | Current text | Issue | Suggestion | Major? | Status`).
+- **MASTER section 10, house rules (dated; forward only):** a rule applies to chapters not yet locked on its date, never retrofitted unless <AUTHOR> names a chapter; the rules in force from 2026-10-29 to 2026-11-16 are listed with their dates.
+- **ROLLOUT_TEST_PLAN:** pre-lock checks, the final-lock line, a 6.5 next-edition row, and the errata loop.
+
+### Changed
+- **PHASE 2.5:** the lifecycle table and state machine gain the final lock (S8) and an errata path (path 4); two decision values for freeze chapters, `Apply for me` and `Edited by author`; the stale-lock rule notes that gates read the REVISED file's time, so after a final lock only an `Errata` section belongs there; §7 (after the lock) and §8 (rules) cover freeze chapters; a new exit-gate item.
+- **PHASE 4:** Part 0 is the final lock for a freeze chapter; print edits reach it through the eBook (0P checks); 0.1 uses the hash of record; 0.6 does one verbatim-quote refresh after the final lock; 0.7, 0R, 0C and B0 send findings in a final-locked chapter to the next-edition log, or errata for a major error; B1's re-run line.
+- **PHASE 6.5:** for a freeze chapter it checks the formats against the manuscript, never the manuscript; content findings go to the log and a new "Next-edition items" report section, never to the remediation list; a major error is a Critical issue routed to errata.
+- **PHASE 3, 3.5, 3.5B, HOW_TO_RUN Steps 2d and 3:** for a freeze chapter a small wording edit goes into the layouts (Part 0 syncs it), and only a claim, number or citation change goes through `MANUSCRIPT_REVISED.md`.
+- **PHASE 0.9 Mode D, 5, 6, 6.9, 7, HOW_TO_RUN, MASTER:** read-only after the final lock; the trigger, deliverable and folder maps; the PHASE 7 checklist item.
+- **COPILOT_HANDOFFS** (the standard's rule L, README step 4): after a final lock a Copilot finding goes to the next-edition log, or errata for a major error.
+- **MASTER versions table:** PHASE 6 is now "changed" (the freeze note), so `release_audit.py` stays green.
+- **MASTER flow diagram:** two lines still said 6.9 waits for B0; they now follow #43 (per chapter).
+
+### Fixed
+- Lines saying Ch1 to Ch5 have no lock (MASTER, HOW_TO_RUN Steps 5v and 5c, PHASE 2.5 §0, PHASE 4 0C and the dependency and exit gates). All of Ch1 to Ch7 are locked; Ch1 to Ch5 are protected, so they run with Claude in chat. Release-note lines keep their text with a dated pointer.
+
+### Local tools (backed up as `<name>.backup_20261117` next to the file)
+- `_BookAutomation\pipeline\run-pipeline.ps1`, `Get-LockProblem`: the DOCX and MD are current when both match the lock, or both match a newer `MANUSCRIPT_SYNCED.md` (the PHASE 2.5 §0 hash-of-record rule). Without it, a PHASE 4 re-run after Part 0 had accepted a change (Step 0V, `P4_DECISIONS`) was blocked as a stale lock. Tested on Ch1 to Ch7 (all current) and on a scratch chapter (changed with no sync: stale; both matching a newer sync: current; one file on the lock and the other on the sync: stale; changed after the sync: stale).
+
+### Follow-ups (not made here; tracked in #46)
+- Deploy the merged `v_1_3_0` to `_BookAutomation\pipeline\instructions\` (backup first), after <AUTHOR>'s go-ahead for the merge.
+- Runner, PHASE 4 job prompt: write the `finalLock:` line when the lock has `freezePilot:`; in a confirm-only re-run, put any difference in `P4_DECISIONS.md` without the `Accept PDF` option.
+- Runner, PHASE 6.5 job prompt: for a freeze chapter, allow appending to `NEXT_EDITION_LOG.md` (the one exception to "do not modify any existing file") and never propose a manuscript edit.
+- Runner, PHASE 2.5 job prompt: the §3.1b checks, the short decisions log, the review copy.
+- Runner and n8n: after a final lock, tell a REVISED section titled `Errata` from any other (today any newer REVISED file makes the lock stale, by its time).
+- `release_check.py`: verify the `finalLock:` line (chapter and workbook), the workbook DOCX/MD hash of record, and the PHASE 7 freeze item.
+- Runner, PHASE 3W job prompt (added 2026-11-17): write the workbook `finalLock:` line in `WORKBOOK_READY.md` for a freeze chapter; after the chapter's Kindle build, confirm only (no *Accept PDF*).
+
+---
+
+## [v1.4.0] — PHASE 6.9 runs per chapter (#43)
+
+<AUTHOR>'s decision (2026-11-16): record chapter by chapter. #40 (PR #41) made 6.9 wait for the book-wide final audit covering every chapter's sync, which with 31 chapters held every recording until the last chapter's PHASE 4.
+
+### Changed
+- **6.9 no longer waits for the whole book.** A chapter's 6.9 starts once its PHASE 6.5 Publishing Ready, `MANUSCRIPT_SYNCED.md` and congruency pass 2 PASS are in place (`run-pipeline.ps1`, PHASE 6.9, MASTER, HOW_TO_RUN, PHASE 7, ROLLOUT_TEST_PLAN). The "6.9 waits for the whole book" item of #40 below is superseded.
+- **Later revisions:** a B0 cross-chapter fix or other approved revision to a recorded chapter makes its `AUDIOBOOK_READY.md` stale (the PHASE 7 release check already compares the recorded hashes); the chapter is recorded again in full.
+- **Recording practice:** <AUTHOR> records in batches of about seven ready chapters (about 1.5 hours of narration each); the per-chapter gate just marks a chapter ready and it waits for its batch.
+
+### Fixed
+- `release_check.py` adds its own folder to `sys.path`, so `import phase69` works under `python -I`.
+
+---
+
+## [v1.4.0] — The audiobook moves to PHASE 6.9 (#40)
+
+Edited in place in `v_1_3_0/`, like #34 and #38. This is the author's decision (2026-11-16). The audiobook used to be PHASE 4 Part C, recorded from the Kindle output before PHASE 5. PHASE 6 and 6.5 could still change the manuscript after that, so recordings needed pickups, and about 150 edits across Ch1 to Ch5 left the audio choppy and unlike the author's voice in the edited places.
+
+### Added
+
+- **`PHASE 6.9- Audiobook (Narration Script + Recording).md`** (v1.0), between PHASE 6.5 and PHASE 7. It holds all of the old Part C:
+  - the narration script, built from the Kindle DOCX after 6.5 has certified Publishing Ready;
+  - the optional XTTS draft;
+  - the author's recording of the **whole chapter** (no pickups after 6.9);
+  - the audiobook QA, and a congruency "PHASE 6.9 pass" (manuscript against the script, plus the audio QA result).
+- PHASE 6.9 also has a book mode, which assembles the `<BOOK>_AUDIOBOOK` set (formerly PHASE 4 Part B, B4b).
+- New files: the checklist `<ChapterName>_PHASE6_9_AudiobookChecklist.md`, the trigger `Audiobook/Trigger/AUDIOBOOK_READY.md` or `AUDIOBOOK_INCOMPLETE.md`, and `_Pipeline/RERUN_P6.9.md`.
+- `AUDIOBOOK_READY.md` goes stale when a hash it records changes, and the chapter is then recorded again in full.
+
+### Changed
+
+- **PHASE 4:** Part C and B4b are now pointers to PHASE 6.9. Congruency pass 2 runs after Part A (new step 9b) and adds only the Kindle DOCX. "Audiobook (always last)" and "recorded only after the lock" now point to 6.9. The checklist and the Part B gate have no audio items.
+- **PHASE 5:** its gate no longer waits for the audiobook.
+- **PHASE 6.5:** the audiobook is no longer certified here. There is no Audiobook sub-certification, input row or book-mode check, so a missing recording is not an issue.
+- **PHASE 7:** the entry needs a current `AUDIOBOOK_READY.md` as well as Publishing Ready. A new PHASE 6.9 section holds the audio items. The completion rule lists 6.9, and `<BOOK>_AUDIOBOOK` points to 6.9 book mode.
+- **MASTER_PIPELINE_OVERVIEW** and **HOW_TO_RUN:**
+  - the order of work, the phase table, the versions table and the flow diagram;
+  - deliverables, triggers, the LLM and publishing maps, the automation table and the manual steps;
+  - in HOW_TO_RUN, Step 6 is now RAG, automation and publication QA, and Step 7 is the recording.
+- **Pointer updates:** PHASE 0.9, 1, 2.5, 3, 3.5 and 3W, `ROLLOUT_TEST_PLAN.md`, `COPILOT_HANDOFFS/HOW_TO_USE_COPILOT.md`. The publication-QA handoff no longer uploads the narration script; it is rebuilt after that review.
+- Historical release notes are left as they were, with a dated pointer where they state a rule that changed.
+
+### Update: Terence's answers (2026-11-16)
+
+- **No pickups:** a full re-record is needed only when narrated text changes after `AUDIOBOOK_READY.md`. Fixes made inside 6.9 are fine.
+- **6.9 waits for the whole book** *(superseded 2026-11-16 by #43: 6.9 runs per chapter)*. A chapter's 6.9 starts only after its own PHASE 6.5 Publishing Ready **and** the book-wide final audit: PHASE 0.9 Mode D, run at PHASE 4 Part B step B0, trigger `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md`, which must be newer than **every** chapter's `MANUSCRIPT_SYNCED.md` (the whole book, the PHASE 4 B1 rule). Recording therefore starts after the last chapter's PHASE 4.
+- **A 6.9 recording** is one written after the build time in the 6.9 script's `<!-- phase69Build: <YYYY-MM-DD HH:MM> · kindleDocxSha256: <hash> -->` line. A pre-6.9 script always gets the line when rebuilt. The build time changes only when the narrated text changes, so pronunciation-guide or marker edits keep the recording. An older PHASE 4 recording never counts.
+- **PHASE 6.5** states its verdict as one exact line, `**Overall: Publishing Ready**` or `**Overall: Review Required**`. The 6.9 gate and the release check read it.
+- **When `AUDIOBOOK_READY.md` is written,** any `AUDIOBOOK_INCOMPLETE.md` is renamed to `*_superseded_<timestamp>.md`.
+- **`AUDIOBOOK_READY.md` has a fixed format** with SHA-256 lines, and it goes stale only when a recorded hash changes. A re-run with unchanged narrated text keeps the recording.
+- **Tools updated the same day** (below). Ch1 to Ch7 all have `MANUSCRIPT_LOCKED.md`; Ch1 to Ch5 are protected (the runner never processes them), so they run 6.9 with Claude in chat, under the same gate.
+
+### Local tools (each backed up as `<name>.backup_20261116.<ext>` next to the file)
+
+- `H:\Automation\LocalAI\release_check.py` has a new "PHASE 6.9 — Audiobook" section, after PHASE 6.5. It checks:
+  - that every final MP3 was written after the 6.9 script's build time (shared helper `H:\Automation\LocalAI\phase69.py`, new);
+  - the 6.9 checklist;
+  - that `AUDIOBOOK_READY.md`'s recorded hashes (manuscript DOCX and MD, script, each MP3) still match;
+  - the Publishing Ready row now matches only an "Overall: Publishing Ready" verdict.
+- `_BookAutomation\phase4_tools\congruency_check.py`:
+  - pass 2 is pass 1 plus the Kindle DOCX (no script, no audio);
+  - new pass 3 (PHASE 6.9, report `_Congruency_Pass3`) adds the narration script and the audiobook QA legs;
+  - audio difference keys now include the QA report name, so PHASE 4 acceptances don't carry over to a 6.9 recording, and "stale audio" uses the 6.9 build time;
+  - `--pass 1|2|3`.
+- `H:\Automation\LocalAI\congruency_watch.py`:
+  - pass 1 and 2 no longer wait for the narration script or the MP3s;
+  - pass 3 runs only when the script carries the `phase69Build` line, every MP3 was written after its build time, and each MP3 has a newer audiobook QA report, so unrecorded chapters, and older PHASE 4 recordings, never run it;
+  - **one-off emails:** when the watcher first picked up this change (2026-11-16 14:46), it re-sent 12 congruency HOLD emails (pass 2 for Ch1–6, Part I, Lesson 1 and 2; pass 1 for Ch4, Part I, Lesson 1). Dropping the script and audio legs changed each report's fingerprint; the differences themselves are not new. The new signatures are saved, so they don't repeat;
+  - `RUN_CONGRUENCY.md` accepts `pass 3`.
+- `_BookAutomation\pipeline\run-pipeline.ps1`:
+  - the PHASE 4 gate no longer waits for `*_NarrationScript.md`;
+  - the PHASE 4 job runs pass 2 after Part A;
+  - a new `6.9` gate:
+    - an "Overall: Publishing Ready" verdict;
+    - the chapter's `MANUSCRIPT_SYNCED.md` present;
+    - `AUDIT_FINAL_CLEAR.md` newer than every `Ch<N>_` folder's `MANUSCRIPT_SYNCED.md`, including folders that have no `Final\` yet (front matter, Parts and back matter are not checked);
+    - pass 2 PASS;
+  - job text with the 6.9 script rule and the `AUDIOBOOK_READY.md` format, and an exit check (`AUDIOBOOK_READY.md`).
+- `_BookAutomation\pipeline\decide.js`:
+  - 6.5 PASS queues 6.9, and 6.9 PASS queues 7 (6.5 not passing still queues 7, to list the gaps);
+  - a 6.9 name and email;
+  - `RERUN_P6.9.md` is recognised;
+  - the PHASE 2.5 email no longer says to record audio once the manuscript is locked.
+  - The n8n export (`_BookAutomation\n8n\RCF_ChapterPipeline.json` and `_UI-import.json`) was rebuilt with `build-n8n-workflow.py`, but **not imported**. Live n8n keeps the old routing until Terence re-imports it.
+- `pipeline-config.json`: a `phases."6.9"` entry. `build-n8n-workflow.py`: the notes list 6.9.
+- The deployed `pipeline\instructions\` copy was refreshed from this branch; the previous copy is in `instructions\_Backups\pre_audiobook_6_9_20261116\`.
+- Tests: `LocalAI\tests\test_release_check_phase69.py` and `test_congruency_passes.py`.
+
+---
+
+## [v1.4.0] — Callout quote marks (#38)
+
+From Chapter 7 on (rule dated 2026-11-10), callouts and pull quotes that use the book's own words carry no quotation marks in the eBook, print and Kindle; quote marks are only for an outside source or another person, never the author. Speech the book gives to the reader or a client counts as another person and keeps its marks. Stated in PHASE 1 (callout recommendations), PHASE 2 (governance check), PHASE 3.5 and 3.5B (checks) and PHASE 4 (Kindle). Earlier chapters are not retrofitted unless the author asks. Also from 2026-11-10: Core Value callouts are titled `RCF Core Value N • <Core Value>` in RCF Purple and Meta-Value callouts `RCF Meta-Value N • <Meta Value>` in RCF Blue, in every format.
+
+---
+
+## [v1.4.0] — Chapter Summary bullet rule (#34)
+
+Edited in place in `v_1_3_0/`, by the author's choice. From 2026-11-10 every bullet in a "Chapter N Summary" is one sentence (two at most), about 25 words at most, and a semicolon counts as a break; Chapter 5 is the model, and the rule applies from Chapter 6 on.
+
+Update (#36): from Chapter 7 on the summary has no "Closing Frame" and no personal anecdotes (practical applications are fine); Chapters 1-6 keep theirs. `check_summary_format.py` prints a non-failing note for a Closing Frame in a Chapter 7+ summary; PHASE 2.5 and PHASE 7 state the rule.
+
+### Added
+
+- **PHASE 2.5 `SUMMARY_FORMAT`** (minor, structural) finding category and a note in the "Not findings" paragraph that it is a length check, not a style judgment.
+- **`check_summary_format.py`** (stdlib, with tests in `tests/`) lists the offending bullets of a manuscript MD. Chapters 6 and 7 pass (0 of 79 and 0 of 39 over the rule).
+- **PHASE 7** checklist line for the rule.
+
+---
+
 ## [v1.3.0] — 2026-10-31
 
 **Folder:** `v_1_3_0/` · **Previous:** `v_1_2_6/` (unchanged, kept for books mid-flight) · **Tag:** `v1_3_0.ALPHA` (published); `v1_3_0.BETA` with the reconciliation; `v1_3_0.RC` after the sandbox chapter passes; PROD after the author's own Copilot research test (Ch6, 2026-10-31, found and fixed the Stage 2 gap below) and his go-ahead. The steps only a human can do (InDesign layout checks, audiobook recording, the Kindle Previewer) are first proven in live use, not in the sandbox

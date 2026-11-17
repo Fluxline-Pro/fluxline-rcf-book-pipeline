@@ -3,7 +3,7 @@
 > **Pipeline position:** PHASE 3 of 7 (Design + Production) · **Upstream gate:** `Governance/Trigger/GOVERNANCE_READY.md` exists **and** `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` is current (PHASE 2.5, v1.2.5) · **Downstream:** PHASE 3.5 Design QA
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
-**Release v1.2.5 (2026-10-24): PHASE 3 starts from the manuscript lock.** The chapter's content audit now runs before design, in PHASE 2.5. PHASE 3 needs a **current** `Manuscript/Trigger/MANUSCRIPT_LOCKED.md`: it exists, the DOCX and MD hashes it records match the files, and no `MANUSCRIPT_REVISED.md` section is newer. If the lock is missing or stale, stop, write nothing, and tell <AUTHOR> to finish PHASE 2.5 (or its delta audit). A0 now starts when the lock is written, not when `GOVERNANCE_READY.md` is.
+**Release v1.2.5 (2026-10-24): PHASE 3 starts from the manuscript lock.** The chapter's content audit now runs before design, in PHASE 2.5. PHASE 3 needs a **current** `Manuscript/Trigger/MANUSCRIPT_LOCKED.md`: it exists, the DOCX and MD hashes it records match the files (or those of a newer `MANUSCRIPT_SYNCED.md`; PHASE 2.5 section 0). A newer `MANUSCRIPT_REVISED.md` is informational on its own; the hashes decide (#48). If the lock is missing or stale, stop, write nothing, and tell <AUTHOR> to finish PHASE 2.5 (or its delta audit). A0 now starts when the lock is written, not when `GOVERNANCE_READY.md` is.
 
 **Release v1.2.1 (2026-10-22): PHASE 3 starts automatically when PHASE 2 passes.** When `Governance/Trigger/GOVERNANCE_READY.md` is issued, the automation:
 1. writes the chapter's **figure prompts and figure checklist** (A0);
@@ -39,11 +39,11 @@
 **The PHASE 3 build order (<AUTHOR>, 2026-10-31).** References and manuscript are finished and locked first (PHASE 2.5); nothing below starts earlier. Then, for the book **and** the workbook:
 1. training materials and the design packet, and the figures you request (A0);
 2. updates from your review of those;
-3. the **eBook pass**, which you review and write notes on (wording changes go through `MANUSCRIPT_REVISED.md`, DOCX first, before the print build);
+3. the **eBook pass**, which you review and write notes on (wording changes go through `MANUSCRIPT_REVISED.md`, DOCX first, before the print build; for a freeze chapter, #42, a small wording edit goes into the eBook (the print replicates it), and PHASE 4 Part 0 syncs it back once; only a claim, number or citation change still goes through `MANUSCRIPT_REVISED.md`);
 4. the **print IDML**, created from the eBook after your notes, so it replicates the eBook;
 5. **print is required:** you review it in InDesign, edit it, and pass it off;
 6. QA (PHASE 3.5 and PHASE 3W).
-PHASE 4 then starts: your layout verification (Step 0V), Kindle, and the audiobook last.
+PHASE 4 then starts: your layout verification (Step 0V) and Kindle. The audiobook is last of all, in PHASE 6.9 (2026-11-16).
 
 **Trigger:** `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` is issued (PHASE 2.5 passed, Locked; v1.2.5), with `Governance/Trigger/GOVERNANCE_READY.md` in place. Before v1.2.5 the trigger was `GOVERNANCE_READY.md` alone. The runner starts PHASE 3 for the chapter. A protected chapter runs these steps with Claude in chat instead.
 
@@ -73,7 +73,7 @@ PHASE 4 then starts: your layout verification (Step 0V), Kindle, and the audiobo
   | Fig N: Title | `Figures/RGB/Ch<N>_Fig<#>_<Name>.png` (PNG for illustrations, JPG for photos), sRGB, ≥ 2400 px wide | `Figures/CMYK/Ch<N>_Fig<#>_<Name>.tif`, CMYK, 300 ppi at the placed width (6.5 in ≥ 1950 px), LZW, flattened | to make / draft / final |
 
 - **Photoshop steps** in the file, once: open the final RGB master, then Edit → Convert to Profile → the print profile used for the earlier chapters' TIFFs; check that the image is ≥ 300 ppi at its placed size; flatten; save as TIFF (LZW, no layers).
-- **After <AUTHOR> makes them:** check each against the manuscript, then update the FigureRegistry: status, final file paths (`imagePath` RGB, `printImagePath` CMYK), the **tool used** (AI disclosure rule), and alt text. For a figure made with Copilot (or any generator), also fill the provenance fields (`generator`, `promptVersion`, `dsmVersion`, `generatedOn`, `aiGenerated: true`, `approval: pending`, `colorMode`, `resolutionStatus`, `rights`, `revisionHistory`), keep every candidate in `Figures/Drafts/` (**one generation = one candidate = one `revisionHistory` entry**; another composition is Option 2 as a separate request, never a batch), and put Copilot's alt-text, long description and rationale drafts in the registry for <AUTHOR> to edit. A generated image is never canonical and never `approved` here: it goes through PHASE 3.5 and <AUTHOR>'s approval. Never add a label, term or number to a figure that the manuscript does not contain. Figures must be final before the eBook and print builds (PHASE 3.5B §1).
+- **After <AUTHOR> makes them:** check each against the manuscript (labels in the manuscript's exact wording, no title in the image, no watermark, no garbled text; the background colour may vary and is not a check item, 2026-11-16/17, #47, MASTER section 10), then update the FigureRegistry: status, final file paths (`imagePath` RGB, `printImagePath` CMYK), the **tool used** (AI disclosure rule), and alt text. For a figure made with Copilot (or any generator), also fill the provenance fields (`generator`, `promptVersion`, `dsmVersion`, `generatedOn`, `aiGenerated: true`, `approval: pending`, `colorMode`, `resolutionStatus`, `rights`, `revisionHistory`), keep every candidate in `Figures/Drafts/` (**one generation = one candidate = one `revisionHistory` entry**; another composition is Option 2 as a separate request, never a batch), and put Copilot's alt-text, long description and rationale drafts in the registry for <AUTHOR> to edit. A generated image is never canonical and never `approved` here: it goes through PHASE 3.5 and <AUTHOR>'s approval. Never add a label, term or number to a figure that the manuscript does not contain. Figures must be final before the eBook and print builds (PHASE 3.5B §1).
 
 **Step 2: design packet (automatic).** It needs `<PACKET_DSM_ROOT>/DSM_APPROVED.md`, written once when <AUTHOR> approves the packet DSM.
 - Build every A2 output as described in A2b, saved locally under `DesignPacket/`.
@@ -168,7 +168,7 @@ The workbook PDFs are not Claude Design exports: <AUTHOR> exports them from InDe
 
 Every figure in the chapter's `FigureRegistry.json` must also exist as a raster image in `DesignPacket/figures_export/`, whether it was produced by Claude Design or drawn by <AUTHOR>:
 - Name: `<ChapterName>_Fig<#>_<Name>.png`
-- Minimum 1600 px on the long edge, RGB, transparent or white background
+- Minimum 1600 px on the long edge, RGB. (The figure's background may vary across the chapter and the book, 2026-11-16/17, #47; the earlier "transparent or white background" requirement no longer applies.)
 - Alt text recorded in the FigureRegistry entry (PHASE 4 carries it into the Kindle metadata)
 - Anything still a placeholder at this point is listed in the PHASE 3.5 report and must be resolved before PHASE 4
 
@@ -178,7 +178,7 @@ Every figure in the chapter's `FigureRegistry.json` must also exist as a raster 
 |---|---|---|
 | Print layout | **PHASE 3.5B generated IDML, then <AUTHOR>'s finish** (v1.2, default): `idml_chapter_build.py` builds `InDesign/<NNN>_Chapter<N>_<Title>.idml` from the eBook page, on <AUTHOR>'s last finished chapter IDML. **Or** PHASE 3.5A generated import, then manual finish (v1.1.3): `idml_build.py` turns the manuscript DOCX into `InDesign/<ChapterName>_Import.txt`, styled with the print template's styles; <AUTHOR> places it into a copy of the template and lays out the chapter in InDesign. `Ch<N>_Print7x10.dc.html` and the `/InDesign/` prep stay the design reference. See `PHASE 3.5A- Print Build (Automated Tagged Text).md` | `<CH_ROOT>/InDesign/<ChapterName>_Import.txt` + `_BuildManifest.json` + `_BuildReport.md` (3.5A) → <AUTHOR>'s InDesign document → `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf` |
 | Workbook (eBook 8.5×11 + full-color print 7×10) | **<AUTHOR>, in InDesign**, from the Claude Design workbook. The exercise print IDML is generated by PHASE 3.5B (`idml_workbook_build.py`, v1.2) into `Workbook/`; an optional tagged-text import remains in PHASE 3W W1b (off by default); InDesign files stay in `<WORKBOOK_INDESIGN_ROOT>`. See `PHASE 3W- Workbook Track (eBook + Print).md` | The workbook profile's location and formats (PHASE 3W W2): `chapter`: `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf` + `_Workbook_Print.pdf`; `book-root`: `<WORKBOOK_BOOK_ROOT>/<section>/<NN>_Ex_<L>_<N>_Chapter<C>.pdf` + `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf` (print only if listed; the upload is the cue) |
-| Audiobook | **Moved to PHASE 4 Part C** (recorded from the Kindle output; XTTS draft + <AUTHOR>'s Audition recording) | — |
+| Audiobook | **Moved to PHASE 6.9** (PHASE 4 Part C until 2026-11-16; recorded from the Kindle output; XTTS draft + <AUTHOR>'s Audition recording) | — |
 
 ## A4. Book assembly mode (once every chapter for the edition has passed PHASE 3.5)
 
@@ -190,7 +190,7 @@ Assemble chapter outputs, plus FrontMatter, Parts, and BackMatter sections, into
 | <BOOK>_WORKBOOK_EBOOK | `_BookPublication/<BOOK>_WORKBOOK_EBOOK/` | **Assembled in PHASE 3W (W4)** after PHASE 4 B0, not here |
 | <BOOK>_PRINT_BOOK | `_BookPublication/<BOOK>_PRINT_BOOK/` | Manual InDesign book file + print-ready PDF |
 | <BOOK>_WORKBOOK_PRINT_BOOK | `_BookPublication/<BOOK>_WORKBOOK_PRINT_BOOK/` | **Assembled in PHASE 3W (W4)** after PHASE 4 B0, not here |
-| <BOOK>_AUDIOBOOK | `_BookPublication/<BOOK>_AUDIOBOOK/` | **Assembled in PHASE 4 Part B**, not here |
+| <BOOK>_AUDIOBOOK | `_BookPublication/<BOOK>_AUDIOBOOK/` | **Assembled in PHASE 6.9 book mode**, not here |
 
 **<BOOK>_KINDLE_EBOOK is not built here.** It is assembled in PHASE 4 book assembly mode from the per-chapter Kindle builds, once every chapter has passed PHASE 4.
 

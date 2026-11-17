@@ -19,7 +19,14 @@
 > **Pipeline position:** a side track that runs from the end of **PHASE 2** through **PHASE 3 / 3.5** for each chapter, then once per book after PHASE 4 Part B step B0 · **Upstream gate:** `Governance/Trigger/GOVERNANCE_READY.md` (per chapter) for W0; **a current `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` (PHASE 2.5, v1.2.5) for W1 onward** · **Downstream:** PHASE 4 Step 0V (for a chapter with a lock, v1.3.0), PHASE 6.5 (workbook sub-certification), PHASE 7
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
-**Release v1.2.5 (2026-10-24): the workbook is designed from the locked chapter.** W0 still runs at the end of PHASE 2. Everything from W1 on (the workbook design, W1b, W1c, and the W3 sync) also needs the chapter's `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` to be current: it exists, its DOCX and MD hashes match the chapter manuscript, and no `MANUSCRIPT_REVISED.md` section is newer. The workbook quotes and points into the chapter, so it is built only from the chapter's locked wording. If a PHASE 2.5 fix touches the workbook manuscript, W0 is re-run before the lock is written.
+**Release v1.2.5 (2026-10-24): the workbook is designed from the locked chapter.** W0 still runs at the end of PHASE 2. Everything from W1 on (the workbook design, W1b, W1c, and the W3 sync) also needs the chapter's `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` to be current: it exists, its DOCX and MD hashes match the chapter manuscript (or those of a newer `MANUSCRIPT_SYNCED.md`; PHASE 2.5 section 0). A newer `MANUSCRIPT_REVISED.md` is informational on its own; the hashes decide (#48). The workbook quotes and points into the chapter, so it is built only from the chapter's locked wording. If a PHASE 2.5 fix touches the workbook manuscript, W0 is re-run before the lock is written.
+
+**2026-11-17 (<AUTHOR>'s decision, #42; unreleased): the workbook freezes with its chapter.** For a freeze chapter (its `MANUSCRIPT_LOCKED.md` has a `freezePilot:` line), the workbook manuscript follows the chapter's rule:
+- its wording checks run before the PHASE 2.5 lock (PHASE 2.5 §3.1b), and the lock records the workbook DOCX and MD hashes;
+- after the lock, only small layout edits go into the workbook eBook and print InDesign files;
+- **W3 syncs them back once, and that sync is the workbook's final lock:** `WORKBOOK_READY.md` with a `finalLock: yes` line (W3, Result). W3 stays the one place the workbook sync lives, so nothing moves to PHASE 4; Step 0V already needs a current `WORKBOOK_READY.md` before the chapter's Kindle build, which gives the same "once, before Kindle" point as the chapter;
+- after the chapter's Kindle build (Part A), a W3 re-run only confirms, and the workbook manuscript is read-only except through errata (PHASE 2.5 §9). A content finding goes to the next-edition log;
+- The workbook's hash of record is the synced DOCX and MD hash in the standing `WORKBOOK_READY.md`, or, before W3 has run, the lock's `workbook:` hash; Step 0V and PHASE 7 check it alongside the PDF hashes. The workbook hashes never make the chapter lock stale.
 
 **New in v1.0.3 (2026-09-30).** The workbook ships in two formats only: an **eBook (PDF)** and a **full-color print book**. Claude Design builds the workbook from the workbook manuscript, and <AUTHOR> produces both formats from that in InDesign. It has **no Kindle edition, no audiobook, and no RAG ingestion**. Before this file, the workbook's steps were spread across PHASES 1–7, and several of them assumed an HTML-built eBook, a Kindle edition, and RAG ingestion.
 
@@ -185,6 +192,7 @@ The workbook print PDF gets the same deterministic check as the book's print PDF
 | **Per chapter** (`chapter`) | `<CH_ROOT>/Workbook/<ChapterName>_Workbook_Print*.pdf` (e.g. `_Workbook_Print.pdf` or `_Workbook_Print7x10.pdf`) | `<CH_ROOT>/Workbook/<ChapterName>_Workbook_eBook.pdf` | `<ChapterName>_Workbook_PrintQA.md` + `.json` |
 
 - **Checked:** text drift against the eBook PDF (line breaks, hyphenation, spacing, running heads, and folios ignored), and the print layout checks: widows, orphans, runts, stranded headings, stacked hyphens, doubled words, safe zone and trim, 7×10 trim and bleed, embedded and Type3 fonts, images under 300 ppi, RGB images, blank pages. See PHASE 4 Part 0P for the severities.
+- **Expected by design (<AUTHOR>, 2026-11-16/17, #47; MASTER section 10):** the PART thumb tabs bleed, so safe-zone warnings on them are expected; runts in prompt lines and the colour step-number buttons are fine too. `print_check.py` still flags them; whoever reads the report records them as expected, and they count as accepted without a per-item note (PHASE 6.5 §8, PHASE 7). Only warnings are covered: a layout error (text across the trim, a font not embedded) still blocks, and real layout problems (a widow in body text) are still raised.
 - **Page size:** the eBook is 8.5×11 in and the print is 7×10 in. That difference is expected; only wording is compared between them.
 - **Print-only differences:** <AUTHOR> logs them as quoted phrases in a `*PrintOnlyDifferences*.md` file at `<WORKBOOK_BOOK_ROOT>` (e.g. `Workbook_PrintOnlyDifferences.md`), or, in the `chapter` layout, at `<CH_ROOT>` (the chapter's `<ChapterName>_PrintOnlyDifferences.md`). The next run skips them.
 - **Fixes:** layout and print wording go into the print InDesign workbook, then re-export. Wording that should reach the workbook manuscript goes into the eBook InDesign workbook, then re-export and re-upload, which re-runs W3.
@@ -204,6 +212,7 @@ Run when W2's files appear or change. Write `<CH_ROOT>/Governance/<ChapterName>_
      - It goes to `<CH_ROOT>/_Pipeline/P3W_DECISIONS.md` as a table (# · Location · DOCX text · PDF text · Why flagged · Recommendation · **Decision**, left blank).
      - <AUTHOR> writes *Accept PDF*, *Keep DOCX*, or *Defer* (with initials) in the Decision column. The next W3 run applies those decisions.
      - *Keep DOCX* means the PDF is wrong: fix it in InDesign and re-upload.
+   - **Freeze chapters (#42):** this sync is the workbook's final lock, once, before the chapter's Kindle build. After `Kindle/<ChapterName>_Kindle.docx` is newer than the standing `WORKBOOK_READY.md`, a W3 run only confirms: it must find no wording difference, *Accept PDF* is not offered, and a difference means the PDF is wrong (*Keep DOCX*) or, for a major error, the errata step (PHASE 2.5 §9).
 2. **Confirm PDF = DOCX = MD.** After the sync, all three give 0 word differences (ignoring page furniture: running heads, page numbers, and write-in lines).
 3. **Print and eBook match.** The print PDF has the same exercises, in the same order, with the same wording and exercise IDs as the eBook PDF. Page breaks may differ, since the page sizes differ. Evidence (v3.4): the W2b print QA report shows 0 text differences to check, and any remaining difference is logged as print-only. (Skip this, and step 5, when the book ships no print workbook; record "print: n/a".)
 4. **Exercise registry.** Re-check the chapter's entries against the synced workbook and the chapter manuscript (blocking rules as in the W0 gate). If the registry file, or this chapter's entries, don't exist yet (for example, a chapter built before v1.0.3 that skipped the W0 gate), create them now. **W3 never skips this step**, and `WORKBOOK_READY.md` can't be written without it.
@@ -221,12 +230,13 @@ Run when W2's files appear or change. Write `<CH_ROOT>/Governance/<ChapterName>_
   - the file name, date, and **SHA-256 hash** of every uploaded workbook PDF for this chapter's exercises, in the formats the profile lists (one or more exercises; eBook and/or print);
   - the synced DOCX/MD versions and hashes;
   - the number of sync changes;
-  - any items <AUTHOR> accepted.
+  - any items <AUTHOR> accepted;
+  - for a freeze chapter (#42), the line `finalLock: yes — <ISO date-time>, PHASE 3W W3 (#42); read-only from here, errata only (PHASE 2.5 §9)`. A re-sync before the chapter's Kindle build writes a new date; a confirm-only run adds `(confirmed <date>)`; an errata re-sync names the errata ID.
 - Otherwise → `WORKBOOK_INCOMPLETE.md` with the blockers.
 
 **Readiness is bound to the files.** Every consumer of `WORKBOOK_READY.md` (W4, PHASE 6.5, PHASE 7) recomputes the hashes of the uploaded PDFs (in `Workbook/` or `<WORKBOOK_BOOK_ROOT>`) and treats the trigger as stale if any hash differs from the recorded one.
 
-`WORKBOOK_READY.md` does **not** block `DESIGN_READY.md`, and the workbook is not a Kindle, audiobook, or RAG input. From v1.3.0, for a chapter with a lock, a current `WORKBOOK_READY.md` (or `WORKBOOK_NOT_APPLICABLE.md`) is required before PHASE 4 Step 0V and Part A, because the author wants the workbook solid before Kindle and the audiobook. It is also required for PHASE 6.5's workbook sub-certification and for PHASE 7.
+`WORKBOOK_READY.md` does **not** block `DESIGN_READY.md`, and the workbook is not a Kindle, audiobook, or RAG input. From v1.3.0, for a chapter with a lock, a current `WORKBOOK_READY.md` (or `WORKBOOK_NOT_APPLICABLE.md`) is required before PHASE 4 Step 0V and Part A, because the author wants the workbook solid before Kindle (and the audiobook, PHASE 6.9). It is also required for PHASE 6.5's workbook sub-certification and for PHASE 7.
 
 ---
 
@@ -243,6 +253,8 @@ Each hit is a follow-up for <AUTHOR>. If the fix belongs in the workbook:
 3. Re-export and re-upload (W2), which re-runs W3.
 
 A stale `WORKBOOK_READY.md` (older than a PHASE 4 Part 0 sync that flagged the workbook) is renamed `WORKBOOK_READY_superseded_<timestamp>.md`.
+
+**Freeze chapters (#42):** before the chapter's Kindle build, such a fix is a small layout edit in the workbook InDesign files, which W3 syncs back. After it, the workbook manuscript is read-only: a hit goes to the next-edition log, unless it is a major error (errata, PHASE 2.5 §9).
 
 ---
 
