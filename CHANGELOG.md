@@ -9,6 +9,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 <AUTHOR>'s decision (2026-11-16): after the PHASE 2.5 lock the manuscript kept being reopened, by late content audits (PHASE 6.5, the close-out audits), by house rules adopted mid-book and retrofitted, and by post-lock research. Every reopening redid the eBook, print, Kindle, RAG and audio. Edited in place in `v_1_3_0/`, like #40 and #43. The pilot is Ch7; Ch1 to Ch6 stay on the existing process.
 
+### Author decisions (Terence, 2026-11-17, chat: "go with your picks")
+- "Final lock once" means once before the Kindle build; Step 0V re-exports still count as Part 0 (confirmed).
+- Between the lock and Part 0, `MANUSCRIPT_REVISED.md` stays for claim, number or citation changes a layout edit can't carry (confirmed).
+- MASTER section 10: the "From" column awaits his review; not a merge blocker.
+- **The workbook manuscript freezes too.** Its checks run before the 2.5 lock (which records its hashes); small layout edits only after it; PHASE 3W W3 syncs them back once and writes `WORKBOOK_READY.md` with a `finalLock: yes` line, before the chapter's Kindle build; read-only after that except errata. The sync stays in W3 (least change: Step 0V already requires a current `WORKBOOK_READY.md` before Part A). PHASE 3W, PHASE 2.5 (§3.1b, §5, §9), PHASE 4 Part 0, MASTER, HOW_TO_RUN Step 5.
+- **`freezePilot:` stays opt-in until Ch7 has completed PHASE 4** (Part 0 final lock and Part A); after that every chapter's first lock writes it, and a re-lock carries it only if the previous lock had it (PHASE 2.5 §5, MASTER).
+- Keep the live `Get-LockProblem` runner change (below).
+- The runner and deployment follow-ups move to their own issue, #46.
+- Also from the delta review: the workbook's hash of record (the synced hashes in `WORKBOOK_READY.md`, else the lock's `workbook:` line; checked at Step 0V and PHASE 7, never staling the chapter lock), one `workbook:` line format, and a shorter chain for a workbook-only errata.
+
 ### Added
 - **Freeze chapters.** A lock with a `freezePilot:` line is on the new process; the line is carried forward on every re-lock (PHASE 2.5 §5). Ch7's lock of 2026-11-16 already has it.
 - **PHASE 2.5 §3.1b, content checks before the lock:** research, hedges, citations and footnote form, glossary casing and term forms, house form, callouts, figures, the workbook exercise, typos, and the house rules in force on the lock date. They are moved here: PHASE 6.5 and the close-out audits no longer check a freeze chapter's text. (No phase file listed hedges, footnote form or casing as 6.5 checks; they ran in chat. The list follows the categories of Ch7's pre-build check.)
@@ -36,13 +46,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 ### Local tools (backed up as `<name>.backup_20261117` next to the file)
 - `_BookAutomation\pipeline\run-pipeline.ps1`, `Get-LockProblem`: the DOCX and MD are current when both match the lock, or both match a newer `MANUSCRIPT_SYNCED.md` (the PHASE 2.5 §0 hash-of-record rule). Without it, a PHASE 4 re-run after Part 0 had accepted a change (Step 0V, `P4_DECISIONS`) was blocked as a stale lock. Tested on Ch1 to Ch7 (all current) and on a scratch chapter (changed with no sync: stale; both matching a newer sync: current; one file on the lock and the other on the sync: stale; changed after the sync: stale).
 
-### Follow-ups (not made here)
+### Follow-ups (not made here; tracked in #46)
 - Deploy the merged `v_1_3_0` to `_BookAutomation\pipeline\instructions\` (backup first), after <AUTHOR>'s go-ahead for the merge.
 - Runner, PHASE 4 job prompt: write the `finalLock:` line when the lock has `freezePilot:`; in a confirm-only re-run, put any difference in `P4_DECISIONS.md` without the `Accept PDF` option.
 - Runner, PHASE 6.5 job prompt: for a freeze chapter, allow appending to `NEXT_EDITION_LOG.md` (the one exception to "do not modify any existing file") and never propose a manuscript edit.
 - Runner, PHASE 2.5 job prompt: the §3.1b checks, the short decisions log, the review copy.
 - Runner and n8n: after a final lock, tell a REVISED section titled `Errata` from any other (today any newer REVISED file makes the lock stale, by its time).
-- `release_check.py`: verify the `finalLock:` line and the PHASE 7 freeze item.
+- `release_check.py`: verify the `finalLock:` line (chapter and workbook), the workbook DOCX/MD hash of record, and the PHASE 7 freeze item.
+- Runner, PHASE 3W job prompt (added 2026-11-17): write the workbook `finalLock:` line in `WORKBOOK_READY.md` for a freeze chapter; after the chapter's Kindle build, confirm only (no *Accept PDF*).
 
 ---
 

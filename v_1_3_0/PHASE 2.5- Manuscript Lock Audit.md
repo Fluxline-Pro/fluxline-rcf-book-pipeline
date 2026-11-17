@@ -78,9 +78,9 @@ The final eBook PDF does **not** create the lock. It starts the PHASE 4 final-wo
 3. **PHASE 4 Part 0's accept path** (after the lock): a safety net for wording the final eBook PDF carries that the manuscript lacks. It never applies wording that adds or strengthens an empirical claim, a number, or a causal or absolute statement, or that changes a citation: those go through path 2.
 4. **Errata** (freeze chapters, after the final lock; #42): a `MANUSCRIPT_REVISED.md` section titled `Errata — <criterion>: NE-<nnn>` with <AUTHOR>'s approval line, for a major error only, then path 2's chain and a new final lock (§9).
 
-**For a freeze chapter (#42)** the paths are used in order. Path 1 is where every content check happens (§3.1b). Between the lock and Part 0, path 3 is the routine route: <AUTHOR>'s small edits in the eBook and print layouts, synced back once. Path 2 stays for a change Part 0 may not apply (a claim, a number, a citation) or one too big for a layout edit. After the final lock, path 4 is the only one; any other content finding goes to the next-edition log.
+**For a freeze chapter (#42)** the paths are used in order. Path 1 is where every content check happens (§3.1b). Between the lock and Part 0, path 3 is the routine route: <AUTHOR>'s small edits in the eBook and print layouts, synced back once. Path 2 stays for a change Part 0 may not apply (a claim, a number, a citation) or one too big for a layout edit (confirmed by <AUTHOR>, 2026-11-17). After the final lock, path 4 is the only one; any other content finding goes to the next-edition log.
 
-**The hash of record** is the DOCX and MD hash in `MANUSCRIPT_SYNCED.md` when Part 0 changed the manuscript after the lock with <AUTHOR>'s decision and nothing was edited since; otherwise it is the hash in `MANUSCRIPT_LOCKED.md`. Every gate that compares a hash uses this rule. After a final lock (#42) it is the final-lock file's hash, which equals the lock's when Part 0 found no differences.
+**The hash of record** is the DOCX and MD hash in `MANUSCRIPT_SYNCED.md` when Part 0 changed the manuscript after the lock with <AUTHOR>'s decision and nothing was edited since; otherwise it is the hash in `MANUSCRIPT_LOCKED.md`. Every gate that compares a hash uses this rule. After a final lock (#42) it is the final-lock file's hash, which equals the lock's when Part 0 found no differences. For a freeze chapter's workbook manuscript (#42): The workbook's hash of record is the synced DOCX and MD hash in the standing `WORKBOOK_READY.md`, or, before W3 has run, the lock's `workbook:` hash; Step 0V and PHASE 7 check it alongside the PDF hashes. The workbook hashes never make the chapter lock stale.
 
 **Verifying sources, in one chain** (each step produces evidence; none is a verdict):
 
@@ -155,7 +155,7 @@ For a freeze chapter, every content check runs here, once, before the lock. Thes
 | House form | Heading punctuation, exercise titles, curly quotes and apostrophes, em dashes for emphasis only, the Chapter Summary rule (SUMMARY_FORMAT, §4) | `check_summary_format.py`, then a read-through |
 | Callouts and pull quotes | The callout rules in force; each recommended callout's source sentence still exists; none sits right before the sentence it echoes | PHASE 1 callout recommendations against the text |
 | Figures | Every figure referenced in the text and captioned (FIGURE, §4) | read-through |
-| Workbook exercise | The same checks on the chapter's workbook DOCX | read-through |
+| Workbook exercise | The same checks on the chapter's workbook DOCX; the workbook freezes with the chapter (§9), so its wording is settled here too | read-through |
 | Typos and grammar | Spelling, agreement, doubled words, dangling clauses | read-through |
 | House rules | The rules in force on the lock date (`MASTER_PIPELINE_OVERVIEW.md` section 10). A rule adopted later doesn't apply to this chapter (forward only) | the dated list |
 
@@ -365,6 +365,8 @@ researchClear: DeepResearch/RESEARCH_CLEAR.md (clearedAt <date>; hashes equal th
 decisionsLog: Manuscript/<ChapterName>_LockDecisions.md
 snapshot: Manuscript/_Locked/<ChapterName>_Manuscript_v<version>.docx / .md
 governanceReady: <date of the GOVERNANCE_READY.md this lock follows>
+workbook:          # freeze chapters (#42): one indented line per exercise, file names only (in <CH_ROOT>/Workbook/):
+  - <workbook DOCX name>: <sha256> · <workbook MD name>: <sha256>
 ```
 
 Otherwise write `MANUSCRIPT_LOCK_INCOMPLETE.md` listing what is open: blank decisions, unapplied fixes, a new delta finding, an open impact item, or a failed DOCX = MD check.
@@ -375,7 +377,9 @@ Otherwise write `MANUSCRIPT_LOCK_INCOMPLETE.md` listing what is open: blank deci
 - a "Copilot research retrofit" section in `MANUSCRIPT_REVISED.md` (§7) sets `yes` on the next lock;
 - a lock written by earlier releases has no such field, and counts as `no`. An author may set `no` on a new chapter only by recording why in the decisions log.
 
-**`freezePilot:`** (2026-11-16, #42) marks a freeze chapter: all checks before this lock, small edits only in PHASE 3 / 3.5, the final lock at PHASE 4 Part 0, read-only after it except errata. Every gate that treats a freeze chapter differently reads this one line. The pilot chapter's lock has it; Ch1 to Ch6 don't. A delta re-lock and an errata re-lock carry it forward.
+**`freezePilot:`** (2026-11-16, #42) marks a freeze chapter: all checks before this lock, small edits only in PHASE 3 / 3.5, the final lock at PHASE 4 Part 0, read-only after it except errata. Every gate that treats a freeze chapter differently reads this one line. The pilot chapter's lock has it; Ch1 to Ch6 don't. A delta re-lock and an errata re-lock carry it forward. A freeze chapter's lock also records the workbook manuscript hashes (`workbook:`), because the workbook freezes with it (§9).
+
+**When `freezePilot:` becomes the default (<AUTHOR>, 2026-11-17).** It stays opt-in until the pilot chapter has completed PHASE 4 (its Part 0 final lock and Part A). From then on, **every chapter's first lock** writes the line by default. A re-lock carries it forward only if the previous lock had it, so a re-lock of Ch1 to Ch6 never picks it up; they keep the old process unless <AUTHOR> names one.
 
 **A stale lock is never left in place.** The lock is stale when either hash of record (section 0) no longer matches the files, or when `MANUSCRIPT_REVISED.md` has a section newer than the lock. Every downstream gate checks both. The gates go by the file's time, not the section title, so after a freeze chapter's final lock only an approved `Errata` section belongs in that file (§9).
 
@@ -442,7 +446,9 @@ The one other sanctioned path is PHASE 4 Part 0: a difference between the final 
 
 ## 9. After the final lock: read-only, the next-edition log, errata (freeze chapters, 2026-11-16, #42)
 
-**Read-only.** This is the chapter manuscript (DOCX and MD); the workbook manuscript keeps its PHASE 3W rules. From the final lock on (`MANUSCRIPT_SYNCED.md` with `finalLock: yes`; a re-export during PHASE 4 Step 0V, before Part A, is still part of Part 0, PHASE 4 0.8), no phase edits the manuscript DOCX or MD, proposes an edit to it, or asks <AUTHOR> to make one, except through the errata step below. This covers PHASE 4 (0R, 0G, Part A, Part B with B0), PHASE 0.9 Mode D, PHASE 5, 6, 6.5 (chapter and book mode), 6.9 and 7. Their checks compare the formats with the manuscript; when a format differs, the format is fixed.
+**The workbook freezes too (<AUTHOR>, 2026-11-17).** The chapter's workbook manuscript (DOCX and MD) follows the same rule: its wording checks run before this lock (§3.1b), which records its hashes; after the lock only small layout edits go into the workbook eBook and print; PHASE 3W W3 syncs them back once and writes `WORKBOOK_READY.md` with its own `finalLock: yes` line, before the chapter's Kindle build (PHASE 3W, W3); after that it is read-only except through errata. Below, "the manuscript" means both.
+
+**Read-only.** From the final lock on (`MANUSCRIPT_SYNCED.md` with `finalLock: yes`; a re-export during PHASE 4 Step 0V, before Part A, is still part of Part 0, PHASE 4 0.8), no phase edits the manuscript DOCX or MD, proposes an edit to it, or asks <AUTHOR> to make one, except through the errata step below. This covers PHASE 4 (0R, 0G, Part A, Part B with B0), PHASE 0.9 Mode D, PHASE 5, 6, 6.5 (chapter and book mode), 6.9 and 7. Their checks compare the formats with the manuscript; when a format differs, the format is fixed.
 
 **The next-edition log.** One file for the book, append-only: `<BOOK_ROOT>/_BookGovernance/NextEdition/NEXT_EDITION_LOG.md`. A phase that finds a content issue in a final-locked chapter adds a row and lists the row IDs in its own report. This is the one file such a phase may add to besides its own outputs; it never edits or deletes a row.
 
@@ -470,7 +476,7 @@ Not major errors: style, voice, casing, a hedge on a claim that is otherwise sup
 **The errata step.**
 1. The phase that finds it logs the row with `Major?: yes: <criterion>` and tells <AUTHOR>, with the evidence (the source opened, the fact checked).
 2. **<AUTHOR> approves it:** a `MANUSCRIPT_REVISED.md` section titled `Errata — <criterion>: NE-<nnn>`, with the changed sections, the reason and `Approved: <initials> <date>`. After the final lock, add no other kind of section. Claude does not act on a section without that title or the approval line, but the gates still see the newer REVISED file as a stale lock (§5), so such a section is moved to the chapter's archive folder and its item logged for the next edition.
-3. <AUTHOR> edits the DOCX in Word (a review copy shows the spot; a mechanical fix can be `Apply for me`). Claude brings the MD in line with `docx_md_sync.py` and verifies it.
+3. <AUTHOR> edits the DOCX in Word (a review copy shows the spot; a mechanical fix can be `Apply for me`). Claude brings the MD in line with `docx_md_sync.py` and verifies it. An errata in the workbook edits the workbook DOCX the same way, and W3 then writes a new final-lock `WORKBOOK_READY.md` naming the errata ID. **A workbook-only errata** (the chapter text unchanged) needs only the PHASE 2.5 delta re-lock, the workbook layouts and W3, then the chapter's PHASE 6.5 and 7; Part 0, Part A, PHASE 5, 6 and 6.9 don't re-run, because nothing they read changed.
 4. PHASE 1 for the changed sections and PHASE 2 re-validate (`RERUN_P1.md`, then `RERUN_P2.md`). Then a PHASE 2.5 delta audit of the changed sections, with the §7 step 4a research rule (`RERUN_P2.5.md`), writes a new `MANUSCRIPT_LOCKED.md`. `copilotRequired` and `freezePilot:` carry forward.
 5. <AUTHOR> carries the fix into the eBook and print layouts (and the workbook, if it carries the text) and re-exports. PHASE 4 Part 0 compares the new PDF with the errata lock and expects `NO_DIFFERENCES` (the fix is already in the DOCX and MD), then writes a new final-lock `MANUSCRIPT_SYNCED.md` whose `finalLock:` line names the errata ID. Then 0P, 0V (a new `LAYOUT_VERIFIED.md`), 0C, Part A, and PHASE 5, 6 and 6.5 run again for the chapter.
 6. **The audiobook:** the chapter's `AUDIOBOOK_READY.md` is now stale, because its manuscript hashes no longer match (the PHASE 7 release check compares them). Rename it `AUDIOBOOK_READY_superseded_<timestamp>.md`. PHASE 6.9 runs again; if narrated text changed, the chapter is recorded again in full (no pickups).

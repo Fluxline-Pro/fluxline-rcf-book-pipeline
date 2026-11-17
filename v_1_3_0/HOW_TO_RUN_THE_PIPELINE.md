@@ -241,6 +241,8 @@ This follows the order in Steps 2c and 2d: the packet and figures, your updates,
 
 📧 **Email:** "workbook synced and locked", or "needs you". If it needs you, fill in the **Decision** column in `_Pipeline/P3W_DECISIONS.md`, then create `_Pipeline/RERUN_P3W.md`.
 
+**Freeze chapters (#42, 2026-11-17): the workbook freezes with the chapter.** Its wording was checked before the lock (Step 2a). After the lock, make only small edits in the workbook InDesign files. This sync copies them back once and is the workbook's final lock (`WORKBOOK_READY.md` gets a `finalLock: yes` line). It must be in place before the chapter's Kindle build (Step 5v). After the Kindle build, a re-upload only confirms: a wording difference means the PDF is wrong, and only a major error reopens the workbook (errata, Step 4).
+
 ✅ `WORKBOOK_READY.md`.
 
 Steps 4 and 5 are independent, so do them in either order.
