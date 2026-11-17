@@ -71,13 +71,22 @@ Stop, write `Audiobook/Trigger/AUDIOBOOK_INCOMPLETE.md` naming what failed, and 
 
 Update `Audiobook/<ChapterName>_NarrationScript.md` from `Kindle/<ChapterName>_Kindle.docx`: same reading order, headings, and text as the Kindle build.
 
+**Narration follows the Kindle text (<AUTHOR>, 2026-11-17, #47; MASTER section 10).** The Kindle text matches the manuscript, so the narration matches both (Whispersync alignment). This replaces the 2026-11-12 practice of narrating from the print/eBook layout. In the script:
+- **Print-only boxes and quotes are never read** (anything the Kindle build doesn't carry, such as a print pull quote).
+- **Short spoken figure descriptions stay**, as marked narration-only notes.
+- **Running Part labels** ("Part <N>: <Part title>") are not read.
+- **Callouts are read where the Kindle places them**, not where the print puts them.
+- **Footnote labels are read as the Kindle has them.**
+
 **The 6.9 script.** A script built here carries the line `<!-- phase69Build: <YYYY-MM-DD HH:MM> · kindleDocxSha256: <hash> -->` (local time; an HTML comment, so it is never read as narration). The build time is the moment its narrated text was last set.
 - **No such line** (the script predates 6.9, for example from PHASE 4 Part C): rebuild it and always write the line with the current time, even if the text comes out the same.
+- **The line is there but dated before 2026-11-17** (built under the print/eBook practice): rebuild under the rules above and write the current time if the narrated text changed.
 - **The line is there**, and the Kindle DOCX hash differs from the one it records (or <AUTHOR> asks): rebuild. If the narrated text changed, write the current time; if it didn't, keep the old build time and only update the hash.
 - Edits that leave the narration alone (the pronunciation guide, pacing notes, segment markers) never change the build time.
 - A recording counts in this phase only if it was written after the build time. An older recording does not count, even one newer than an older script.
 - Keep the pronunciation guide and segment markers, and move any marker whose text moved.
-- Narration-only adaptations are marked notes, never silent text changes: figure and table references, URLs, and visual-only callouts get a spoken alternative or a skip note.
+- Narration-only adaptations are marked notes, never silent text changes: figure and table references and URLs get a spoken alternative or a skip note. A callout in the Kindle text is read where the Kindle places it (2026-11-17, #47); only print-only boxes and quotes get a skip note.
+- **A Kindle rebuild that only adds links** (the linked footnotes, PHASE 4 Part A, 2026-11-17) changes no narrated text: rebuild, keep the build time and update only `kindleDocxSha256`. The script file's own hash still changes, so a recorded chapter's `AUDIOBOOK_READY.md` goes stale; re-run this phase to write a new one, with no re-record (section 6). The order is: relink (PHASE 4 Part A), congruency pass 2 (Part A step 9b), the PHASE 6.5 Kindle re-check, then this phase, because the entry check (section 0) needs pass 2 and the 6.5 report to be newer than the relinked Kindle DOCX.
 - This clears the "narration" items in the PHASE 4 Part 0 downstream impact list.
 
 # 2. XTTS draft (optional)
