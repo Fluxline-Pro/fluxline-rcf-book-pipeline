@@ -293,11 +293,11 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 
 📧 **Email:** only if a phase needs you. Fix the item, then create `RERUN_P5.md`, `RERUN_P6.md`, or `RERUN_P6.5.md`.
 
-✅ PHASE 6.5 certifies the chapter Publishing Ready, and PHASE 6.9 is queued. It starts once the whole book has passed the book-wide final audit (B0, `AUDIT_FINAL_CLEAR.md`), so recording begins after the last chapter's PHASE 4.
+✅ PHASE 6.5 certifies the chapter Publishing Ready, and PHASE 6.9 is queued. It starts as soon as the chapter's congruency pass 2 is PASS; it does not wait for the rest of the book (#43).
 
 ### Step 7 — Record the audiobook → PHASE 6.9 (manual, with an automatic check; the last step before PHASE 7)
 
-🤖 **Automatic:** once PHASE 6.5 certifies Publishing Ready and the book-wide final audit has passed, Claude rebuilds the narration script from the Kindle output (and, if you want one, an XTTS draft for pacing) and emails you that it is ready to record. (Ch1 to Ch5 are protected: ask Claude in chat. Until the rebuilt n8n workflow is re-imported, n8n doesn't queue 6.9 or react to `RERUN_P6.9.md`; ask Claude then too.)
+🤖 **Automatic:** once PHASE 6.5 certifies Publishing Ready and congruency pass 2 is PASS, Claude rebuilds the narration script from the Kindle output (and, if you want one, an XTTS draft for pacing) and emails you that it is ready to record. (Ch1 to Ch5 are protected: ask Claude in chat. Until the rebuilt n8n workflow is re-imported, n8n doesn't queue 6.9 or react to `RERUN_P6.9.md`; ask Claude then too.)
 
 🧑 **You:** record the **whole chapter** in Adobe Audition from that script, and export `Audiobook/<NN>_<ChapterName>.mp3`. There are no pickups: a chapter recorded earlier (for example in PHASE 4) is recorded again in full.
 

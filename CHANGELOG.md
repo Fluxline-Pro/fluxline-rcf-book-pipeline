@@ -5,6 +5,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [Unreleased] — PHASE 6.9 runs per chapter (#43)
+
+<AUTHOR>'s decision (2026-11-16): record chapter by chapter. #40 (PR #41) made 6.9 wait for the book-wide final audit covering every chapter's sync, which with 31 chapters held every recording until the last chapter's PHASE 4.
+
+### Changed
+- **6.9 no longer waits for the whole book.** A chapter's 6.9 starts once its PHASE 6.5 Publishing Ready, `MANUSCRIPT_SYNCED.md` and congruency pass 2 PASS are in place (`run-pipeline.ps1`, PHASE 6.9, MASTER, HOW_TO_RUN, PHASE 7, ROLLOUT_TEST_PLAN). The "6.9 waits for the whole book" item of #40 below is superseded.
+- **Later revisions:** a B0 cross-chapter fix or other approved revision to a recorded chapter makes its `AUDIOBOOK_READY.md` stale (the PHASE 7 release check already compares the recorded hashes); the chapter is recorded again in full.
+- **Recording practice:** <AUTHOR> records in batches of about seven ready chapters (about 1.5 hours of narration each); the per-chapter gate just marks a chapter ready and it waits for its batch.
+
+### Fixed
+- `release_check.py` adds its own folder to `sys.path`, so `import phase69` works under `python -I`.
+
+---
+
 ## [Unreleased] — The audiobook moves to PHASE 6.9 (#40)
 
 Edited in place in `v_1_3_0/`, like #34 and #38. This is the author's decision (2026-11-16). The audiobook used to be PHASE 4 Part C, recorded from the Kindle output before PHASE 5. PHASE 6 and 6.5 could still change the manuscript after that, so recordings needed pickups, and about 150 edits across Ch1 to Ch5 left the audio choppy and unlike the author's voice in the edited places.
@@ -36,7 +50,7 @@ Edited in place in `v_1_3_0/`, like #34 and #38. This is the author's decision (
 ### Update: Terence's answers (2026-11-16)
 
 - **No pickups:** a full re-record is needed only when narrated text changes after `AUDIOBOOK_READY.md`. Fixes made inside 6.9 are fine.
-- **6.9 waits for the whole book.** A chapter's 6.9 starts only after its own PHASE 6.5 Publishing Ready **and** the book-wide final audit: PHASE 0.9 Mode D, run at PHASE 4 Part B step B0, trigger `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md`, which must be newer than **every** chapter's `MANUSCRIPT_SYNCED.md` (the whole book, the PHASE 4 B1 rule). Recording therefore starts after the last chapter's PHASE 4.
+- **6.9 waits for the whole book** *(superseded 2026-11-16 by #43: 6.9 runs per chapter)*. A chapter's 6.9 starts only after its own PHASE 6.5 Publishing Ready **and** the book-wide final audit: PHASE 0.9 Mode D, run at PHASE 4 Part B step B0, trigger `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md`, which must be newer than **every** chapter's `MANUSCRIPT_SYNCED.md` (the whole book, the PHASE 4 B1 rule). Recording therefore starts after the last chapter's PHASE 4.
 - **A 6.9 recording** is one written after the build time in the 6.9 script's `<!-- phase69Build: <YYYY-MM-DD HH:MM> · kindleDocxSha256: <hash> -->` line. A pre-6.9 script always gets the line when rebuilt. The build time changes only when the narrated text changes, so pronunciation-guide or marker edits keep the recording. An older PHASE 4 recording never counts.
 - **PHASE 6.5** states its verdict as one exact line, `**Overall: Publishing Ready**` or `**Overall: Review Required**`. The 6.9 gate and the release check read it.
 - **When `AUDIOBOOK_READY.md` is written,** any `AUDIOBOOK_INCOMPLETE.md` is renamed to `*_superseded_<timestamp>.md`.
