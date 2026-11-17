@@ -3,7 +3,7 @@
 > **Pipeline position:** PHASE 3 of 7 (Design + Production) · **Upstream gate:** `Governance/Trigger/GOVERNANCE_READY.md` exists **and** `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` is current (PHASE 2.5, v1.2.5) · **Downstream:** PHASE 3.5 Design QA
 > **Canonical paths, status ladder, triggers, and deliverables:** see `MASTER_PIPELINE_OVERVIEW.md`.
 
-**Release v1.2.5 (2026-10-24): PHASE 3 starts from the manuscript lock.** The chapter's content audit now runs before design, in PHASE 2.5. PHASE 3 needs a **current** `Manuscript/Trigger/MANUSCRIPT_LOCKED.md`: it exists, the DOCX and MD hashes it records match the files, and no `MANUSCRIPT_REVISED.md` section is newer. If the lock is missing or stale, stop, write nothing, and tell <AUTHOR> to finish PHASE 2.5 (or its delta audit). A0 now starts when the lock is written, not when `GOVERNANCE_READY.md` is.
+**Release v1.2.5 (2026-10-24): PHASE 3 starts from the manuscript lock.** The chapter's content audit now runs before design, in PHASE 2.5. PHASE 3 needs a **current** `Manuscript/Trigger/MANUSCRIPT_LOCKED.md`: it exists, the DOCX and MD hashes it records match the files (or those of a newer `MANUSCRIPT_SYNCED.md`; PHASE 2.5 section 0). A newer `MANUSCRIPT_REVISED.md` is informational on its own; the hashes decide (#48). If the lock is missing or stale, stop, write nothing, and tell <AUTHOR> to finish PHASE 2.5 (or its delta audit). A0 now starts when the lock is written, not when `GOVERNANCE_READY.md` is.
 
 **Release v1.2.1 (2026-10-22): PHASE 3 starts automatically when PHASE 2 passes.** When `Governance/Trigger/GOVERNANCE_READY.md` is issued, the automation:
 1. writes the chapter's **figure prompts and figure checklist** (A0);

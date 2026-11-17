@@ -59,11 +59,11 @@ No earlier phase waits on audio any more. Congruency pass 2 (PHASE 4) no longer 
 
 Stop, write `Audiobook/Trigger/AUDIOBOOK_INCOMPLETE.md` naming what failed, and set `gateStatus: FAIL` in the checklist if any of these is not true:
 
-- The latest `Governance/<ChapterName>_PublicationQA_*.md` (front matter, Part openers and back matter: the latest book-mode report) certifies **Publishing Ready** and is newer than `MANUSCRIPT_SYNCED.md` and the Kindle DOCX, so it certifies the current text.
-- The manuscript DOCX and MD hashes match `MANUSCRIPT_LOCKED.md` or the newer `MANUSCRIPT_SYNCED.md`, and no `MANUSCRIPT_REVISED.md` section is newer than the lock.
-- `Kindle/<ChapterName>_Kindle.docx` exists and is newer than the manuscript.
+- The latest `Governance/<ChapterName>_PublicationQA_*.md` (front matter, Part openers and back matter: the latest book-mode report) certifies **Publishing Ready** for the current Kindle DOCX: its `kindleDocxSha256:` line equals the Kindle DOCX's SHA-256 now. A report with no such line (written before #48, carrying only a shortened hash, or a book-mode report, which records no per-package line) falls back to the file dates: it must be newer than `MANUSCRIPT_SYNCED.md` and the Kindle DOCX. Any Kindle change after the report, even a title-only fix, needs a new report (a confirm-only 6.5 run is #52).
+- The manuscript DOCX and MD hashes match the hashes of record: `MANUSCRIPT_LOCKED.md`, or a `MANUSCRIPT_SYNCED.md` newer than the lock. A `MANUSCRIPT_REVISED.md` newer than the lock is informational on its own; a revision that changes the text shows in the hashes once the DOCX is edited (PHASE 2.5, path 2; #48). Before you build the script, check that no approved `MANUSCRIPT_REVISED.md` section is still waiting for its DOCX edit.
+- `Kindle/<ChapterName>_Kindle.docx` exists and was built or synced from that text, judged by hash, not file date (#48): the manuscript hashes match the record (above), the `**Kindle DOCX SHA-256:**` line in `Kindle/Trigger/KINDLE_BUILT.md` equals the Kindle DOCX's SHA-256 now, and its `**Chapter version:**` number (the leading `x.y.z`, without the note after it) equals the record's `chapterVersion` number. An identical-content restore of the manuscript (a newer date, the same bytes) does not make the Kindle stale. Only when `KINDLE_BUILT.md` records no Kindle DOCX hash, the date is the fallback: the Kindle DOCX must be newer than the manuscript.
 - This chapter's `MANUSCRIPT_SYNCED.md` exists. (The book-wide final audit is not part of this check, #43.)
-- The congruency pass 2 report is PASS and newer than every one of its inputs.
+- The congruency pass 2 report is PASS and newer than every one of its inputs. This bullet stays on file dates (the report records no input hashes, and the watcher re-runs the check on any write).
 
 ---
 
