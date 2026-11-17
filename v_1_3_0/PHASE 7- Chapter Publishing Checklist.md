@@ -216,7 +216,7 @@
 
 ## PHASE 6.9 — Audiobook (2026-11-16)
 
-- [ ] PHASE 6.9 started only after PHASE 6.5 certified Publishing Ready and the book-wide final audit passed (`AUDIT_FINAL_CLEAR.md` newer than every chapter's `MANUSCRIPT_SYNCED.md`)
+- [ ] PHASE 6.9 started only after PHASE 6.5 certified Publishing Ready and congruency pass 2 was PASS, and `AUDIOBOOK_READY.md` is not stale (no recorded hash has changed since)
 - [ ] Narration script rebuilt from the Kindle output in PHASE 6.9
 - [ ] Final narration recorded in full by <AUTHOR> (Adobe Audition) in PHASE 6.9: not an XTTS draft, and not an earlier recording patched with pickups
 - [ ] Audiobook QA: coverage and technical-spec results recorded, no open item; pronunciation reviewed

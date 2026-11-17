@@ -46,7 +46,7 @@ Tick each line. A line is a pass only if it happened with no hand-edited trigger
 - [ ] PHASE 5 starts only after all the files above are finished; the RAG chunks match the final wording (no earlier version).
 - [ ] PHASE 6 produces drafts only; nothing touches the manuscript or the finished files.
 - [ ] PHASE 6.5: deterministic checks, Claude's QA, then the Copilot cross-format review; the Copilot `PASS` alone does not produce Publishing Ready.
-- [ ] PHASE 6.9 (2026-11-16): it waits for `AUDIT_FINAL_CLEAR.md`; after 6.5 passes and B0 has run, the narration script is rebuilt from the Kindle output; a stand-in recording of the whole chapter gets its audiobook QA and the congruency PHASE 6.9 pass; `AUDIOBOOK_READY.md` is written, and PHASE 7 waits for it.
+- [ ] PHASE 6.9 (2026-11-16): it starts per chapter (#43): after 6.5 passes and congruency pass 2 is PASS, even with other chapters unsynced, the narration script is rebuilt from the Kindle output; a stand-in recording of the whole chapter gets its audiobook QA and the congruency PHASE 6.9 pass; `AUDIOBOOK_READY.md` is written, and PHASE 7 waits for it.
 - [ ] PHASE 7: the release check pre-fills; you sign; the chapter is Published.
 
 ## Record the result
