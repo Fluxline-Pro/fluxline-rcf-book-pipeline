@@ -34,7 +34,7 @@ The IDML tools need the Python standard library, plus Pillow and the fonts' TTF 
 
 All of these must hold. If any fails, write nothing and tell <AUTHOR> which one.
 
-1. **The manuscript is final and locked.** The chapter DOCX is in `<CH_ROOT>/Manuscript/` and the MD isn't newer than it (as in 3.5A §1). From release v1.2.5, `<CH_ROOT>/Manuscript/Trigger/MANUSCRIPT_LOCKED.md` (PHASE 2.5) must be current: it exists, the DOCX and MD hashes it records match the files, and no `MANUSCRIPT_REVISED.md` section is newer. The eBook page and both IDMLs are built from the locked text only. For the workbook, the exercise DOCX is in `<CH_ROOT>/Workbook/`, `WORKBOOK_MANUSCRIPT_READY.md` exists, and the chapter's lock is current.
+1. **The manuscript is final and locked.** The chapter DOCX is in `<CH_ROOT>/Manuscript/` and the MD isn't newer than it (as in 3.5A §1). From release v1.2.5, `<CH_ROOT>/Manuscript/Trigger/MANUSCRIPT_LOCKED.md` (PHASE 2.5) must be current: it exists, and the DOCX and MD hashes of record (the lock's, or a newer `MANUSCRIPT_SYNCED.md`'s) match the files. A newer `MANUSCRIPT_REVISED.md` is informational on its own; the hashes decide (#48). The eBook page and both IDMLs are built from the locked text only. For the workbook, the exercise DOCX is in `<CH_ROOT>/Workbook/`, `WORKBOOK_MANUSCRIPT_READY.md` exists, and the chapter's lock is current.
 2. **The figures are finished:**
    - the RGB masters (PNG or JPG) are in `Figures/RGB/`, for the eBook only;
    - the CMYK TIFFs are in `Figures/CMYK/`, for print only.

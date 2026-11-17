@@ -5,6 +5,23 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [Unreleased] — Gates compare content hashes, not file dates (#48)
+
+False alarms on 2026-11-16/17 all came from file dates: an identical-content restore of Ch1–3 made the manuscript look newer than the Kindle build (PHASE 6.9 entry); a status-word tidy of Ch2's `MANUSCRIPT_REVISED.md` read as a stale lock (a congruency HOLD); a Kindle title-only fix made the 6.5 report look stale. Edited in place in `v_1_3_0/`, like #42.
+
+### Changed
+- **The stale-lock rule is hash-only.** The lock is stale only when the manuscript DOCX/MD hashes match neither `MANUSCRIPT_LOCKED.md` nor a newer `MANUSCRIPT_SYNCED.md`. A newer `MANUSCRIPT_REVISED.md` is informational on its own; a revision that changes the text shows in the DOCX hash once the DOCX is edited (between the approval and that edit the lock reads as current; 6.9 §0 asks for a check that no approved section is waiting). Before a lock exists (the 2.5 entry check against `GOVERNANCE_READY.md`) there is no hash of record, and the date stays. PHASE 2.5 §5 and §9, MASTER, HOW_TO_RUN, PHASE 3, 3.5, 3.5A, 3.5B, 3W, PHASE 4 Part 0.
+- **PHASE 6.9 §0.** The Kindle counts as current when the manuscript hashes match the record and `KINDLE_BUILT.md`'s Kindle DOCX SHA-256 and chapter version match the current Kindle and the record. The 6.5 report must certify the current Kindle DOCX by its `kindleDocxSha256:` line. File dates are the fallback only where no hash is recorded (a `KINDLE_BUILT.md` with no Kindle hash, such as Ch6's; a 6.5 report written before #48, whose hashes are shortened). A Kindle change after the 6.5 report, even a title-only fix, still needs a new report; a confirm-only 6.5 run is #52.
+- **PHASE 6.5** chapter reports record `kindleDocxSha256: <64-hex>` (doc and runner prompt).
+- **Kept on file dates, on purpose:** trigger order (a `MANUSCRIPT_SYNCED.md` newer than the lock), eBook/print/workbook re-exports, `LAYOUT_VERIFIED.md`, 0P, the congruency report against its inputs (no input hashes recorded), recordings against the 6.9 build time, and PHASE 4 Part 0's stop when `MANUSCRIPT_REVISED.md` is newer than the eBook PDF.
+- HOW_TO_RUN Step 5: a file listed as older than the manuscript is information when the lock has hashes.
+
+### Local tools (backed up as `<name>.backup_20261117b` next to the file)
+- `run-pipeline.ps1`: `Get-LockProblem` no longer returns "MANUSCRIPT_REVISED.md is newer than the lock"; the 6.5 prompt asks for the `kindleDocxSha256:` line; the 6.9 prompt says section 0 goes by hash.
+- `congruency_check.py` (`leg_files`): a newer `MANUSCRIPT_SYNCED.md` supersedes the lock when the manuscript matches its hashes (was: when the manuscript's date was older); a newer REVISED file is an informational row, not a hold; "older than the manuscript" holds only when the lock has no hash lines.
+- `release_check.py` (`synced_newer`): "edited after the sync" compares the sync's hash lines (the date is the fallback for a sync without them).
+- New `tests/test_hash_not_date.py` (14 tests): identical restore passes, real text change holds, newer REVISED with equal hashes passes, the Part 0 sync basis, and the date fallbacks.
+
 ## [Unreleased] — 2026-11-17 house rules, the author TODO file, the archive convention (#47)
 
 <AUTHOR>'s decisions of 2026-11-16/17 (TW, chat), which the runner couldn't see yet. Edited in place in `v_1_3_0/`, like #42 and #43.

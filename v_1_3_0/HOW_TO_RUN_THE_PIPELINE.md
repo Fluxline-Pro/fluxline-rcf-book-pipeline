@@ -224,7 +224,7 @@ This follows the order in Steps 2c and 2d: the packet and figures, your updates,
 ✅ The PHASE 4 checklist shows `gateStatus: PASS`, and PHASE 5 starts on its own.
 
 **Freeze chapters (#42): this sync is the final lock.** `MANUSCRIPT_SYNCED.md` gets a `finalLock: yes` line, and Kindle builds from that text. From then on the manuscript is read-only. Your last small edits can still come in during Step 5v, before Kindle is built. If you re-export the eBook PDF after the Kindle build (a layout fix), Part 0 only confirms: it must find no differences, and a wording difference means the layout is wrong. A content issue found later goes to the next-edition log, `_BookGovernance/NextEdition/NEXT_EDITION_LOG.md`. Only a **major error** (factual, safety, legal, or a broken claim or citation) reopens the chapter, through the errata step (PHASE 2.5 §9):
-1. You approve an `Errata — <criterion>: NE-<nnn>` section in `MANUSCRIPT_REVISED.md` (add no other kind of section after the final lock: any newer section makes the lock look stale).
+1. You approve an `Errata — <criterion>: NE-<nnn>` section in `MANUSCRIPT_REVISED.md` (add no other kind of section after the final lock; since #48 a newer section no longer makes the lock look stale, because the gates compare the manuscript hashes, but the file stays an errata record; PHASE 4 Part 0 still stops when the file is newer than the eBook PDF).
 2. You make the edit in Word; Claude syncs the MD.
 3. `RERUN_P1.md`, `RERUN_P2.md`, then `RERUN_P2.5.md` for a delta re-lock; you carry the fix into the layouts and re-export; Part 0 writes a new final lock; 0P, 5v (a new `LAYOUT_VERIFIED.md`) and 5c follow.
 4. Kindle, RAG and publication QA run again. If narrated text changed, the chapter is recorded again in full (`AUDIOBOOK_READY.md` goes stale).
@@ -299,7 +299,7 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 1. Open the report. The first table shows each format's status; each difference has its page or segment.
 2. For each difference: fix the file that is wrong and re-export (the check re-runs by itself), or accept it as intended. Narration-only text (figure descriptions, the spoken pointer in place of the references) is accepted once.
 3. To accept what the report shows: `python congruency_check.py <ChapterName> --accept "<reason>"` (add `--keys K1,K2`, from the report's Key column, to accept only some). Read each difference first; never accept a wording difference you haven't looked at.
-4. A file listed as older than the manuscript needs re-exporting.
+4. A file listed as older than the manuscript is information when the lock has hashes (the text comparison decides, #48): re-export only if the report shows a text difference, or the lock has no hash lines.
 
 ✅ **Done when:** the verdict is **PASS**. Part A (Kindle) starts only on PASS. For a section without a lock the report is for information and never holds anything. Ch1 to Ch5 have locks now (2026-11-16), so the check covers them in full; they are protected, so you act on a HOLD for them with Claude in chat.
 

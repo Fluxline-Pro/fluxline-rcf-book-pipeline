@@ -96,6 +96,7 @@ Evaluate all publication outputs for:
 
 - Chapter mode: `<CH_ROOT>/Governance/<ChapterName>_PublicationQA_<YYYYMMDD_HHMM>.md`
 - Book mode: `<BOOK_ROOT>/_BookGovernance/<BOOK>_PublicationQA_<YYYYMMDD_HHMM>.md`
+- Chapter mode: record the Kindle DOCX you certified on its own line, `kindleDocxSha256: <full 64-character SHA-256>` (#48). The PHASE 6.9 entry check compares it with the Kindle DOCX instead of the file dates; a shortened hash (`fff8a0af…2471`) does not count, and a report without the line falls back to the dates.
 
 ---
 
