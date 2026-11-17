@@ -162,7 +162,7 @@ For a freeze chapter, every content check runs here, once, before the lock. Thes
 **How it runs (simplified, #42).** <AUTHOR> makes the manuscript edits, in Word:
 1. Claude writes each item in the decisions log: the heading, the exact current sentence, the suggested wording with a one-line reason, and the type, `mechanical` or `voice`.
 2. Claude makes a **review copy**, `Manuscript/<ChapterName>_Manuscript_REVIEW_<YYYYMMDD>.docx` (and one for the workbook DOCX), with each spot highlighted and a comment giving the item number and the suggestion. It is never a gate input. An older review copy moves to the chapter's archive folder when a new one is made.
-3. Claude puts the items to <AUTHOR> one at a time (in chat; in an automated run the log is the channel): the heading, the sentence and the suggestion. A mechanical item (marker position, pointer form, casing) can be answered "apply for me", and Claude applies it in the DOCX (§3.4). A voice item is <AUTHOR>'s to word in the DOCX.
+3. Claude puts the items to <AUTHOR> one at a time (in chat; in an automated run the log is the channel): the heading, the sentence and the suggestion. A mechanical item (marker position, pointer form, casing) can be answered `Apply for me`, and Claude applies it in the DOCX (§3.4). A voice item is <AUTHOR>'s to word in the DOCX.
 4. After <AUTHOR> saves, Claude brings the MD in line with `docx_md_sync.py`, verifies it (0 dropped, and every rewritten block either a decided item or a listed known exception), re-checks the changed paragraphs (§3.5), and records each decision in its row.
 5. **An author rewrite** that goes beyond the listed items gets these checks again on the rewritten paragraphs, with a new review copy, before the lock. For research, only the rewritten sentences that state or attribute a source, a claim or a number go to a **scoped Copilot re-review**: its own prompt and `Copilot_Research_Handoff_<n>.md` (§3.2b), covering just those sentences. The rest of the clearance carries forward, and `RESEARCH_CLEAR.md` records the basis, the scoped report and `changesAfterReport`.
 
@@ -241,11 +241,11 @@ When <AUTHOR> isn't present (always, in automated runs), the log is the only cha
 
 1. Read the decisions log first.
 2. A row whose manuscript text no longer matches (the DOCX changed since the audit) is re-evaluated, not applied. A freeze chapter's `Edited by author` row is expected to differ: it is checked through §3.5, not re-evaluated as a new finding.
-3. Blank rows block the lock. A **blocking** finding can be closed only by `Fix`, `Fix: …`, `Canonical: …`, or `Keep — <reason>` with <AUTHOR>'s initials.
+3. Blank rows block the lock. A **blocking** finding can be closed only by `Fix`, `Fix: …`, `Canonical: …`, or `Keep — <reason>` with <AUTHOR>'s initials; for a freeze chapter (#42) also by `Apply for me` (once applied) or `Edited by author` (once the §3.5 re-check of the new text is clean and Applied is filled).
 
 ### 3.4 Apply: DOCX first, then the MD
 
-**Freeze chapters (#42):** Claude applies only the rows <AUTHOR> answered "apply for me" (mechanical items) and `Fix` rows <AUTHOR> asked Claude to apply. <AUTHOR> edits the voice rows in Word. Step 3 (the MD) then follows for both.
+**Freeze chapters (#42):** Claude applies only the rows <AUTHOR> answered `Apply for me` (mechanical items) and `Fix` rows <AUTHOR> asked Claude to apply. <AUTHOR> edits the voice rows in Word. Step 3 (the MD) then follows for both.
 
 1. **Back up** both files to `<CH_ROOT>/Governance/_Backups/<YYYYMMDD_HHMM>_lockaudit/Manuscript/`.
 2. **DOCX (canonical):** edit each decided row in place. Change only the runs that differ, and keep the paragraph and character styles, comments, and section breaks. Never regenerate the DOCX from the Markdown.
@@ -388,7 +388,7 @@ Otherwise write `MANUSCRIPT_LOCK_INCOMPLETE.md` listing what is open: blank deci
 `MANUSCRIPT_LOCKED.md` is written when:
 - [ ] the chapter has Pass 1 and Pass 2 files (and Pass 3, if enabled) in the run folder;
 - [ ] every finding in the decisions log has a Decision, and no **blocking** finding is open;
-- [ ] every `Fix`, `Fix: …`, and `Canonical: …` row is applied, DOCX first, with the Applied column filled;
+- [ ] every `Fix`, `Fix: …`, and `Canonical: …` row is applied, DOCX first, with the Applied column filled (freeze chapters, #42: every `Apply for me` row too, and every `Edited by author` row has Applied filled after a clean §3.5 re-check);
 - [ ] every `Canonical: …` decision is in `Audit_CanonicalTerms.json`;
 - [ ] Pass 4 ran: the chapter has a `ScienceClaims` file, every cited source resolves, and every **High** science claim is softened, cited, removed, kept by <AUTHOR> with initials and a reason, or sitting with an outside reviewer (never on an AI verdict alone). A `blocking` SCIENCE finding is closed, not deferred;
 - [ ] `RESEARCH_CLEAR.md` is written and its hashes equal the files being locked (v1.3.0; a chapter with `copilotRequired: no` needs it only when it opts in, §7);
@@ -470,7 +470,7 @@ Not major errors: style, voice, casing, a hedge on a claim that is otherwise sup
 **The errata step.**
 1. The phase that finds it logs the row with `Major?: yes: <criterion>` and tells <AUTHOR>, with the evidence (the source opened, the fact checked).
 2. **<AUTHOR> approves it:** a `MANUSCRIPT_REVISED.md` section titled `Errata — <criterion>: NE-<nnn>`, with the changed sections, the reason and `Approved: <initials> <date>`. After the final lock, add no other kind of section. Claude does not act on a section without that title or the approval line, but the gates still see the newer REVISED file as a stale lock (§5), so such a section is moved to the chapter's archive folder and its item logged for the next edition.
-3. <AUTHOR> edits the DOCX in Word (a review copy shows the spot; a mechanical fix can be "apply for me"). Claude brings the MD in line with `docx_md_sync.py` and verifies it.
+3. <AUTHOR> edits the DOCX in Word (a review copy shows the spot; a mechanical fix can be `Apply for me`). Claude brings the MD in line with `docx_md_sync.py` and verifies it.
 4. PHASE 1 for the changed sections and PHASE 2 re-validate (`RERUN_P1.md`, then `RERUN_P2.md`). Then a PHASE 2.5 delta audit of the changed sections, with the §7 step 4a research rule (`RERUN_P2.5.md`), writes a new `MANUSCRIPT_LOCKED.md`. `copilotRequired` and `freezePilot:` carry forward.
 5. <AUTHOR> carries the fix into the eBook and print layouts (and the workbook, if it carries the text) and re-exports. PHASE 4 Part 0 compares the new PDF with the errata lock and expects `NO_DIFFERENCES` (the fix is already in the DOCX and MD), then writes a new final-lock `MANUSCRIPT_SYNCED.md` whose `finalLock:` line names the errata ID. Then 0P, 0V (a new `LAYOUT_VERIFIED.md`), 0C, Part A, and PHASE 5, 6 and 6.5 run again for the chapter.
 6. **The audiobook:** the chapter's `AUDIOBOOK_READY.md` is now stale, because its manuscript hashes no longer match (the PHASE 7 release check compares them). Rename it `AUDIOBOOK_READY_superseded_<timestamp>.md`. PHASE 6.9 runs again; if narrated text changed, the chapter is recorded again in full (no pickups).

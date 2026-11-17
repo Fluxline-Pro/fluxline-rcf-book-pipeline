@@ -340,7 +340,7 @@ The layout checks are heuristics: they point at places to look, not at certain f
 
 **What to do with findings:**
 - **Text difference, print is wrong:** fix the print InDesign book and re-export the print PDF.
-- **Text difference, print is right** (the wording should reach the manuscript): fix the eBook InDesign book and re-export the eBook PDF. Part 0 re-syncs the manuscript (0.5's "Accept the PDF wording" path), and 0P re-runs.
+- **Text difference, print is right** (the wording should reach the manuscript): fix the eBook InDesign book and re-export the eBook PDF. Part 0 re-syncs the manuscript (0.5's "Accept the PDF wording" path), and 0P re-runs. For a freeze chapter (#42) this works only before Kindle (0.8); after Part A has built from the final lock, the manuscript is the reference, so the print is the one fixed, unless the difference shows a major error (errata, PHASE 2.5 §9).
 - **Text difference that belongs only in print** (e.g. a page reference): <AUTHOR> logs it in `<ChapterName>_PrintOnlyDifferences.md`, and the next run skips it.
 - **Layout error or warning:** fix it in the print InDesign book and re-export, or, for a warning, <AUTHOR> accepts it in writing (in the PHASE 7 checklist, beside the item).
 
@@ -369,7 +369,7 @@ Part 0 itself needs only the final eBook PDF and the manuscript (MD and DOCX); i
 
 ## 0V. Author layout verification (v1.3.0; chapters with a lock)
 
-**Why:** <AUTHOR> is the graphic designer and checks the eBook and the print book (chapter and workbook) in InDesign for final anomalies before anything is derived from them. The Kindle build (and, in PHASE 6.9, the audiobook) comes from the same words, so it waits until the manuscript (DOCX and MD), the eBook and the print book (and the workbook's) agree and are final. Nothing in this step edits a layout or a manuscript; <AUTHOR> makes any change in InDesign (or in the DOCX, through `MANUSCRIPT_REVISED.md`) and re-exports. For a freeze chapter (#42), a small wording edit is made in the layouts only, and the re-export's Part 0 run syncs it (this is still before Kindle, 0.8); a claim, number or citation change found now is a major error and goes through errata (PHASE 2.5 §9).
+**Why:** <AUTHOR> is the graphic designer and checks the eBook and the print book (chapter and workbook) in InDesign for final anomalies before anything is derived from them. The Kindle build (and, in PHASE 6.9, the audiobook) comes from the same words, so it waits until the manuscript (DOCX and MD), the eBook and the print book (and the workbook's) agree and are final. Nothing in this step edits a layout or a manuscript; <AUTHOR> makes any change in InDesign (or in the DOCX, through `MANUSCRIPT_REVISED.md`) and re-exports. For a freeze chapter (#42), a small wording edit is made in the layouts only, and the re-export's Part 0 run syncs it (this is still before Kindle, 0.8); a claim, number or citation problem found now goes through errata if it meets the major-error criteria (PHASE 2.5 §9), and to the next-edition log otherwise.
 
 **What <AUTHOR> does:**
 1. Check the chapter's eBook and print layouts, and the workbook's eBook and print layouts if the chapter has a workbook, and fix what needs fixing. If a Copilot print or final-eBook review was run (optional print review; required final eBook review for `copilotRequired: yes`), use its confirmed findings as a checklist; it is not a substitute for your eye.

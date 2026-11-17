@@ -134,7 +134,7 @@ If PHASE 2 needs you, resolve the listed items (Needs Author Review, Tier C prop
 
 **Freeze chapters (#42): every check happens here, and you make the edits yourself.** Claude runs the content checks that used to come later: research, hedges, citations and footnote form, glossary casing, house form, callouts, figures, the workbook exercise, typos, and the house rules in force (PHASE 2.5 §3.1b; the dated rules are in `MASTER_PIPELINE_OVERVIEW.md` section 10). Then:
 1. Claude asks you item by item: the heading, the exact sentence, and the suggested wording. It also gives you a review copy, `Manuscript/<ChapterName>_Manuscript_REVIEW_<YYYYMMDD>.docx`, with each spot highlighted and commented.
-2. You make the edits in the real DOCX in Word. For a mechanical item (marker position, pointer form, casing) you can answer "apply for me".
+2. You make the edits in the real DOCX in Word. For a mechanical item (marker position, pointer form, casing) you can answer `Apply for me`.
 3. Claude brings the MD in line, verifies it, and records each answer in the one decisions log (`Manuscript/<ChapterName>_LockDecisions.md`).
 4. If you rewrite more than the items, the rewritten paragraphs are checked again, and only the rewritten source sentences go to a scoped Copilot re-review.
 
@@ -227,7 +227,7 @@ This follows the order in Steps 2c and 2d: the packet and figures, your updates,
 3. `RERUN_P1.md`, `RERUN_P2.md`, then `RERUN_P2.5.md` for a delta re-lock; you carry the fix into the layouts and re-export; Part 0 writes a new final lock; 0P, 5v (a new `LAYOUT_VERIFIED.md`) and 5c follow.
 4. Kindle, RAG and publication QA run again. If narrated text changed, the chapter is recorded again in full (`AUDIOBOOK_READY.md` goes stale).
 
-**Reference or glossary findings** don't block Kindle; they reach you by email. References are finished and locked before any PHASE 3 build (PHASE 2.5), so a reference fix after the lock is a **`MANUSCRIPT_REVISED.md` change** (DOCX first, delta audit, new lock), not an edit made only in InDesign.
+**Reference or glossary findings** don't block Kindle; they reach you by email. References are finished and locked before any PHASE 3 build (PHASE 2.5), so a reference fix after the lock is a **`MANUSCRIPT_REVISED.md` change** (DOCX first, delta audit, new lock), not an edit made only in InDesign. For a freeze chapter (#42), a finding after the final lock goes to the next-edition log; only a broken citation (a major error) goes through errata.
 
 ### Step 5 — Upload the final workbook PDF → PHASE 3W (workbook sync)
 
@@ -264,7 +264,7 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 1. Read the report.
 2. **Text differences:**
    - Print wrong → fix the print InDesign book.
-   - Print right → fix the eBook InDesign book, and re-export the eBook PDF (Part 0 re-syncs the manuscript).
+   - Print right → fix the eBook InDesign book, and re-export the eBook PDF (Part 0 re-syncs the manuscript). For a freeze chapter (#42), only before the Kindle build; after it, fix the print instead (or, for a major error, use errata).
    - Print-only (e.g. a page reference) → log it as a quoted phrase in `<CH_ROOT>/<ChapterName>_PrintOnlyDifferences.md`.
 3. **Layout errors:** fix them in the print InDesign book. **Warnings:** fix each one, or accept it.
 4. Re-export the PDF. The report refreshes on its own.
@@ -500,7 +500,7 @@ A dedicated Copilot agent (`COPILOT_AGENT_INSTRUCTIONS.md`) is optional: the han
 | **Output / save to** | `COPILOT_FINAL_EBOOK_REVIEW.md` → `<CH_ROOT>/Governance/Copilot/COPILOT_FINAL_EBOOK_REVIEW_<date>.md` (or add a `final-ebook: waived — <reason> (<initials> <date>)` line to `Governance/Copilot/Copilot_Waivers.md`) |
 | **Pass / fail** | `PASS` or accepted `CONDITIONAL PASS` lets Part 0 continue. `FAIL` / `AUTHOR DECISION REQUIRED` stop the chapter until you fix the eBook and re-upload, or accept the findings in writing |
 | **Next** | Create `_Pipeline/RERUN_P4.md` (saving the report does not start anything): Claude verifies the findings, writes `Final_eBook_Gate_<date>.md`, and Part 0 runs (0.2 onward) |
-| **You approve** | Each non-blocking finding you accept; any wording change that touches research (goes through `MANUSCRIPT_REVISED.md` and a re-lock) |
+| **You approve** | Each non-blocking finding you accept; any wording change that touches research (goes through `MANUSCRIPT_REVISED.md` and a re-lock; after a freeze chapter's final lock, only as errata for a major error, otherwise to the next-edition log, #42) |
 | **Invalidated by** | A new eBook PDF (the changed pages), or a manuscript change other than the Part 0 changes taken from the PDF that was reviewed |
 
 ### 5. Print PDF review (PHASE 4 0P; optional)
