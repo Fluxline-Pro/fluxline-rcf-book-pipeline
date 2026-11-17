@@ -299,6 +299,8 @@ Triggers (rename any older one to `*_superseded_<timestamp>.md`):
 - `RAG/Trigger/RAG_READY.md` when the overall gate passes: paths of the deliverables, each track's status, timestamp.
 - Otherwise `RAG/Trigger/RAG_INCOMPLETE.md` listing the blockers per track.
 
+**Freeze chapters (#42):** the manuscript is read-only after its final lock (PHASE 2.5 §9). This phase reads it and never proposes a change to it; a content issue found while chunking or testing retrieval goes to the next-edition log, and a major error to the errata step.
+
 Re-run rule: when PHASE 4 Part 0 re-syncs the manuscript (eBook re-export), PHASE 5 re-runs for that chapter, and **both** enabled tracks are rebuilt from the new chunk set. An index built from an older chunk set is stale. PHASE 6 §3G runs this re-run nightly for any chapter whose inputs changed, then notifies `cloud.consumers`.
 
 ## PHASE 5 exit gate

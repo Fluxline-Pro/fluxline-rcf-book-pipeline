@@ -111,7 +111,7 @@ Nothing is applied to the manuscript or PDF without the author's decision.
 | FAIL | Stops. Blocking findings are fixed in the eBook (re-upload the PDF and run the review again, for the changed pages) or accepted in writing |
 | AUTHOR DECISION REQUIRED | Stops until `<AUTHOR>` decides |
 
-A finding marked "may invalidate research clearance" is handled by the rule below. If `<AUTHOR>` accepts a wording change that alters an empirical claim, it goes through `MANUSCRIPT_REVISED.md`, PHASE 2.5's delta audit (including a Copilot research re-run on those sections), and a new lock.
+A finding marked "may invalidate research clearance" is handled by the rule below. If `<AUTHOR>` accepts a wording change that alters an empirical claim, it goes through `MANUSCRIPT_REVISED.md`, PHASE 2.5's delta audit (including a Copilot research re-run on those sections), and a new lock. For a freeze chapter whose final lock is already written (a re-review after a Step 0V re-export, #42), such a change is a major error and goes through the errata step (PHASE 2.5 §9).
 
 ## What invalidates the result
 

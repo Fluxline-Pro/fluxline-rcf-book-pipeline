@@ -10,7 +10,7 @@
 
 No earlier phase waits on audio any more. Congruency pass 2 (PHASE 4) no longer includes the narration script or the audio, and PHASE 6.5 no longer certifies the audiobook.
 
-**It runs per chapter (<AUTHOR>'s decision, 2026-11-16, #43).** A chapter's 6.9 starts once its own checks pass: its PHASE 6.5 report says Publishing Ready, `MANUSCRIPT_SYNCED.md` exists, and congruency pass 2 is PASS. It does not wait for other chapters or for the book-wide final audit (B0). If a later approved revision, for example a B0 cross-chapter fix, changes a recorded chapter, its `AUDIOBOOK_READY.md` goes stale (the PHASE 7 release check compares the recorded hashes), and the chapter is recorded again in full.
+**It runs per chapter (<AUTHOR>'s decision, 2026-11-16, #43).** A chapter's 6.9 starts once its own checks pass: its PHASE 6.5 report says Publishing Ready, `MANUSCRIPT_SYNCED.md` exists, and congruency pass 2 is PASS. It does not wait for other chapters or for the book-wide final audit (B0). If a later approved revision, for example a B0 cross-chapter fix, changes a recorded chapter, its `AUDIOBOOK_READY.md` goes stale (the PHASE 7 release check compares the recorded hashes), and the chapter is recorded again in full. For a freeze chapter (#42) the only such revision is an errata fix for a major error (PHASE 2.5 §9); a B0 conflict goes to the next-edition log instead.
 
 **Recording in batches (<AUTHOR>, 2026-11-16).** The pipeline still readies each chapter on its own, but <AUTHOR> records in batches of about seven chapters (roughly 1.5 hours of narration per chapter), once a batch's chapters are all ready. Waiting for a batch lowers the chance that a later cross-chapter fix forces a re-record. A chapter whose script is ready simply waits (`AUDIOBOOK_INCOMPLETE.md`, "Waiting: recording") until its batch is recorded.
 
@@ -37,7 +37,7 @@ No earlier phase waits on audio any more. Congruency pass 2 (PHASE 4) no longer 
 | Narration prep: pronunciation guide, segment markers, pacing notes | `<CH_ROOT>/Audiobook/<ChapterName>_NarrationScript.md` (first made in PHASE 1 Step 9) |
 | Congruency report, pass 2 (PASS) | `<BOOK_ROOT>/_BookGovernance/CongruencyQA/<ChapterName>_Congruency_Pass2.md` + `.json` |
 
-**The chapter's own checks are done here.** The script is built from the Kindle DOCX, which PHASE 4 Part A builds from the synced manuscript. If PHASE 6.5's fixes changed the manuscript (through `MANUSCRIPT_REVISED.md`, a new lock and a Part 0 re-sync), Part A rebuilt the Kindle DOCX, so it carries those fixes. A later approved revision makes `AUDIOBOOK_READY.md` stale (section 6).
+**The chapter's own checks are done here.** The script is built from the Kindle DOCX, which PHASE 4 Part A builds from the synced manuscript. If PHASE 6.5's fixes changed the manuscript (through `MANUSCRIPT_REVISED.md`, a new lock and a Part 0 re-sync), Part A rebuilt the Kindle DOCX, so it carries those fixes. A later approved revision makes `AUDIOBOOK_READY.md` stale (section 6). **Freeze chapters (#42):** the manuscript is read-only after its final lock (`finalLock: yes` in `MANUSCRIPT_SYNCED.md`), so 6.5 changes no text, and this phase never proposes a manuscript edit either. A narration-script fix is a script fix; a content issue goes to the next-edition log; only a major error goes through the errata step (PHASE 2.5 §9), and the chapter is then recorded again in full.
 
 ---
 

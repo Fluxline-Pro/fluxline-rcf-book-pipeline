@@ -6,6 +6,13 @@
 
 **2026-11-16 (<AUTHOR>'s decision; unreleased): the audiobook is no longer checked here.** It is recorded after this phase, in PHASE 6.9 (`PHASE 6.9- Audiobook (Narration Script + Recording).md`), which also checks it and assembles the book's audiobook set. This phase has no Audiobook sub-certification, and a missing recording is not an issue here.
 
+**2026-11-16 (<AUTHOR>'s decision, #42; unreleased): for a freeze chapter, this phase checks the formats against the manuscript, never the manuscript itself.** A freeze chapter's lock carries a `freezePilot:` line, and its `MANUSCRIPT_SYNCED.md` a `finalLock: yes` line (PHASE 2.5 §5 and §9). Its content checks (hedges, citations, footnote form, glossary casing, house form) all ran before the lock, in PHASE 2.5 §3.1b, so they are not repeated here. For such a chapter:
+- a format that differs from the manuscript is a format defect, fixed in that format;
+- a content issue in the manuscript itself is not a remediation. It is added to the next-edition log, `_BookGovernance/NextEdition/NEXT_EDITION_LOG.md` (the one file this phase may add to besides its report; PHASE 2.5 §9 has the format), and listed in the report's **Next-edition items** section. It never blocks Publishing Ready;
+- only a **major error** (factual, safety, legal, or a broken claim or citation) is raised with <AUTHOR> as a Critical issue, with the log row marked `Major?: yes`. It goes through the errata step (PHASE 2.5 §9), never a direct fix.
+
+Chapters without the line keep the rules below unchanged.
+
 **v3.4 changes (2026-10-03, release v1.1.2):** print is validated from the **print QA reports** in `_BookGovernance/PrintQA/` (PHASE 4 Part 0P for the book, PHASE 3W W2b for the print workbook). This phase reads them rather than repeating their text and layout checks. An open text difference to check, or a layout error, there is a Major issue here, and the Print sub-certification can't be Ready while one is open.
 
 **v3.2 changes (2026-09-30 workbook track):** the workbook is an InDesign eBook PDF + full-color print book (`PHASE 3W- Workbook Track (eBook + Print).md`). This phase certifies it from the PHASE 3W reports and adds a **Workbook** sub-certification. `Workbook_Master.html`, the workbook EPUB, and `RAG_Workbook.html` are no longer inputs.
@@ -40,7 +47,7 @@ Evaluate all publication outputs for:
 - Print package completeness
 - RAG readiness
 
-**You do not modify files.** You produce the QA Markdown. Fixes are applied by Claude Design (HTML/DSM) and Claude Cowork (scripts, metadata, packaging) only after <AUTHOR> approves the remediation list. For any question, ask <AUTHOR> before recommending a change that alters content or meaning.
+**You do not modify files.** You produce the QA Markdown. Fixes are applied by Claude Design (HTML/DSM) and Claude Cowork (scripts, metadata, packaging) only after <AUTHOR> approves the remediation list. For any question, ask <AUTHOR> before recommending a change that alters content or meaning. For a freeze chapter (#42), never recommend a manuscript change: content findings go to the next-edition log, and a major error to the errata step (see the note at the top). Appending rows to that log is the one exception to "you do not modify files".
 
 ---
 
@@ -155,7 +162,7 @@ An independent comparative read, run by <AUTHOR> in Microsoft Copilot (`COPILOT_
 - Required for chapters with `copilotRequired: yes` in their lock, unless `Governance/Copilot/Copilot_Waivers.md` has a `publication-qa: waived — <reason> (<initials> <date>)` line (copy it into this report). Not applicable to a chapter with `copilotRequired: no`.
 
 ## 10. Brand consistency
-Check terminology (TerminologyLock), voice (VoiceKit), component consistency, DSM alignment.
+Check terminology (TerminologyLock), voice (VoiceKit), component consistency, DSM alignment. For a freeze chapter (#42), check that each format carries the manuscript's terms and wording; the manuscript's own terms and voice were settled before the lock.
 
 ---
 
@@ -204,6 +211,9 @@ Check terminology (TerminologyLock), voice (VoiceKit), component consistency, DS
 ## RAG Findings
 ## Brand Consistency Findings
 
+## Next-edition items (freeze chapters, #42)
+The `NE-<nnn>` rows this run added to the next-edition log, one line each, or "none". They are not remediations.
+
 ## Recommended Remediations
 ### Fix Immediately (production blockers)
 ### Fix Before Publication (strong recommendations)
@@ -223,4 +233,4 @@ Provide rationale. State the Copilot review (`copilotReview: <file and outcome> 
 
 # FINAL RULE
 
-You do not modify files. You produce the QA Markdown. Claude Design and Claude Cowork apply fixes after <AUTHOR> approves them, then this QA is re-run until it certifies Publishing Ready. PHASE 6.9 (the audiobook) starts only from a Publishing Ready report, and PHASE 7 after it.
+You do not modify files (except appending rows to the next-edition log for a freeze chapter, #42). You produce the QA Markdown. Claude Design and Claude Cowork apply fixes after <AUTHOR> approves them, then this QA is re-run until it certifies Publishing Ready. PHASE 6.9 (the audiobook) starts only from a Publishing Ready report, and PHASE 7 after it.

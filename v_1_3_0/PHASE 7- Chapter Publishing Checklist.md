@@ -233,6 +233,7 @@
 - [ ] <BOOK>_KINDLE_EBOOK (PHASE 4 Part B)
 - [ ] Book-wide audit: `_BookGovernance/Audit/Trigger/AUDIT_FINAL_CLEAR.md` present, and this chapter's final wording was part of that run (PHASE 0.9 Mode D: cross-chapter consistency + since-lock delta, v1.2.5)
 - [ ] Manuscript lock (v1.2.5): `Manuscript/Trigger/MANUSCRIPT_LOCKED.md` present (PHASE 2.5), its decisions log fully decided, and every change since the lock approved (an accepted `P4_DECISIONS` row, or a `MANUSCRIPT_REVISED.md` section with its approval line and a delta re-lock)
+- [ ] Freeze chapters (lock has `freezePilot:`, #42): `MANUSCRIPT_SYNCED.md` carries `finalLock: yes`; the manuscript hashes still equal it; every change after it is an approved `Errata` section with a new final lock; this chapter's next-edition log rows have a Status (`open` rows are fine and don't block release; a `Major?: yes` row is closed through errata or downgraded by <AUTHOR>)
 
 ---
 

@@ -39,7 +39,7 @@
 **The PHASE 3 build order (<AUTHOR>, 2026-10-31).** References and manuscript are finished and locked first (PHASE 2.5); nothing below starts earlier. Then, for the book **and** the workbook:
 1. training materials and the design packet, and the figures you request (A0);
 2. updates from your review of those;
-3. the **eBook pass**, which you review and write notes on (wording changes go through `MANUSCRIPT_REVISED.md`, DOCX first, before the print build);
+3. the **eBook pass**, which you review and write notes on (wording changes go through `MANUSCRIPT_REVISED.md`, DOCX first, before the print build; for a freeze chapter, #42, a small wording edit goes into the eBook (the print replicates it), and PHASE 4 Part 0 syncs it back once; only a claim, number or citation change still goes through `MANUSCRIPT_REVISED.md`);
 4. the **print IDML**, created from the eBook after your notes, so it replicates the eBook;
 5. **print is required:** you review it in InDesign, edit it, and pass it off;
 6. QA (PHASE 3.5 and PHASE 3W).

@@ -4,6 +4,18 @@
 **Author:** <AUTHOR> · **Pipeline version:** v3.4 / release v1.3.0 (aligned 2026-10-31)
 **PHASE 3 build order (v1.3.0, <AUTHOR>):** references and manuscript locked first → training materials, figures and the design packet → your updates → the eBook pass and your notes → the print IDML created from the eBook after those notes (book and workbook; print required, you review, edit and pass it off) → QA. PHASE 4 then: your layout verification and Kindle. PHASE 5 (RAG) comes after the chapter's files are finished, then automations and publication QA. The audiobook is last of all (PHASE 6.9, 2026-11-16).
 **Order of work (v1.3.0):** manuscript (DOCX and MD) → eBook and print book, chapter and workbook, verified by <AUTHOR> in InDesign (PHASE 4 Step 0V, `LAYOUT_VERIFIED.md`) → Kindle → PHASE 5, 6, 6.5 → audiobook (PHASE 6.9, last; 2026-11-16) → PHASE 7.
+**Unreleased (2026-11-16, <AUTHOR>'s decision, #42): the manuscript freezes after PHASE 4 Part 0, the final lock.**
+- **Scope:** a **freeze chapter** is one whose `MANUSCRIPT_LOCKED.md` carries a `freezePilot:` line (PHASE 2.5 §5). The pilot is the first chapter locked with it; Ch1 to Ch6 stay on the process described elsewhere in these files, unless <AUTHOR> names one.
+- **Every content check runs before the PHASE 2.5 lock** (PHASE 2.5 §3.1b): Deep Research and Copilot applied, the content audits (hedges, citations and footnote form, glossary casing, house form, callouts, figures, the workbook exercise) that PHASE 6.5 and the close-out audits used to run, and the house rules as they stand (section 10). They are moved there, not copied.
+- **Between the lock and Part 0,** <AUTHOR>'s small edits in the eBook and print layouts (PHASE 3 / 3.5) are the only routine changes. A change to a claim, a number or a citation still goes through `MANUSCRIPT_REVISED.md` and a delta re-lock (confirmed by <AUTHOR>, 2026-11-17).
+- **PHASE 4 Part 0 syncs those edits back once, before Kindle. That sync is the final lock:** `MANUSCRIPT_SYNCED.md` with a `finalLock: yes` line (PHASE 4, 0.8). A re-export during Step 0V, before Part A, is still part of Part 0 and supersedes it; the final lock Part A builds Kindle from is the one that stands (this reading of "once" confirmed by <AUTHOR>, 2026-11-17).
+- **After the final lock the manuscript is read-only:** PHASE 5, 6, 6.5, Part B (B0, book mode), the book audit and 6.9. PHASE 6.5 checks the formats against the manuscript, never the manuscript itself. A content finding goes to the **next-edition log**, `_BookGovernance/NextEdition/NEXT_EDITION_LOG.md`. A **major error** (factual, safety, legal, or a broken claim or citation) goes through the **errata step** (PHASE 2.5 §9): <AUTHOR>'s approval, a full re-sync and re-lock, `AUDIOBOOK_READY.md` stale, and a full re-recording if narrated text changed.
+- **House rules apply forward only** (section 10).
+- **The workbook manuscript freezes too** (<AUTHOR>, 2026-11-17): its checks run before the 2.5 lock, which records its hashes; small layout edits only after it; PHASE 3W W3 syncs them back once and writes `WORKBOOK_READY.md` with its own `finalLock: yes` line, before the chapter's Kindle build (Step 0V requires it); read-only after that except errata. The sync stays in W3, so PHASE 4 is unchanged for the workbook.
+- **`freezePilot:` becomes the default** (<AUTHOR>, 2026-11-17): opt-in until the pilot chapter has completed PHASE 4 (Part 0 final lock and Part A); from then on every chapter's first lock writes it, and a re-lock carries it only if the previous lock had it, so Ch1 to Ch6 keep the old process unless <AUTHOR> names one.
+- **Simpler checks:** <AUTHOR> makes the manuscript edits in Word. Claude puts each item to <AUTHOR> (the heading, the exact sentence, the suggested wording) with a highlighted, commented review copy, offers mechanical fixes as "apply for me", then syncs the MD from the DOCX, verifies it, and keeps one short decisions log per chapter. Files that quote the manuscript word for word get their verbatim-quote refresh once, after the final lock (PHASE 4 0.6).
+- The audiobook stays last (PHASE 6.9, per chapter, recorded in batches; #43).
+
 **Unreleased (2026-11-16, <AUTHOR>'s decision): the audiobook moves to PHASE 6.9.**
 - **New PHASE 6.9, Audiobook** (`PHASE 6.9- Audiobook (Narration Script + Recording).md`), between PHASE 6.5 and PHASE 7. All of what was PHASE 4 Part C runs there: the narration script from the Kindle output, the XTTS draft, <AUTHOR>'s recording, the audiobook QA. So does the book-level `<BOOK>_AUDIOBOOK` set (was PHASE 4 Part B, B4b).
 - **Each chapter is recorded in full at PHASE 6.9.** There are no pickup re-records after it. If narrated text changes later, `AUDIOBOOK_READY.md` goes stale and the chapter is recorded again in full.
@@ -24,7 +36,7 @@
 - **New Step 0C, pass 1**, after Part 0 / 0R / 0G / 0P and before Part A: `congruency_check.py <ChapterName> --pass 1` (deterministic, report-only). It puts the manuscript DOCX and MD, the eBook PDF, the print PDF, the workbook's exercise numbers and titles (the narration script joins in pass 2), and every file's freshness against `MANUSCRIPT_LOCKED.md` into one report with a **PASS / HOLD** verdict. Part A starts only on PASS.
 - **Pass 2**, after Part C, adds the Kindle DOCX and the audiobook QA, and gates PHASE 5 and 6.5. (2026-11-16: after Part A, Kindle DOCX only; the script and audio checks moved to PHASE 6.9.)
 - **Triggers:** automatic (the local watcher runs it when every input exists and nothing has changed for 5 minutes, and emails when the verdict is HOLD) or manual (`Manuscript/Trigger/RUN_CONGRUENCY.md`, or ask Claude).
-- **Protected chapters** (the first book's Ch1 to Ch5, which have no lock) get the report only; it never holds them.
+- **Protected chapters** (the first book's Ch1 to Ch5, which have no lock) get the report only; it never holds them. (2026-11-16: Ch1 to Ch5 now have locks, so the check covers them in full. They are still protected, so the runner never processes them, and <AUTHOR> acts on a HOLD with Claude in chat.)
 - Why: each pair of formats was checked alone; nothing combined them, and the script against the manuscript, file freshness, and the exercise numbers and titles were not checked at all.
 
 **Release v1.2.5 (2026-10-24): the manuscript is locked before design (new PHASE 2.5).**
@@ -162,7 +174,7 @@ The version in each file's title is that file's own document version. This table
 | PHASE 3W | v3.4 | changed in v1.3.0 | `PHASE 3W- Workbook Track (eBook + Print).md` |
 | PHASE 4 | v3.4 | changed in v1.3.0 | `PHASE 4- Kindle DOCX Chapter Compilation.md` |
 | PHASE 5 | v4.2 | changed in v1.3.0 | `PHASE 5- RAG Rebuild & Local LLM Setup (Per Chapter).md` |
-| PHASE 6 | v4.1 | unchanged since v1.2.6 | `PHASE 6- Automation Activation (n8n + Local LLM + RAG).md` |
+| PHASE 6 | v4.1 | changed: freeze note (unreleased, 2026-11-16, #42) | `PHASE 6- Automation Activation (n8n + Local LLM + RAG).md` |
 | PHASE 6.5 | v3.4 | changed in v1.3.0 | `PHASE 6.5- Claude Design Publication QA.md` |
 | PHASE 6.9 | v1.0 | changed: new file (unreleased, 2026-11-16) | `PHASE 6.9- Audiobook (Narration Script + Recording).md` |
 | PHASE 7 | v3.4 | changed in v1.3.0 | `PHASE 7- Chapter Publishing Checklist.md` |
@@ -191,14 +203,15 @@ PASS 6 (tighten) ─▶ 0.9 audit ─▶ PASS 7 (voice; semi-locked) ─▶ poli
         └─ 3W workbook: WORKBOOK_MANUSCRIPT_READY (end of 2) ─▶ Claude Design workbook (3) ─▶ InDesign eBook + print
                           ─▶ upload PDFs ─▶ W3 sync + check (PDF = DOCX = MD) ─▶ WORKBOOK_READY
   ─▶ 4: [Copilot final eBook review 0F] ─▶ Part 0 sync + 0.7 spot check ─▶ 0P print QA closed ─▶ <AUTHOR> verifies eBook + print (chapter + workbook) in InDesign ─▶ LAYOUT_VERIFIED.md (0V) ─▶ 0C ─▶ Part A Kindle ─▶ 0C pass 2
-  ─▶ 5 ─▶ 6 ─▶ 6.5 ─▶ 6.9 audiobook, last (script from the Kindle output; XTTS draft; <AUTHOR> records the chapter in full in Audition; audiobook QA) ─▶ 7 ─▶ Published   (per chapter; 6.9 waits for B0 below)
+  ─▶ 5 ─▶ 6 ─▶ 6.5 ─▶ 6.9 audiobook, last (script from the Kindle output; XTTS draft; <AUTHOR> records the chapter in full in Audition; audiobook QA) ─▶ 7 ─▶ Published   (per chapter; 6.9 does not wait for B0, #43)
+  Freeze chapters (#42): every content check in 2.5 ─▶ lock ─▶ small layout edits only ─▶ 4 Part 0 = final lock ─▶ read-only (content findings ─▶ next-edition log; major error ─▶ errata)
 
   4 Part B, once every chapter has passed Part A:
   B0 cross-chapter consistency + since-lock delta ─▶ Kindle package ─▶ 6.5 book mode   (once per book)
-  6.9 per chapter, once B0 has passed and the chapter is Publishing Ready; then 6.9 book mode: audiobook set   (once per book)
+  6.9 per chapter, once the chapter is Publishing Ready (#43); then 6.9 book mode: audiobook set   (once per book)
                        └─▶ 3W W4–W5: workbook eBook + print books (after B0)
 
-Fix loops: 2.5 finding → <AUTHOR>'s decision → DOCX → MD (before anything is designed); 0P / W2b print QA → print InDesign fix → re-export (wording that should reach the manuscript → MANUSCRIPT_REVISED.md + approval → eBook fix → Part 0 re-run); 3.5 → 3; 3W W3 → InDesign workbook fix (and DOCX → MD) → re-export → re-upload; 0.7 blocking finding → eBook (and print) InDesign fix → re-export → Part 0 re-run; B0 genuine cross-chapter conflict only → <AUTHOR> approves → MANUSCRIPT_REVISED.md → re-lock → eBook fix → Part 0 re-run; 6.5 → owner phase after approval.
+Fix loops: 2.5 finding → <AUTHOR>'s decision → DOCX → MD (before anything is designed); 0P / W2b print QA → print InDesign fix → re-export (wording that should reach the manuscript → MANUSCRIPT_REVISED.md + approval → eBook fix → Part 0 re-run); 3.5 → 3; 3W W3 → InDesign workbook fix (and DOCX → MD) → re-export → re-upload; 0.7 blocking finding → eBook (and print) InDesign fix → re-export → Part 0 re-run; B0 genuine cross-chapter conflict only → <AUTHOR> approves → MANUSCRIPT_REVISED.md → re-lock → eBook fix → Part 0 re-run; 6.5 → owner phase after approval. Freeze chapters (#42): before Kindle, a small wording fix from 0P, 0V or 0.7 goes into the layouts and the eBook re-export (Part 0 syncs it); after the final lock, a 6.5, B0 or later content finding → next-edition log, and a major error → errata (PHASE 2.5 §9: Errata section + approval → DOCX → MD → PHASE 1, 2 → delta re-lock → layouts + eBook re-export → Part 0, new final lock → 0P, 0V, 0C → Part A → 5, 6, 6.5 → 6.9, a full re-record if narrated text changed).
 ```
 
 ---
@@ -209,7 +222,7 @@ One ladder is used by every phase:
 
 `Draft → Review Ready → Design Ready → Locked → Production Ready → Publishing Ready → Published`
 
-**The manuscript's lifecycle, in one vocabulary (v1.3.0):** PASS 7 = **semi-locked** (editorially complete) → PHASE 1 and 2 = **governed** → PHASE 2.5 = **research-cleared and locked** (`RESEARCH_CLEAR.md` when `copilotRequired: yes`, then `MANUSCRIPT_LOCKED.md`; references finished) → PHASE 3 onward = **production source** → PHASE 4 Part 0 = **final-wording synced** (`MANUSCRIPT_SYNCED.md`). The lock state machine and the only sanctioned edit paths are in `PHASE 2.5- Manuscript Lock Audit.md` §0.
+**The manuscript's lifecycle, in one vocabulary (v1.3.0):** PASS 7 = **semi-locked** (editorially complete) → PHASE 1 and 2 = **governed** → PHASE 2.5 = **research-cleared and locked** (`RESEARCH_CLEAR.md` when `copilotRequired: yes`, then `MANUSCRIPT_LOCKED.md`; references finished) → PHASE 3 onward = **production source** → PHASE 4 Part 0 = **final-wording synced** (`MANUSCRIPT_SYNCED.md`); for a freeze chapter (#42) this is the **final lock** (`finalLock: yes`), and after it the manuscript is **read-only** except through errata. The lock state machine and the only sanctioned edit paths are in `PHASE 2.5- Manuscript Lock Audit.md` §0, and the freeze rules in its §9.
 
 | Milestone | Awarded by | Evidence |
 |---|---|---|
@@ -237,6 +250,8 @@ PHASES 4, 5, 6, and 6.9 don't change the status; they gate by checklist (`gateSt
 | | Locked snapshot (DOCX + MD, for the B0 delta check) | `<CH_ROOT>/Manuscript/_Locked/<ChapterName>_Manuscript_v<chapterVersion>.docx` / `.md` |
 | | Pass files + updated book ledger | `_BookGovernance/Audit/<YYYYMMDD>_L_<ChapterName>/` |
 | | Lock trigger | `<CH_ROOT>/Manuscript/Trigger/MANUSCRIPT_LOCKED.md` |
+| | Review copy (freeze chapters, #42): each item highlighted and commented for <AUTHOR>; never a gate input; older copies go to the chapter's archive folder | `<CH_ROOT>/Manuscript/<ChapterName>_Manuscript_REVIEW_<YYYYMMDD>.docx` (workbook: `<CH_ROOT>/Workbook/<workbook DOCX stem>_REVIEW_<YYYYMMDD>.docx`) |
+| **Book, after any final lock (#42)** | Next-edition log: content findings in final-locked chapters, append-only (format in PHASE 2.5 §9) | `_BookGovernance/NextEdition/NEXT_EDITION_LOG.md` |
 | **PHASE 3** (+3.5) | <BOOK>_EBOOK_PDF&EPUB | `_BookPublication/<BOOK>_EBOOK/` |
 | | <BOOK>_PRINT_BOOK (manual InDesign) | `_BookPublication/<BOOK>_PRINT_BOOK/` |
 | | Exported figure images (PHASE 4 dependency) | `<CH_ROOT>/DesignPacket/figures_export/` |
@@ -303,6 +318,7 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 │   ├── Audit/                    config, canonical terms, EvalSet/, <RUN_ID>/ (incl. <date>_L_<ChapterName>/ lock runs), Trigger/ [P0.9, P2.5]
 │   ├── PrintQA/                  <Section>_PrintQA.md + .json, Workbook_*_PrintQA.md [P4 0P, P3W W2b]
 │   ├── CongruencyQA/             <Section>_Congruency.md + .json (+ _Pass2, _Pass3), <Section>_Accepted.json [P4 Step 0C, v1.2.6; P6.9]
+│   ├── NextEdition/              NEXT_EDITION_LOG.md (append-only; content findings in final-locked chapters, #42) [P4 0R onward]
 │   └── Workbook/                 Workbook_ExerciseRegistry.json                    [P3W]
 ├── _PrintDSM/                    <PRINT_DSM_ROOT>: print templates (IDML), finished chapter IDMLs, print DSM, style_map.json — READ-ONLY [read by P3.5A, P3.5B]
 ├── _eBookDSM/                    <EBOOK_DSM_ROOT>: eBook design system + Chapter<N>_eBook.dc.html pages [P3, P3.5B]
@@ -338,20 +354,20 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 
 | Trigger file | Location | Created by | Consumed by |
 |---|---|---|---|
-| **Final eBook PDF** `<ChapterName>_eBook.pdf` (or `_eBookPDF.pdf`; newer than `MANUSCRIPT_SYNCED.md`) — **completes PHASE 3.5 (v1.1)** | `eBook/` | <AUTHOR> (final export) | P4 Part 0 (after 30 quiet minutes); P6 3F watcher (notify only) |
+| **Final eBook PDF** `<ChapterName>_eBook.pdf` (or `_eBookPDF.pdf`; newer than `MANUSCRIPT_SYNCED.md`) — **completes PHASE 3.5 (v1.1)** | `eBook/` | <AUTHOR> (final export) | P4 Part 0 (after 30 quiet minutes; for a freeze chapter whose Kindle build exists, a confirm-only re-run, #42); P6 3F watcher (notify only) |
 | **Final workbook PDF** `<NN>_Ex_<L>_<N>_Chapter<C>.pdf` (v1.1 option) — completes PHASE 3.5 for the workbook | `<WORKBOOK_BOOK_ROOT>/<section>/` | <AUTHOR> (final export) | P3W W3 (after 30 quiet minutes) |
 | `WORKBOOK_SELECTION.md` (ticked) | `_Pipeline/` | P1 (candidates) → <AUTHOR> | P2 workbook selection |
 | `Glossary_Canonical.json` | `_BookGovernance/Glossary/` | <AUTHOR> | P2 glossary; P4 0G; glossary rollup |
 | `AUDIT_CLEAR.md` / `AUDIT_INCOMPLETE.md` | `_BookGovernance/Audit/Trigger/` | P0.9 Mode F | P1 entry; P3.5A entry (the DOCX must be newer) |
 | `RUN_CONGRUENCY.md` (v1.2.6): optional first line `pass 2` (or `pass 3`, PHASE 6.9); renamed `RUN_CONGRUENCY_done_<timestamp>.md` after the run | `Manuscript/Trigger/` (Parts: `Trigger/`) | <AUTHOR> | The watcher runs the congruency check now |
-| `MANUSCRIPT_LOCKED.md` / `MANUSCRIPT_LOCK_INCOMPLETE.md` (v1.2.5): run ID, chapter version, DOCX and MD SHA-256 hashes, finding and decision counts, decisions log, snapshot | `Manuscript/Trigger/` | P2.5 (once every finding is decided and applied, DOCX = MD) | Entry gates of P3 (A0 starts from it), P3.5, P3.5A, P3.5B, P3W, P4 Part 0/A; P4 B0 (since-lock delta); P6.9. **Stale** when a hash no longer matches the files or `MANUSCRIPT_REVISED.md` is newer |
+| `MANUSCRIPT_LOCKED.md` / `MANUSCRIPT_LOCK_INCOMPLETE.md` (v1.2.5): run ID, chapter version, DOCX and MD SHA-256 hashes, finding and decision counts, decisions log, snapshot; a `freezePilot:` line marks a freeze chapter and is carried forward (#42) | `Manuscript/Trigger/` | P2.5 (once every finding is decided and applied, DOCX = MD) | Entry gates of P3 (A0 starts from it), P3.5, P3.5A, P3.5B, P3W, P4 Part 0/A; P4 B0 (since-lock delta); P6.9. **Stale** when a hash no longer matches the files or `MANUSCRIPT_REVISED.md` is newer |
 | `RESEARCH_CLEAR.md` / `RESEARCH_INCOMPLETE.md` (v1.3.0): hashes equal to the lock, Pass 4 and Copilot report refs, reconciliation counts, `changesAfterReport`, author approval | `DeepResearch/` | P2.5 (just before the lock) | P2.5 exit gate / lock; P4 Step 0F; P6.5 §9b; P7 |
 | `COPILOT_RESEARCH_REPORT.md` (saved by <AUTHOR>), `RESEARCH_RECONCILIATION.md` (Claude) (v1.3.0) | `DeepResearch/` | <AUTHOR> (from Copilot) · P2.5 §3.2b | P2.5 decisions log; `RESEARCH_CLEAR.md` |
 | `START_HERE.md`, `PROMPT_PasteIntoCopilot.md`, `Copilot_Research_Handoff.md` (manifest), `1_Upload_First/`, `2_Upload_Second/` (v1.3.0): the reference-only snapshots and instructions for the Copilot research review | `DeepResearch/` | P2.5 audit run (rebuilt when the manuscript changes) | <AUTHOR> (drags the folders into Copilot) |
 | `Final_eBook_Handoff.md`, `COPILOT_FINAL_EBOOK_REVIEW_<date>.md` (<AUTHOR>), `Final_eBook_Gate_<date>.md` (Claude) (v1.3.0) | `Governance/Copilot/` | P4 Step 0F · <AUTHOR> | P4 Part 0 (0.2 starts only on an open gate); P6.5 §9b |
 | `COPILOT_DESIGN_REVIEW_`, `COPILOT_PRINT_PDF_REVIEW_`, `COPILOT_KINDLE_REVIEW_`, `COPILOT_PUBLICATION_QA_<date>.md` (v1.3.0, optional except the last) | `Governance/Copilot/` (book level: `_BookGovernance/Copilot/`) | <AUTHOR> (from Copilot) | P3.5 §15; P4 0P; P4 B6; P6.5 §9b |
 | `<ChapterName>_LockDecisions.md` (v1.2.5): one row per finding, blank **Decision** column | `Manuscript/` | P2.5 (rows) → <AUTHOR> (decisions), then `_Pipeline/RERUN_P2.5.md` | P2.5 apply run |
-| `MANUSCRIPT_REVISED.md` (v1.1.3): changed sections + reason, one dated section per revision; **after the lock, each section carries <AUTHOR>'s `Approved: <initials> <date>` line** (v1.2.5) | `Manuscript/Trigger/` | <AUTHOR> (after PHASE 1; DOCX edited, MD brought in line with `docx_md_sync.py`) | (nothing wakes by itself; the author creates `RERUN_P1`, `RERUN_P2`, `RERUN_P2.5` in turn) P1 re-run from Step 1 for the changed sections → P2 re-validation → P2.5 delta audit + new lock; P3.5A / 3.5B re-run; P4 Part 0 stop (if newer than the eBook PDF: re-export) |
+| `MANUSCRIPT_REVISED.md` (v1.1.3): changed sections + reason, one dated section per revision; **after the lock, each section carries <AUTHOR>'s `Approved: <initials> <date>` line** (v1.2.5); after a freeze chapter's final lock, only a section titled `Errata — <criterion>: NE-<nnn>` belongs there (#42; gates read the file's time, so any newer section makes the lock stale) | `Manuscript/Trigger/` | <AUTHOR> (after PHASE 1; DOCX edited, MD brought in line with `docx_md_sync.py`) | (nothing wakes by itself; the author creates `RERUN_P1`, `RERUN_P2`, `RERUN_P2.5` in turn) P1 re-run from Step 1 for the changed sections → P2 re-validation → P2.5 delta audit + new lock; P3.5A / 3.5B re-run; P4 Part 0 stop (if newer than the eBook PDF: re-export) |
 | `<ChapterName>_Import.txt` + `_BuildManifest.json` + `_BuildReport.md` (v1.1.3) | `InDesign/` | P3.5A (`idml_build.py`) | <AUTHOR> (place into a copy of the template; manual layout); P3.5 §13A print-build review |
 | `<NNN>_Chapter<N>_<Title>.idml` / `<NN>-<n>_Exercise_<L>_<N>_<Name>.idml` (v1.2) | `InDesign/` / `Workbook/` | P3.5B (`idml_chapter_build.py`, `idml_workbook_build.py`) | <AUTHOR> (open in InDesign, fonts, finish, export the print PDF → P4 0P / P3W W2b) |
 | `AUDIT_FINAL_CLEAR.md` / `AUDIT_FINAL_INCOMPLETE.md` | `_BookGovernance/Audit/Trigger/` | P0.9 Mode D (P4 B0: cross-chapter consistency + since-lock delta, v1.2.5) | P4 Part B; P5 cloud release-ready flag; P6.5 book mode; P6.9 book mode (audiobook set); P7 |
@@ -360,10 +376,11 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 | `WORKBOOK_MANUSCRIPT_READY.md` / `WORKBOOK_MANUSCRIPT_INCOMPLETE.md` | `Workbook/Trigger/` | P3W W0 gate (end of P2) | P3 workbook design |
 | **Workbook PDFs** in the profile's `formats` (`chapter`: `<ChapterName>_Workbook_eBook.pdf` + `_Workbook_Print.pdf`; `book-root`: `<NN>_Ex_<L>_<N>_Chapter<C>.pdf` + `InDesign/<eBook stem>_Print7x10.pdf`) (newer than `WORKBOOK_READY.md`) | `Workbook/` or `<WORKBOOK_BOOK_ROOT>` (profile `location`) | <AUTHOR> (final exports from InDesign) | P3W W3 |
 | `WORKBOOK_NOT_APPLICABLE.md` (the book's workbook profile excludes this chapter) | `Workbook/Trigger/` | P2 (in place of the W0 gate) | P3W (does nothing); P4 Step 0V and P6.5 treat the workbook as N/A |
-| `WORKBOOK_READY.md` / `WORKBOOK_INCOMPLETE.md` | `Workbook/Trigger/` | P3W W3 | P3W W4 (every chapter); P6.5 workbook sub-cert; P7 |
+| `WORKBOOK_READY.md` / `WORKBOOK_INCOMPLETE.md`; for a freeze chapter its `finalLock: yes` line is the workbook's final lock (#42, 2026-11-17) | `Workbook/Trigger/` | P3W W3 | P3W W4 (every chapter); P6.5 workbook sub-cert; P7 |
 | `DESIGN_READY.md` / `_INCOMPLETE` | `DesignPacket/Trigger/` | P3.5 | P4 entry; P6 3B/3D |
 | `LAYOUT_VERIFIED.md` (v1.3.0): created **by <AUTHOR>** after checking the eBook and print books (chapter and workbook) in InDesign; `LAYOUT_VERIFY_INCOMPLETE.md` lists what is open | `Manuscript/Trigger/` | <AUTHOR> · P4 Step 0V (the incomplete file) | P4 Step 0C and Part A; P5 |
-| `MANUSCRIPT_SYNCED.md` / `MANUSCRIPT_SYNC_INCOMPLETE.md` | `Manuscript/Trigger/` | P4 Part 0 | P4 Step 0; P4 Part B; P5 entry; P6.9 |
+| `MANUSCRIPT_SYNCED.md` / `MANUSCRIPT_SYNC_INCOMPLETE.md`; for a freeze chapter its `finalLock: yes` line is the **final lock** (#42) | `Manuscript/Trigger/` | P4 Part 0 | P4 Step 0; P4 Part B; P5 entry; P6.9; every phase that must not edit a final-locked chapter |
+| `NEXT_EDITION_LOG.md` (#42): one row per content finding in a final-locked chapter; append-only | `_BookGovernance/NextEdition/` | P4 0R and Part B (B0), P0.9 Mode D, P5, P6, P6.5, P6.9 (add rows); <AUTHOR> (Status) | the chapter's next-edition lock audit; a `Major?: yes` row → errata (PHASE 2.5 §9) |
 | **Print PDF** `<ChapterName>_Print7x10.pdf` (v1.1.2; workbook: `<WORKBOOK_BOOK_ROOT>/InDesign/<eBook stem>_Print7x10.pdf`, or `Workbook/<ChapterName>_Workbook_Print*.pdf` in the `chapter` layout) | `InDesign/` | <AUTHOR> (print export: 7×10, bleed, no printer's marks) | P4 0P / P3W W2b print QA (after 5 quiet minutes; re-runs when the print or eBook PDF changes); P6.5; P7 |
 | `RAG_LOCAL_READY.md` | `RAG/Trigger/` | P5 Track L | P6 local workflows; local 3E |
 | `RAG_CLOUD_READY.md` | `RAG/Trigger/` | P5 Track C | P6 cloud workflows; cloud 3E |
@@ -482,3 +499,26 @@ Every step after one of <AUTHOR>'s uploads is started by an event, not by pastin
 | `_Pipeline/RERUN_P<n>.md` (<AUTHOR>; `<n>` = 1, 2, 2.5, 3W, 3.5, 3.5A, 3.5B, 4, 5, 6, 6.5, 6.9, 7; `RERUN_P3.5B.md` takes `ebook` or `idml` on its first line) | Re-runs that phase; notes inside go to Claude | As for that phase |
 
 Manual by design: PHASE 0.9; PHASE 3 and 3.5 (Claude Design, InDesign); the audiobook recording (PHASE 6.9); book assembly (PHASE 3 book mode, 3W W4–W5, PHASE 4 Part B, PHASE 6.9 book mode); every approval; and the PHASE 7 sign-off.
+
+---
+
+## 10. House rules (dated; forward only)
+
+**The rule (<AUTHOR>, 2026-11-16, #42):** a house rule applies from its date to the chapters **not yet locked** on that date. It is never retrofitted to a locked chapter unless <AUTHOR> names the chapter: before the chapter's final lock, through a `MANUSCRIPT_REVISED.md` section; after it, through the next-edition log. PHASE 2.5 §3.1b checks a freeze chapter against the rules in force on its lock date. Add each new rule here with its date, and say in the "From" column where it starts.
+
+The rules in force for the first book (*<BOOK_TITLE>*). The "From" column is partly reconstructed from the recorded decisions and awaits <AUTHOR>'s review (2026-11-17; it doesn't block anything):
+
+| Date | Rule | From |
+|---|---|---|
+| 2026-10-29 | No sidebars: callouts and pull quotes only (`sidebars: off`, the default) | the whole book (a book setting) |
+| 2026-10-31 | Hedged claim language: empirical outcomes and absolutes are softened ("can", "may", "tends to", "is designed to"); framework mechanics are stated as design; framework definitions are not hedged twice | new wording from the date |
+| 2026-11-03 | Em dashes for emphasis only (an aside or add-on takes commas or ", which"); numbered footnotes, never in-text "(Author, year)" citations | new wording from the date |
+| 2026-11-05 | "resonance" stays lowercase as a common noun; capitals only in defined proper terms | new wording from the date |
+| 2026-11-05 | A callout never sits immediately before (or after) the sentence it echoes | the chapters laid out from the date |
+| 2026-11-10 | Chapter Summary bullets: one sentence, two at most, about 25 words at most (SUMMARY_FORMAT, PHASE 2.5 §4); from Chapter 7, no Closing Frame or personal anecdotes in the Summary | Chapter 6 (length), Chapter 7 (content) |
+| 2026-11-10 | Callouts: no quotation marks around the book's own words; a Core Value title callout only in the chapter that first introduces that Core Value; Meta-Value callouts in blue (titling corrected 2026-11-16) | Chapter 7 (quote marks); the titling rule as corrected |
+| 2026-11-11 | Workbook exercises use "Step 1, Step 2…" headings, with no how-to box | Chapter 6 |
+| 2026-11-12 | Footnote markers go after the punctuation (except before an em dash); lettered pointers read "(see Footnote A)" | book-wide (<AUTHOR>'s decision on the date) |
+| 2026-11-12 | Exercise titles: "Workbook Exercise N.N: Title" (the chapter's print and eBook heading shows two lines, no colon); the workbook's own heading is "Exercise N.N: Title" | the chapters locked from the date |
+| 2026-11-13 | Workbook back-matter journal pages carry no page numbers | the workbook back matter |
+| 2026-11-16 | House rules apply forward only (this section); the manuscript freezes after PHASE 4 Part 0 (#42) | freeze chapters (the pilot onward) |

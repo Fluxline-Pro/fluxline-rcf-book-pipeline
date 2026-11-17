@@ -20,7 +20,7 @@ Find every place where the book disagrees with itself — terms, definitions, ac
 
 - **PASS 6: tightening.** Word counts come down and redundancy goes. Wording changes a lot here, so audit **after** PASS 6 is finished for every chapter, not during it.
 - **PHASE 0.9, Mode F.** The book-wide audit, run on the tightened draft.
-- **PASS 7: voice.** <AUTHOR> reads each chapter in full and edits it for voice, resolving the audit findings along the way. After PASS 7, the chapter is semi-locked (editorially complete): from then on, wording changes only through PHASE 1 Editorial Suggestions or PHASE 2.5 (and, after the lock, `MANUSCRIPT_REVISED.md`; PHASE 4 Part 0 is a safety net, not an edit path).
+- **PASS 7: voice.** <AUTHOR> reads each chapter in full and edits it for voice, resolving the audit findings along the way. After PASS 7, the chapter is semi-locked (editorially complete): from then on, wording changes only through PHASE 1 Editorial Suggestions or PHASE 2.5 (and, after the lock, `MANUSCRIPT_REVISED.md`; PHASE 4 Part 0 is a safety net, not an edit path; for a freeze chapter, #42, Part 0 is the one route for <AUTHOR>'s small layout edits, and the final lock).
 - **PHASES 1–2.** Production and governance work from the PASS 7 text.
 - **PHASE 2.5 (release v1.2.5).** The lock audit: this phase's Pass 1 → Pass 2 on each governed chapter, <AUTHOR>'s decisions, the fixes in the DOCX, and the lock. Design starts only from the locked text.
 - **PHASE 3.** Design works from the locked text.
@@ -295,6 +295,7 @@ Save as `<BOOK>_AuditReport.md`, and copy the *Canonical decisions needed* secti
    - Mode L (PHASE 2.5): <AUTHOR> decides each finding in the decisions log; the approved fixes go into the DOCX, then the MD through `docx_md_sync.py`. See PHASE 2.5.
    - Mode P (b): a blocking wording fix goes into the eBook InDesign book (and the print book, if it carries the same text) → re-export the eBook PDF → PHASE 4 Part 0 re-sync → Part A → PHASE 5 re-run for that chapter, and PHASE 6.9 later records it in full (the existing re-sync rule). Never patch the synced manuscript by hand.
    - Mode D: only a genuine cross-chapter conflict reopens a manuscript, and only with <AUTHOR>'s approval: `MANUSCRIPT_REVISED.md` (with the approval line) → PHASE 2.5 delta re-lock → the eBook fix and Part 0 as above (PHASE 4 B0).
+   - Mode D, freeze chapters (2026-11-16, #42): a final-locked chapter is never reopened for a consistency finding. The finding goes to the next-edition log (`_BookGovernance/NextEdition/NEXT_EDITION_LOG.md`); only a major error goes through the errata step (PHASE 2.5 §9).
 3. **Update the glossary** from the glossary delta.
 4. **Re-run Pass 2 on the changed chapters only**, then Consolidation, until the gate passes.
 
@@ -313,6 +314,6 @@ Otherwise write `AUDIT_INCOMPLETE.md` listing what is open. PHASE 1 does not sta
 
 **Mode L → `MANUSCRIPT_LOCKED.md`** (per chapter): see the PHASE 2.5 exit gate.
 
-**Mode D → `Trigger/AUDIT_FINAL_CLEAR.md`** when every chapter has a `MANUSCRIPT_LOCKED.md`, no cross-chapter conflict is open (each is resolved with <AUTHOR>'s approval, or accepted with a note), every change since a chapter's lock is approved and re-checked, no finding `Defer`red in a lock audit is still open, and every canonical term in the final text matches `Audit_CanonicalTerms.json`. Otherwise write `AUDIT_FINAL_INCOMPLETE.md`. PHASE 4 Part B, PHASE 6.5 book mode, and the release-ready flag on the cloud RAG store all wait for `AUDIT_FINAL_CLEAR.md`.
+**Mode D → `Trigger/AUDIT_FINAL_CLEAR.md`** when every chapter has a `MANUSCRIPT_LOCKED.md`, no cross-chapter conflict is open (each is resolved with <AUTHOR>'s approval, accepted with a note, or, for a final-locked chapter, logged for the next edition, #42), every change since a chapter's lock is approved and re-checked, no finding `Defer`red in a lock audit is still open, and every canonical term in the final text matches `Audit_CanonicalTerms.json`. Otherwise write `AUDIT_FINAL_INCOMPLETE.md`. PHASE 4 Part B, PHASE 6.5 book mode, and the release-ready flag on the cloud RAG store all wait for `AUDIT_FINAL_CLEAR.md`.
 
 Rename any older trigger to `*_superseded_<timestamp>.md`.
