@@ -250,7 +250,7 @@ PHASES 4, 5, 6, and 6.9 don't change the status; they gate by checklist (`gateSt
 | | Locked snapshot (DOCX + MD, for the B0 delta check) | `<CH_ROOT>/Manuscript/_Locked/<ChapterName>_Manuscript_v<chapterVersion>.docx` / `.md` |
 | | Pass files + updated book ledger | `_BookGovernance/Audit/<YYYYMMDD>_L_<ChapterName>/` |
 | | Lock trigger | `<CH_ROOT>/Manuscript/Trigger/MANUSCRIPT_LOCKED.md` |
-| | Review copy (freeze chapters, #42): each item highlighted and commented for <AUTHOR>; never a gate input; older copies go to the chapter's archive folder | `<CH_ROOT>/Manuscript/<ChapterName>_Manuscript_REVIEW_<YYYYMMDD>.docx` (workbook: `<CH_ROOT>/Workbook/<workbook DOCX stem>_REVIEW_<YYYYMMDD>.docx`) |
+| | Review copy (freeze chapters, #42): each item highlighted and commented for <AUTHOR>; never a gate input; older copies go to the chapter's archive (`Chapters/<ChapterName>/ARCHIVE/<YYYYMMDD>/`, §10) | `<CH_ROOT>/Manuscript/<ChapterName>_Manuscript_REVIEW_<YYYYMMDD>.docx` (workbook: `<CH_ROOT>/Workbook/<workbook DOCX stem>_REVIEW_<YYYYMMDD>.docx`) |
 | **Book, after any final lock (#42)** | Next-edition log: content findings in final-locked chapters, append-only (format in PHASE 2.5 §9) | `_BookGovernance/NextEdition/NEXT_EDITION_LOG.md` |
 | **PHASE 3** (+3.5) | <BOOK>_EBOOK_PDF&EPUB | `_BookPublication/<BOOK>_EBOOK/` |
 | | <BOOK>_PRINT_BOOK (manual InDesign) | `_BookPublication/<BOOK>_PRINT_BOOK/` |
@@ -308,6 +308,7 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 **Chapter name:** `Ch<N>_<PascalCaseTitle>` (e.g. `Ch1_YourChapterTitle`)
 **Print InDesign book:** <AUTHOR> may keep the print InDesign book (INDB, linked assets) in separate print folders outside `<BOOK_ROOT>`. The print templates (IDML), the print DSM, and `style_map.json` live in `<PRINT_DSM_ROOT>` (`<BOOK_ROOT>/_PrintDSM`). Phases read `<PRINT_DSM_ROOT>` only through PHASE 3.5A and 3.5B, and never write to it. The eBook design system lives in `<EBOOK_DSM_ROOT>` (`<BOOK_ROOT>/_eBookDSM`); the print build reads it for content only (v1.2). From v1.1.2, the exported print PDF is uploaded to `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf`, and PHASE 4 Part 0P checks it against the eBook PDF. The final **eBook** PDF stays the only layout text PHASE 4 Part 0 syncs the manuscript to.
 **Workbook InDesign files:** <AUTHOR> keeps them (documents, INDB, links, fonts) in `<WORKBOOK_INDESIGN_ROOT>`, outside `<BOOK_ROOT>` (for example, OneDrive). No phase reads them; PHASE 3W checks only the exported PDFs uploaded to the workbook profile's location, `Workbook/` or `<WORKBOOK_BOOK_ROOT>` (eBook 8.5×11 in; print 7×10 in, if the profile lists it).
+**Author TODO file and archives (2026-11-17, #47):** `<AUTHOR>_TODO.md` sits in the folder that holds `<BOOK_ROOT>`; each chapter has one archive, `Chapters/<ChapterName>/ARCHIVE/<YYYYMMDD>/` (the book-level `_Archive/` folder is retired). See section 10.
 **File names:** `<ChapterName>_<ArtifactType>.<ext>`; Marketing: `<ChapterName>_MKT_<Type>.<ext>`; Claude Design project files: `Ch<N>_<Type>.dc.html` (accepted exception)
 
 ```
@@ -325,7 +326,6 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 ├── _BookPublication/             six book deliverables + _Masters/                 [P3 assembly, P3W, P4 Part B, P6.5, P6.9]
 ├── _BookAutomation/              AutomationIndex.json, n8n/, OpenClaw/, Notices/   [P6]
 ├── _FinalizedReleases/           signed PHASE 7 checklists                         [P7]
-├── _Archive/<ChapterName>/       drafts moved at release                           [P7]
 ├── FrontMatter/Final/<Section>/  {Audiobook, eBook, Kindle}/                       [P3, P4, P6.9]
 ├── Parts/<NNN>_<Part>/Kindle/                                                      [P4]
 ├── BackMatter/<Section>/         {Audiobook, eBook, Kindle}/                       [P3, P4, P6.9]
@@ -345,7 +345,8 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
     │   ├── DeepResearch/         reference-only research folder: upload snapshots (1_Upload_First, 2_Upload_Second), the prompt, the manifest, and the results (Copilot report, reconciliation, RESEARCH_CLEAR) [P2.5]
     │   ├── DesignPacket/         _ds/ (DSM), packet/, figures_export/, templates/, uploads/, Trigger/ [P2 staging, P3]
     │   └── <ChapterName>_*Checklist / _Report files
-    └── Published/                approved release copies                           [P7]
+    ├── Published/                approved release copies                           [P7]
+    └── ARCHIVE/<YYYYMMDD>/       the chapter's one archive + its ARCHIVE_MANIFEST.md; never Final/ARCHIVE (§10, 2026-11-17) [any phase; P7 drafts]
 ```
 
 ---
@@ -506,7 +507,9 @@ Manual by design: PHASE 0.9; PHASE 3 and 3.5 (Claude Design, InDesign); the audi
 
 **The rule (<AUTHOR>, 2026-11-16, #42):** a house rule applies from its date to the chapters **not yet locked** on that date. It is never retrofitted to a locked chapter unless <AUTHOR> names the chapter: before the chapter's final lock, through a `MANUSCRIPT_REVISED.md` section; after it, through the next-edition log. PHASE 2.5 §3.1b checks a freeze chapter against the rules in force on its lock date. Add each new rule here with its date, and say in the "From" column where it starts.
 
-The rules in force for the first book (*<BOOK_TITLE>*). The "From" column is partly reconstructed from the recorded decisions and awaits <AUTHOR>'s review (2026-11-17; it doesn't block anything):
+**Process and build rules (2026-11-17, #47).** The forward-only rule is about the manuscript. A rule about how a phase builds or checks a format (the narration script, the Kindle links, a QA check, the TODO file, the archive) applies to every run of that phase from its date, whatever the chapter's lock state, as its "From" column says.
+
+The rules in force for the first book (*<BOOK_TITLE>*). The "From" column up to 2026-11-16 is partly reconstructed from the recorded decisions; <AUTHOR> approved the table on 2026-11-17:
 
 | Date | Rule | From |
 |---|---|---|
@@ -522,3 +525,25 @@ The rules in force for the first book (*<BOOK_TITLE>*). The "From" column is par
 | 2026-11-12 | Exercise titles: "Workbook Exercise N.N: Title" (the chapter's print and eBook heading shows two lines, no colon); the workbook's own heading is "Exercise N.N: Title" | the chapters locked from the date |
 | 2026-11-13 | Workbook back-matter journal pages carry no page numbers | the workbook back matter |
 | 2026-11-16 | House rules apply forward only (this section); the manuscript freezes after PHASE 4 Part 0 (#42) | freeze chapters (the pilot onward) |
+| 2026-11-17 | **Narration follows the Kindle text**, which matches the manuscript (for Whispersync). Print-only boxes and quotes are never read; short spoken figure descriptions stay; running Part labels ("Part <N>: <Part title>") are not read; callouts are read where the Kindle places them; footnote labels are read as the Kindle has them. Replaces the 2026-11-12 practice of narrating from the print/eBook layout (PHASE 6.9 step 1). (TW, chat) | every narration script built from the date, including the Ch1 to Ch5 full re-records |
+| 2026-11-16/17 | **Kindle builds carry linked footnotes:** each citation links to its References entry and back, each lettered note to its note and back. DOCX bookmarks plus internal hyperlinks (not Word footnote objects); `#` anchors in the Kindle HTML; chapter-prefixed ids so the book package has no collisions (PHASE 4 Part A steps 4, 8, B2; PHASE 6.5 §4). Native builder support: #46, #49. (TW, chat) | every Kindle build from the date (the book package needs the same ids in every chapter) |
+| 2026-11-16/17 | **Every chapter opens with an attributed epigraph**, after the Lesson and Core Value labels; the quotation and its attribution are verified as a source line (PHASE 2.5 §3.1b). (TW, chat) | the chapters locked from the date; Ch1, Ch4 and Ch6 are not retrofitted unless <AUTHOR> names them |
+| 2026-11-16/17 | **Workbook PART thumb tabs bleed by design:** safe-zone warnings on them are expected and count as accepted; prompt-line runts and the colour step-number buttons are fine too. Real layout problems are still raised (PHASE 3W W2b, PHASE 4 0P). (TW, chat) | every workbook print QA run from the date |
+| 2026-11-16/17 | **Figure backgrounds may vary** across a chapter and the book; background colour is not a check item. Labels, titles in the image, watermarks and garbled text still are (PHASE 3 figure checks, PHASE 3.5 §9 and §15). (TW, chat) | every figure check from the date |
+| 2026-11-16/17 | **The author TODO file**, `<AUTHOR>_TODO.md`: phases add hands-on author items there (InDesign fixes, re-exports, page checks, proofs, previews), batched by chapter and ordered by dependency, instead of one Command Center card each; one card points to the file. Yes/no decisions may still be asked directly (see "The author TODO file" below). (TW, chat) | every phase run from the date |
+| 2026-11-16/17 | **One archive per chapter**, `<BOOK_ROOT>/Chapters/<ChapterName>/ARCHIVE/<YYYYMMDD>/` with an `ARCHIVE_MANIFEST.md`, never `Final/ARCHIVE` (see "Archive" below). (TW, chat) | every archive move from the date |
+
+### The author TODO file (2026-11-17, #47)
+
+`<AUTHOR>_TODO.md` is one file for the book and its workbook, kept in the folder that holds `<BOOK_ROOT>` and `<WORKBOOK_BOOK_ROOT>`. When a phase needs <AUTHOR>'s hands in an app (an InDesign fix, a re-export, a page check, a proof, a Kindle Previewer pass), it adds the item there instead of opening a card per item:
+- items are grouped by chapter, and within a chapter ordered by dependency (InDesign fixes, then re-exports, then page checks, proofs and previews);
+- each item gives the exact place (file, page or folio, element) and what to do;
+- a quick yes/no decision may still be asked directly (in chat or by email), and is recorded in the file once answered;
+- one Command Center card points to the file and stays open while it has open items;
+- the pipeline emails still notify (HOW_TO_RUN golden rule 2); the file is where the hands-on work is batched.
+
+### Archive (2026-11-17, #47)
+
+Each chapter has **one** archive, `<BOOK_ROOT>/Chapters/<ChapterName>/ARCHIVE/<YYYYMMDD>/`, beside `Final/` and `Published/` (never `<CH_ROOT>/ARCHIVE`, which is `Final/ARCHIVE`). Under the dated folder, files go into descriptive subfolders (for example `audiobook_pre69/`, `kindle_footnotes/`, `eBookDSM/`), never into a working folder name (`Audiobook/`, `eBook/`, `InDesign/`, `Kindle/`, `Trigger/`), because the local watchers search those names anywhere under a chapter. The dated folder's `ARCHIVE_MANIFEST.md` logs each move: original path, archived path, reason. What goes there: superseded DSM files (a book-level DSM file goes to the archive of the chapter it was made for), older dated reports and logs once a newer one of the same kind exists, older review copies, and, at release, the working drafts (PHASE 7). Front matter, Parts and back matter use `FrontMatter/ARCHIVE/<YYYYMMDD>/`, `Parts/ARCHIVE/<YYYYMMDD>/` and `BackMatter/ARCHIVE/<YYYYMMDD>/`, never a folder inside `Final/`. Files are moved, never deleted, and no phase reads an archived file as a working source.
+
+`Governance/_Backups/` stays as it is: it holds the safety copy made before an edit. The `*_superseded_<timestamp>.md` trigger renames also stay in place, because the gates read them there.

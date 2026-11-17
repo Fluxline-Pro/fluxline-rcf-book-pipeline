@@ -25,6 +25,8 @@ This is the operating guide: what to do, in what order, one step at a time. The 
 3. **Nothing publishes itself.** Every generated item is a draft, and only you approve, sign off, and mark a chapter Published. A Copilot report is evidence, never a verdict or a gate on its own.
 4. **To redo a step,** create `<CH_ROOT>/_Pipeline/RERUN_P<n>.md`, where `<n>` is 1, 2, 2.5, 3W, 3.5, 3.5A, 3.5B, 4, 5, 6, 6.5, 6.9, or 7. Anything you write inside is passed to Claude.
 5. **Where to look:** `<CH_ROOT>/_Pipeline/STATUS.md` shows a chapter's phase history.
+6. **Your hands-on list is one file (2026-11-16/17, #47).** When a phase needs you in InDesign, Word, Kindle Previewer or another app (a fix, a re-export, a page check, a proof, a preview), it adds the item to `<AUTHOR>_TODO.md`, in the folder that holds `<BOOK_ROOT>`. Items are grouped by chapter and ordered by dependency (InDesign fixes, then re-exports, then page checks, proofs and previews), so you can work through them in one sitting, each with the exact place and what to do. One Command Center card points to the file, instead of a card per item. Quick yes/no decisions may still be asked directly. The emails (rule 2) still tell you when something is waiting. When you finish an item, tell Claude, and it is ticked off in the file.
+7. **Old copies go to the chapter's archive (2026-11-16/17, #47).** A superseded DSM file, an older dated report or log, or an older review copy moves to `<BOOK_ROOT>/Chapters/<ChapterName>/ARCHIVE/<YYYYMMDD>/`, logged in `ARCHIVE/<YYYYMMDD>/ARCHIVE_MANIFEST.md`. There is one archive per chapter, beside `Final/`, never `Final/ARCHIVE`. Nothing is deleted, and no phase works from an archived copy. `Governance/_Backups/` (the copy made before an edit) is separate. See `MASTER_PIPELINE_OVERVIEW.md` section 10.
 
 ---
 
@@ -343,7 +345,7 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 1. Fix anything missing, then create `_Pipeline/RERUN_P7.md` to refresh the checklist. It takes seconds.
 2. Confirm every 👤 item and decide each Part B row (Accept / Defer / Reject).
 3. Sign **Part C**, and choose *Publishing Ready (hold)* or ***Published***.
-4. Copy the signed checklist to `_FinalizedReleases/<ChapterName>_PHASE7_ReleaseChecklist_v<chapterVersion>.md`, create the chapter's `Published/` package, and move working drafts to `_Archive/<ChapterName>/`.
+4. Copy the signed checklist to `_FinalizedReleases/<ChapterName>_PHASE7_ReleaseChecklist_v<chapterVersion>.md`, create the chapter's `Published/` package, and move working drafts to the chapter's archive, `Chapters/<ChapterName>/ARCHIVE/<YYYYMMDD>/`, logged in `ARCHIVE/<YYYYMMDD>/ARCHIVE_MANIFEST.md` (one archive per chapter, never `Final/ARCHIVE`; the book-level `_Archive/` is retired, 2026-11-17, #47).
 
 ✅ The signed checklist is in `_FinalizedReleases/`. The chapter is **Published**.
 

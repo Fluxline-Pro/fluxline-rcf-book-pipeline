@@ -338,6 +338,8 @@ Keep one print PDF per folder. Rename an older export to `*_superseded_<timestam
 
 The layout checks are heuristics: they point at places to look, not at certain faults.
 
+**Expected flags (workbook print, 2026-11-16/17, #47; MASTER section 10).** This applies to the workbook print PDF only, not the chapter print book. The workbook's PART thumb tabs bleed by design, so safe-zone warnings on them are expected and count as accepted by house rule, with no per-item note; so are runts in prompt lines and the colour step-number buttons. The check still flags them; they are recorded as expected, not open (PHASE 3W W2b). A layout error (for example text across the trim) is never covered, and any other layout problem is still raised.
+
 **What to do with findings:**
 - **Text difference, print is wrong:** fix the print InDesign book and re-export the print PDF.
 - **Text difference, print is right** (the wording should reach the manuscript): fix the eBook InDesign book and re-export the eBook PDF. Part 0 re-syncs the manuscript (0.5's "Accept the PDF wording" path), and 0P re-runs. For a freeze chapter (#42) this works only before Kindle (0.8); after Part A has built from the final lock, the manuscript is the reference, so the print is the one fixed, unless the difference shows a major error (errata, PHASE 2.5 §9).
@@ -510,6 +512,11 @@ Preserve semantic hierarchy, inline emphasis, paragraph spacing, indentation, li
 - The manuscript text is authoritative (after Part 0, it matches the final eBook PDF); the eBook HTML supplies structure only. If they differ, the manuscript wins, and the difference is logged in the checklist for PHASE 2's owner.
 - Insert figure placeholders or images wherever the FigureRegistry places a figure.
 - Captions come from the Governance FigureRegistry (titles, descriptions).
+- **Linked footnotes (<AUTHOR>, 2026-11-16/17, #47; MASTER section 10).** Every citation marker links to its entry in the chapter's References and the entry links back; every lettered note pointer ("(see Footnote A)") links to its note and back.
+  - Build them as DOCX bookmarks plus internal hyperlinks, never as Word footnote objects.
+  - Ids are chapter-prefixed (for example `ch7-ref-12`, `ch7-ref-12-back`, `ch7-note-a`), so the book package (B2) has no collisions.
+  - A link wraps the existing marker or label and adds no visible text, so the congruency check and the narrated text are unchanged. A rebuild that only adds links changes only `kindleDocxSha256` in the PHASE 6.9 script line, never its build time (PHASE 6.9 step 1).
+  - Until the Kindle builder supports this natively (#46, #49), the links are added after the build, before step 9b (congruency pass 2), and the checklist says so.
 
 ## 5. Insert supporting materials (per build profile)
 
@@ -535,8 +542,8 @@ Title · Heading 1 · Heading 2 · Heading 3 · Body · Quote · Caption · Call
 
 ## 8. Generate the Kindle HTML and metadata files
 
-- `<ChapterName>_Kindle.html`: clean Kindle-safe HTML of the compiled chapter (same content and order as the DOCX)
-- `<ChapterName>_KindleMetadata.json`: chapterNumber, chapterTitle, part, lesson, coreValue, TOC entries, section anchors, figure anchors, alt text, language, version (from VersionMetadata), buildProfile
+- `<ChapterName>_Kindle.html`: clean Kindle-safe HTML of the compiled chapter (same content and order as the DOCX), with the linked footnotes as `#` anchors using the same chapter-prefixed ids (2026-11-16/17, step 4)
+- `<ChapterName>_KindleMetadata.json`: chapterNumber, chapterTitle, part, lesson, coreValue, TOC entries, section anchors, figure anchors, footnote and note anchors (2026-11-16/17), alt text, language, version (from VersionMetadata), buildProfile
 
 ## 9. Save outputs
 
@@ -560,6 +567,7 @@ Save as `<CH_ROOT>/<ChapterName>_PHASE4_KindleChecklist.md`. Include:
 - All sections included
 - Step 0 dependency check result (list anything missing)
 - Figures inserted, with the source image for each (list any approved placeholder)
+- Linked footnotes (2026-11-16/17): citations ↔ References and lettered notes ↔ notes, counts linked both ways, any unlinked marker, and whether the links were added natively or after the build (#46, #49)
 - Styles applied
 - TOC generated
 - Metadata added
@@ -623,7 +631,7 @@ Run once, when every chapter, front matter section, Part opener, and back matter
 1. Concatenate in reading order into `<BOOK>_Kindle.docx`, keeping one consistent style set (Title, Heading 1–3, Body, Quote, Caption, Callout).
 2. Rebuild a single book-level TOC from the chapter TOC entries; heading levels drive the Kindle navigation.
 3. Renumber nothing: chapter and figure numbers stay as governed. Flag any collision instead of fixing it silently.
-4. Resolve cross-chapter links to the book-level anchors.
+4. Resolve cross-chapter links to the book-level anchors. The footnote and note links keep their chapter-prefixed ids (step 4, 2026-11-17), so every link still resolves inside its own chapter; flag any id collision.
 
 ## B3. Build the book metadata
 
