@@ -12,6 +12,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 ### Changed
 - **6.9 no longer waits for the whole book.** A chapter's 6.9 starts once its PHASE 6.5 Publishing Ready, `MANUSCRIPT_SYNCED.md` and congruency pass 2 PASS are in place (`run-pipeline.ps1`, PHASE 6.9, MASTER, HOW_TO_RUN, PHASE 7, ROLLOUT_TEST_PLAN). The "6.9 waits for the whole book" item of #40 below is superseded.
 - **Later revisions:** a B0 cross-chapter fix or other approved revision to a recorded chapter makes its `AUDIOBOOK_READY.md` stale (the PHASE 7 release check already compares the recorded hashes); the chapter is recorded again in full.
+- **Recording practice:** <AUTHOR> records in batches of about seven ready chapters (about 1.5 hours of narration each); the per-chapter gate just marks a chapter ready and it waits for its batch.
 
 ### Fixed
 - `release_check.py` adds its own folder to `sys.path`, so `import phase69` works under `python -I`.

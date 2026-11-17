@@ -12,6 +12,8 @@ No earlier phase waits on audio any more. Congruency pass 2 (PHASE 4) no longer 
 
 **It runs per chapter (<AUTHOR>'s decision, 2026-11-16, #43).** A chapter's 6.9 starts once its own checks pass: its PHASE 6.5 report says Publishing Ready, `MANUSCRIPT_SYNCED.md` exists, and congruency pass 2 is PASS. It does not wait for other chapters or for the book-wide final audit (B0). If a later approved revision, for example a B0 cross-chapter fix, changes a recorded chapter, its `AUDIOBOOK_READY.md` goes stale (the PHASE 7 release check compares the recorded hashes), and the chapter is recorded again in full.
 
+**Recording in batches (<AUTHOR>, 2026-11-16).** The pipeline still readies each chapter on its own, but <AUTHOR> records in batches of about seven chapters (roughly 1.5 hours of narration per chapter), once a batch's chapters are all ready. Waiting for a batch lowers the chance that a later cross-chapter fix forces a re-record. A chapter whose script is ready simply waits (`AUDIOBOOK_INCOMPLETE.md`, "Waiting: recording") until its batch is recorded.
+
 ---
 
 # RUN MODES
