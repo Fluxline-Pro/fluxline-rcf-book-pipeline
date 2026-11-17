@@ -22,6 +22,24 @@ False alarms on 2026-11-16/17 all came from file dates: an identical-content res
 - `release_check.py` (`synced_newer`): "edited after the sync" compares the sync's hash lines (the date is the fallback for a sync without them).
 - New `tests/test_hash_not_date.py` (14 tests): identical restore passes, real text change holds, newer REVISED with equal hashes passes, the Part 0 sync basis, and the date fallbacks.
 
+## [Unreleased] — 2026-11-17 house rules, the author TODO file, the archive convention (#47)
+
+<AUTHOR>'s decisions of 2026-11-16/17 (TW, chat), which the runner couldn't see yet. Edited in place in `v_1_3_0/`, like #42 and #43.
+
+### Added
+- **MASTER section 10:** seven dated rows (narration, Kindle linked footnotes, the epigraph, workbook thumb tabs, figure backgrounds, the author TODO file, the archive), each with its source and where it starts; a note that process and build rules apply to every run from their date, whatever the lock state; two new subsections, "The author TODO file" and "Archive".
+- **PHASE 6.9 step 1: narration follows the Kindle text,** which matches the manuscript (Whispersync). Print-only boxes and quotes are never read, short spoken figure descriptions stay, running Part labels are not read, callouts are read where the Kindle places them, and footnote labels are read as the Kindle has them. This replaces the 2026-11-12 practice of narrating from the print/eBook layout. A script with a build line dated before 2026-11-17 is rebuilt. A link-only Kindle rebuild changes only `kindleDocxSha256`; it stales `AUDIOBOOK_READY.md` (a re-run, no re-record), in the order relink, congruency pass 2, 6.5 Kindle re-check, 6.9.
+- **PHASE 4 Part A: linked footnotes.** Citations link to the References and back, and lettered notes to their notes and back. They are built as DOCX bookmarks plus internal hyperlinks (not Word footnote objects), use `#` anchors in the Kindle HTML and chapter-prefixed ids (B2), and add a metadata and checklist line. Native builder support is tracked in #46 and #49.
+- **PHASE 6.5 §4:** the links resolve both ways in Kindle Previewer; a broken link is Major.
+- **PHASE 2.5 §3.1b:** an epigraph row. Every chapter opens with an attributed epigraph after the Lesson and Core Value labels, verified as a source line. This applies going forward only; Ch1, Ch4 and Ch6 are not retrofitted unless <AUTHOR> names them.
+- **PHASE 3W W2b and PHASE 4 0P:** the workbook PART thumb tabs bleed by design. Their safe-zone warnings, prompt-line runts and the colour step-number buttons are expected and count as accepted (PHASE 6.5 §8 and PHASE 7 say so); a layout error still blocks, and real layout problems are still raised.
+- **ROLLOUT_TEST_PLAN:** one row for the link-only relink, the expected thumb-tab warnings and an archive move.
+- **HOW_TO_RUN golden rules 6 and 7:** the author TODO file (`<AUTHOR>_TODO.md`, in the folder that holds `<BOOK_ROOT>`) and the archive convention.
+
+### Changed
+- **Figure backgrounds may vary** (PHASE 3 A0 check and figure export spec, PHASE 3.5 §9 and §15). The export spec's "transparent or white background" is dropped. Labels, titles, watermarks and garbled text are still checked.
+- **One archive per chapter**, `Chapters/<ChapterName>/ARCHIVE/<YYYYMMDD>/` with its `ARCHIVE_MANIFEST.md`, never `Final/ARCHIVE`. The book-level `_Archive/<ChapterName>/` release folder is retired (MASTER folder map, HOW_TO_RUN Step 8, PHASE 7 Archive, PLACEHOLDERS). Archived files go into descriptive subfolders, never a working folder name such as `Audiobook/` or `InDesign/`, which the local watchers search; front matter, Parts and back matter have their own `ARCHIVE/`. The PHASE 2.5 review-copy and errata lines point to it. `Governance/_Backups/` and the `*_superseded_*` trigger renames are unchanged.
+
 ---
 
 ## [Unreleased] — Manuscript freeze after PHASE 4 Part 0; every check before the 2.5 lock (#42)

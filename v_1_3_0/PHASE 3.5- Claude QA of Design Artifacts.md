@@ -320,6 +320,8 @@ Validate:
 
 Flag missing figure implementations.
 
+In the figure images, check labels against the manuscript, a title set in the image, watermarks and garbled text. Background colour is not a check item: it may vary across the chapter and the book (2026-11-16/17, #47; MASTER section 10).
+
 ---
 
 # 10. BRAND CONSISTENCY REVIEW
@@ -644,7 +646,7 @@ Also state (v1.3.0): `copilotReview: <file and outcome> | none | stale` and `gen
 
 **Generated figures.** For every figure whose registry row has `aiGenerated: true` (Copilot Create, Gemini, Firefly or other):
 - the row is complete: `generator`, `promptVersion`, `dsmVersion`, `generatedOn`, `approval`, `colorMode`, `resolutionStatus`, `rights`, `altText`;
-- the final file matches the DSM (palette, line, level of abstraction) and the neighbouring chapters' figures; it carries no text, label, term or number the manuscript does not contain; it reads in greyscale;
+- the final file matches the DSM (palette, line, level of abstraction) and the neighbouring chapters' figures, except the background colour, which may vary (2026-11-16/17, #47); it carries no text, label, term or number the manuscript does not contain; it reads in greyscale;
 - the image is not an unrefined `RGB concept` (see `resolutionStatus`): a concept-only image is a **Major** issue for print and eBook;
 - `approval` is `approved <initials> <date>`; `pending` is a **Major** issue and the chapter cannot be certified Production Ready.
 It is <AUTHOR>'s decision, not this QA's, to approve a generated image.

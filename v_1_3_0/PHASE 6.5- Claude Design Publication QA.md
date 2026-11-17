@@ -115,6 +115,7 @@ Flag broken links, missing anchors, structural errors.
 
 ## 4. Kindle validation
 Check the PHASE 4 package in Kindle Previewer: DOCX and converted EPUB/AZW3 integrity, TOC behavior and depth, reflow behavior, metadata correctness, cover, and figure rendering (size, legibility, captions, alt text).
+**Linked footnotes (2026-11-16/17, #47; MASTER section 10):** in Kindle Previewer, every citation marker jumps to its References entry and the entry jumps back, and every lettered note pointer jumps to its note and back; ids are chapter-prefixed and resolve in the book package too. A missing or broken link is a Major issue. (No check of a Word footnote object: the build uses bookmarks and internal links, PHASE 4 Part A step 4.)
 Also check chapter-to-book fidelity: each chapter's book-level section matches its per-chapter `<ChapterName>_Kindle.docx`, at the same version, with figure and chapter numbering unchanged.
 Flag rendering issues and formatting drift. Confirm the package is ready for KDP upload, or list exactly what blocks it.
 
@@ -142,7 +143,7 @@ Workbook:
   - its recorded hashes match the uploaded PDFs, wherever the profile's `location` puts them (`Workbook/` or `<WORKBOOK_BOOK_ROOT>`)
 
   Plus a WorkbookQA report that shows PDF = DOCX = MD with no open blocking items. Only the formats the profile lists are required.
-  If the profile lists `print`, the chapter's W2b print QA reports are closed, by the same rule as the book's print above (v3.4). W2b writes them for both locations: `<ChapterName>_Workbook_PrintQA.md` (`location: chapter`), or `Workbook_<eBook stem>_PrintQA.md` for each of the chapter's exercises (`location: book-root`).
+  If the profile lists `print`, the chapter's W2b print QA reports are closed, by the same rule as the book's print above (v3.4); the thumb-tab, prompt-line runt and step-button warnings W2b records as expected count as accepted (2026-11-16/17, #47). W2b writes them for both locations: `<ChapterName>_Workbook_PrintQA.md` (`location: chapter`), or `Workbook_<eBook stem>_PrintQA.md` for each of the chapter's exercises (`location: book-root`).
 - **Book mode:**
   - **Deliverables:** the workbook deliverables for the profile's `formats` are present: the eBook at 8.5×11 in, and the print interior at 7×10 in only when `print` is listed. Otherwise record print as **n/a** (copy that evidence from the W5 assembly report).
   - **Assembly report:** the PHASE 3W report lists no blocking items. It checks the book PDFs against the chapter workbook manuscripts, the exercise registry against the synced manuscripts, eBook bookmarks and links, and full-color print preflight (only when print is shipped).
