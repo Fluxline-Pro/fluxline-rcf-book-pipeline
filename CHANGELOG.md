@@ -5,7 +5,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
-## [Unreleased] — Gates compare content hashes, not file dates (#48)
+## [v1.4.0] — 2026-11-17 (release candidate)
+
+**Folder:** `v_1_3_0/` (these changes were edited in place, so no new version folder) · **Tag:** `v1_4_0.RC`; PROD after the Ch7 freeze pilot finishes PHASE 4 and the author gives the go-ahead.
+
+This release includes the entries below that were marked [Unreleased], #34 through #48:
+- the Chapter Summary bullet rule (#34);
+- callout quote marks (#38);
+- the audiobook moving to PHASE 6.9, run per chapter (#40, #43);
+- the manuscript freeze (#42);
+- the 2026-11-17 house rules, the author TODO file and the archive convention (#47);
+- hash-based gates (#48).
+
+The deployed `instructions/` copy matches this release.
+
+## [v1.4.0] — Gates compare content hashes, not file dates (#48)
 
 False alarms on 2026-11-16/17 all came from file dates: an identical-content restore of Ch1–3 made the manuscript look newer than the Kindle build (PHASE 6.9 entry); a status-word tidy of Ch2's `MANUSCRIPT_REVISED.md` read as a stale lock (a congruency HOLD); a Kindle title-only fix made the 6.5 report look stale. Edited in place in `v_1_3_0/`, like #42.
 
@@ -22,7 +36,7 @@ False alarms on 2026-11-16/17 all came from file dates: an identical-content res
 - `release_check.py` (`synced_newer`): "edited after the sync" compares the sync's hash lines (the date is the fallback for a sync without them).
 - New `tests/test_hash_not_date.py` (14 tests): identical restore passes, real text change holds, newer REVISED with equal hashes passes, the Part 0 sync basis, and the date fallbacks.
 
-## [Unreleased] — 2026-11-17 house rules, the author TODO file, the archive convention (#47)
+## [v1.4.0] — 2026-11-17 house rules, the author TODO file, the archive convention (#47)
 
 <AUTHOR>'s decisions of 2026-11-16/17 (TW, chat), which the runner couldn't see yet. Edited in place in `v_1_3_0/`, like #42 and #43.
 
@@ -42,7 +56,7 @@ False alarms on 2026-11-16/17 all came from file dates: an identical-content res
 
 ---
 
-## [Unreleased] — Manuscript freeze after PHASE 4 Part 0; every check before the 2.5 lock (#42)
+## [v1.4.0] — Manuscript freeze after PHASE 4 Part 0; every check before the 2.5 lock (#42)
 
 <AUTHOR>'s decision (2026-11-16): after the PHASE 2.5 lock the manuscript kept being reopened, by late content audits (PHASE 6.5, the close-out audits), by house rules adopted mid-book and retrofitted, and by post-lock research. Every reopening redid the eBook, print, Kindle, RAG and audio. Edited in place in `v_1_3_0/`, like #40 and #43. The pilot is Ch7; Ch1 to Ch6 stay on the existing process.
 
@@ -94,7 +108,7 @@ False alarms on 2026-11-16/17 all came from file dates: an identical-content res
 
 ---
 
-## [Unreleased] — PHASE 6.9 runs per chapter (#43)
+## [v1.4.0] — PHASE 6.9 runs per chapter (#43)
 
 <AUTHOR>'s decision (2026-11-16): record chapter by chapter. #40 (PR #41) made 6.9 wait for the book-wide final audit covering every chapter's sync, which with 31 chapters held every recording until the last chapter's PHASE 4.
 
@@ -108,7 +122,7 @@ False alarms on 2026-11-16/17 all came from file dates: an identical-content res
 
 ---
 
-## [Unreleased] — The audiobook moves to PHASE 6.9 (#40)
+## [v1.4.0] — The audiobook moves to PHASE 6.9 (#40)
 
 Edited in place in `v_1_3_0/`, like #34 and #38. This is the author's decision (2026-11-16). The audiobook used to be PHASE 4 Part C, recorded from the Kindle output before PHASE 5. PHASE 6 and 6.5 could still change the manuscript after that, so recordings needed pickups, and about 150 edits across Ch1 to Ch5 left the audio choppy and unlike the author's voice in the edited places.
 
@@ -184,13 +198,13 @@ Edited in place in `v_1_3_0/`, like #34 and #38. This is the author's decision (
 
 ---
 
-## [Unreleased] — Callout quote marks (#38)
+## [v1.4.0] — Callout quote marks (#38)
 
 From Chapter 7 on (rule dated 2026-11-10), callouts and pull quotes that use the book's own words carry no quotation marks in the eBook, print and Kindle; quote marks are only for an outside source or another person, never the author. Speech the book gives to the reader or a client counts as another person and keeps its marks. Stated in PHASE 1 (callout recommendations), PHASE 2 (governance check), PHASE 3.5 and 3.5B (checks) and PHASE 4 (Kindle). Earlier chapters are not retrofitted unless the author asks. Also from 2026-11-10: Core Value callouts are titled `RCF Core Value N • <Core Value>` in RCF Purple and Meta-Value callouts `RCF Meta-Value N • <Meta Value>` in RCF Blue, in every format.
 
 ---
 
-## [Unreleased] — Chapter Summary bullet rule (#34)
+## [v1.4.0] — Chapter Summary bullet rule (#34)
 
 Edited in place in `v_1_3_0/`, by the author's choice. From 2026-11-10 every bullet in a "Chapter N Summary" is one sentence (two at most), about 25 words at most, and a semicolon counts as a break; Chapter 5 is the model, and the rule applies from Chapter 6 on.
 
