@@ -262,7 +262,7 @@ Copies of the approved release versions only:
 
 ## Archive (`<BOOK_ROOT>/Chapters/<ChapterName>/ARCHIVE/<YYYYMMDD>/`)
 
-The chapter's one archive (2026-11-17, #47; MASTER section 10): beside `Final/`, never `Final/ARCHIVE`; the book-level `_Archive/` folder is retired. Log each move in `ARCHIVE/<YYYYMMDD>/ARCHIVE_MANIFEST.md`. Move (never delete) working material:
+The chapter's one archive (2026-11-17, #47; MASTER section 10): beside `Final/`, never `Final/ARCHIVE`, and archived files go in descriptive subfolders, never working folder names such as `Audiobook/` or `eBook/`; the book-level `_Archive/` folder is retired. Log each move in `ARCHIVE/<YYYYMMDD>/ARCHIVE_MANIFEST.md`. Move (never delete) working material:
 - [ ] PASS 7 drafts · HTML drafts · superseded QA reports · `Marketing/Generated/` drafts not approved · working notes
 
 ## Master asset updates

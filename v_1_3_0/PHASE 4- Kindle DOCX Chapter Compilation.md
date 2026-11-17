@@ -359,7 +359,7 @@ Reports: `_BookGovernance/PrintQA/Workbook_<eBook stem>_PrintQA.md` or `Workbook
 **Gate:** 0P is non-blocking for Part 0. From v1.3.0 it must be **closed before Part A** for a chapter that has a lock (Step 0V below), and, for every section, before PHASE 6.5 and PHASE 7 (a later print re-export re-opens it):
 - the latest report is newer than both PDFs;
 - it shows **0** text differences to check and **0** layout errors;
-- every minor text difference and every warning is fixed, logged as print-only, or accepted by <AUTHOR>.
+- every minor text difference and every warning is fixed, logged as print-only, or accepted by <AUTHOR> (the thumb-tab, prompt-line runt and step-button warnings W2b records as expected count as accepted, 2026-11-16/17, #47).
 
 Record the latest 0P counts in the PHASE 4 checklist.
 

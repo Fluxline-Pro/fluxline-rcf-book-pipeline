@@ -345,7 +345,7 @@ It changes nothing; it writes `_BookGovernance/PrintQA/<ChapterName>_PrintQA.md`
 1. Fix anything missing, then create `_Pipeline/RERUN_P7.md` to refresh the checklist. It takes seconds.
 2. Confirm every 👤 item and decide each Part B row (Accept / Defer / Reject).
 3. Sign **Part C**, and choose *Publishing Ready (hold)* or ***Published***.
-4. Copy the signed checklist to `_FinalizedReleases/<ChapterName>_PHASE7_ReleaseChecklist_v<chapterVersion>.md`, create the chapter's `Published/` package, and move working drafts to the chapter's archive, `Chapters/<ChapterName>/ARCHIVE/<YYYYMMDD>/`, logged in `ARCHIVE/<YYYYMMDD>/ARCHIVE_MANIFEST.md` (one archive per chapter, never `Final/ARCHIVE`; the book-level `_Archive/` is retired, 2026-11-17, #47).
+4. Copy the signed checklist to `_FinalizedReleases/<ChapterName>_PHASE7_ReleaseChecklist_v<chapterVersion>.md`, create the chapter's `Published/` package, and move working drafts to the chapter's archive, `Chapters/<ChapterName>/ARCHIVE/<YYYYMMDD>/`, logged in `ARCHIVE/<YYYYMMDD>/ARCHIVE_MANIFEST.md` (one archive per chapter, never `Final/ARCHIVE`, in descriptive subfolders rather than working folder names (MASTER section 10); the book-level `_Archive/` is retired, 2026-11-17, #47).
 
 ✅ The signed checklist is in `_FinalizedReleases/`. The chapter is **Published**.
 
