@@ -38,17 +38,17 @@ All of these must hold. If any fails, write nothing and tell <AUTHOR> which one.
 2. **The figures are finished:**
    - the RGB masters (PNG or JPG) are in `Figures/RGB/`, for the eBook only;
    - the CMYK TIFFs are in `Figures/CMYK/`, for print only.
-3. **The print sources exist** in `<PRINT_DSM_ROOT>` (book) and the workbook's own `_PrintDSM/`:
-   - the template IDML;
-   - <AUTHOR>'s most recent finished chapter IDML, or exercise IDML, which the build starts from (§4, §5).
+3. **The print sources exist:**
+   - the template IDML, in `<PRINT_DSM_ROOT>` (book) or the workbook's own `_PrintDSM/`;
+   - <AUTHOR>'s most recent finished chapter IDML (in the previous chapter's `InDesign/` folder), or exercise IDML (in the previous chapter's `Workbook/` folder), which the build starts from (§4, §5). Finished IDMLs live in their chapter's folders, not in `_PrintDSM` (<AUTHOR>, 2026-11-20).
 4. **The eBook page is built and reviewed** (§3) before the print build starts. "Reviewed" means <AUTHOR> has looked at the eBook review PDF and either its notes are applied (layout notes to the eBook page; wording changes through `MANUSCRIPT_REVISED.md`, DOCX first, with a new lock) or <AUTHOR> has said there are none. For a freeze chapter (#42), a small wording note is applied to the eBook page like a layout note, and PHASE 4 Part 0 syncs it back to the manuscript once; only a change to a claim, a number or a citation still goes through `MANUSCRIPT_REVISED.md` and a new lock. The print IDML is built from the eBook **after** those notes, so it replicates the final eBook. Request it as a second step: `_Pipeline/RERUN_P3.5B.md` with `idml` on the first line. **Anything other than `idml` on the first line (including an empty file) builds only the eBook page and its review PDF**; `idml` is refused until the eBook is reviewed.
 
 ## 2. Design rules (<AUTHOR>, 2026-10-22)
 
 These rules apply to every print build from this release on.
 
-**Sources: print uses `_PrintDSM`, the eBook uses `_eBookDSM`:**
-- Print styling, masters, swatches, callouts, tables, and ruled lines come only from `<PRINT_DSM_ROOT>` (and the workbook's `_PrintDSM/`).
+**Sources: print uses `_PrintDSM` and the finished print IDMLs, the eBook uses `_eBookDSM`:**
+- Print styling, masters, swatches, callouts, tables, and ruled lines come only from `<PRINT_DSM_ROOT>` (and the workbook's `_PrintDSM/`) and from <AUTHOR>'s finished print IDMLs in the chapter folders (the build base, §4, §5).
 - `<EBOOK_DSM_ROOT>` is read for content and structure only: which blocks, in which order, with which callouts. Its colors, components, and CSS are never copied into print.
 
 **Image formats:**
@@ -114,7 +114,7 @@ The builder applies what the styles can carry:
 
 It reports figure/callout pairs that land close together. <AUTHOR> settles facing-page alignment and any remaining moves in the finish (§9).
 
-**Never write to `_PrintDSM`.** The templates and <AUTHOR>'s finished documents there are read-only. The builders open them as zips and write somewhere else (§7).
+**Never write to `_PrintDSM`.** It holds the shared design files only (templates, style maps, tokens), and they are read-only. <AUTHOR>'s finished chapter and exercise IDMLs, which the builders also only read, live in the chapter folders (<AUTHOR>, 2026-11-20). The builders open them as zips and write somewhere else (§7).
 
 ## 3. eBook first (8.5×11, Claude Design)
 
@@ -169,7 +169,7 @@ The first alignment was 2026-10-22: Chapter 3 and Exercise 1.3. Both re-exports 
 
 ## 4. Book: chapter print IDML (`idml_chapter_build.py`)
 
-**Base:** <AUTHOR>'s most recent **finished** chapter IDML in `<PRINT_DSM_ROOT>` (for example `004_Chapter2_<Title>.idml` for Chapter 3). The build keeps its:
+**Base:** <AUTHOR>'s most recent **finished** chapter IDML, in that chapter's `<CH_ROOT>/InDesign/` (for example `Chapters/Ch2_<Name>/Final/InDesign/004_Chapter2_<Title>.idml` for Chapter 3). The build keeps its:
 - masters, styles, swatches, and fonts;
 - preferences and the chapter-opener page.
 
@@ -191,7 +191,7 @@ So the result opens exactly like the chapters already laid out. Use the template
 
 ```
 python <LOCAL_TOOLS_ROOT>/idml_chapter_build.py ^
-  --base "<PRINT_DSM_ROOT>/<NNN>_Chapter<N-1>_<Title>.idml" ^
+  --base "<BOOK_ROOT>/Chapters/<PreviousChapterName>/Final/InDesign/<NNN>_Chapter<N-1>_<Title>.idml" ^
   --ebook "<EBOOK_DSM_ROOT>/Chapter<N>_eBook.dc.html" ^
   --out "<CH_ROOT>/InDesign/<NNN>_Chapter<N>_<Title>.idml" ^
   --chapter-number <N> --chapter-word <WORD> --title "<Chapter Title>" ^
@@ -208,7 +208,7 @@ It prints a JSON report covering:
 
 ## 5. Workbook: exercise print IDML (`idml_workbook_build.py`)
 
-**Base:** <AUTHOR>'s previous finished **exercise** IDML in the workbook's `_PrintDSM/` (for example `02-2_Exercise_1_2_<Name>.idml` for Exercise 1.3). The build clones its page designs piece by piece:
+**Base:** <AUTHOR>'s previous finished **exercise** IDML, in that chapter's `<CH_ROOT>/Workbook/` (for example `Chapters/Ch2_<Name>/Final/Workbook/02-2_Exercise_1_2_<Name>.idml` for Exercise 1.3). The build clones its page designs piece by piece:
 - the opener and the PART tab;
 - the title and running header;
 - field labels, body text, and prompts with ruled lines;
@@ -233,7 +233,7 @@ The component layer (cloning, measurement, callouts, cards, grids) is shared.
 
 ```
 python <LOCAL_TOOLS_ROOT>/idml_workbook_build.py ^
-  --base "<workbook _PrintDSM>/<NN>-<n>_Exercise_<L>_<n>_<Name>.idml" ^
+  --base "<BOOK_ROOT>/Chapters/<PreviousChapterName>/Final/Workbook/<NN>-<n>_Exercise_<L>_<n>_<Name>.idml" ^
   --docx "<CH_ROOT>/Workbook/<ChapterName>_Exercise<L.N>_Workbook.docx" ^
   --out "<CH_ROOT>/Workbook/<NN>-<n+1>_Exercise_<L>_<N>_<Name>.idml"
 ```
@@ -297,17 +297,17 @@ A structural proof can be rendered through Adobe's InDesign rendering service. T
 1. Open the IDML. Re-apply or activate fonts where InDesign reports missing ones (Adobe Fonts).
 2. Relink the figures if the links moved, then check the anchored figures and captions.
 3. Check the callout badges, opener, spacing, and page breaks: align facing pages top and bottom where possible, and move a callout off a figure's page, and confirm the chapter's page count is even so the next chapter opens on a right-hand page (§2, "Print pagination and spacing"). Smart Text Reflow adds or removes pages at the end.
-4. Save as INDD in the print book (INDB), and export the print PDF to:
+4. Add it to the print book (INDB) (the INDD itself is saved in the chapter folder, step 5), and export the print PDF to:
    - the book: `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf`;
    - the workbook: the W2 location.
 
    Both are 7×10 in, with 0.125 in bleed and no printer's marks. PHASE 4 Part 0P (book) and PHASE 3W W2b (workbook) check the PDFs as before.
-5. **Export the finished document as IDML into `<PRINT_DSM_ROOT>`** (book) or the workbook's `_PrintDSM/` (<AUTHOR>, 2026-10-22). The next chapter or exercise is built on it, so it carries your latest styling and fixes. Save refreshed copies of the templates there too whenever they change.
+5. **Save the finished document (INDD and IDML) in the chapter's own folder** (<AUTHOR>, 2026-11-20): the chapter in `<CH_ROOT>/InDesign/`, the exercise in `<CH_ROOT>/Workbook/`. Book-level pieces (title pages, front- and back-matter journals, Lesson and Part openers) go beside their PDFs. The next chapter or exercise is built on it, so it carries your latest styling and fixes. Only refreshed templates go to `<PRINT_DSM_ROOT>` or the workbook's `_PrintDSM/`, whenever they change. (Replaces the 2026-10-22 rule of exporting finished IDMLs into `_PrintDSM`.)
 
 ## 10. Rules
 
 - **Never edit the DOCX or the MD.** The builds only read them.
-- **Never write to `<PRINT_DSM_ROOT>`** or the workbook's `_PrintDSM/`. They are read-only.
+- **Never write to `<PRINT_DSM_ROOT>`** or the workbook's `_PrintDSM/`. They are read-only and hold shared design files only.
 - **`_eBookDSM` is for reference only on the print side.** Its styling never reaches print.
 - **TIFF for print, RGB for the eBook.** Never one for the other.
 - **One column only.** Never create 2-column spreads.

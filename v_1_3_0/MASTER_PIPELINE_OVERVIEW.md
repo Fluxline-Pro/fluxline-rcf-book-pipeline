@@ -77,7 +77,7 @@ Each eBook page links its system's tokens and components through `dsm_css.py` (P
 
 **Release v1.2 (2026-10-22): eBook-first print build (IDML).**
 - **New PHASE 3.5B.** The eBook is built first. The print documents are then generated as InDesign IDML files that replicate it:
-  - the chapter (7×10), by `idml_chapter_build.py`, starting from <AUTHOR>'s last finished chapter IDML in `<PRINT_DSM_ROOT>`;
+  - the chapter (7×10), by `idml_chapter_build.py`, starting from <AUTHOR>'s last finished chapter IDML, in the previous chapter's `InDesign/` folder (<AUTHOR>, 2026-11-20);
   - the workbook exercise (7×10), by `idml_workbook_build.py`, cloning the previous exercise's IDML.
 - **Placement:** the chapter IDML goes to `<CH_ROOT>/InDesign/`, the exercise IDML to `<CH_ROOT>/Workbook/`. <AUTHOR> finishes them in InDesign (fonts, a final check) and exports the print PDFs as before.
 - **Design rules (<AUTHOR>):**
@@ -86,7 +86,7 @@ Each eBook page links its system's tokens and components through `dsm_css.py` (P
   - no eBook motifs or extra colors, except the pull quotes and the print template's own multi-color callouts;
   - margins used end to end, and consistent spacing;
   - CMYK TIFF for print and RGB PNG/JPG for the eBook, never swapped;
-  - `<PRINT_DSM_ROOT>` is the only print source, and `<EBOOK_DSM_ROOT>` is read on the print side for content only.
+  - print styling comes only from `<PRINT_DSM_ROOT>` (templates, style map) and <AUTHOR>'s finished print IDMLs in the chapter folders; `<EBOOK_DSM_ROOT>` is read on the print side for content only.
 - **eBook tools:** `ebook_paginate.py` (fits blocks to 8.5×11 pages) and `ebook_print.py` (a print-ready PDF with a font check).
 - **Proofs:** an optional structural proof through Adobe's InDesign rendering, with <AUTHOR>'s permission. Fonts are substituted on the render server.
 - PHASE 3.5A (tagged text) stays available; 3.5B is the default print build.
@@ -306,8 +306,8 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 **Book root:** `<BOOK_ROOT>` — your book's root folder, e.g. `D:\Books\<BOOK_SLUG>`. Every path below is relative to it.
 **Chapter root:** `<CH_ROOT>` = `<BOOK_ROOT>/Chapters/<ChapterName>/Final/`
 **Chapter name:** `Ch<N>_<PascalCaseTitle>` (e.g. `Ch1_YourChapterTitle`)
-**Print InDesign book:** <AUTHOR> may keep the print InDesign book (INDB, linked assets) in separate print folders outside `<BOOK_ROOT>`. The print templates (IDML), the print DSM, and `style_map.json` live in `<PRINT_DSM_ROOT>` (`<BOOK_ROOT>/_PrintDSM`). Phases read `<PRINT_DSM_ROOT>` only through PHASE 3.5A and 3.5B, and never write to it. The eBook design system lives in `<EBOOK_DSM_ROOT>` (`<BOOK_ROOT>/_eBookDSM`); the print build reads it for content only (v1.2). From v1.1.2, the exported print PDF is uploaded to `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf`, and PHASE 4 Part 0P checks it against the eBook PDF. The final **eBook** PDF stays the only layout text PHASE 4 Part 0 syncs the manuscript to.
-**Workbook InDesign files:** <AUTHOR> keeps them (documents, INDB, links, fonts) in `<WORKBOOK_INDESIGN_ROOT>`, outside `<BOOK_ROOT>` (for example, OneDrive). No phase reads them; PHASE 3W checks only the exported PDFs uploaded to the workbook profile's location, `Workbook/` or `<WORKBOOK_BOOK_ROOT>` (eBook 8.5×11 in; print 7×10 in, if the profile lists it).
+**Print InDesign book:** <AUTHOR> may keep the print InDesign book (INDB, linked assets) in separate print folders outside `<BOOK_ROOT>`. The print templates (IDML), the print DSM, and `style_map.json` live in `<PRINT_DSM_ROOT>` (`<BOOK_ROOT>/_PrintDSM`). <AUTHOR>'s finished chapter IDML/INDD lives in `<CH_ROOT>/InDesign/` and the exercise IDML in `<CH_ROOT>/Workbook/` (<AUTHOR>, 2026-11-20). Phases read `<PRINT_DSM_ROOT>` only through PHASE 3.5A and 3.5B, and never write to it. The eBook design system lives in `<EBOOK_DSM_ROOT>` (`<BOOK_ROOT>/_eBookDSM`); the print build reads it for content only (v1.2). From v1.1.2, the exported print PDF is uploaded to `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf`, and PHASE 4 Part 0P checks it against the eBook PDF. The final **eBook** PDF stays the only layout text PHASE 4 Part 0 syncs the manuscript to.
+**Workbook InDesign files:** <AUTHOR> keeps the INDB, links, fonts, and working files in `<WORKBOOK_INDESIGN_ROOT>`, outside `<BOOK_ROOT>` (for example, OneDrive); no phase reads them. The finished exercise IDML/INDD is saved to `<CH_ROOT>/Workbook/` (<AUTHOR>, 2026-11-20), where PHASE 3.5B reads it as the next exercise's base; PHASE 3W checks only the exported PDFs uploaded to the workbook profile's location, `Workbook/` or `<WORKBOOK_BOOK_ROOT>` (eBook 8.5×11 in; print 7×10 in, if the profile lists it).
 **Author TODO file and archives (2026-11-17, #47):** `<AUTHOR>_TODO.md` sits in the folder that holds `<BOOK_ROOT>`; each chapter has one archive, `Chapters/<ChapterName>/ARCHIVE/<YYYYMMDD>/` (the book-level `_Archive/` folder is retired). See section 10.
 **File names:** `<ChapterName>_<ArtifactType>.<ext>`; Marketing: `<ChapterName>_MKT_<Type>.<ext>`; Claude Design project files: `Ch<N>_<Type>.dc.html` (accepted exception)
 
@@ -321,7 +321,7 @@ Per-chapter phase records (all at `<CH_ROOT>` root unless noted):
 │   ├── CongruencyQA/             <Section>_Congruency.md + .json (+ _Pass2, _Pass3), <Section>_Accepted.json [P4 Step 0C, v1.2.6; P6.9]
 │   ├── NextEdition/              NEXT_EDITION_LOG.md (append-only; content findings in final-locked chapters, #42) [P4 0R onward]
 │   └── Workbook/                 Workbook_ExerciseRegistry.json                    [P3W]
-├── _PrintDSM/                    <PRINT_DSM_ROOT>: print templates (IDML), finished chapter IDMLs, print DSM, style_map.json — READ-ONLY [read by P3.5A, P3.5B]
+├── _PrintDSM/                    <PRINT_DSM_ROOT>: print templates (IDML), print DSM, style_map.json — READ-ONLY [read by P3.5A, P3.5B]; finished chapter IDMLs live in <CH_ROOT>/InDesign/ and exercise IDMLs in <CH_ROOT>/Workbook/ (2026-11-20)
 ├── _eBookDSM/                    <EBOOK_DSM_ROOT>: eBook design system + Chapter<N>_eBook.dc.html pages [P3, P3.5B]
 ├── _BookPublication/             six book deliverables + _Masters/                 [P3 assembly, P3W, P4 Part B, P6.5, P6.9]
 ├── _BookAutomation/              AutomationIndex.json, n8n/, OpenClaw/, Notices/   [P6]
