@@ -9,7 +9,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 Edited in place in `v_1_3_0/`, like #42 and #48. Author decision 2026-11-20: two copies of each print IDML (the author's in `_PrintDSM`, the build copy in the chapter) drifted, and Ch7's print text went stale.
 
-- The finished chapter IDML/INDD is saved in `<CH_ROOT>/InDesign/`, and the finished exercise IDML/INDD in `<CH_ROOT>/Workbook/`. Book-level pieces (title pages, journals, Lesson and Part openers) sit beside their PDFs.
+- The finished chapter IDML is saved in `<CH_ROOT>/InDesign/`, and the finished exercise IDML in `<CH_ROOT>/Workbook/`. The INDD files stay with the InDesign book (INDB) outside `<BOOK_ROOT>`, with no second copy (#60). Book-level pieces (title pages, journals, Lesson and Part openers) sit beside their PDFs.
 - `_PrintDSM` (book and workbook) holds shared design files only: templates, style maps, tokens. It stays read-only.
 - PHASE 3.5B builds from the previous chapter's or exercise's folder. This replaces the 2026-10-22 rule of exporting finished IDMLs into `_PrintDSM`.
 - Workbook print PDFs still export to the W2 location.

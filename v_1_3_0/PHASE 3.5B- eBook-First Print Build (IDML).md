@@ -297,12 +297,12 @@ A structural proof can be rendered through Adobe's InDesign rendering service. T
 1. Open the IDML. Re-apply or activate fonts where InDesign reports missing ones (Adobe Fonts).
 2. Relink the figures if the links moved, then check the anchored figures and captions.
 3. Check the callout badges, opener, spacing, and page breaks: align facing pages top and bottom where possible, and move a callout off a figure's page, and confirm the chapter's page count is even so the next chapter opens on a right-hand page (§2, "Print pagination and spacing"). Smart Text Reflow adds or removes pages at the end.
-4. Add it to the print book (INDB) (the INDD itself is saved in the chapter folder, step 5), and export the print PDF to:
+4. Save it as INDD beside the print book (INDB), outside `<BOOK_ROOT>` (for example, OneDrive), add it to the book, and export the print PDF to:
    - the book: `<CH_ROOT>/InDesign/<ChapterName>_Print7x10.pdf`;
    - the workbook: the W2 location.
 
    Both are 7×10 in, with 0.125 in bleed and no printer's marks. PHASE 4 Part 0P (book) and PHASE 3W W2b (workbook) check the PDFs as before.
-5. **Save the finished document (INDD and IDML) in the chapter's own folder** (<AUTHOR>, 2026-11-20): the chapter in `<CH_ROOT>/InDesign/`, the exercise in `<CH_ROOT>/Workbook/`. Book-level pieces (title pages, front- and back-matter journals, Lesson and Part openers) go beside their PDFs. The next chapter or exercise is built on it, so it carries your latest styling and fixes. Only refreshed templates go to `<PRINT_DSM_ROOT>` or the workbook's `_PrintDSM/`, whenever they change. (Replaces the 2026-10-22 rule of exporting finished IDMLs into `_PrintDSM`.)
+5. **Export the finished document as IDML into the chapter's own folder** (<AUTHOR>, 2026-11-20; the INDD stays with the INDB, with no second copy here): the chapter in `<CH_ROOT>/InDesign/`, the exercise in `<CH_ROOT>/Workbook/`. Book-level pieces (title pages, front- and back-matter journals, Lesson and Part openers) go beside their PDFs. The next chapter or exercise is built on it, so it carries your latest styling and fixes. Only refreshed templates go to `<PRINT_DSM_ROOT>` or the workbook's `_PrintDSM/`, whenever they change. (Replaces the 2026-10-22 rule of exporting finished IDMLs into `_PrintDSM`.)
 
 ## 10. Rules
 
