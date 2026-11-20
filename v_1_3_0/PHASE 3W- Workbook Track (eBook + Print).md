@@ -123,7 +123,7 @@ The workbook half of PHASE 3.5B (§5 there).
      - titled with the workbook title and the section;
      - the author and the language (en-US) set;
      - bookmarks for an exercise's applications or a journal's entries.
-2. **Print.** `idml_workbook_build.py` clones <AUTHOR>'s previous finished exercise IDML from the workbook's `_PrintDSM/`. The page designs it clones:
+2. **Print.** `idml_workbook_build.py` clones <AUTHOR>'s previous finished exercise IDML from that chapter's `<CH_ROOT>/Workbook/` (<AUTHOR>, 2026-11-20); the workbook's `_PrintDSM/` holds only shared design files (template, style map, tokens). The print PDF is still exported to the W2 location. The page designs it clones:
    - the opener and the PART tab;
    - ruled lines, tables, and grids;
    - the circular badges;
