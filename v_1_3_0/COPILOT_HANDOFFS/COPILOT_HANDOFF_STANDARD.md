@@ -98,11 +98,11 @@ The research report also carries `stage1Source`, `stage1Claims` and `rowsRuled` 
 | Book-level review (`chapter: book`) | One line per chapter: `<ChapterName>: <hash>` | each chapter's trigger file |
 | Image generation | `n/a` | |
 
-"Stale" is decided by each gate's own invalidation rule, not by a hash difference alone: the research report stays valid after softening-only fixes, and the final eBook review stays valid after Part 0 applies the very PDF wording it reviewed.
+"Stale" is decided by each gate's own invalidation rule, not by a hash difference alone: the research report stays valid after softening-only fixes and the author's human-verified corrections (PHASE 2.5 §3.7 step 5, #62), and the final eBook review stays valid after Part 0 applies the very PDF wording it reviewed.
 
 ## Waivers
 
-A required Copilot step may be waived by the author, with a reason. One file holds them: `<CH_ROOT>/Governance/Copilot/Copilot_Waivers.md` (book-level steps: `<BOOK_ROOT>/_BookGovernance/Copilot/Copilot_Waivers.md`), one line per waiver:
+A required Copilot step, or the author's HumanSourceCheck (#62), may be waived by the author, with a reason. One file holds them: `<CH_ROOT>/Governance/Copilot/Copilot_Waivers.md` (book-level steps: `<BOOK_ROOT>/_BookGovernance/Copilot/Copilot_Waivers.md`), one line per waiver:
 
 `<step>: waived — <reason> (<initials> <date>)`
 
@@ -113,6 +113,7 @@ To waive only some claims of the research step, use `research-ids: <ID list>: wa
 | `research` | PHASE 2.5 | chapters with `copilotRequired: yes` in their lock |
 | `final-ebook` | PHASE 4 Step 0F | chapters with `copilotRequired: yes` in their lock |
 | `publication-qa` | PHASE 6.5 §9b | chapters with `copilotRequired: yes` in their lock |
+| `human-source-check` | PHASE 2.5 §3.7 | chapters with `humanSourceCheckRequired: yes` in their lock (#62) |
 
 The optional steps (design, print, Kindle, image generation) need no waiver. Claude copies each waiver into the report that would have used the Copilot output and into the PHASE 7 checklist. A waiver written by anyone but the author, or without a reason, is ignored.
 
