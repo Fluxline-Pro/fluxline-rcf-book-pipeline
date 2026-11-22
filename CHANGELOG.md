@@ -5,7 +5,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
-## [Unreleased] — The author's HumanSourceCheck before the lock (#62)
+## [v1.4.1] — 2026-11-22 (release candidate)
+
+**Folder:** `v_1_3_0/` (edited in place, so no new version folder) · **Tag:** `v1_4_1.RC`; PROD (`v1_4_1.PROD`) after the HumanSourceCheck is tested on Ch2 and the author gives the go-ahead.
+
+This release includes the entries below that were marked [Unreleased], #58 through #62:
+- finished print IDMLs live in the chapter folders, not `_PrintDSM` (#58), and the INDD stays with the InDesign book (#60);
+- the author's HumanSourceCheck before the lock, and so before PHASE 3 (#62).
+
+The deployed `instructions/` copy matches this release.
+
+## [v1.4.1] — The author's HumanSourceCheck before the lock (#62)
 
 Edited in place in `v_1_3_0/`, like #42, #48 and #58. Author decision 2026-11-22: the AI checks (Pass 4, the Copilot research review) are reliable on hedging and wording, but not proof that a source says what a sentence says. A Ch10 epigraph passed both and wasn't in the book it was attributed to.
 
@@ -28,7 +38,7 @@ Edited in place in `v_1_3_0/`, like #42, #48 and #58. Author decision 2026-11-22
 - **New:** `templates/HUMAN_SOURCE_CHECK_TEMPLATE.md`.
 - **Updated:** PHASE 2.5 (§0, §3.1b, §3.2b, §3.6, §3.7, §5, §6, §7), PHASE 3 (header), MASTER_PIPELINE_OVERVIEW, HOW_TO_RUN_THE_PIPELINE, COPILOT_HANDOFFS/COPILOT_HANDOFF_STANDARD.
 
-## [Unreleased] — Finished print IDMLs live in the chapter folders, not `_PrintDSM` (#58)
+## [v1.4.1] — Finished print IDMLs live in the chapter folders, not `_PrintDSM` (#58)
 
 Edited in place in `v_1_3_0/`, like #42 and #48. Author decision 2026-11-20: two copies of each print IDML (the author's in `_PrintDSM`, the build copy in the chapter) drifted, and Ch7's print text went stale.
 
