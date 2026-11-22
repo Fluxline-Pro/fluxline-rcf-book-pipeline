@@ -5,6 +5,29 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [Unreleased] — The author's HumanSourceCheck before the lock (#62)
+
+Edited in place in `v_1_3_0/`, like #42, #48 and #58. Author decision 2026-11-22: the AI checks (Pass 4, the Copilot research review) are reliable on hedging and wording, but not proof that a source says what a sentence says. A Ch10 epigraph passed both and wasn't in the book it was attributed to.
+
+- **PHASE 2.5 §3.7 (new):** in confirm mode, after the decisions are applied and DOCX = MD, Claude builds `<CH_ROOT>/DeepResearch/<ChapterName>_HumanSourceCheck.md`. It's a tiered checklist:
+  - Tier 1, open the source: quotes, numbers, named research, mechanisms, safety lines, weak sources;
+  - Tier 2: skim;
+  - Tier 3: no check.
+
+  Each item has the exact sentence, the reference link, a *Check:* line, the AI ruling as a hint only, and the boxes *Says it / Says less / Doesn't say it / Source too weak*. Notes in the sheet become tracked changes on the next `RERUN_P2.5.md`.
+- **Gate (§6, new state S4h):** a chapter whose first lock is written on or after 2026-11-22 records `humanSourceCheckRequired: yes`, carried forward on re-locks. Its lock needs a signed sheet, or a `human-source-check: waived` line (new step key in the Copilot waiver table). This applies whether `copilotRequired` is yes or no. "Signed" is machine-checkable:
+  - every Tier 1 item has a box ticked and `Initials/date:`;
+  - the last line is `Signed: <initials> <YYYY-MM-DD>`;
+  - `builtFrom:` equals the DOCX;
+  - every item not marked *Says it*, *Source found* or *Keep* is closed in the decisions log (the Decision is the author's; drafts go into a review copy).
+
+  After the fixes, the sheet is rebuilt (changed items cleared, new claims added, removed sentences retired; numbers stay stable) and signed again. `RESEARCH_CLEAR.md` and `MANUSCRIPT_LOCKED.md` record `humanSourceCheck:` (and `humanSourceCheckRequired:`).
+- **Copilot loop (§3.2b, §5, §7 4a, Copilot standard):** a correction the author made with the source open is `human-verified` and needs no Copilot re-run (`changesAfterReport: human-verified`). That includes a citation replaced with a source already in the reviewed reference list. A source Copilot never reviewed goes to a scoped re-review. Post-lock revisions mark it with a `human-verified:` line in `MANUSCRIPT_REVISED.md`.
+- **Chapters locked before #62 (Ch1 to Ch9)** keep their locks and are not gated. Their sheets are worked through after the lock, by revision (§7) or errata (§9).
+- **House rules (MASTER §10):** the epigraph's book is reference 1 (2026-11-21), and the HumanSourceCheck (2026-11-22).
+- **New:** `templates/HUMAN_SOURCE_CHECK_TEMPLATE.md`.
+- **Updated:** PHASE 2.5 (§0, §3.1b, §3.2b, §3.6, §3.7, §5, §6, §7), PHASE 3 (header), MASTER_PIPELINE_OVERVIEW, HOW_TO_RUN_THE_PIPELINE, COPILOT_HANDOFFS/COPILOT_HANDOFF_STANDARD.
+
 ## [Unreleased] — Finished print IDMLs live in the chapter folders, not `_PrintDSM` (#58)
 
 Edited in place in `v_1_3_0/`, like #42 and #48. Author decision 2026-11-20: two copies of each print IDML (the author's in `_PrintDSM`, the build copy in the chapter) drifted, and Ch7's print text went stale.
