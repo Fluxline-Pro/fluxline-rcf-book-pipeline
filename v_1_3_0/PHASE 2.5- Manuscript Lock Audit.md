@@ -283,7 +283,7 @@ When PHASE 2.5 runs again and the decisions log is fully decided and applied, it
 
 Then it writes the lock (§5). Otherwise it stops with `MANUSCRIPT_LOCK_INCOMPLETE.md` and one of these lines:
 - "Waiting: HumanSourceCheck": no sheet yet. It builds the sheet first.
-- "Waiting: HumanSourceCheck, unsigned (items <n>)": items unmarked or no valid `Signed:` line.
+- "Waiting: HumanSourceCheck, unsigned (items <n>)": items unmarked, missing `Opened:` or `Initials/date:` (or a bare `Opened: none` with no reason), or no valid `Signed:` line.
 - "Waiting: HumanSourceCheck decisions (items <n>)": items marked for a fix, with rows not yet decided or applied. It drafts the fixes first (§3.7, step 4).
 - "Waiting: HumanSourceCheck re-sign (items <n>)": the sheet was rebuilt after fixes (§3.7, step 6).
 
@@ -299,20 +299,20 @@ Then it writes the lock (§5). Otherwise it stops with `MANUSCRIPT_LOCK_INCOMPLE
    - **Tier 2, skim:** consensus statements, cross-chapter consistency, whether the safety lines are present.
    - **Tier 3:** no check (stories, framework constructs, exercises, encouragement); a one-line list only.
 
-   A **Tier 1 item** is each `**<n>.` entry under the `## Tier 1` heading. Each one gives the sentence exactly as it reads (with its `^n^` markers), the reference and its DOI or URL copied from the reference list (none for a quotation from a book without one), a concrete **Check:** line, the Copilot and Pass 4 ruling labelled a **hint**, one line of boxes, a `Notes:` line, and its own `Initials/date:` line (`<initials> <YYYY-MM-DD>`). There are three box sets:
+   A **Tier 1 item** is each `**<n>.` entry under the `## Tier 1` heading. Each one gives the sentence exactly as it reads (with its `^n^` markers), the reference and its DOI or URL copied from the reference list (none for a quotation from a book without one), a concrete **Check:** line, the Copilot and Pass 4 ruling labelled a **hint**, one line of boxes, an `Opened:` line (the source and page <AUTHOR> read himself, #67), a `Notes:` line, an optional `AI notes:` line (research from an AI tool that he pasted in, kept apart from his own notes), and its own `Initials/date:` line (`<initials> <YYYY-MM-DD>`). When there was nothing to open (an uncited number reworded or labelled, a source dropped, a search that found nothing), the one allowed form is `Opened: none — <why>`, for example `Opened: none — dropped, refs 4 and 5 cover it`. **Claude leaves `Opened:`, `Notes:`, `AI notes:` and `Initials/date:` blank; only <AUTHOR> fills them.** There are three box sets:
    - `Says it / Says less / Doesn't say it / Source too weak` (the default);
    - `Source found / Reword / Label as illustration` (an uncited number);
    - `Keep / Replace with a stronger source / Drop` (source quality).
 
    Claude writes a fact as verified only if it read the source on the page in this run, and says where (for example "read on the page in the Google Books preview, p. xvii"). Anything recalled is labelled "usually summarised as". No page, DOI or quotation is invented.
 3. **Signed.** After HTML comments are stripped, the sheet is signed when:
-   - every Tier 1 item has exactly one box ticked (`[x]`) and an `Initials/date:` value;
+   - every Tier 1 item has exactly one box ticked (`[x]`), an `Opened:` value (#67; a value that starts with `none` must match `^none — .+`, so a bare `none` fails) and an `Initials/date:` value;
    - the last non-blank line, trimmed, matches `^Signed: [A-Z]{2,3} \d{4}-\d{2}-\d{2}$`;
    - its `builtFrom:` DOCX hash equals the DOCX being locked;
    - every item not marked *Says it*, *Source found* or *Keep* (that is: *Says less*, *Doesn't say it*, *Source too weak*, *Reword*, *Label as illustration*, *Replace* or *Drop*) is **closed in the decisions log** (step 4).
 
    **Waiver.** Instead of a signature, <AUTHOR> may waive the check for the chapter with the line `human-source-check: waived — <reason> (<initials> <date>)` in `<CH_ROOT>/Governance/Copilot/Copilot_Waivers.md` (step key in `COPILOT_HANDOFFS/COPILOT_HANDOFF_STANDARD.md`).
-4. **Marks and notes become decisions.** Each item not marked *Says it*, *Source found* or *Keep* becomes a SCIENCE row in the decisions log, with the tag `human-verified: HumanSourceCheck item <n>` in its Location. Claude puts <AUTHOR>'s note and a draft fix in his voice in the Suggestion column ("Suggested" in the freeze short log). **The Decision is <AUTHOR>'s, never pre-filled.** Two ways it gets recorded:
+4. **Marks and notes become decisions.** Each item not marked *Says it*, *Source found* or *Keep* becomes a SCIENCE row in the decisions log, with the tag `human-verified: HumanSourceCheck item <n>` in its Location. Claude puts <AUTHOR>'s note and a draft fix in his voice (only `Notes:` drives a draft fix, and only a note not prefixed `(earlier check, …)`; `AI notes:` is a record of what an AI tool said, never a fix on its own) in the Suggestion column ("Suggested" in the freeze short log). **The Decision is <AUTHOR>'s, never pre-filled.** Two ways it gets recorded:
    - Claude puts the draft as a tracked change into a review copy of the DOCX (`Manuscript/<ChapterName>_Manuscript_REVIEW_<date>.docx`; the freeze process's review copy, so §8's "no decision, no edit" holds). <AUTHOR> accepts or edits it in Word and saves it as the manuscript, and the row is recorded as `Edited by author`.
    - <AUTHOR> writes `Keep — <reason> (<initials>)`, for example "the source supports it at this strength after all".
 
@@ -324,9 +324,11 @@ Then it writes the lock (§5). Otherwise it stops with `MANUSCRIPT_LOCK_INCOMPLE
    - a citation renumbered, completed, or replaced **with a source already in the reviewed reference list** (the References section of the DOCX snapshot in the latest research handoff's `1_Upload_First/`).
 
    `RESEARCH_CLEAR.md` lists these under `changesAfterReport: human-verified (<n> rows)`. A **newly added source**, meaning one that isn't in the reference list Copilot reviewed (a replacement Copilot never saw included), goes to a scoped Copilot re-review for the sentence it supports.
+   **Sheets built before #67.** On every confirm-mode run, not only a rebuild, Claude adds empty `- Opened:` and `- AI notes:` lines to any Tier 1 item that lacks them, without touching its boxes, Notes or `Initials/date:`. <AUTHOR> then fills `Opened:` on every Tier 1 item, marked or not, before signing.
+
 6. **Rebuild and re-sign.** Applying the fixes changes the DOCX hash, so the sheet goes stale. The next run rebuilds it:
    - it writes the new hashes to `builtFrom:`;
-   - for each item whose sentence changed, it updates the quoted sentence and clears that item's boxes and `Initials/date:`;
+   - for each item whose sentence changed, it updates the quoted sentence and clears that item's boxes, `Opened:` and `Initials/date:` (its `Notes:` and `AI notes:` stay as the record, each prefixed `(earlier check, <date>)`, and such notes never drive a new draft);
    - it adds a new Tier 1 item for each sourced claim, number or citation that the changed sections now contain and the sheet doesn't (numbered after the last item, so existing numbers stay stable for the decisions-log tags);
    - it marks an item whose sentence no longer exists (after a *Drop*) as `Retired: sentence removed (<date>)`, and leaves it in place with its number;
    - it keeps <AUTHOR>'s marks on unchanged items;
