@@ -541,6 +541,7 @@ The rules in force for the first book (*<BOOK_TITLE>*). The "From" column up to 
 | 2026-11-16/17 | **One archive per chapter**, `<BOOK_ROOT>/Chapters/<ChapterName>/ARCHIVE/<YYYYMMDD>/` with an `ARCHIVE_MANIFEST.md`, never `Final/ARCHIVE` (see "Archive" below). (TW, chat) | every archive move from the date |
 | 2026-11-21 | The epigraph's book is **reference 1**, with no marker on the attribution line (<AUTHOR>'s decision for Ch10, following Ch7 and Ch9, which already did this) | the chapters locked from the date (Ch7 and Ch9 already conform) |
 | 2026-11-22 | **The author's HumanSourceCheck** before the lock (PHASE 2.5 §3.7, #62): a signed, tiered checklist confirming each sourced claim against its source | chapters first locked from the date (`humanSourceCheckRequired: yes`); Ch1 to Ch9 are checked after their locks |
+| 2026-11-24 | Each HumanSourceCheck item has an **`Opened:` line** (what the author read himself, or `none — <why>`) and an optional **`AI notes:`** line; the gate needs `Opened:` on every Tier 1 item (#67) | every sheet from the date (older sheets get the lines added on the next run) |
 
 ### The author TODO file (2026-11-17, #47)
 
