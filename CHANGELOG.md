@@ -5,6 +5,27 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
+## [v1.4.2] — 2026-11-25 (PROD)
+
+**Folder:** `v_1_3_0/` (edited in place, so no new version folder) · **Tag:** `v1_4_2.PROD`. Released after the HumanSourceCheck was tested on Ch2 (2026-11-24), with the author's go-ahead.
+
+This release includes:
+- everything in v1.4.1 (RC, not tagged PROD on its own): finished print IDMLs in the chapter folders (#58), the INDD staying with the InDesign book (#60), and the author's HumanSourceCheck before the lock (#62);
+- the `Opened:` and `AI notes:` lines on each HumanSourceCheck item (#67), from the Ch2 pilot.
+
+The deployed `instructions/` copy matches this release.
+
+## [v1.4.2] — HumanSourceCheck: an `Opened:` line per item (#67)
+
+Edited in place in `v_1_3_0/`, like #62. From the Ch2 pilot (2026-11-24): much of the sheet was AI research the author then confirmed, and the sheet couldn't show which sources he read himself.
+
+- **Template:** each Tier 1 item gets `- Opened:` (the source and page the author read himself) and an optional `- AI notes:` line for research pasted from an AI tool, kept apart from his own Notes.
+- **Gate (PHASE 2.5 §3.6, §3.7):** every Tier 1 item needs a non-empty `Opened:` value as well as a box and `Initials/date:`. When there was nothing to open, the one allowed form is `Opened: none — <why>`; a bare `none` fails. The wait message names a missing `Opened:` or `Initials/date:`.
+- **Claude leaves `Opened:`, `Notes:`, `AI notes:` and `Initials/date:` blank.** Only the author's `Notes:` drive draft fixes; `AI notes:` are a record.
+- **Sheets built before #67:** every confirm-mode run adds the two lines to any item that lacks them (keeping its marks); the author fills `Opened:` on every Tier 1 item before signing. The ten live sheets (Ch1–Ch10) got the lines on 2026-11-24.
+- **Rebuild:** on a changed item it clears the boxes, `Opened:` and `Initials/date:`, and keeps `Notes:` and `AI notes:` prefixed `(earlier check, <date>)`, which never drive a new draft.
+- **Updated:** PHASE 2.5 §3.6 and §3.7, `templates/HUMAN_SOURCE_CHECK_TEMPLATE.md` (sections C and D now list every line), HOW_TO_RUN_THE_PIPELINE, MASTER_PIPELINE_OVERVIEW §10.
+
 ## [v1.4.1] — 2026-11-22 (release candidate)
 
 **Folder:** `v_1_3_0/` (edited in place, so no new version folder) · **Tag:** `v1_4_1.RC`; PROD (`v1_4_1.PROD`) after the HumanSourceCheck is tested on Ch2 and the author gives the go-ahead.
