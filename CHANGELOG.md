@@ -5,7 +5,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 
 ---
 
-## [Unreleased] — HumanSourceCheck: an `Opened:` line per item (#67)
+## [v1.4.2] — 2026-11-25 (PROD)
+
+**Folder:** `v_1_3_0/` (edited in place, so no new version folder) · **Tag:** `v1_4_2.PROD`. Released after the HumanSourceCheck was tested on Ch2 (2026-11-24), with the author's go-ahead.
+
+This release includes:
+- everything in v1.4.1 (RC, not tagged PROD on its own): finished print IDMLs in the chapter folders (#58), the INDD staying with the InDesign book (#60), and the author's HumanSourceCheck before the lock (#62);
+- the `Opened:` and `AI notes:` lines on each HumanSourceCheck item (#67), from the Ch2 pilot.
+
+The deployed `instructions/` copy matches this release.
+
+## [v1.4.2] — HumanSourceCheck: an `Opened:` line per item (#67)
 
 Edited in place in `v_1_3_0/`, like #62. From the Ch2 pilot (2026-11-24): much of the sheet was AI research the author then confirmed, and the sheet couldn't show which sources he read himself.
 
